@@ -2733,6 +2733,13 @@
   #modal-newpw .pw-rules span{font-size:11.5px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-3,#66666c);} #modal-newpw .pw-rules span.ok{background:#e7f3ec;color:#2f7a4a;} #modal-newpw .pw-rules span.bad{background:#fdecea;color:#b42318;}
   .au-pw-state{display:block;font-style:normal;font-size:12px;margin-top:6px;} .au-pw-state:empty{display:none;}
   .au-pw-state.wait{color:var(--c-warn,#8a5a00);} .au-pw-state.done{color:var(--c-ok,#2f7a4a);}
+  /* 장치 선택 */
+  body.v3-ui #modal-setup .dev-select-row{display:flex;align-items:center;gap:10px;margin:2px 0 0;font-size:13.5px;color:var(--c-ink-2);}
+  body.v3-ui #modal-setup .dev-select-row > span{flex:none;}
+  body.v3-ui #modal-setup .dev-select-row select{flex:1;min-width:0;height:36px;padding:0 32px 0 10px;border:1px solid var(--c-line-strong);border-radius:8px;background:#fff;color:var(--c-ink);font:inherit;font-size:13.5px;text-overflow:ellipsis;cursor:pointer;}
+  body.v3-ui #modal-setup .dev-select-row select:disabled{color:var(--c-ink-3);cursor:default;background:var(--c-surface);}
+  body.v3-ui #modal-setup .dev-select-row select:focus{outline:2px solid var(--c-accent);outline-offset:1px;}
+  body.v3-ui #modal-setup .dev-note{margin:0;font-size:12.5px;line-height:1.5;color:var(--c-warn);background:var(--c-warn-bg);border-radius:8px;padding:8px 10px;}
   /* 베타 현황 */
   .beta-head-btns{display:flex;gap:8px;flex-wrap:wrap;}
   .beta-table{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:14px;overflow:hidden;}
@@ -3738,19 +3745,22 @@
         <div class="dev-grid">
           <div class="dev-card" id="dev-card-mic">
             <div class="dev-head"><span class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><b>마이크</b><span class="dev-req">필수</span><span class="dev-pill" id="setup-mic-pill">확인 중</span></div>
-            <p class="dev-line">입력 장치: <span id="setup-mic-dev">확인 중…</span></p>
+            <label class="dev-select-row"><span>입력 장치</span><select id="setup-mic-select" onchange="onMicDeviceChange(this.value)" aria-label="마이크 선택"><option value="">확인 중…</option></select></label>
+            <span id="setup-mic-dev" hidden></span>
             <div class="level-meter"><div class="level-meter-fill" id="mic-level"></div></div>
             <div class="mic-check" id="mic-check">
               <span class="mic-check-dot" id="mic-check-dot"></span>
               <span class="mic-check-text" id="mic-check-text">마이크 확인 중…</span>
               <a class="mic-help-link" href="javascript:void(0)" onclick="openMicHelp()">마이크가 안 되나요?</a>
             </div>
-            <p class="dev-hint">짧게 말해보세요. 목소리가 감지되면 막대가 움직여요.</p>
+            <p class="dev-hint">짧게 말해보세요. 목소리가 감지되면 막대가 움직여요. 막대가 안 움직이면 위 "입력 장치"에서 다른 마이크를 골라 보세요.</p>
+            <p class="dev-note" id="setup-mic-note" hidden>기본이 아닌 마이크를 골랐어요. 말이 글자로 잘 안 나오면 주소창 오른쪽(또는 왼쪽 자물쇠) 마이크 아이콘에서도 같은 마이크를 골라 주세요.</p>
             <button class="switch on" id="switch-mic" hidden onclick="toggleSwitch(this,'mic')"></button>
           </div>
           <div class="dev-card" id="dev-card-cam">
             <div class="dev-head"><span class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></span><b>카메라</b><span class="dev-req opt">선택</span><span class="dev-pill" id="setup-cam-pill">확인 중</span></div>
             <label class="dev-check"><input type="checkbox" id="switch-cam" checked onchange="onSetupCamToggle(this.checked)"> 카메라 사용</label>
+            <label class="dev-select-row" id="setup-cam-select-row"><span>카메라 장치</span><select id="setup-cam-select" onchange="onCamDeviceChange(this.value)" aria-label="카메라 선택"><option value="">확인 중…</option></select></label>
             <div class="setup-cam-box" id="setup-cam-preview"><video id="setup-cam-video" autoplay muted playsinline></video><span class="cam-msg" id="setup-cam-msg">카메라 여는 중…</span></div>
           </div>
         </div>
@@ -7012,7 +7022,7 @@ async function precheckMic(){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ set('bad', '이 브라우저는 마이크를 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.', '안 돼요'); return; }
   set('', '마이크 확인 중… 권한을 물어보면 "허용"을 눌러 주세요.', '확인 중'); btn.disabled = true;
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true } });
+    const stream = await DevicePref.audio({ echoCancellation:true, noiseSuppression:true });
     pcMic.stream = stream;
     const track = stream.getAudioTracks()[0]; const devName = (track && track.label) ? track.label : '기본 마이크';
     const AC = window.AudioContext || window.webkitAudioContext; pcMic.ctx = new AC();
@@ -7968,6 +7978,53 @@ function closeSetup(){
   document.getElementById('modal-setup').classList.remove('active');
   stopMicLevelAnim(); stopCamPreview();
 }
+/* ---- 장치 선택 (2026-10-07): 면접 준비 창에서 고른 마이크·카메라를 면접 전체에 사용 ----
+   브라우저에 "고른 장치 id"만 기억(개인정보 아님). 고른 장치가 빠지면 자동으로 기본 장치로 돌아감 */
+const DevicePref = {
+  mic: (()=>{ try{ return localStorage.getItem('steno.micId') || ''; }catch(_){ return ''; } })(),
+  cam: (()=>{ try{ return localStorage.getItem('steno.camId') || ''; }catch(_){ return ''; } })(),
+  set(kind, id){ id = (id==='default') ? '' : (id||''); this[kind] = id; try{ if(id) localStorage.setItem('steno.'+kind+'Id', id); else localStorage.removeItem('steno.'+kind+'Id'); }catch(_){} },
+  async audio(base){
+    const b = Object.assign({}, base||{});
+    if(this.mic){ try{ return await navigator.mediaDevices.getUserMedia({ audio: Object.assign({}, b, { deviceId:{ exact:this.mic } }) }); }
+      catch(e){ if(e && (e.name==='OverconstrainedError' || e.name==='NotFoundError')){ console.warn('[장치] 고른 마이크가 없어 기본 마이크로', e); this.set('mic',''); } else throw e; } }
+    return await navigator.mediaDevices.getUserMedia({ audio: Object.keys(b).length ? b : true });
+  },
+  async video(base){
+    const b = Object.assign({}, base||{});
+    if(this.cam){ const c = Object.assign({}, b, { deviceId:{ exact:this.cam } }); delete c.facingMode;
+      try{ return await navigator.mediaDevices.getUserMedia({ video:c, audio:false }); }
+      catch(e){ if(e && (e.name==='OverconstrainedError' || e.name==='NotFoundError')){ console.warn('[장치] 고른 카메라가 없어 기본 카메라로', e); this.set('cam',''); } else throw e; } }
+    return await navigator.mediaDevices.getUserMedia({ video:b, audio:false });
+  },
+};
+async function refreshDeviceSelects(activeMicId, activeCamId){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+  let list = []; try{ list = await navigator.mediaDevices.enumerateDevices(); }catch(_){ return; }
+  const fill = (selId, kind, activeId, prefId, emptyText)=>{
+    const sel = document.getElementById(selId); if(!sel) return;
+    const devs = list.filter(d=>d.kind===kind && d.deviceId !== 'communications');
+    if(!devs.length){ sel.innerHTML = `<option value="">${emptyText}</option>`; sel.disabled = true; return; }
+    const named = devs.some(d=>d.label);
+    if(!named){ sel.innerHTML = '<option value="">권한을 허용하면 목록이 보여요</option>'; sel.disabled = true; return; }
+    let n = 0;
+    sel.innerHTML = devs.map(d=>{
+      const lbl = d.deviceId==='default' ? (d.label ? d.label.replace(/^(기본값|Default)\s*-\s*/i, '기본 · ') : '기본 장치') : (d.label || ((kind==='audioinput'?'마이크 ':'카메라 ')+(++n)));
+      return `<option value="${escapeHtml(d.deviceId)}">${escapeHtml(lbl)}</option>`;
+    }).join('');
+    sel.disabled = false;
+    const want = prefId || activeId || (devs.find(d=>d.deviceId==='default') || devs[0]).deviceId;
+    if([...sel.options].some(o=>o.value===want)) sel.value = want;
+  };
+  fill('setup-mic-select', 'audioinput', activeMicId, DevicePref.mic, '마이크를 찾지 못했어요');
+  fill('setup-cam-select', 'videoinput', activeCamId, DevicePref.cam, '카메라를 찾지 못했어요');
+  const note = document.getElementById('setup-mic-note'); if(note) note.hidden = !DevicePref.mic;
+}
+function onMicDeviceChange(id){ DevicePref.set('mic', id); const note = document.getElementById('setup-mic-note'); if(note) note.hidden = !DevicePref.mic; startMicLevelAnim(); }
+function onCamDeviceChange(id){ DevicePref.set('cam', id); const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }
+if(navigator.mediaDevices && navigator.mediaDevices.addEventListener){
+  navigator.mediaDevices.addEventListener('devicechange', ()=>{ const m = document.getElementById('modal-setup'); if(m && m.classList.contains('active')) refreshDeviceSelects(); });
+}
 /* ---- 면접 준비 창 v3: 카메라 미리보기 · 요약 줄 · 서류 카드 ---- */
 let setupCam = { stream:null };
 function setCamPill(text, kind){ const el = document.getElementById('setup-cam-pill'); if(el){ el.textContent = text; el.className = 'dev-pill' + (kind ? ' '+kind : ''); } const ms = document.getElementById('setup-ms-device'); if(ms && kind==='err'){ /* 마이크 상태가 우선 */ } }
@@ -7978,10 +8035,11 @@ async function startCamPreview(){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ if(msg) msg.textContent = '이 브라우저는 카메라 미리보기를 지원하지 않아요'; box.classList.add('off'); setCamPill('지원 안 됨','warn'); return; }
   if(msg) msg.textContent = '카메라 여는 중…';
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({ video:{ width:{ideal:640}, height:{ideal:360}, facingMode:'user' }, audio:false });
+    const stream = await DevicePref.video({ width:{ideal:640}, height:{ideal:360}, facingMode:'user' });
     const chk = document.getElementById('switch-cam');
     if(!chk || !chk.checked || !document.getElementById('modal-setup').classList.contains('active')){ stream.getTracks().forEach(t=>t.stop()); return; }
     setupCam.stream = stream; v.srcObject = stream; box.classList.add('on'); setCamPill('연결됨','ok');
+    { const tr = stream.getVideoTracks()[0]; const st = tr && tr.getSettings ? tr.getSettings() : {}; refreshDeviceSelects(null, st.deviceId); }
   }catch(err){
     console.warn('[카메라 미리보기 실패]', err);
     const name = err && err.name || '';
@@ -7990,7 +8048,7 @@ async function startCamPreview(){
   }
 }
 function stopCamPreview(){ if(setupCam.stream){ setupCam.stream.getTracks().forEach(t=>t.stop()); setupCam.stream = null; } const v = document.getElementById('setup-cam-video'); if(v) v.srcObject = null; const box = document.getElementById('setup-cam-preview'); if(box) box.classList.remove('on'); }
-function onSetupCamToggle(on){ state.camPref = !!on; if(on) startCamPreview(); else { stopCamPreview(); const box = document.getElementById('setup-cam-preview'), msg = document.getElementById('setup-cam-msg'); if(box) box.classList.add('off'); if(msg) msg.textContent = '카메라를 끄고 면접을 진행해요'; setCamPill('꺼짐',''); } updateSetupSummary(); }
+function onSetupCamToggle(on){ state.camPref = !!on; { const row = document.getElementById('setup-cam-select-row'); if(row) row.style.display = on ? '' : 'none'; } if(on) startCamPreview(); else { stopCamPreview(); const box = document.getElementById('setup-cam-preview'), msg = document.getElementById('setup-cam-msg'); if(box) box.classList.add('off'); if(msg) msg.textContent = '카메라를 끄고 면접을 진행해요'; setCamPill('꺼짐',''); } updateSetupSummary(); }
 function updateSetupSummary(){
   const el = document.getElementById('setup-summary'); if(!el) return;
   const isReview = state.selectedField && state.selectedField.id === 'review';
@@ -8722,10 +8780,13 @@ async function startMicLevelAnim(){
   }
   setMicCheck('', '마이크 확인 중… (권한을 물어보면 "허용"을 눌러주세요)');
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}});
+    const gen = (startMicLevelAnim._g = (startMicLevelAnim._g||0) + 1);
+    const stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
+    if(gen !== startMicLevelAnim._g){ stream.getTracks().forEach(t=>t.stop()); return; }   // 그 사이 다른 마이크를 골랐으면 이건 버림
     micCheck.stream = stream;
     const track = stream.getAudioTracks()[0];
     const devName = (track && track.label) ? track.label : '기본 마이크';
+    { const st = track && track.getSettings ? track.getSettings() : {}; refreshDeviceSelects(st.deviceId, null); }
     { const dv = document.getElementById('setup-mic-dev'); if(dv) dv.textContent = devName; }
     const AC = window.AudioContext || window.webkitAudioContext;
     micCheck.ctx = new AC();
@@ -8735,7 +8796,7 @@ async function startMicLevelAnim(){
     src.connect(analyser);
     const buf = new Uint8Array(analyser.fftSize);
     micCheck.heard = false; micCheck.startedAt = Date.now();
-    setMicCheck('warn', `사용 중인 마이크: ${devName} · "아~" 하고 소리를 내 보세요`);
+    setMicCheck('warn', `"아~" 하고 소리를 내 보세요`);
     // 마이크는 열렸어도 음성 인식(말→글자)이 따로 막혀 있을 수 있어 한 번만 짧게 검사 (크롬 file:// 제한, 서버 연결 실패 등)
     if(!micCheck.srTested && (window.SpeechRecognition || window.webkitSpeechRecognition)){
       micCheck.srTested = true; micCheck.srResult = null;
@@ -8758,10 +8819,10 @@ async function startMicLevelAnim(){
       fill.style.width = Math.max(4, pct)+'%';
       if(pct > 12 && !micCheck.heard){
         micCheck.heard = true;
-        if(!micCheck.srBlocked) setMicCheck('ok', `마이크 정상 · 사용 중인 마이크: ${devName}`);
+        if(!micCheck.srBlocked) setMicCheck('ok', `마이크 정상 · 목소리가 잘 들려요`);
       }else if(!micCheck.heard && !micCheck.srBlocked && Date.now()-micCheck.startedAt > 6000){
         micCheck.startedAt = Date.now() + 1e12; // 한 번만 안내
-        setMicCheck('warn', `소리가 감지되지 않아요. 사용 중인 마이크(${devName})가 맞는지 확인해 주세요.`);
+        setMicCheck('warn', `소리가 감지되지 않아요. 위 "입력 장치"에서 다른 마이크를 골라 보세요.`);
       }
       micCheck.raf = requestAnimationFrame(loop);
     };
@@ -8829,7 +8890,7 @@ async function runMicDiagnostic(){
   try{ const devs = await navigator.mediaDevices.enumerateDevices(); const ins = devs.filter(d=>d.kind==='audioinput'); f.inputs = ins.length; f.labels = ins.map(d=>d.label).filter(Boolean);
     add(ins.length?'ok':'bad', `마이크 장치: ${ins.length}개 감지${f.labels.length?' ('+f.labels.join(', ')+')':''}`); }catch(e){ f.inputs=-1; add('warn','마이크 장치 목록을 읽지 못했어요: '+(e.name||e)); }
   // 실제 열기
-  try{ const st = await navigator.mediaDevices.getUserMedia({audio:true}); const tr = st.getAudioTracks()[0]; f.gum='ok'; f.gumLabel = tr && tr.label || '';
+  try{ const st = await DevicePref.audio(); const tr = st.getAudioTracks()[0]; f.gum='ok'; f.gumLabel = tr && tr.label || '';
     // 1.5초 음량 측정
     let peak=0; try{ const AC=window.AudioContext||window.webkitAudioContext; const ctx=new AC(); const an=ctx.createAnalyser(); an.fftSize=1024; ctx.createMediaStreamSource(st).connect(an); const buf=new Uint8Array(an.fftSize); const t0=Date.now();
       await new Promise(r=>{ const lp=()=>{ an.getByteTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++){ const v=(buf[i]-128)/128; sum+=v*v; } peak=Math.max(peak, Math.sqrt(sum/buf.length)); if(Date.now()-t0<1500) requestAnimationFrame(lp); else r(); }; lp(); }); try{ ctx.close(); }catch(_){} }catch(_){}
@@ -9340,7 +9401,7 @@ async function startRehearsalMeter(){
   const fill = document.getElementById('rh-meter-fill'); const note = document.getElementById('rh-meter-note'); const box = document.querySelector('.rh-meter');
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ if(note) note.textContent='이 브라우저는 마이크 측정을 지원하지 않아요'; return; }
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}});
+    const stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
     if(state.interviewMode !== 'rehearsal'){ stream.getTracks().forEach(t=>t.stop()); return; }
     rhMeter.stream = stream;
     const AC = window.AudioContext || window.webkitAudioContext; rhMeter.ctx = new AC();
@@ -10366,7 +10427,7 @@ async function startCamera(){
   }
   label.textContent = '카메라 연결 중…'; label.style.display=''; icon.style.display='';
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({ video:{ width:{ideal:640}, height:{ideal:480}, facingMode:'user' }, audio:false });
+    const stream = await DevicePref.video({ width:{ideal:640}, height:{ideal:480}, facingMode:'user' });
     if(!state.camOn){ stream.getTracks().forEach(t=>t.stop()); return; }   // 기다리는 사이 카메라를 껐다면 폐기
     state.cameraStream = stream;
     video.srcObject = stream;
@@ -11490,7 +11551,7 @@ const StenoListener = {
 
     // 1) 실제 음량 측정 (실패해도 음성 인식만으로 진행)
     try{
-      this.stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}});
+      this.stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
       const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC();
       const src = this.ctx.createMediaStreamSource(this.stream); const an = this.ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
       const buf = new Uint8Array(an.fftSize);
@@ -11528,12 +11589,15 @@ const StenoListener = {
     };
     rec.onerror = (e)=>{
       if(e.error==='no-speech' || e.error==='aborted') return;
+      if(this._srTrack){ console.warn('[StenoListener] 고른 마이크로 음성 인식 실패 → 기본 마이크로 다시 시도', e.error); this._srTrack = null; return; }   // onend가 기본 마이크로 다시 시작
       if(e.error==='network'){ this.timers.netErr = (this.timers.netErr||0)+1; if(this.timers.netErr<3) return; }
       this._fail(micErrorMessage(e).text);
     };
-    rec.onend = ()=>{ if(this.active){ setTimeout(()=>{ if(this.active){ try{ rec.start(); }catch(_){} } }, 300); } };
+    rec.onend = ()=>{ if(this.active){ setTimeout(()=>{ if(this.active){ try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }catch(_){} } }, 300); } };
     this.rec = rec;
-    try{ rec.start(); }catch(e){ this._fail('음성 인식을 시작하지 못했어요: '+(e.message||e)); return false; }
+    this._srTrack = (DevicePref.mic && this.stream && this.stream.getAudioTracks()[0]) || null;
+    try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }
+    catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); }catch(e2){ this._fail('음성 인식을 시작하지 못했어요: '+(e2.message||e2)); return false; } } else { this._fail('음성 인식을 시작하지 못했어요: '+(e.message||e)); return false; } }
     this._state('listening');
     return true;
   },
