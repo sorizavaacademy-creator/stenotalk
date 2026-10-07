@@ -2720,6 +2720,19 @@
   .pc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;} .pc-sum{font-size:13.5px;color:var(--c-ink-2,#45454a);} body.v3-ui .pc-foot .btn-solid{flex:none;padding:0 22px;height:44px;}
   .au-pw{margin-top:14px;border:1px solid var(--c-line,#e6e4e0);border-radius:12px;padding:14px 16px;background:#fff;} .au-pw-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;} .au-pw-head > div{flex:1;min-width:0;} .au-pw-head b{display:block;font-size:14px;margin-bottom:2px;} .au-pw-head span{font-size:12.5px;color:var(--c-ink-2,#45454a);line-height:1.5;} .au-pw-head .btn-manage{flex:none;white-space:nowrap;}
   .au-pw-result{margin-top:12px;} .au-pw-code{display:flex;align-items:center;gap:10px;} .au-pw-code span{font-family:ui-monospace,Consolas,monospace;font-size:20px;font-weight:700;letter-spacing:.04em;background:var(--c-surface,#f6f5f3);border:1px dashed var(--c-line-strong,#d3d0ca);border-radius:8px;padding:8px 14px;user-select:all;} .au-pw-result p{margin:8px 0 0;font-size:12.5px;color:var(--c-ink-2,#45454a);line-height:1.5;} .au-pw-err{color:#b42318 !important;}
+  /* 새 비밀번호 정하기 (2026-10-07) */
+  #modal-newpw .np-box{max-width:460px;}
+  #modal-newpw .modal-head h2{margin:8px 0 6px;font-size:20px;}
+  #modal-newpw .modal-head p{margin:0;font-size:13.5px;line-height:1.6;color:var(--c-ink-2,#45454a);}
+  .np-badge{display:inline-flex;align-items:center;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--c-warn-soft,#fff4d6);color:var(--c-warn,#8a5a00);}
+  .np-input{position:relative;} .np-input input{width:100%;padding-right:64px !important;}
+  .np-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;font-size:12.5px;color:var(--c-ink-3,#66666c);padding:6px 8px;cursor:pointer;border-radius:6px;}
+  .np-eye:hover{background:var(--c-surface,#f6f5f3);color:var(--c-ink,#1c1c1e);}
+  .np-tip{margin:14px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.55;}
+  .np-foot{display:flex;gap:10px;} .np-foot .btn{flex:1;} .np-foot .btn-solid[disabled]{opacity:.45;cursor:not-allowed;}
+  #modal-newpw .pw-rules span{font-size:11.5px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-3,#66666c);} #modal-newpw .pw-rules span.ok{background:#e7f3ec;color:#2f7a4a;} #modal-newpw .pw-rules span.bad{background:#fdecea;color:#b42318;}
+  .au-pw-state{display:block;font-style:normal;font-size:12px;margin-top:6px;} .au-pw-state:empty{display:none;}
+  .au-pw-state.wait{color:var(--c-warn,#8a5a00);} .au-pw-state.done{color:var(--c-ok,#2f7a4a);}
   .mp-note{margin:10px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.5;}
   @media(max-width:560px){ .au-pw-head{flex-direction:column;} .pc-sec-body{margin-left:0;} .pc-foot{flex-direction:column;align-items:stretch;} }
 </style>
@@ -3765,6 +3778,34 @@
 </div>
 
 <!-- ============ 시작 전 점검 (로그인 전에도 열 수 있음) ============ -->
+<!-- 임시 비밀번호로 로그인했을 때: 새 비밀번호 한 번 정하기 (닫기 버튼 없음) -->
+<div class="modal-overlay" id="modal-newpw" role="dialog" aria-modal="true" aria-labelledby="np-title">
+  <div class="modal-box np-box">
+    <div class="modal-head">
+      <span class="np-badge">임시 비밀번호로 로그인했어요</span>
+      <h2 id="np-title">앞으로 쓸 비밀번호를 정해 주세요</h2>
+      <p>관리자가 만들어 준 임시 비밀번호는 이번 한 번만 써요. 새 비밀번호를 정하면 다음 로그인부터 그 비밀번호를 쓰고, 그 뒤에 다시 바꿀 때는 관리자에게 말씀해 주세요.</p>
+    </div>
+    <div class="modal-body">
+      <div class="signup-field">
+        <label for="np-pw">새 비밀번호</label>
+        <div class="np-input"><input id="np-pw" type="password" placeholder="영문+숫자 8자 이상" autocomplete="new-password" oninput="validateNewPw()"><button type="button" class="np-eye" onclick="toggleNewPwVisible()" id="np-eye">보기</button></div>
+        <div class="pw-rules" id="np-rules"><span data-rule="len">8자 이상</span><span data-rule="alpha">영문 포함</span><span data-rule="digit">숫자 포함</span><span data-rule="diff">임시 비밀번호와 다름</span></div>
+      </div>
+      <div class="signup-field" style="margin-bottom:0;">
+        <label for="np-pw2">한 번 더 입력</label>
+        <input id="np-pw2" type="password" placeholder="같은 비밀번호를 한 번 더" autocomplete="new-password" oninput="validateNewPw()" onkeydown="if(event.key==='Enter') submitNewPw()">
+        <div class="field-error" id="np-err"></div>
+      </div>
+      <p class="np-tip">휴대폰 번호·생일처럼 남이 짐작하기 쉬운 비밀번호는 피해 주세요. 잊어버리면 관리자가 다시 임시 비밀번호를 만들어 드려요.</p>
+    </div>
+    <div class="modal-foot np-foot">
+      <button type="button" class="btn btn-outline" onclick="newPwLogout()">로그아웃</button>
+      <button type="button" class="btn btn-solid" id="np-save" onclick="submitNewPw()" disabled>새 비밀번호로 저장</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-precheck">
   <div class="modal-box pc-box">
     <div class="modal-head">
@@ -3794,7 +3835,7 @@
         <div class="pc-sec-body pc-faq">
           <details><summary>마이크가 안 돼요 / "권한이 차단되어 있어요"라고 나와요</summary><p>주소창 왼쪽 자물쇠(또는 ⓘ) 아이콘을 누르고 마이크를 <b>허용</b>으로 바꾼 뒤 새로고침하세요. 줌·팀즈처럼 마이크를 쓰는 다른 프로그램은 닫아 주세요. 윈도우 설정 → 개인 정보 → 마이크에서 "앱이 마이크에 액세스하도록 허용"도 켜져 있어야 해요.</p></details>
           <details><summary>휴대폰으로 해도 되나요?</summary><p>될 수는 있지만 PC를 권장해요. 휴대폰은 반드시 <b>크롬(안드로이드)</b> 또는 <b>사파리(아이폰)</b> 앱에서 직접 주소를 열어 주세요. 카카오톡·네이버·인스타그램 안에서 열린 창에서는 오른쪽 위 ⋮ 또는 공유 버튼 → "다른 브라우저로 열기"를 눌러 주세요.</p></details>
-          <details><summary>비밀번호를 잊었어요</summary><p>보안을 위해 본인이 직접 바꿀 수는 없어요. 교육 담당 관리자에게 말씀하시면 임시 비밀번호를 만들어 드려요.</p></details>
+          <details><summary>비밀번호를 잊었어요</summary><p>교육 담당 관리자에게 말씀하시면 임시 비밀번호를 만들어 드려요. 그 비밀번호로 로그인하면 앞으로 쓸 새 비밀번호를 한 번 정할 수 있어요.</p></details>
           <details><summary>"권한 대기"라고 나오고 면접을 시작할 수 없어요</summary><p>관리자가 지원 기관의 서류 합격을 확인한 뒤 해당 면접 분야를 열어 줘요. 열리기 전에는 질문 미리 보기만 가능하니, 급하면 관리자에게 연락해 주세요.</p></details>
           <details><summary>면접 기록이 안 보여요</summary><p>면접을 끝까지 마쳐야(결과 화면까지) 기록이 저장돼요. 중간에 창을 닫거나 "면접 종료"로 나가면 그때까지의 답변으로 결과가 만들어지지만, 리허설은 저장되지 않아요.</p></details>
         </div>
@@ -3956,7 +3997,7 @@
         <div class="mp-info"><div class="mp-info-lbl">이름</div><div class="mp-info-val" id="mp-name"></div></div>
         <div class="mp-info"><div class="mp-info-lbl">이메일</div><div class="mp-info-val" id="mp-email"></div></div>
         <div class="mp-info"><div class="mp-info-lbl">휴대폰 번호</div><div class="mp-info-val" id="mp-phone"></div></div>
-        <p class="mp-note">이름·휴대폰·비밀번호 변경은 교육 담당 관리자에게 말씀해 주세요. 비밀번호를 잊으면 관리자가 임시 비밀번호를 만들어 드려요.</p>
+        <p class="mp-note">이름·휴대폰·비밀번호 변경은 교육 담당 관리자에게 말씀해 주세요. 비밀번호를 잊으면 관리자가 임시 비밀번호를 만들어 드리고, 그 비밀번호로 처음 로그인할 때 새 비밀번호를 한 번 정할 수 있어요.</p>
         <div class="mp-info"><div class="mp-info-lbl">현재 상태</div><div class="mp-info-val" id="mp-status"></div></div>
         <div class="mp-info"><div class="mp-info-lbl">연습 가능한 분야</div><div class="mp-info-val" id="mp-fields"></div></div>
         <div class="mp-info"><div class="mp-info-lbl">이용 기간</div><div class="mp-info-val" id="mp-until"></div></div>
@@ -4029,7 +4070,7 @@
       </div>
 
       <div class="au-pw" id="au-pw">
-        <div class="au-pw-head"><div><b>비밀번호</b><span>면접자는 스스로 비밀번호를 바꿀 수 없어요. 잊어버렸다고 하면 여기서 임시 비밀번호를 만들어 전화·카톡으로 알려 주세요.</span></div><button type="button" class="btn-manage" id="au-pw-btn" onclick="adminResetPassword()">임시 비밀번호 만들기</button></div>
+        <div class="au-pw-head"><div><b>비밀번호</b><span>잊어버렸다고 하면 여기서 임시 비밀번호를 만들어 전화·카톡으로 알려 주세요. 면접자가 그 비밀번호로 처음 로그인하면 새 비밀번호를 한 번 정하게 돼요.</span><em class="au-pw-state" id="au-pw-state"></em></div><button type="button" class="btn-manage" id="au-pw-btn" onclick="adminResetPassword()">임시 비밀번호 만들기</button></div>
         <div class="au-pw-result" id="au-pw-result" style="display:none;"></div>
       </div>
 
@@ -6765,6 +6806,75 @@ async function rejectIfExpired(profile){
   showToast(ACCESS_EXPIRED_MSG);
   return true;
 }
+/* ---------- 임시 비밀번호 → 새 비밀번호 한 번 정하기 (2026-10-07 · step9) ----------
+   관리자가 만든 임시 비밀번호로 로그인하면(profiles.must_change_password) 닫을 수 없는 창을 띄움.
+   저장: auth.updateUser → rpc password_changed() (표시 해제). 그 뒤 변경은 다시 관리자만.
+   비밀번호는 화면 메모리에서 비교용으로만 잠깐 쓰고 어디에도 저장하지 않음. */
+let _npTempPw = '';
+function maybeForceNewPassword(profile, typedPw){
+  if(!profile || !profile.must_change_password) return false;
+  _npTempPw = typedPw || '';
+  const m = document.getElementById('modal-newpw'); if(!m) return false;
+  ['np-pw','np-pw2'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.type='password'; } });
+  { const e=document.getElementById('np-eye'); if(e) e.textContent='보기'; }
+  validateNewPw();
+  m.classList.add('active');
+  setTimeout(()=>{ const el=document.getElementById('np-pw'); if(el) el.focus(); }, 60);
+  return true;
+}
+function newPwRules(v){
+  return { len: v.length>=8, alpha: /[A-Za-z]/.test(v), digit: /[0-9]/.test(v), diff: !!v && (!_npTempPw || v!==_npTempPw) };
+}
+function validateNewPw(){
+  const v = (document.getElementById('np-pw')||{}).value || '';
+  const v2 = (document.getElementById('np-pw2')||{}).value || '';
+  const r = newPwRules(v);
+  document.querySelectorAll('#np-rules [data-rule]').forEach(el=>{ el.classList.toggle('ok', !!v && r[el.dataset.rule]); el.classList.toggle('bad', !!v && !r[el.dataset.rule]); });
+  const allOk = r.len && r.alpha && r.digit && r.diff;
+  const err = document.getElementById('np-err');
+  if(err) err.textContent = (v2 && v !== v2) ? '두 비밀번호가 서로 달라요.' : '';
+  const btn = document.getElementById('np-save'); if(btn) btn.disabled = !(allOk && v2 && v===v2);
+  return allOk && v2 && v===v2;
+}
+function toggleNewPwVisible(){
+  const show = document.getElementById('np-pw').type === 'password';
+  ['np-pw','np-pw2'].forEach(id=>{ document.getElementById(id).type = show ? 'text' : 'password'; });
+  document.getElementById('np-eye').textContent = show ? '숨기기' : '보기';
+}
+async function submitNewPw(){
+  if(!validateNewPw()) return;
+  const v = document.getElementById('np-pw').value;
+  const btn = document.getElementById('np-save'), err = document.getElementById('np-err');
+  btn.disabled = true; btn.textContent = '저장 중…'; err.textContent = '';
+  try{
+    const { error } = await sb.auth.updateUser({ password: v });
+    if(error){
+      const t = String(error.message||'').toLowerCase();
+      if(/same_password|should be different|different from the old/.test(t)) throw new Error('임시 비밀번호와 다른 비밀번호를 정해 주세요.');
+      if(/weak_password|password should|too short|password is too/.test(t)) throw new Error('너무 쉬운 비밀번호예요. 영문·숫자를 섞어 8자 이상으로 정해 주세요.');
+      if(/reauthenticat/.test(t)) throw new Error('보안 확인이 필요해요. 로그아웃 후 임시 비밀번호로 다시 로그인해 주세요.');
+      if(/failed to fetch|network/.test(t)) throw new Error('인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+      throw new Error('비밀번호를 바꾸지 못했어요. ('+error.message+')');
+    }
+    const { error: rpcErr } = await sb.rpc('password_changed');
+    if(rpcErr) console.warn('password_changed rpc', rpcErr);
+    _npTempPw = '';
+    ['np-pw','np-pw2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('modal-newpw').classList.remove('active');
+    try{ Activity.log('password_changed'); }catch(_){}
+    showToast('새 비밀번호로 바뀌었어요. 다음 로그인부터 이 비밀번호를 쓰세요.');
+    maybeOpenDemoFromUrl();
+  }catch(e){
+    err.textContent = e.message || String(e);
+  }finally{
+    btn.textContent = '새 비밀번호로 저장'; validateNewPw();
+  }
+}
+async function newPwLogout(){
+  _npTempPw = '';
+  document.getElementById('modal-newpw').classList.remove('active');
+  await handleLogout();
+}
 /** 로그인 중에 기간이 지나면(자정 경과 등) 1분 안에 자동 로그아웃 */
 let accessWatchTimer = null;
 function startAccessWatch(){
@@ -6920,6 +7030,7 @@ async function handleLogin(){
   showScreen('screen-dashboard');
   showToast('로그인되었습니다');
   Activity.log('login'); Activity.setPresence('dashboard');
+  if(maybeForceNewPassword(profile, pw)) { startAccessWatch(); return; }
   maybeOpenDemoFromUrl();
   startAccessWatch();
 }
@@ -6960,6 +7071,7 @@ async function tryRestoreSession(){
   showScreen('screen-dashboard');
   Activity.log('login', {restored:true}); Activity.setPresence('dashboard');
   startAccessWatch();
+  if(maybeForceNewPassword(profile)) return;
   maybeOpenDemoFromUrl();
 }
 
@@ -8102,8 +8214,8 @@ const Activity = {
     else console.warn('[접속 기록 실패]', msg);
   },
 };
-const ACTIVITY_LABEL = { login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단' };
-const ACTIVITY_CLS = { login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort' };
+const ACTIVITY_LABEL = { login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정' };
+const ACTIVITY_CLS = { login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login' };
 function presenceLabel(p){
   if(!p) return '';
   if(p.screen==='interview') return `<b>${escapeHtml(p.field_name||'')}</b> ${p.mode==='rehearsal' ? '리허설' : 'AI 대화 면접'}${p.question_no ? ' · 질문 '+p.question_no : ''} 진행 중`;
@@ -12068,7 +12180,14 @@ function exportRecordsCsv(){
 
 /* ---------------- 관리자: 수강생 상세 (기록·점수 추이·메모·상태) ---------------- */
 function copyText(t, msg){ try{ navigator.clipboard.writeText(t).then(()=>showToast(msg||'복사했어요'), ()=>showToast('복사하지 못했어요. 직접 선택해서 복사해 주세요')); }catch(e){ showToast('복사하지 못했어요. 직접 선택해서 복사해 주세요'); } }
-/* 관리자: 면접자 임시 비밀번호 발급 (Edge Function admin-set-password · 2026-10-06). 면접자 본인은 비밀번호를 바꿀 수 없음 */
+/* 관리자: 면접자 임시 비밀번호 발급 (Edge Function admin-set-password · 2026-10-06).
+   2026-10-07: 임시 비밀번호로 처음 로그인하면 본인이 한 번 새 비밀번호를 정함 (step9 · modal-newpw). 그 뒤 변경은 다시 관리자만 */
+function renderAuPwState(u){
+  const el = document.getElementById('au-pw-state'); if(!el) return;
+  if(u && u.must_change_password){ el.className='au-pw-state wait'; el.textContent = '임시 비밀번호 사용 중 · 아직 새 비밀번호를 정하지 않았어요' + (u.temp_password_at ? ' (발급 '+formatDateFull(u.temp_password_at)+')' : ''); }
+  else if(u && u.password_changed_at){ el.className='au-pw-state done'; el.textContent = '본인이 새 비밀번호를 정함 · '+formatDateFull(u.password_changed_at); }
+  else { el.className='au-pw-state'; el.textContent=''; }
+}
 async function adminResetPassword(){
   const userId = state.editingUserId; const u = (state.adminUsers||[]).find(x=>x.id===userId); if(!u) return;
   if(!confirm(`${u.name||'이 면접자'} 님의 비밀번호를 새 임시 비밀번호로 바꿀까요?\n기존 비밀번호로는 더 이상 로그인할 수 없어요.`)) return;
@@ -12085,7 +12204,8 @@ async function adminResetPassword(){
     }
     box.style.display = '';
     box.innerHTML = `<div class="au-pw-code"><span id="au-pw-code">${escapeHtml(data.password)}</span><button type="button" class="btn-manage" onclick="copyText(document.getElementById('au-pw-code').textContent, '임시 비밀번호를 복사했어요')">복사</button></div>
-      <p>이 창을 닫으면 다시 볼 수 없어요. ${escapeHtml(u.name||'면접자')} 님에게 전달하고, 로그인 후 바로 쓰시면 돼요(본인이 바꿀 수는 없고 필요하면 여기서 다시 만들어 주세요).</p>`;
+      <p>이 창을 닫으면 다시 볼 수 없어요. ${escapeHtml(u.name||'면접자')} 님에게 전달해 주세요. 이 비밀번호로 처음 로그인하면 본인이 쓸 새 비밀번호를 한 번 정하게 돼요.</p>`;
+    u.must_change_password = true; u.temp_password_at = new Date().toISOString(); renderAuPwState(u);
     btn.textContent = '다시 만들기';
     showToast('임시 비밀번호를 만들었어요');
   }catch(err){
@@ -12103,7 +12223,7 @@ function openAdminUserDetail(userId){
   const allowedNames = (u.allowed_fields||[]).map(id=>{ const f=FIELDS.find(x=>x.id===id); return f?f.name:id; });
 
   document.getElementById('au-title').textContent = u.name || '수강생';
-  { const pr = document.getElementById('au-pw-result'); if(pr){ pr.style.display='none'; pr.innerHTML=''; } const pb = document.getElementById('au-pw-btn'); if(pb){ pb.disabled=false; pb.textContent='임시 비밀번호 만들기'; } }
+  { const pr = document.getElementById('au-pw-result'); if(pr){ pr.style.display='none'; pr.innerHTML=''; } const pb = document.getElementById('au-pw-btn'); if(pb){ pb.disabled=false; pb.textContent='임시 비밀번호 만들기'; } renderAuPwState(u); }
   document.getElementById('au-desc').textContent =
     `가입 ${formatDateFull(u.created_at)} · 권한: ${allowedNames.length ? allowedNames.join(', ') : '없음'}`;
 
