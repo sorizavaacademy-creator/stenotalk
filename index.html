@@ -2973,6 +2973,89 @@
   .qe-f .chip-row{display:flex;gap:6px;} .qe-f .chip{min-width:44px;}
   .qe-warn{margin:0;font-size:12.5px;color:#8a5a00;} .qe-warn:empty{display:none;}
   @media(max-width:700px){ .qe-grid{grid-template-columns:1fr;} .qm-row{grid-template-columns:1fr;} .qm-no{display:none;} .qm-act{justify-content:flex-start;} }
+
+/* ---------- 면접자 한 번에 설정 (2026-10-07) ---------- */
+.bulk-preset{margin:0 0 14px;}
+.bulk-targets{font-size:12.5px;color:#45454a;line-height:1.9;margin-bottom:10px;}
+.bulk-targets b{margin-right:6px;color:#1c1c1e;}
+.bulk-targets span{display:inline-block;background:#f6f5f3;border-radius:999px;padding:1px 9px;margin:0 4px 2px 0;}
+.bulk-targets em{font-style:normal;color:#66666c;}
+.bulk-preset-btn{width:100%;text-align:left;border:1px solid #e8532a;background:#fdf0eb;border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit;color:#1c1c1e;}
+.bulk-preset-btn b{font-size:14px;color:#c8441c;}
+.bulk-preset-btn span{font-size:12.5px;color:#45454a;}
+.bulk-preset-btn:hover{background:#fbe3d9;}
+.btn-bulk-clear{background:none;border:none;color:#66666c;font:inherit;font-size:13px;cursor:pointer;text-decoration:underline;padding:6px 4px;}
+#perm-status-row{margin-top:12px;}
+
+/* ---------- 내 실력 변화 (2026-10-07) ---------- */
+.gr-open{width:100%;text-align:left;border:1px solid #e6e4e0;background:#f6f5f3;border-radius:10px;padding:11px 14px;margin:0 0 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit;color:#1c1c1e;}
+.gr-open b{font-size:14px;} .gr-open span{font-size:12.5px;color:#66666c;} .gr-open:hover{border-color:#1c1c1e;}
+.gr-fields{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.gr-head{display:flex;flex-direction:column;gap:2px;margin-bottom:6px;}
+.gr-head div{display:flex;align-items:baseline;gap:10px;} .gr-head b{font-size:22px;letter-spacing:-.02em;color:#1c1c1e;}
+.gr-head p{margin:0;font-size:12.5px;color:#66666c;}
+.gr-head .up, .gr-prev i.up{color:#0e7c5c;font-weight:800;font-style:normal;} .gr-head .down, .gr-prev i.down{color:#b42318;font-weight:800;font-style:normal;}
+.gr-chart{margin:4px 0 6px;} .gr-chart .d3-chart-svg{width:100%;height:auto;max-height:240px;}
+.gr-chart .tk{font-size:11px;fill:#9a9aa0;} .gr-chart .v{font-size:12px;font-weight:700;fill:#1c1c1e;} .gr-chart .v.last{fill:#c8441c;} .gr-chart .d{font-size:11px;fill:#9a9aa0;}
+.gr-sec{margin-top:16px;padding-top:14px;border-top:1px solid #e6e4e0;}
+.gr-sec h4{margin:0 0 10px;font-size:14px;color:#1c1c1e;} .gr-sec h4 small{font-weight:500;color:#66666c;font-size:12px;margin-left:6px;}
+.gr-axes{display:flex;flex-direction:column;gap:8px;}
+.gr-ax{display:grid;grid-template-columns:70px 1fr 78px 58px;align-items:center;gap:10px;font-size:13px;}
+.gr-ax .nm{color:#45454a;font-weight:600;}
+.gr-ax .bar{position:relative;height:10px;background:#f0eee9;border-radius:999px;overflow:hidden;}
+.gr-ax .bar i{position:absolute;left:0;top:0;height:100%;border-radius:999px;} .gr-ax .bar i.f{background:#d3d0ca;} .gr-ax .bar i.l{background:#1c1c1e;height:4px;top:3px;}
+.gr-ax .num{text-align:right;color:#66666c;font-variant-numeric:tabular-nums;} .gr-ax .num b{color:#1c1c1e;}
+.gr-chip{display:inline-block;font-size:11.5px;font-weight:800;font-style:normal;padding:2px 7px;border-radius:999px;background:#f0eee9;color:#45454a;white-space:nowrap;text-align:center;}
+.gr-chip.up{background:#e3f4ec;color:#0e7c5c;} .gr-chip.down{background:#fdecea;color:#b42318;}
+.gr-note{margin:10px 0 0;font-size:12.5px;color:#45454a;line-height:1.6;}
+.gr-q{border:1px solid #e6e4e0;border-radius:10px;margin-bottom:8px;background:#fff;}
+.gr-q summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;flex-direction:column;gap:4px;} .gr-q summary::-webkit-details-marker{display:none;}
+.gr-q .q{font-size:13.5px;font-weight:600;color:#1c1c1e;line-height:1.45;} .gr-q .s{font-size:12px;color:#66666c;}
+.gr-cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px 12px;}
+.gr-cmp div{background:#f6f5f3;border-radius:8px;padding:9px 11px;} .gr-cmp b{display:block;font-size:12px;color:#45454a;margin-bottom:4px;} .gr-cmp p{margin:0;font-size:12.5px;line-height:1.6;color:#1c1c1e;white-space:pre-wrap;}
+.gr-sum{background:#f6f5f3;border-radius:10px;padding:10px 14px;margin:0 0 10px;font-size:13px;color:#45454a;} .gr-sum b{color:#1c1c1e;}
+.gr-prev{border:1px dashed #d3d0ca;border-radius:10px;padding:9px 12px;margin:0 0 10px;font-size:12.5px;color:#45454a;}
+.gr-prev-top{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;} .gr-prev-top b{color:#1c1c1e;}
+.gr-prev details summary{cursor:pointer;color:#c8441c;font-weight:600;margin-top:4px;} .gr-prev details p{margin:6px 0 0;white-space:pre-wrap;line-height:1.6;color:#1c1c1e;}
+.q-head-right .gr-chip{margin-right:4px;}
+@media (max-width:640px){ .gr-ax{grid-template-columns:58px 1fr 66px;} .gr-ax .gr-chip{display:none;} .gr-cmp{grid-template-columns:1fr;} }
+
+/* ---------- 그래프 디자인 정리 (2026-10-07) ---------- */
+.tl-wrap{position:relative;}
+.tl-svg{overflow:visible;aspect-ratio:560/220;}
+.tl-svg .tl-grid{stroke:#eeebe6;stroke-width:1;vector-effect:non-scaling-stroke;} .tl-svg .tl-grid.base{stroke:#d9d5ce;}
+.tl-svg .tl-tk{font-size:12.5px;fill:#9a9aa0;font-variant-numeric:tabular-nums;}
+.tl-svg .tl-line{fill:none;stroke:#1c1c1e;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+.tl-svg .tl-dot{fill:#1c1c1e;stroke:#fff;stroke-width:2;vector-effect:non-scaling-stroke;transition:r .12s;}
+.tl-svg .tl-dot.last{fill:#e8532a;}
+.tl-svg .tl-dot.on{r:6.5;}
+.tl-svg .tl-cross{stroke:#c9c5be;stroke-width:1;vector-effect:non-scaling-stroke;}
+.tl-svg .tl-val{font-size:14px;font-weight:700;fill:#45454a;} .tl-svg .tl-val.last{font-size:16px;fill:#1c1c1e;}
+.tl-svg .tl-best{font-size:12px;font-weight:600;fill:#9a9aa0;}
+.tl-svg .tl-date{font-size:12.5px;fill:#9a9aa0;} .tl-svg .tl-date.last{fill:#45454a;font-weight:700;}
+.tl-svg .tl-hit{cursor:pointer;}
+.tl-tip{position:absolute;z-index:3;pointer-events:none;background:#1c1c1e;color:#fff;border-radius:8px;padding:7px 10px;font-size:12px;line-height:1.45;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.18);display:flex;flex-direction:column;}
+.tl-tip b{font-size:14px;} .tl-tip span{color:#d6d4cf;} .tl-tip .tl-d{color:#fff;} .tl-tip em{font-style:normal;color:#a9a7a2;font-size:11px;}
+.gr-chart .d3-chart-svg{max-height:none;}
+.gr-legend{display:flex;align-items:center;gap:14px;font-size:12px;color:#66666c;margin:-2px 0 10px;}
+.gr-legend .k{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px;}
+.gr-legend .k.f{background:#fff;border:2px solid #b8b4ad;box-sizing:border-box;} .gr-legend .k.l{background:#1c1c1e;}
+.gr-legend .sc{margin-left:auto;display:none;}
+.gr-axes{gap:12px;}
+.gr-ax{grid-template-columns:72px 1fr 64px;gap:12px;}
+.gr-ax .db{position:relative;height:16px;}
+.gr-ax .db i{position:absolute;display:block;}
+.gr-ax .db .tr{left:0;right:0;top:7px;height:2px;background:#eeebe6;border-radius:2px;}
+.gr-ax .db .mid{left:50%;top:3px;width:1px;height:10px;background:#e0ddd7;}
+.gr-ax .db .seg{top:6px;height:4px;border-radius:4px;background:#c9c5be;} .gr-ax .db .seg.up{background:#9fd3bb;} .gr-ax .db .seg.down{background:#f2b8b0;}
+.gr-ax .db .pt{top:2px;width:12px;height:12px;margin-left:-6px;border-radius:50%;box-sizing:border-box;}
+.gr-ax .db .pt.f{background:#fff;border:2px solid #b8b4ad;}
+.gr-ax .db .pt.l{background:#1c1c1e;border:2px solid #fff;box-shadow:0 0 0 1px #1c1c1e;}
+.gr-ax .num{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;color:#1c1c1e;}
+.gr-ax .num b{font-size:14px;}
+.gr-d{font-size:11.5px;font-weight:700;color:#66666c;} .gr-d.up::before{content:'▲ ';color:#0e7c5c;font-size:9px;} .gr-d.down::before{content:'▼ ';color:#b42318;font-size:9px;}
+.gr-ax .gr-chip{display:none;}
+@media (max-width:640px){ .gr-ax{grid-template-columns:58px 1fr 58px;gap:8px;} }
 </style>
 </head>
 <body>
@@ -3121,7 +3204,7 @@
         <div id="history-list"></div>
       </div>
       <div class="d3-card d3-panel">
-        <div class="d3-panel-head"><h3 class="d3-panel-title">점수 추이</h3><span class="d3-panel-scope" id="d3-trend-scope"></span></div>
+        <div class="d3-panel-head"><h3 class="d3-panel-title">점수 추이</h3><span class="d3-panel-scope" id="d3-trend-scope"></span><button class="d3-btn-text" type="button" onclick="openGrowthView()">실력 변화 자세히 <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></button></div>
         <div class="d3-chart" id="trend-chart"></div>
         <p class="d3-chart-note" id="insight-note"></p>
       </div>
@@ -3272,7 +3355,8 @@
         </div>
         <div class="admin-select-bar" id="admin-select-bar">
           <span id="admin-select-count">0명 선택됨</span>
-          <button class="btn-bulk-perm" onclick="openBulkPermissionModal()">선택 항목 일괄 권한 부여</button>
+          <button class="btn-bulk-perm" onclick="openBulkPermissionModal()">선택한 사람 한 번에 설정</button>
+          <button class="btn-bulk-clear" type="button" onclick="toggleSelectAllUsers(false)">선택 해제</button>
         </div>
         <div class="admin-table users-table">
           <div class="admin-row head">
@@ -3281,7 +3365,7 @@
           </div>
           <div id="admin-list"></div>
         </div>
-        <div class="uf-legend"><b>표시 설명</b> <span class="tag tag-ok">이용 중</span> 권한 있고 기간이 남음 · <span class="tag tag-warn">권한 대기</span> 열어 준 분야 없음 · <span class="tag tag-danger">기간 만료</span> 로그인 차단 · <span class="status-chip until">~10/30</span> 이용 기간 · "준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 한 번에 분야를 열어 줄 수 있어요.</div>
+        <div class="uf-legend"><b>표시 설명</b> <span class="tag tag-ok">이용 중</span> 권한 있고 기간이 남음 · <span class="tag tag-warn">권한 대기</span> 열어 준 분야 없음 · <span class="tag tag-danger">기간 만료</span> 로그인 차단 · <span class="status-chip until">~10/30</span> 이용 기간 · "준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. "권한 대기" 칩을 누른 뒤 맨 위 체크박스를 누르면 대기 중인 사람만 모두 골라져요.</div>
       </div>
 
       <!-- 면접 기록 -->
@@ -4249,19 +4333,28 @@
       <p id="perm-modal-desc">서류 합격이 확인된 기관에만 체크해 주세요. 체크되지 않은 기관은 지원자에게 잠금 상태로 표시됩니다.</p>
     </div>
     <div class="modal-body">
+      <div class="bulk-preset" id="perm-bulk-preset" style="display:none;">
+        <div class="bulk-targets" id="perm-bulk-targets"></div>
+        <button type="button" class="bulk-preset-btn" onclick="applyBetaPreset()"><b>국회 베타 한 번에 설정</b><span>국회 속기사 열기 · 이용 기간 10/30까지 · 상태 "면접 예정"</span></button>
+      </div>
       <div class="perm-checklist" id="perm-checklist"></div>
       <div class="until-block">
         <div class="until-head"><b>이용 기간</b><span class="help-sub">이 날짜(포함)까지 연습할 수 있어요. 비워 두면 기한 없음. 보통 면접일로 맞춰 주세요.</span></div>
         <div class="until-row">
-          <input type="date" id="perm-until" class="until-input">
+          <input type="date" id="perm-until" class="until-input" onchange="permUntilTouched()">
           <div class="chip-row until-quick">
             <button type="button" class="chip" onclick="setUntilQuick('perm-until',7)">+7일</button>
             <button type="button" class="chip" onclick="setUntilQuick('perm-until',14)">+14일</button>
             <button type="button" class="chip" onclick="setUntilQuick('perm-until',30)">+30일</button>
             <button type="button" class="chip" onclick="setUntilQuick('perm-until',null)">기한 없음</button>
+            <button type="button" class="chip" onclick="setUntilDate('perm-until','2026-10-30')" title="국회 속기사 면접일">10/30 (국회 면접일)</button>
           </div>
         </div>
-        <label class="until-keep" id="perm-until-keep-row" style="display:none;"><input type="checkbox" id="perm-until-keep" checked> 이용 기간은 바꾸지 않음 (체크 해제하면 위 날짜를 모두에게 적용)</label>
+        <label class="until-keep" id="perm-until-keep-row" style="display:none;"><input type="checkbox" id="perm-until-keep" checked> 이용 기간은 바꾸지 않음 (날짜를 고르면 자동으로 풀려요)</label>
+      </div>
+      <div class="until-block" id="perm-status-row" style="display:none;">
+        <div class="until-head"><b>준비 단계</b><span class="help-sub">고르면 선택한 모두의 준비 단계가 이 값으로 바뀌어요.</span></div>
+        <select id="perm-status" class="voice-select" style="width:auto;"></select>
       </div>
     </div>
     <div class="modal-foot">
@@ -7913,19 +8006,165 @@ document.addEventListener('click', (e)=>{ const u = document.querySelector('#scr
 function closeUserMenu(){ const m = document.getElementById('d3-user-menu'), b = document.getElementById('d3-user-btn'); if(m) m.style.display = 'none'; if(b) b.setAttribute('aria-expanded','false'); }
 document.addEventListener('click', (e)=>{ const u = document.querySelector('#screen-dashboard .d3-user'); if(u && !u.contains(e.target)) closeUserMenu(); });
 function renderTrendLine(wrap, points){
+  // 2026-10-07 디자인 정리: 얇은 선 + 옅은 면, 실선 헤어라인 격자, 값은 처음·최근(·최고)만, 마우스를 올리면 그 회차 값 표시
   if(!wrap) return;
   if(!points || points.length < 2){ wrap.innerHTML = `<div class="d3-empty"><p class="d3-empty-title">${points && points.length === 1 ? '한 번 더 연습하면 그래프가 그려져요' : '2회 이상 연습하면 점수 추이가 표시돼요'}</p></div>`; return; }
-  const W = 560, H = 240, padL = 32, padR = 16, padT = 24, padB = 28, iw = W-padL-padR, ih = H-padT-padB, n = points.length;
+  const W = 560, H = 220, padL = 30, padR = 22, padT = 26, padB = 30, iw = W-padL-padR, ih = H-padT-padB, n = points.length;
   const x = i => padL + (iw*i)/(n-1), y = s => padT + ih*(1 - Math.max(0, Math.min(100, s))/100);
-  const ticks = [0,25,50,75,100];
-  const line = points.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(p.score).toFixed(1)}`).join(' ');
-  wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" class="d3-chart-svg" role="img" aria-label="회차별 점수 그래프">
-    ${ticks.map(t=>`<line x1="${padL}" x2="${W-padR}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}" stroke="${t===0?'#d3d0ca':'#e6e4e0'}" ${t===0?'':'stroke-dasharray="3 4"'} vector-effect="non-scaling-stroke"/><text x="${padL-8}" y="${(y(t)+4).toFixed(1)}" text-anchor="end" class="tk">${t}</text>`).join('')}
-    <path d="${line}" fill="none" stroke="#1c1c1e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-    ${points.map((p,i)=>{ const last = i===n-1; return `<g class="pt"><title>${p.dateShort} · ${escapeHtml(p.fieldName||'')} · ${p.score}점</title><circle cx="${x(i).toFixed(1)}" cy="${y(p.score).toFixed(1)}" r="${last?6:4.5}" fill="${last?'#e8532a':'#fff'}" stroke="${last?'#e8532a':'#1c1c1e'}" stroke-width="2" vector-effect="non-scaling-stroke"/><text x="${x(i).toFixed(1)}" y="${(y(p.score)-12).toFixed(1)}" text-anchor="middle" class="v${last?' last':''}">${p.score}</text><text x="${x(i).toFixed(1)}" y="${H-6}" text-anchor="middle" class="d${last?' last':''}">${p.dateShort.replace(/^0/,'').replace('.0','.').replace('.','/')}</text></g>`; }).join('')}
-  </svg>`;
+  const md = p => { const m = String(p.dateShort||'').match(/(\d{1,2})\.(\d{1,2})$/); return m ? `${Number(m[1])}/${Number(m[2])}` : String(p.dateShort||''); };
+  const ticks = [0, 25, 50, 75, 100];
+  const pts = points.map((p,i)=>[x(i), y(p.score)]);
+  const line = pts.map((q,i)=>`${i?'L':'M'}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(' ');
+  const area = `${line} L${pts[n-1][0].toFixed(1)},${y(0).toFixed(1)} L${pts[0][0].toFixed(1)},${y(0).toFixed(1)} Z`;
+  let best = 0; points.forEach((p,i)=>{ if(p.score > points[best].score) best = i; });
+  const labelIdx = new Set([0, n-1]); if(best !== n-1 && best !== 0) labelIdx.add(best);
+  const step = n <= 7 ? 1 : Math.ceil((n-1)/6);
+  const showDate = i => i === 0 || i === n-1 || (i % step === 0 && (n-1-i) >= step*0.6);
+  const colW = n > 1 ? iw/(n-1) : iw;
+  const uid = 'tl' + Math.random().toString(36).slice(2,8);
+  wrap.innerHTML = `<div class="tl-wrap" id="${uid}"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" class="d3-chart-svg tl-svg" role="img" aria-label="회차별 점수: ${points.map(p=>md(p)+' '+p.score+'점').join(', ')}">
+    <defs><linearGradient id="${uid}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c1e" stop-opacity=".09"/><stop offset="1" stop-color="#1c1c1e" stop-opacity="0"/></linearGradient></defs>
+    ${ticks.map(tk=>`<line x1="${padL}" x2="${W-padR}" y1="${y(tk).toFixed(1)}" y2="${y(tk).toFixed(1)}" class="tl-grid${tk===0?' base':''}"/><text x="${padL-8}" y="${(y(tk)+4).toFixed(1)}" text-anchor="end" class="tl-tk">${tk}</text>`).join('')}
+    <path d="${area}" fill="url(#${uid}g)"/>
+    <path d="${line}" class="tl-line"/>
+    <line class="tl-cross" x1="0" x2="0" y1="${padT}" y2="${y(0).toFixed(1)}" style="display:none"/>
+    ${pts.map((q,i)=>{ const last = i===n-1; return `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${last?5.5:4}" class="tl-dot${last?' last':''}"/>`; }).join('')}
+    ${[...labelIdx].map(i=>{ const last = i===n-1, isBest = i===best && !last && i!==0; const ax = i===0 ? 'start' : last ? 'end' : 'middle'; const dx = i===0 ? -4 : last ? 6 : 0;
+        return `<text x="${(pts[i][0]+dx).toFixed(1)}" y="${(pts[i][1]-12).toFixed(1)}" text-anchor="${ax}" class="tl-val${last?' last':''}">${points[i].score}${isBest?'<tspan class="tl-best"> 최고</tspan>':''}</text>`; }).join('')}
+    ${points.map((p,i)=>showDate(i) ? `<text x="${pts[i][0].toFixed(1)}" y="${H-8}" text-anchor="${i===0?'start':i===n-1?'end':'middle'}" class="tl-date${i===n-1?' last':''}">${md(p)}</text>` : '').join('')}
+    ${pts.map((q,i)=>`<rect x="${(q[0]-colW/2).toFixed(1)}" y="${padT-10}" width="${colW.toFixed(1)}" height="${ih+20}" fill="transparent" class="tl-hit" data-i="${i}"/>`).join('')}
+  </svg><div class="tl-tip" style="display:none"></div></div>`;
+  const box = wrap.querySelector('.tl-wrap'), svg = box.querySelector('svg'), tip = box.querySelector('.tl-tip'), cross = box.querySelector('.tl-cross');
+  const dots = box.querySelectorAll('.tl-dot');
+  const show = i => {
+    const p = points[i], q = pts[i], prev = i > 0 ? points[i-1].score : null, d = prev == null ? null : p.score - prev;
+    cross.setAttribute('x1', q[0]); cross.setAttribute('x2', q[0]); cross.style.display = '';
+    dots.forEach((el,k)=>el.classList.toggle('on', k===i));
+    tip.innerHTML = `<b>${p.score}점</b><span>${escapeHtml(md(p))}${p.fieldName ? ' · '+escapeHtml(p.fieldName) : ''}</span>${d!=null ? `<span class="tl-d">${d>0?'▲ +'+d:d<0?'▼ '+d:'변화 없음'} <em>지난 회차 대비</em></span>` : ''}`;
+    tip.style.display = '';
+    const r = svg.getBoundingClientRect(), bx = box.getBoundingClientRect();
+    const px = r.left - bx.left + q[0]/W*r.width, py = r.top - bx.top + q[1]/H*r.height;
+    const tw = tip.offsetWidth || 120;
+    tip.style.left = Math.max(0, Math.min(bx.width - tw, px - tw/2)) + 'px';
+    tip.style.top = Math.max(0, py - tip.offsetHeight - 14) + 'px';
+  };
+  const hide = ()=>{ tip.style.display = 'none'; cross.style.display = 'none'; dots.forEach(el=>el.classList.remove('on')); };
+  box.querySelectorAll('.tl-hit').forEach(el=>{ const i = Number(el.dataset.i); el.addEventListener('mouseenter', ()=>show(i)); el.addEventListener('click', ()=>show(i)); });
+  svg.addEventListener('mouseleave', hide);
 }
 
+
+/* ---------------- 내 실력 변화 (2026-10-07) ----------------
+ * 1) 실력 변화 창: 점수 흐름(최근 12회) · 항목별(6축) 처음 vs 최근 · 같은 질문을 다시 답한 기록
+ *    6축 점수는 interview_answers.feedback 끝의 "[리포트 B · 내용 70 · 구조 60 …]" "[전달력 80점]" 줄에서 읽음 (추가 DB 없음)
+ * 2) 결과 화면: 지난번에 받았던 같은 질문이면 "지난번 ○점 → 이번 ○점"과 지난 답변을 함께 보여 줌 */
+const Growth = {
+  AXES: ['content','structure','detail','length','attitude','delivery'],
+  parseAxes(fb){
+    const out = {}; if(!fb) return out;
+    const m = String(fb).match(/\[리포트 [^\]·]*·([^\]]+)\]/);
+    if(m){ Object.keys(Rubric.AXIS_LABELS).forEach(k=>{ if(k === 'delivery') return; const lbl = Rubric.AXIS_LABELS[k].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); const mm = m[1].match(new RegExp('(?:^|·)\\s*' + lbl + '\\s+(\\d{1,3})')); if(mm) out[k] = Number(mm[1]); }); }   // "태도·언어"처럼 이름에 ·가 있어 이름으로 찾음
+    const d = String(fb).match(/\[전달력 (\d{1,3})점\]([^\n]*)/);
+    if(d && !/측정하지 않았/.test(d[2]||'')) out.delivery = Number(d[1]);
+    return out;
+  },
+  answered(a){ return a && String(a.answer_text||'').replace(/\s/g,'').length >= 5; },
+  async answersFor(recordIds, qTexts){
+    if(!recordIds.length) return [];
+    let q = sb.from('interview_answers').select('record_id,question_text,answer_text,score,feedback,kind,question_index').in('record_id', recordIds);
+    if(qTexts && qTexts.length) q = q.in('question_text', qTexts);
+    const { data, error } = await q;
+    if(error){ console.warn('[실력 변화] 답변을 읽지 못함', error.message); return []; }
+    return data || [];
+  },
+  async annotateResult(){
+    const tok = (this._tok = (this._tok||0) + 1);
+    try{
+      if(state.demoResult || !state.currentUser || !sb) return;
+      const items = (state.interviewQuestions||[]).slice(0, state.currentQ);
+      const qTexts = [...new Set(items.filter(it=>it && !it.followup).map(it=>it.q))];
+      if(!qTexts.length) return;
+      const since = state.startTime ? new Date(state.startTime).toISOString() : new Date().toISOString();
+      const { data: recs, error } = await sb.from('interview_records').select('id,created_at').eq('user_id', state.currentUser.id).lt('created_at', since).order('created_at', {ascending:false}).limit(50);
+      if(error || !recs || !recs.length) return;
+      const when = {}; recs.forEach(r=>{ when[r.id] = r.created_at; });
+      const ans = (await this.answersFor(recs.map(r=>r.id).filter(id=>id !== state.savedRecordId), qTexts)).filter(a=>a.kind !== 'followup' && this.answered(a));
+      if(tok !== this._tok || document.querySelector('#result-bars .gr-sum, #result-bars .gr-prev')) return;   // 결과 화면이 다시 그려졌거나 이미 표시됨
+      let shown = 0, up = 0;
+      items.forEach((it, i)=>{
+        if(!it || it.followup) return;
+        const prev = ans.filter(a=>a.question_text === it.q).sort((a,b)=>new Date(when[b.record_id]) - new Date(when[a.record_id]));
+        if(!prev.length) return;
+        const p = prev[0], now = (state.answerScores||[])[i], hasNow = (state.answerTexts||[])[i] && now != null;
+        const diff = hasNow && p.score != null ? now - p.score : null;
+        if(diff != null && diff > 0) up++;
+        const grp = document.querySelector(`#result-bars .q-result-group[data-qi="${i}"]`); if(!grp) return;
+        const right = grp.querySelector('.q-head-right');
+        if(right && diff != null) right.insertAdjacentHTML('afterbegin', `<span class="gr-chip ${diff>0?'up':diff<0?'down':''}" title="지난번 같은 질문 ${p.score}점">${diff>0?'▲':diff<0?'▼':'='} ${diff>0?'+':''}${diff}</span>`);
+        const body = grp.querySelector('.q-body');
+        if(body) body.insertAdjacentHTML('afterbegin', `<div class="gr-prev"><div class="gr-prev-top"><b>지난번에도 받은 질문</b><span>${formatDateShort(when[p.record_id])} · ${p.score!=null?p.score+'점':'점수 없음'}${diff!=null?` → 이번 ${now}점 <i class="${diff>0?'up':diff<0?'down':''}">(${diff>0?'+':''}${diff})</i>`:''}${prev.length>1?` · 이 질문 ${prev.length+1}번째`:''}</span></div><details><summary>지난번 내 답변 보기</summary><p>${escapeHtml(p.answer_text||'')}</p></details></div>`);
+        shown++;
+      });
+      if(shown){
+        const wrap = document.getElementById('result-bars');
+        if(wrap) wrap.insertAdjacentHTML('afterbegin', `<div class="gr-sum"><b>지난번에도 받은 질문 ${shown}개</b>${up ? ` · 그중 ${up}개는 점수가 올랐어요` : ''} · 문항을 펼치면 지난 답변과 비교할 수 있어요</div>`);
+      }
+    }catch(e){ console.warn('[실력 변화] 결과 비교 실패', e); }
+  },
+};
+async function openGrowthView(field){
+  const all = (state.historyRecords || []).slice().sort((a,b)=>a.timestamp - b.timestamp);
+  const fields = [...new Set(all.map(h=>h.fieldId))];
+  if(field === undefined) field = (state.dashField && all.some(h=>h.fieldId===state.dashField)) ? state.dashField : (fields.length===1 ? fields[0] : '');
+  state.growthField = field;
+  const pool = field ? all.filter(h=>h.fieldId===field) : all;
+  const fname = field ? ((FIELDS.find(f=>f.id===field)||{}).name || '') : '전체 분야';
+  document.getElementById('record-modal-title').textContent = '내 실력 변화';
+  document.getElementById('record-modal-desc').textContent = `${fname} · 연습 ${pool.length}회`;
+  state.recordBackFn = null;
+  document.getElementById('record-back-btn').style.display = '';
+  const body = document.getElementById('record-modal-body');
+  document.getElementById('modal-record').classList.add('active');
+  const chips = fields.length > 1 ? `<div class="gr-fields">${[['','전체']].concat(fields.map(id=>[id, (FIELDS.find(f=>f.id===id)||{}).name || id])).map(([id,nm])=>`<button type="button" class="chip${id===field?' sel':''}" onclick="openGrowthView('${id}')">${escapeHtml(nm)}</button>`).join('')}</div>` : '';
+  if(pool.length < 2){ body.innerHTML = chips + '<div class="qa-empty">2회 이상 연습하면 실력 변화를 보여 드려요.</div>'; return; }
+  const recent = pool.slice(-12);
+  const first = pool[0], last = pool[pool.length-1], d = last.score - first.score;
+  const best = pool.reduce((m,h)=>h.score>m.score?h:m, pool[0]);
+  body.innerHTML = chips + `<div class="gr-head"><div><b>${first.score}점 → ${last.score}점</b><span class="${d>0?'up':d<0?'down':''}">${d>0?'+':''}${d}점</span></div><p>처음(${first.dateShort}) → 최근(${last.dateShort}) · 최고 ${best.score}점 (${best.dateShort})</p></div>
+    <div class="gr-chart" id="gr-chart"></div>
+    <div id="gr-more"><div class="qa-empty">항목별 변화를 계산하는 중…</div></div>`;
+  renderTrendLine(document.getElementById('gr-chart'), recent);
+  // 항목별 변화 + 같은 질문 다시 답한 기록
+  const ans = await Growth.answersFor(pool.map(h=>h.id));
+  if(state.growthField !== field) return;   // 그 사이 분야를 바꿨으면 무시
+  const order = {}; pool.forEach((h,i)=>{ order[h.id] = i; });
+  const perRec = {};
+  ans.forEach(a=>{ if(!Growth.answered(a)) return; const ax = Growth.parseAxes(a.feedback); const r = (perRec[a.record_id] = perRec[a.record_id] || {}); Object.entries(ax).forEach(([k,v])=>{ (r[k] = r[k] || []).push(v); }); });
+  const recAx = pool.map(h=>{ const r = perRec[h.id]; if(!r) return null; const o = {}; Object.entries(r).forEach(([k,arr])=>{ o[k] = arr.reduce((s,v)=>s+v,0)/arr.length; }); return o; }).filter(Boolean);
+  let axisHtml = '';
+  if(recAx.length >= 2){
+    const n = Math.min(3, Math.floor(recAx.length/2)) || 1;
+    const avgOf = (list,k)=>{ const v = list.map(o=>o[k]).filter(x=>x!=null); return v.length ? Math.round(v.reduce((s,x)=>s+x,0)/v.length) : null; };
+    const a0 = recAx.slice(0,n), a1 = recAx.slice(-n);
+    const rows = Growth.AXES.map(k=>({ k, label: Rubric.AXIS_LABELS[k], f: avgOf(a0,k), l: avgOf(a1,k) })).filter(r=>r.f!=null && r.l!=null);
+    const upMost = rows.slice().sort((x,y)=>(y.l-y.f)-(x.l-x.f))[0];
+    const weak = rows.slice().sort((x,y)=>x.l-y.l)[0];
+    axisHtml = `<div class="gr-sec"><h4>항목별 변화 <small>처음 ${n}회 평균 → 최근 ${n}회 평균</small></h4>
+      <div class="gr-legend"><span><i class="k f"></i>처음 ${n}회</span><span><i class="k l"></i>최근 ${n}회</span><span class="sc"><em>0</em><em>50</em><em>100</em></span></div>
+      <div class="gr-axes">${rows.map(r=>{ const dd = r.l - r.f, lo = Math.min(r.f, r.l), hi = Math.max(r.f, r.l); return `<div class="gr-ax" title="${escapeHtml(r.label)}: 처음 ${r.f}점 → 최근 ${r.l}점"><span class="nm">${escapeHtml(r.label)}</span><span class="db"><i class="tr"></i><i class="mid"></i><i class="seg ${dd>0?'up':dd<0?'down':''}" style="left:${lo}%;width:${hi-lo}%"></i><i class="pt f" style="left:${r.f}%"></i><i class="pt l" style="left:${r.l}%"></i></span><span class="num"><b>${r.l}</b><span class="gr-d ${dd>0?'up':dd<0?'down':''}">${dd>0?'+'+dd:dd<0?String(dd):'±0'}</span></span></div>`; }).join('')}</div>
+      <p class="gr-note">${upMost && upMost.l-upMost.f>0 ? `가장 많이 오른 항목은 <b>${escapeHtml(upMost.label)}</b>(+${upMost.l-upMost.f})이에요. ` : ''}${weak ? `지금 가장 낮은 항목은 <b>${escapeHtml(weak.label)}</b>(${weak.l}점)이라, 다음 연습에서 이 부분을 신경 써 보세요.` : ''}</p></div>`;
+  }else{
+    axisHtml = `<div class="gr-sec"><h4>항목별 변화</h4><p class="gr-note">답변이 있는 연습이 2회 이상 쌓이면 내용·구조·구체성 같은 항목별 변화도 보여 드려요.</p></div>`;
+  }
+  const byQ = {};
+  ans.forEach(a=>{ if(a.kind === 'followup' || !Growth.answered(a)) return; (byQ[a.question_text] = byQ[a.question_text] || []).push(a); });
+  const rep = Object.entries(byQ).filter(([,arr])=>arr.length >= 2).map(([q,arr])=>{ arr.sort((x,y)=>order[x.record_id]-order[y.record_id]); return { q, arr, lastIdx: order[arr[arr.length-1].record_id] }; }).sort((x,y)=>y.lastIdx - x.lastIdx).slice(0,8);
+  const repHtml = rep.length ? `<div class="gr-sec"><h4>같은 질문 다시 답한 기록 <small>${rep.length}개</small></h4>${rep.map(({q,arr})=>{ const f = arr[0], l = arr[arr.length-1], dd = (l.score||0) - (f.score||0); const fd = pool[order[f.record_id]], ld = pool[order[l.record_id]];
+      return `<details class="gr-q"><summary><span class="q">${escapeHtml(q)}</span><span class="s">${arr.length}번 · ${f.score}점 → ${l.score}점 <i class="gr-chip ${dd>0?'up':dd<0?'down':''}">${dd>0?'+':''}${dd}</i></span></summary>
+        <div class="gr-cmp"><div><b>처음 (${escapeHtml(fd ? fd.dateShort : '')} · ${f.score}점)</b><p>${escapeHtml(f.answer_text||'')}</p></div><div><b>최근 (${escapeHtml(ld ? ld.dateShort : '')} · ${l.score}점)</b><p>${escapeHtml(l.answer_text||'')}</p></div></div></details>`; }).join('')}</div>`
+    : `<div class="gr-sec"><h4>같은 질문 다시 답한 기록</h4><p class="gr-note">같은 질문을 두 번 이상 답하면 처음 답변과 최근 답변을 나란히 비교해 드려요. "보완이 필요한 질문" 다시 연습을 활용해 보세요.</p></div>`;
+  const more = document.getElementById('gr-more'); if(more) more.innerHTML = axisHtml + repHtml;
+}
 /* ---------------- 관리자 화면 (사이드바 메뉴) ---------------- */
 async function openAdminScreen(view){
   if(!state.currentUser || !state.currentUser.isAdmin){ showToast('관리자만 들어갈 수 있어요.'); return; }
@@ -8257,7 +8496,7 @@ function openAllHistory(){
   document.getElementById('record-modal-title').textContent = '전체 연습 기록';
   document.getElementById('record-modal-desc').textContent = `최근 ${list.length}회 · 기록을 클릭하면 답변과 피드백을 다시 볼 수 있어요.`;
   document.getElementById('record-back-btn').style.display = 'none';
-  document.getElementById('record-modal-body').innerHTML = list.length
+  document.getElementById('record-modal-body').innerHTML = (list.length >= 2 ? `<button type="button" class="gr-open" onclick="openGrowthView()"><b>내 실력 변화 보기</b><span>점수 흐름 · 항목별 변화 · 같은 질문 다시 답한 기록</span></button>` : '') + (list.length
     ? list.map(h=>`
         <div class="record-list-row" onclick="openRecordDetail('${h.id}', true)">
           <div>
@@ -8266,7 +8505,7 @@ function openAllHistory(){
           </div>
           <span class="score-pill ${h.score<75?'mid':''}">${h.score}점</span>
         </div>`).join('')
-    : '<div class="qa-empty">아직 연습 기록이 없어요.</div>';
+    : '<div class="qa-empty">아직 연습 기록이 없어요.</div>');
   document.getElementById('modal-record').classList.add('active');
 }
 
@@ -9158,9 +9397,13 @@ function isAccessExpired(user){ return !!(user && !user.isAdmin && accessInfo(us
 /** 날짜 입력 옆 빠른 선택: 오늘부터 n일 뒤 (n=null → 비움) */
 function setUntilQuick(inputId, days){
   const el = document.getElementById(inputId); if(!el) return;
-  if(days == null){ el.value = ''; return; }
-  const d = new Date(); d.setDate(d.getDate() + days); el.value = formatYmd(d);
+  if(days == null){ el.value = ''; }
+  else { const d = new Date(); d.setDate(d.getDate() + days); el.value = formatYmd(d); }
+  if(inputId === 'perm-until') permUntilTouched();
 }
+function setUntilDate(inputId, ymd){ const el = document.getElementById(inputId); if(!el) return; el.value = ymd; if(inputId === 'perm-until') permUntilTouched(); }
+/** 일괄 설정에서 날짜를 건드리면 "이용 기간은 바꾸지 않음"을 자동으로 해제 (예전엔 체크를 직접 풀어야 해서 날짜가 적용되지 않는 일이 있었음) */
+function permUntilTouched(){ if(state.bulkPermissionMode){ const k = document.getElementById('perm-until-keep'); if(k) k.checked = false; } }
 
 /* ---------------- 마이페이지 ---------------- */
 async function openMyPage(){
@@ -11359,7 +11602,7 @@ function renderResultBars(){
     const scoreTxt = rb && !rb.empty ? rb.total+'점' : (texts[i-1] ? content+'점' : '답변 없음');
     const typeTxt = rb && !rb.empty ? rb.typeLabel : '';
     rows += `
-      <div class="q-result-group${i===1?' open':''}">
+      <div class="q-result-group${i===1?' open':''}" data-qi="${i-1}">
         <button type="button" class="q-head" onclick="this.parentElement.classList.toggle('open')" aria-expanded="${i===1?'true':'false'}">
           <span class="q-num">Q${i}</span>
           <span class="q-title">${qLabel}</span>
@@ -11398,6 +11641,7 @@ function renderResultBars(){
   state.lastAverageScore = avg((state.answerScores||[]).filter(s=>s!=null));
   countUpEl(document.getElementById('rs-content'), state.lastAverageScore, '점');
   renderResultReport();
+  Growth.annotateResult();
   // trigger transition
   requestAnimationFrame(()=>{
     wrap.querySelectorAll('.bar-fill').forEach(el=>{ const w=el.style.width; el.style.width='0%'; requestAnimationFrame(()=>{el.style.width=w;}); });
@@ -11731,7 +11975,7 @@ async function renderAdmin(){
     const isActive = !u.is_admin && allowedFields.length > 0 && !acc.expired;
     const isPending = !u.is_admin && allowedFields.length === 0;
     const isExpiring = !u.is_admin && (acc.expired || (acc.until && acc.daysLeft <= 3));
-    return `<div class="admin-row" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    return `<div class="admin-row" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
@@ -13278,7 +13522,9 @@ function toggleUserSelect(userId, checked){
   if(allCb) allCb.checked = total>0 && state.selectedUserIds.size===total;
 }
 function toggleSelectAllUsers(checked){
-  if(checked) (state.adminUsers||[]).forEach(u=>state.selectedUserIds.add(u.id));
+  // 검색·필터로 보이는 사람만 (예: "권한 대기" 칩을 누르고 전체 선택 → 대기 중인 사람만)
+  const visible = [...document.querySelectorAll('#admin-list .admin-row[data-uid]')].filter(r=>r.style.display !== 'none' && r.dataset.admin !== '1').map(r=>r.dataset.uid);
+  if(checked) visible.forEach(id=>state.selectedUserIds.add(id));
   else state.selectedUserIds.clear();
   renderAdmin();
 }
@@ -13298,13 +13544,27 @@ function openBulkPermissionModal(){
   }
   state.bulkPermissionMode = true;
   state.editingUserId = null;
-  document.getElementById('perm-modal-title').textContent = `선택한 ${n}명에게 권한 일괄 부여`;
-  document.getElementById('perm-modal-desc').textContent = '여기서 체크한 분야가 선택된 모든 면접자에게 추가로 부여됩니다. 기존에 이미 가지고 있던 권한은 그대로 유지돼요.';
+  document.getElementById('perm-modal-title').textContent = `선택한 ${n}명 한 번에 설정`;
+  document.getElementById('perm-modal-desc').textContent = '체크한 분야는 모두에게 추가로 열리고(이미 열린 분야는 그대로), 이용 기간·준비 단계는 정한 경우에만 바뀌어요.';
   buildPermChecklist('perm-checklist', []);
   document.getElementById('perm-until').value = '';
   document.getElementById('perm-until-keep').checked = true;
   document.getElementById('perm-until-keep-row').style.display = '';
+  const names = [...state.selectedUserIds].map(id=>((state.adminUsers||[]).find(u=>u.id===id)||{}).name).filter(Boolean);
+  document.getElementById('perm-bulk-targets').innerHTML = `<b>대상 ${names.length}명</b> ${names.slice(0,12).map(nm=>`<span>${escapeHtml(nm)}</span>`).join('')}${names.length>12?` <em>외 ${names.length-12}명</em>`:''}`;
+  document.getElementById('perm-bulk-preset').style.display = '';
+  const ss = document.getElementById('perm-status');
+  ss.innerHTML = '<option value="">바꾸지 않음</option>' + USER_STATUSES.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+  ss.value = '';
+  document.getElementById('perm-status-row').style.display = '';
   document.getElementById('modal-permission').classList.add('active');
+}
+/** 국회 베타 기본값: 국회 속기사 분야 + 이용 기간 2026-10-30 + 준비 단계 "면접 예정" */
+function applyBetaPreset(){
+  const cb = document.querySelector('#perm-checklist input[value="assembly"]'); if(cb) cb.checked = true;
+  setUntilDate('perm-until', '2026-10-30');
+  const ss = document.getElementById('perm-status'); if(ss && USER_STATUSES.includes('면접 예정')) ss.value = '면접 예정';
+  showToast('국회 속기사 · 10/30까지 · 면접 예정으로 채웠어요. 확인하고 "권한 저장"을 누르세요.');
 }
 
 function buildPermChecklist(containerId, checkedIds){
@@ -13388,6 +13648,8 @@ function openPermissionModal(userId){
   buildPermChecklist('perm-checklist', user.allowed_fields || []);
   document.getElementById('perm-until').value = user.access_until ? String(user.access_until).slice(0,10) : '';
   document.getElementById('perm-until-keep-row').style.display = 'none';
+  document.getElementById('perm-bulk-preset').style.display = 'none';
+  document.getElementById('perm-status-row').style.display = 'none';
   document.getElementById('modal-permission').classList.add('active');
 }
 /** profiles 업데이트 — access_until 컬럼이 없으면(SQL 미적용) 그 항목만 빼고 다시 저장 */
@@ -13415,23 +13677,34 @@ function closePermissionModal(){
 async function savePermissions(){
   if(state.bulkPermissionMode){
     const fieldsToAdd = readPermChecklist('perm-checklist');
-    if(fieldsToAdd.length===0){
-      showToast('부여할 분야를 하나 이상 선택해 주세요');
+    const changeUntil = !document.getElementById('perm-until-keep').checked;
+    const newStatus = (document.getElementById('perm-status')||{}).value || '';
+    if(fieldsToAdd.length===0 && !changeUntil && !newStatus){
+      showToast('열어 줄 분야, 이용 기간, 준비 단계 중 하나 이상을 정해 주세요');
       return;
     }
+    const untilVal = document.getElementById('perm-until').value || null;
     const targetIds = [...state.selectedUserIds];
+    const parts = [];
+    if(fieldsToAdd.length) parts.push('분야 추가: ' + fieldsToAdd.map(id=>(FIELDS.find(f=>f.id===id)||{}).name||id).join(', '));
+    if(changeUntil) parts.push('이용 기간: ' + (untilVal ? untilVal + '까지' : '기한 없음'));
+    if(newStatus) parts.push('준비 단계: ' + newStatus);
+    if(!confirm(`선택한 ${targetIds.length}명에게 적용할까요?\n\n` + parts.join('\n'))) return;
+    let ok = 0; const failed = [];
     for(const id of targetIds){
       const user = (state.adminUsers||[]).find(u=>u.id===id);
       if(!user) continue;
-      const merged = [...new Set([...(user.allowed_fields||[]), ...fieldsToAdd])];
-      const patch = { allowed_fields: merged };
-      if(!document.getElementById('perm-until-keep').checked){ patch.access_until = document.getElementById('perm-until').value || null; }
+      const patch = {};
+      if(fieldsToAdd.length) patch.allowed_fields = [...new Set([...(user.allowed_fields||[]), ...fieldsToAdd])];
+      if(changeUntil) patch.access_until = untilVal;
+      if(newStatus) patch.status = newStatus;
       const error = await updateProfileWithUntil(id, patch);
-      if(error){ showToast(`${user.name}님 권한 저장 실패: `+error.message); }
+      if(error){ failed.push(user.name || id); console.warn('[일괄 설정 실패]', user.name, error.message); } else ok++;
     }
     closePermissionModal();
+    state.selectedUserIds.clear();
     await renderAdmin();
-    showToast(`${targetIds.length}명에게 권한이 일괄 부여되었습니다`);
+    showToast(failed.length ? `${ok}명 적용 · ${failed.length}명 실패 (${failed.slice(0,3).join(', ')}${failed.length>3?' 외':''})` : `${ok}명에게 한 번에 적용했어요`);
     return;
   }
   const user = (state.adminUsers||[]).find(u=>u.id===state.editingUserId);
