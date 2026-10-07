@@ -3407,7 +3407,7 @@
           <textarea id="tts-text" class="pipe-input" rows="2" style="width:100%;resize:vertical;">국회 상임위원회 회의 중 발언자가 겹칠 경우, 속기록 작성 순서를 어떻게 정리하시겠습니까? 조서와 녹취록의 차이도 함께 설명해 주십시오.</textarea>
           <div class="pipe-row" style="gap:12px;font-size:12.5px;color:var(--slate-600);margin-top:10px;">
             <label>목소리 <select id="tts-voice" class="voice-select" style="flex:0;width:auto;padding:4px 8px;">
-              <option value="onyx">onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option></select></label>
+              <option value="marin">marin (여성·자연스러움 · OpenAI 권장)</option><option value="cedar">cedar (남성·자연스러움 · OpenAI 권장)</option><option value="onyx">onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option><option value="ballad">ballad (남성·부드러움)</option><option value="verse">verse (남성·생기)</option></select></label>
             <label>모델 <select id="tts-model" class="voice-select" style="flex:0;width:auto;padding:4px 8px;" onchange="ttsModelChanged()">
               <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (말투 지시 가능)</option><option value="tts-1-hd">tts-1-hd (고음질, 지시 없음)</option><option value="tts-1">tts-1 (기본)</option></select></label>
             <label style="display:flex;align-items:center;gap:6px;">속도 <input type="range" id="tts-speed" min="0.7" max="1.2" step="0.05" value="0.9" oninput="document.getElementById('tts-speed-val').textContent=this.value"> <b id="tts-speed-val" style="font-family:var(--font-mono);">0.9</b></label>
@@ -3477,7 +3477,7 @@
             <label>목소리 <select id="loop-voice" class="voice-select" style="flex:0;width:auto;padding:4px 8px;" onchange="StenoVoice.provider=this.value">
               <option value="browser" selected>브라우저 음성 (무료)</option><option value="openai">OpenAI 음성 (키 필요)</option></select></label>
             <label id="loop-openai-voice-wrap" style="display:none;">OpenAI 목소리 <select id="loop-openai-voice" class="voice-select" style="flex:0;width:auto;padding:4px 8px;" onchange="StenoVoice.openaiVoice=this.value">
-              <option value="onyx" selected>onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option></select></label>
+              <option value="marin">marin (여성·자연스러움 · OpenAI 권장)</option><option value="cedar">cedar (남성·자연스러움 · OpenAI 권장)</option><option value="onyx" selected>onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option><option value="ballad">ballad (남성·부드러움)</option><option value="verse">verse (남성·생기)</option></select></label>
             <button class="btn btn-outline pipe-btn" style="padding:5px 10px;font-size:12px;" onclick="StenoVoice.speak('안녕하세요. 오늘 면접을 진행할 면접관입니다.')">목소리 미리 듣기</button>
           </div>
           <div class="loop-stage" id="loop-stage" style="display:none;">
@@ -9750,7 +9750,7 @@ const QTYPE_INFO = {
 const Rubric = {
   detectType(q){
     const s = q || '';
-    if(/(자기\s*소개|본인을 소개|간단히 소개|소개해)/.test(s)) return 'intro';
+    if(/(자기\s*소개(?!서)|본인을 소개|간단히 소개|소개해)/.test(s)) return 'intro'; // 2026-10-07: '자기소개서에 적은…' 질문은 자기소개로 보지 않음
     if(/(지원\s*동기|지원한 이유|왜 지원|지원하게 된|우리 기관|우리 회사|우리 (법원|의회|국회|검찰)|이 직무를 선택)/.test(s)) return 'motive';
     if(/(경험|해 본 적|했던|사례|겪었|극복|성취|실패|갈등을 해결한)/.test(s)) return 'experience';
     if(/(한다면|하시겠|어떻게 (대응|대처|하시|처리)|상황|생긴다면|발생하면|요구하면|지시하면|실수|충돌|갈등)/.test(s)) return 'situation';
@@ -11949,6 +11949,9 @@ const AiSwitch = {
       const { data, error } = await sb.from('app_settings').select('key,value');
       if(error) throw error;
       (data||[]).forEach(r=>{ if(r.key in this.settings) this.settings[r.key] = !!(r.value && r.value.enabled); if(r.key==='ai_limits' && r.value){ this.limits = { daily: Number(r.value.daily)||10, total: Number(r.value.total)||120 }; } });
+      // 2026-10-07: 관리자가 저장한 면접관 목소리를 모든 사람에게 똑같이 적용 (예전엔 관리자 브라우저에만 저장돼 수강생은 기본 onyx로 들림)
+      const tv = (data||[]).find(r=>r.key==='tts_voice');
+      if(tv && tv.value && tv.value.voice){ saveTtsSettings(Object.assign({}, TTS_DEFAULTS, tv.value)); if(typeof StenoVoice !== 'undefined') StenoVoice.applySettings(); }
       this.loaded = true;
     }catch(e){ console.warn('[AI 스위치 읽기 실패 → 기본값(꺼짐)] step6_voice_bank.sql 실행 여부 확인', e.message||e); }
   },
@@ -12444,7 +12447,7 @@ const DEFAULT_GREETING = { open:'안녕하세요. 오늘 면접을 진행할 면
  *   콜백(onEvent)으로 화면을 갱신하므로 실제 면접 화면(Step 5)에서도 그대로 재사용됩니다.
  * ============================================================ */
 /** 실전 모드 제한 시간: 자기소개 60초, 꼬리질문 60초, 그 외 답변 90초 */
-function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개/.test(qText||'') ? 60000 : 90000; }
+function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개(?!서)/.test(qText||'') ? 60000 : 90000; }
 const StenoLoop = {
   running:false, aborted:false, transcript:[], stats:{}, opt:{},
   async run(opt, onEvent){
@@ -12706,7 +12709,9 @@ function ttsSave(){
   const st = ttsReadUI();
   if(st.preset==='custom' && !st.custom){ showToast('직접 입력을 골랐다면 지시 문장을 적어 주세요'); return; }
   saveTtsSettings(st); StenoVoice.applySettings(st); ttsShowSaved();
-  showToast('저장했어요. 면접 화면과 질문 녹음에 이 목소리 설정이 쓰여요.');
+  // 모든 사용자에게 같은 목소리로 (꼬리질문 등 즉석 음성) — app_settings.tts_voice
+  sb.from('app_settings').upsert({ key:'tts_voice', value: st, updated_at: new Date().toISOString() })
+    .then(({ error })=>{ showToast(error ? '이 브라우저에는 저장했지만 공용 저장은 실패했어요: ' + error.message : '저장했어요. 모든 면접자의 면접 화면과 질문 녹음에 이 목소리 설정이 쓰여요.'); });
 }
 
 /* ---------------- 관리자: 질문 음성 녹음 (generate-audio 함수를 20개씩 반복 호출) ---------------- */
