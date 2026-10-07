@@ -2733,6 +2733,42 @@
   #modal-newpw .pw-rules span{font-size:11.5px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-3,#66666c);} #modal-newpw .pw-rules span.ok{background:#e7f3ec;color:#2f7a4a;} #modal-newpw .pw-rules span.bad{background:#fdecea;color:#b42318;}
   .au-pw-state{display:block;font-style:normal;font-size:12px;margin-top:6px;} .au-pw-state:empty{display:none;}
   .au-pw-state.wait{color:var(--c-warn,#8a5a00);} .au-pw-state.done{color:var(--c-ok,#2f7a4a);}
+  /* 베타 현황 */
+  .beta-head-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .beta-table{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:14px;overflow:hidden;}
+  .bt-row{display:grid;grid-template-columns:minmax(150px,1.4fr) 110px 1fr .9fr 1fr .9fr 1fr;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid var(--c-line,#e6e4e0);font-size:13.5px;color:var(--c-ink,#1c1c1e);cursor:pointer;}
+  .bt-row:hover{background:var(--c-surface,#f6f5f3);}
+  .bt-row.bt-head{border-top:0;background:var(--c-bg-2,#f6f6f3);font-size:12px;font-weight:600;color:var(--c-ink-3,#66666c);cursor:default;}
+  .bt-row.bt-head:hover{background:var(--c-bg-2,#f6f6f3);}
+  .bt-row small{display:block;font-size:12px;color:var(--c-ink-3,#66666c);margin-top:1px;}
+  .bt-name b{font-weight:600;} .bt-row .muted{color:var(--c-ink-3,#66666c);}
+  .bt-pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-2,#45454a);white-space:nowrap;}
+  .bt-pill.none{background:#fdecea;color:#b42318;} .bt-pill.idle{background:#fff4d6;color:#8a5a00;} .bt-pill.hot{background:#e7f3ec;color:#2f7a4a;} .bt-pill.exp{background:#eceae6;color:#66666c;}
+  .bt-bad{color:#b42318;font-weight:600;} .bt-warn-tag{font-size:11px;font-weight:600;padding:1px 6px;border-radius:6px;background:#fff4d6;color:#8a5a00;margin-left:4px;}
+  @media(max-width:900px){
+    .bt-row.bt-head{display:none;}
+    .bt-row{grid-template-columns:1fr auto;gap:6px 12px;}
+    .bt-row .bt-cell{grid-column:1 / -1;display:flex;gap:8px;align-items:baseline;} .bt-row .bt-cell::before{content:attr(data-l);font-size:12px;color:var(--c-ink-3,#66666c);min-width:72px;}
+    .bt-row .bt-cell small{display:inline;margin:0;}
+  }
+  /* 실전 모드 */
+  .opt-new{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--c-accent-soft,#fdf0eb);color:var(--c-accent-ink,#c2401b);vertical-align:1px;}
+  #rh3-timer.tl-warn{color:#b42318 !important;}
+  .tl-row{font-size:13px;line-height:1.5;padding:8px 12px;border-radius:8px;margin-bottom:10px;background:#e7f3ec;color:#2f7a4a;} .tl-row b{margin-right:8px;}
+  .tl-row.warn{background:#fff4d6;color:#8a5a00;} .tl-row.bad{background:#fdecea;color:#b42318;}
+  .tl-sum{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13.5px;color:var(--c-ink-2,#45454a);margin:0 0 10px;} .tl-sum b{color:var(--c-ink,#1c1c1e);}
+  .tl-badge{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--c-dark,#1f1f21);color:#fff;}
+  /* 내 답변 다시 듣기 */
+  .qanswer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .qanswer-head .qanswer-label{margin-bottom:0;}
+  .aa-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px 0 10px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:999px;background:#fff;color:var(--c-ink,#1c1c1e);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .aa-btn:hover{border-color:var(--c-accent,#e8532a);color:var(--c-accent-ink,#c2401b);}
+  .aa-btn .aa-ic{width:0;height:0;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;}
+  .aa-btn.on{background:var(--c-accent-soft,#fdf0eb);border-color:var(--c-accent,#e8532a);color:var(--c-accent-ink,#c2401b);}
+  .aa-btn.on .aa-ic{width:9px;height:9px;border:0;background:currentColor;border-radius:2px;margin-left:0;}
+  .aa-btn .aa-len{font-weight:500;color:var(--c-ink-3,#66666c);font-variant-numeric:tabular-nums;}
+  .aa-note{margin:0 0 10px;font-size:12.5px;color:var(--c-ink-3,#66666c);}
+  @media print{ .aa-btn, .aa-note{display:none !important;} }
   .mp-note{margin:10px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.5;}
   @media(max-width:560px){ .au-pw-head{flex-direction:column;} .pc-sec-body{margin-left:0;} .pc-foot{flex-direction:column;align-items:stretch;} }
 </style>
@@ -2920,6 +2956,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         현황 요약
       </button>
+      <button class="admin-menu-btn" data-view="beta" onclick="showAdminView('beta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        베타 현황
+      </button>
       <button class="admin-menu-btn" data-view="users" onclick="showAdminView('users')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5a5 5 0 0 1 6 5"/></svg>
         면접자 관리
@@ -2969,6 +3009,23 @@
       </div>
 
       <!-- 면접자 관리 -->
+      <!-- 베타 현황 (2026-10-07) -->
+      <div class="admin-view" id="admin-view-beta">
+        <div class="admin-view-head">
+          <div><h2>베타 현황</h2>
+          <p>베타테스터(관리자 제외)마다 마지막 접속, 연습 횟수, 점수, 오류·의견을 한 표로 봅니다. 아직 시작하지 않았거나 2일 이상 안 들어온 사람은 위로 올라와요. 이름을 누르면 면접자 상세가 열려요.</p></div>
+          <div class="beta-head-btns"><button class="btn-manage" onclick="copyBetaNudgeList()">독려 대상 연락처 복사</button><button class="btn-manage" onclick="loadBetaView(true)">새로 고침</button></div>
+        </div>
+        <div class="live-note" id="beta-note" style="display:none;"></div>
+        <div class="admin-stats beta-stats" id="beta-stats"></div>
+        <div class="admin-toolbar">
+          <div class="uf-chips" id="beta-chips"></div>
+          <input type="text" id="beta-search" class="admin-search" placeholder="이름, 휴대폰 번호로 검색" oninput="renderBetaView()">
+        </div>
+        <div class="beta-table" id="beta-table"></div>
+        <div class="uf-legend"><b>상태</b> <span class="bt-pill none">시작 안 함</span> 면접을 한 번도 안 함 · <span class="bt-pill idle">2일+ 미접속</span> 이틀 넘게 안 들어옴 · <span class="bt-pill hot">활발</span> 최근 2일 안에 연습 · <span class="bt-pill">보통</span> 그 외</div>
+      </div>
+
       <div class="admin-view" id="admin-view-users">
         <div class="admin-view-head">
           <div>
@@ -3549,7 +3606,7 @@
         </div>
 
         <div class="wave-panel">
-          <div class="rh3-ahead rh3-only"><span>내 답변</span><span class="rh3-timer-wrap">답변 시간 <b id="rh3-timer">00:00</b></span></div>
+          <div class="rh3-ahead rh3-only"><span>내 답변</span><span class="rh3-timer-wrap"><span id="rh3-timer-lbl">답변 시간</span> <b id="rh3-timer">00:00</b></span></div>
           <p class="lv3-ans-status lv3-only" id="lv3-ans-status">면접관이 연결되면 질문이 시작돼요.</p>
           <div class="wave-head"><span>실시간 음성 파형</span><span id="wave-state">답변 대기 중</span></div>
           <div class="wave-bars" id="wave-bars"></div>
@@ -3722,6 +3779,12 @@
             <div class="opt">
               <div class="opt-lbl">꼬리질문</div><div class="opt-sub">면접 전체에서 추가되는 꼬리질문의 최대 개수예요. 답변에 따라 실제 개수는 달라질 수 있어요.</div>
               <div class="chip-row" id="chip-followups"><button type="button" class="chip" data-val="0" onclick="selectChip(this,'followups')"><i class="ck">✓</i>없음</button><button type="button" class="chip sel" data-val="3" onclick="selectChip(this,'followups')"><i class="ck">✓</i>최대 3개</button><button type="button" class="chip" data-val="5" onclick="selectChip(this,'followups')"><i class="ck">✓</i>최대 5개</button></div>
+            </div>
+          </div>
+          <div id="setup-time-block" class="opt-pair">
+            <div class="opt">
+              <div class="opt-lbl">답변 시간 <span class="opt-new">실전 모드</span></div><div class="opt-sub">실전은 국회 면접처럼 자기소개 60초·답변 90초가 지나면 답변이 끊기고, 10초 동안 말이 없으면 다음 질문으로 넘어가요. 라이브 면접에 적용돼요.</div>
+              <div class="chip-row" id="chip-timed"><button type="button" class="chip sel" data-val="free" onclick="selectChip(this,'timed')"><i class="ck">✓</i>연습 (제한 없음)</button><button type="button" class="chip" data-val="real" onclick="selectChip(this,'timed')"><i class="ck">✓</i>실전 (시간 제한)</button></div>
             </div>
           </div>
         </div>
@@ -6722,6 +6785,7 @@ let state = {
   pendingGrades:[],
   interviewStyle:'classic',    // 'classic' 기본 연습 | 'dialog' AI 대화 면접
   dialogPressure:'normal',
+  timedMode:'free',   // 'real' = 실전 모드(자기소개 60초·답변 90초, 10초 침묵 시 다음 질문)
   dialogFollowups:3,   // 면접 전체 꼬리질문 최대 개수 (랜덤한 질문에 1개씩 배치, 2026-10-01)
   dialogTranscript:[],
   historyRecords:[],
@@ -6768,6 +6832,7 @@ function showToast(msg, kind){
   setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 260); }, 4000);
 }
 function showScreen(id){
+  try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
@@ -7036,6 +7101,7 @@ async function handleLogin(){
 }
 async function handleLogout(){
   state.resumeText = '';
+  try{ AnswerAudio.clear(); }catch(_){}
   if(accessWatchTimer){ clearInterval(accessWatchTimer); accessWatchTimer = null; }
   await Activity.log('logout'); await Activity.offline();
   stopLiveRefresh();
@@ -7296,6 +7362,7 @@ function showAdminView(view){
   if(view === 'feedback') loadFeedback();
   else { if(StenoLoop.running) StenoLoop.stop(); else if(StenoListener.active) StenoListener.stop('manual'); }
   if(view === 'live') startLiveRefresh(); else stopLiveRefresh();
+  if(view === 'beta') loadBetaView();
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
   document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active', b.dataset.view === view));
   window.scrollTo({top:0});
@@ -7932,7 +7999,7 @@ function updateSetupSummary(){
   const cam = (document.getElementById('switch-cam')||{}).checked ? '카메라 켬' : '카메라 끔';
   const hasResume = state.customQuestions && state.customQuestions.length;
   const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
-  parts.push(`진행 방식 ${pr}`, cam); if(hasResume) parts.push('서류 반영');
+  parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real') parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
   el.textContent = parts.join(' · ');
   const ms = document.getElementById('setup-ms-config'); if(ms) ms.textContent = isReview ? `복습 ${state.questionCount||0}개` : `질문 ${state.questionCount||5}개`;
 }
@@ -8109,6 +8176,85 @@ async function loadFeedback(force){
   renderFeedback();
   const badge = document.getElementById('fb-nav-badge');
   if(badge){ const n = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; }
+}
+/* ---------- 관리자 · 베타 현황 (2026-10-07) ----------
+   면접자(관리자 제외)별: 마지막 접속(activity_log login) · 연습 횟수(interview_records) · 평균/최근 점수 · 자동 오류/의견(feedback) · 이용 기간 */
+async function loadBetaView(force){
+  const note = document.getElementById('beta-note');
+  if(force){ try{ await renderAdmin(); }catch(_){} }
+  const since = new Date(Date.now() - 30*86400000).toISOString();
+  let logs = [], fb = [], miss = [];
+  try{ const r = await sb.from('activity_log').select('user_id,event,created_at').gte('created_at', since).order('created_at', {ascending:false}).limit(5000); if(r.error) throw r.error; logs = r.data || []; }catch(e){ miss.push('접속 기록'); }
+  try{ const r = await sb.from('feedback').select('user_id,auto,kind,status,created_at').limit(2000); if(r.error) throw r.error; fb = r.data || []; }catch(e){ miss.push('의견·오류'); }
+  state.betaLogs = logs; state.betaFb = fb;
+  if(note){ note.style.display = miss.length ? '' : 'none'; if(miss.length) note.textContent = miss.join('·') + ' 표를 읽지 못해 그 칸은 비어 있어요.'; }
+  renderBetaView();
+}
+function betaRows(){
+  const users = (state.adminUsers||[]).filter(u=>!u.is_admin);
+  const recs = state.adminRecordsByUser || {}; const logs = state.betaLogs || []; const fb = state.betaFb || [];
+  const now = Date.now(), DAY = 86400000;
+  const lastLogin = {}; logs.forEach(l=>{ if(l.event==='login' && !lastLogin[l.user_id]) lastLogin[l.user_id] = new Date(l.created_at).getTime(); });
+  return users.map(u=>{
+    const rs = (recs[u.id]||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    const n = rs.length, recent = rs.filter(r=>now - new Date(r.created_at).getTime() < 3*DAY).length;
+    const scores = rs.map(r=>r.score).filter(v=>v!=null);
+    const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+    const lastRec = rs[0] ? new Date(rs[0].created_at).getTime() : null;
+    const last = Math.max(lastLogin[u.id]||0, lastRec||0) || null;
+    const days = last ? Math.floor((now - last)/DAY) : null;
+    const mine = fb.filter(f=>f.user_id===u.id);
+    const errs = mine.filter(f=>f.auto).length, notes = mine.length - errs;
+    const acc = accessInfo(u.access_until);
+    const hasPerm = (u.allowed_fields||[]).length > 0;
+    let st = 'mid';
+    if(!n) st = 'none'; else if(days!=null && days >= 2) st = 'idle'; else if(lastRec && now - lastRec < 2*DAY) st = 'hot';
+    if(acc.expired) st = 'expired';
+    return { u, n, recent, avg, lastScore: rs[0] ? rs[0].score : null, last, days, errs, notes, acc, hasPerm, st };
+  });
+}
+function setBetaFilter(v){ state.betaFilter = v; renderBetaView(); }
+function renderBetaView(){
+  const all = betaRows(); const cur = state.betaFilter || 'all';
+  const q = normalizeSearch((document.getElementById('beta-search')||{}).value || '');
+  const today0 = new Date(); today0.setHours(0,0,0,0);
+  const todayPeople = all.filter(r=>((state.adminRecordsByUser||{})[r.u.id]||[]).some(x=>new Date(x.created_at) >= today0)).length;
+  const active = all.filter(r=>r.st!=='expired');
+  const cnt = k => active.filter(r=>r.st===k).length;
+  document.getElementById('beta-stats').innerHTML =
+      statTile(`${active.length}<i>명</i>`, '베타테스터', {foot:`이용 기간이 남은 면접자 · 권한 없는 사람 ${active.filter(r=>!r.hasPerm).length}명`})
+    + statTile(`${todayPeople}<i>명</i>`, '오늘 연습한 사람', {cls: todayPeople?'live':'', foot:`최근 3일 연습 ${active.reduce((s,r)=>s+r.recent,0)}회`})
+    + statTile(`${cnt('none')}<i>명</i>`, '아직 시작 안 함', {cls: cnt('none')?'warn':'', foot:'면접을 한 번도 안 한 사람'})
+    + statTile(`${cnt('idle')}<i>명</i>`, '2일 이상 미접속', {cls: cnt('idle')?'warn':'', foot:'연습은 했지만 이틀 넘게 안 들어옴'});
+  const defs = [['all','전체',all.length],['none','시작 안 함',cnt('none')],['idle','2일+ 미접속',cnt('idle')],['hot','활발',cnt('hot')],['expired','기간 끝남',all.filter(r=>r.st==='expired').length]];
+  document.getElementById('beta-chips').innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setBetaFilter('${v}')">${l} <b>${n}</b></button>`).join('');
+  const order = { none:0, idle:1, mid:2, hot:3, expired:4 };
+  const rows = all.filter(r=>cur==='all' || r.st===cur).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
+    .sort((a,b)=>(order[a.st]-order[b.st]) || ((b.days??999)-(a.days??999)) || (a.u.name||'').localeCompare(b.u.name||''));
+  const pill = { none:['none','시작 안 함'], idle:['idle','2일+ 미접속'], hot:['hot','활발'], mid:['','보통'], expired:['exp','기간 끝남'] };
+  const el = document.getElementById('beta-table');
+  if(!rows.length){ el.innerHTML = `<div class="qa-empty" style="margin:12px;">${all.length ? '조건에 맞는 사람이 없어요.' : '아직 면접자가 없어요.'}</div>`; return; }
+  el.innerHTML = `<div class="bt-row bt-head"><span>면접자</span><span>상태</span><span>마지막 접속</span><span>연습</span><span>점수</span><span>오류 · 의견</span><span>이용 기간</span></div>` + rows.map(r=>{
+    const [pc, pt] = pill[r.st];
+    const lastTxt = r.last ? (r.days===0 ? '오늘' : r.days+'일 전') + `<small>${formatDateShort(r.last)}</small>` : '<span class="muted">기록 없음</span>';
+    const accTxt = r.acc.until ? (r.acc.expired ? '<span class="bt-bad">끝남</span>' : `${r.acc.label}<small>${r.acc.daysLeft===0?'오늘까지':r.acc.daysLeft+'일 남음'}</small>`) : '<span class="muted">기한 없음</span>';
+    const perm = r.hasPerm ? '' : ' <span class="bt-warn-tag">권한 없음</span>';
+    return `<div class="bt-row" onclick="openAdminUserDetail('${r.u.id}')" title="누르면 면접자 상세가 열려요">
+      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${perm}${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
+      <span><span class="bt-pill ${pc}">${pt}</span></span>
+      <span class="bt-cell" data-l="마지막 접속">${lastTxt}</span>
+      <span class="bt-cell" data-l="연습"><b>${r.n}회</b><small>최근 3일 ${r.recent}회</small></span>
+      <span class="bt-cell" data-l="점수">${r.avg!=null ? `<b>평균 ${r.avg}점</b><small>최근 ${r.lastScore!=null?r.lastScore+'점':'–'}</small>` : '<span class="muted">–</span>'}</span>
+      <span class="bt-cell" data-l="오류 · 의견">${r.errs ? `<span class="bt-bad">오류 ${r.errs}</span>` : '<span class="muted">오류 0</span>'}<small>의견 ${r.notes}</small></span>
+      <span class="bt-cell" data-l="이용 기간">${accTxt}</span>
+    </div>`;
+  }).join('');
+}
+function copyBetaNudgeList(){
+  const list = betaRows().filter(r=>r.hasPerm && (r.st==='none' || r.st==='idle')).sort((a,b)=>(a.st===b.st?0:a.st==='none'?-1:1) || ((b.days??999)-(a.days??999)));
+  if(!list.length){ showToast('지금은 독려할 사람이 없어요. (권한이 없는 사람은 먼저 면접자 관리에서 권한을 열어 주세요)'); return; }
+  const text = list.map(r=>`${r.u.name||''}\t${r.u.phone||''}\t${r.st==='none' ? '아직 시작 안 함' : r.days+'일째 미접속'}`).join('\n');
+  copyText(text, `독려 대상 ${list.length}명의 이름·연락처를 복사했어요`);
 }
 // 관리자 공통 · 숫자 타일 (라벨 위 · 숫자 아래 · 범위/보조 설명)
 function statTile(num, lbl, o={}){ return `<div class="admin-stat${o.cls?' '+o.cls:''}${o.go?' link':''}"${o.go?` onclick="${o.go}" title="누르면 이동"`:''}><div class="lbl">${lbl}${o.scope?`<span class="scope">${o.scope}</span>`:''}</div><div class="num">${num}</div>${o.foot?`<div class="foot">${o.foot}</div>`:''}</div>`; }
@@ -8534,6 +8680,7 @@ function selectChip(el,type){
   if(type==='count') state.questionCount = parseInt(el.dataset.val);
   else if(type==='pressure') state.dialogPressure = el.dataset.val;
   else if(type==='followups') state.dialogFollowups = parseInt(el.dataset.val,10);
+  else if(type==='timed') state.timedMode = el.dataset.val === 'real' ? 'real' : 'free';
   else state.difficulty = el.dataset.val;
   updateDifficultyNote(); updateSetupSummary();
 }
@@ -9388,9 +9535,20 @@ function lv3Sync(){
   if(cls==='listening' && lv3.listenStart){ lv3.lastSec = Math.floor((Date.now()-lv3.listenStart)/1000); }
   if(cls==='speaking' && lv3.phase!=='speaking'){ lv3.lastSec = 0; lv3.listenStart = null; }
   lv3.phase = cls;
-  const tm = document.getElementById('rh3-timer'); if(tm) tm.textContent = String(Math.floor(lv3.lastSec/60)).padStart(2,'0')+':'+String(lv3.lastSec%60).padStart(2,'0');
-  // 파형: 90초 한도 대비 진행을 초록 칸으로
-  const bars = document.querySelectorAll('#wave-bars i'); if(bars.length){ const k = cls==='listening' ? Math.min(bars.length, Math.max(1, Math.round(lv3.lastSec/90*bars.length))) : 0; bars.forEach((b,idx)=>b.classList.toggle('on', idx < k)); }
+  const real = !!(state.dialogRealMode && StenoLoop.running);
+  const limSec = real ? Math.round((StenoLoop._curLimit||90000)/1000) : 90;
+  const tm = document.getElementById('rh3-timer'), tl = document.getElementById('rh3-timer-lbl');
+  if(real){
+    const left = cls==='listening' ? Math.max(0, limSec - lv3.lastSec) : limSec;
+    if(tm){ tm.textContent = String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0'); tm.classList.toggle('tl-warn', cls==='listening' && left<=10); }
+    if(tl) tl.textContent = '실전 · 남은 시간';
+    if(cls==='listening' && left===10 && lv3.warned10 !== lv3.listenStart){ lv3.warned10 = lv3.listenStart; showToast('10초 남았어요. 마무리해 주세요.'); }
+  }else{
+    if(tm){ tm.textContent = String(Math.floor(lv3.lastSec/60)).padStart(2,'0')+':'+String(lv3.lastSec%60).padStart(2,'0'); tm.classList.remove('tl-warn'); }
+    if(tl) tl.textContent = '답변 시간';
+  }
+  // 파형: 제한 시간(기본 90초) 대비 진행을 초록 칸으로
+  const bars = document.querySelectorAll('#wave-bars i'); if(bars.length){ const k = cls==='listening' ? Math.min(bars.length, Math.max(1, Math.round(lv3.lastSec/limSec*bars.length))) : 0; bars.forEach((b,idx)=>b.classList.toggle('on', idx < k)); }
   // 버튼·카메라 라벨
   const ml = document.getElementById('mic-label'); if(ml) ml.textContent = state.micOn ? '마이크' : '마이크 켜기';
   const ms = document.getElementById('rh3-mic-sub'); if(ms) ms.textContent = (state.micOn && cls==='listening') ? '듣는 중' : '';
@@ -9654,6 +9812,7 @@ function dialogPhase(cls, text){ const p=document.getElementById('dialog-phase')
   const li=document.getElementById('live-interviewer'); if(li){ li.classList.remove('speaking','listening','thinking'); if(cls) li.classList.add(cls); } const lt=document.getElementById('live-phase-text'); if(lt) lt.textContent=text;
   if(typeof Persona !== 'undefined') Persona.setState(cls); }
 function startDialogInterview(){
+  AnswerAudio.clear(); state.answerTimeLimit = null;
   closeSetup();
   state.interviewMode = 'dialog';
   state.currentQ = 0; state.answered = false; state.micOn = true; state.camOn = state.camPref !== false;
@@ -9762,8 +9921,10 @@ async function runDialogInterview(){
   let pendingAsk = null; // 지금 답변을 기다리는 질문
   const opt = {
     fieldId: state.selectedField.id, count: state.questionCount, maxFollowups: 1, followupTotal: state.dialogFollowups, diff: state.difficulty, pressure: state.dialogPressure,
-    silenceMs: 1800, maxAnswerMs: 90000,
+    silenceMs: 1800, maxAnswerMs: 90000, recordAnswers: true, realMode: state.timedMode === 'real',
   };
+  state.dialogRealMode = opt.realMode;
+  if(opt.realMode) showToast('실전 모드예요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말이 없으면 다음 질문으로 넘어가요.', 'info');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
   if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
   else if(state.customQuestions && state.customQuestions.length){ opt.extraQuestions = state.customQuestions.map(x=>Object.assign({}, x)); }
@@ -9782,13 +9943,17 @@ async function runDialogInterview(){
     else if(type==='listening'){ setDialogTypedUI(false); hideSttAlert(); dialogPhase('listening', '답변을 듣는 중 · 말씀하세요'); document.getElementById('wave-state').textContent='답변 인식 중'; updateListeningUI(true); startWaveAnim(); stopBtn.disabled = false; ta.value=''; updateCharCount(); }
     else if(type==='interim'){ ta.value = d.text; ta.scrollTop = ta.scrollHeight; updateCharCount(); }
     else if(type==='listen-typed'){ setDialogTypedUI(true, d.why, d.partial); }
-    else if(type==='skipped'){ hideSttAlert(); setDialogTypedUI(false); ta.value=''; updateCharCount(); showToast('답변 없이 다음 질문으로 넘어갑니다.'); }
+    else if(type==='skipped'){
+      hideSttAlert(); setDialogTypedUI(false); ta.value=''; updateCharCount(); showToast(d && d.realTimeout ? '10초 동안 답변이 없어 다음 질문으로 넘어가요.' : '답변 없이 다음 질문으로 넘어갑니다.');
+      if(d && d.realTimeout && pendingAsk){ pendingAsk.answer = ''; pendingAsk.endReason = 'silence'; pendingAsk.limitMs = StenoLoop._curLimit || null; asks.push(pendingAsk); pendingAsk = null; }
+    }
     else if(type==='listen-state'){ if(d.name==='silence') dialogPhase('listening', `말이 멈췄어요 · ${d.extra!=null?d.extra.toFixed(1):''}초 후 다음으로`); else if(d.name==='speaking') dialogPhase('listening','답변 인식 중…'); }
     else if(type==='answer'){
       updateListeningUI(false); stopWaveAnim(); stopBtn.disabled = true; hideSttAlert(); setDialogTypedUI(false);
       ta.value = d.text; updateCharCount();
       if(pendingAsk){
-        pendingAsk.answer = d.text; pendingAsk.durMs = d.durMs; pendingAsk.timing = d.timing || null; asks.push(pendingAsk); pendingAsk = null;
+        pendingAsk.answer = d.text; pendingAsk.durMs = d.durMs; pendingAsk.timing = d.timing || null; pendingAsk.audioParts = d.audioParts || [];
+        pendingAsk.endReason = d.reason || ''; pendingAsk.limitMs = d.limitMs || null; asks.push(pendingAsk); pendingAsk = null;
       }
     }
     else if(type==='thinking'){ dialogPhase('thinking', '면접관이 답변을 듣고 생각하는 중…'); document.getElementById('wave-state').textContent='꼬리질문 준비 중'; }
@@ -9861,11 +10026,19 @@ async function finishDialogInterview(asks, transcript){
   state.interviewQuestions = asks.map(a=>({ q: a.q, ref: a.ref, followup: !!a.followup, custom: !!a.custom, evaluation: a.evaluation||'' }));
   state.answerTexts = asks.map(a=>a.answer || '');
   state.answerScores = []; state.answerFeedback = []; state.answerDelivery = [];
+  state.answerTimeLimit = asks.map(a=>{
+    if(!a.limitMs) return null;
+    const t = a.timing; const used = t && t.listenStart ? Math.max(0, ((t.lastSpeech || t.endAt || Date.now()) - t.listenStart)) : 0;
+    return { limitMs: a.limitMs, usedMs: Math.min(used, a.limitMs), reason: a.endReason || '' };
+  });
+  if(!state.answerTimeLimit.some(Boolean)) state.answerTimeLimit = null;
+  await AnswerAudio.collect(asks);
   asks.forEach((a,i)=>{
     const analysis = analyzeAnswer(a.answer||'', a.ref);
     if(a.followup){ analysis.followup = true; analysis.evaluation = a.evaluation || ''; }
     state.answerScores[i] = analysis.score; state.answerFeedback[i] = analysis;
     state.answerDelivery[i] = computeDelivery(a.answer||'', a.timing, (a.timing && a.timing.endAt) || Date.now());
+    if(a.endReason==='silence' && state.answerDelivery[i]) state.answerDelivery[i].summary = '답변이 없어 전달력을 측정하지 않았어요.';
   });
   state.currentQ = asks.length;
   state.questionCount = asks.length;
@@ -10558,6 +10731,7 @@ function renderResultBars(){
           <span class="q-head-right">${typeTxt?`<span class="q-type-chip">${escapeHtml(typeTxt)}</span>`:''}<span class="q-grade ${gradeCls}">${gradeTxt}</span><span class="q-score">${scoreTxt}</span><svg class="q-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
         </button>
         <div class="q-body">
+        ${timeLimitHtml(i-1)}
         ${rubricHtml}
         <div class="bar-row">
           <div class="bar-top"><span>전달력</span><span>${d && d.measured ? d.score+'점' : '측정 안 됨'}</span></div>
@@ -10572,7 +10746,7 @@ function renderResultBars(){
           <p class="delivery-note">${escapeHtml(d.notes.join(' '))}</p>`
           : `<p class="delivery-note">${escapeHtml(d ? d.summary : '전달력을 측정할 음성 기록이 없어요.')}</p>`}
         <div class="qanswer">
-          <span class="qanswer-label">내 답변</span>
+          <div class="qanswer-head"><span class="qanswer-label">내 답변</span>${AnswerAudio.buttonHtml(i-1)}</div>
           <p>${answerText}</p>
         </div>
         <div class="qfeedback">
@@ -10582,7 +10756,8 @@ function renderResultBars(){
         </div>
       </div>`;
   }
-  wrap.innerHTML = rows;
+  AnswerAudio.stop();
+  wrap.innerHTML = timeLimitSummaryHtml() + (AnswerAudio.anyRecorded() ? '<p class="aa-note">"다시 듣기"로 내 답변 목소리를 들어볼 수 있어요. 녹음은 이 화면에서만 들을 수 있고 어디에도 저장되지 않아요.</p>' : '') + rows;
   const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
   document.getElementById('rs-pronun').textContent = deliveryList.length ? avg(deliveryList)+'점' : '–';
   state.lastAverageScore = avg((state.answerScores||[]).filter(s=>s!=null));
@@ -10593,6 +10768,69 @@ function renderResultBars(){
     wrap.querySelectorAll('.bar-fill').forEach(el=>{ const w=el.style.width; el.style.width='0%'; requestAnimationFrame(()=>{el.style.width=w;}); });
   });
 }
+/* ---------- 실전 모드 결과: 시간 준수 (2026-10-07) ---------- */
+function timeLimitInfo(i){ const a = state.answerTimeLimit; return a && a[i] ? a[i] : null; }
+function timeLimitHtml(i){
+  const t = timeLimitInfo(i); if(!t) return '';
+  const lim = Math.round(t.limitMs/1000), used = Math.round(t.usedMs/1000);
+  if(t.reason === 'silence') return `<div class="tl-row bad"><b>실전 시간</b>답변 없음 · 10초 동안 말이 없어 다음 질문으로 넘어갔어요</div>`;
+  if(t.reason === 'max') return `<div class="tl-row warn"><b>실전 시간</b>${lim}초를 모두 써서 답변이 끊겼어요 · 핵심부터 말하고 ${Math.round(lim*0.8)}초 안에 마무리해 보세요</div>`;
+  const short = used < lim*0.3;
+  return `<div class="tl-row ${short?'warn':'ok'}"><b>실전 시간</b>${used}초 / ${lim}초 · ${short ? '시간 안에 마쳤지만 너무 짧아요' : '시간 안에 마쳤어요'}</div>`;
+}
+function timeLimitSummaryHtml(){
+  const a = state.answerTimeLimit; if(!a) return '';
+  const list = a.filter(Boolean); if(!list.length) return '';
+  const ok = list.filter(t=>t.reason!=='max' && t.reason!=='silence').length;
+  const cut = list.filter(t=>t.reason==='max').length, none = list.filter(t=>t.reason==='silence').length;
+  return `<div class="tl-sum"><span class="tl-badge">실전 모드</span><b>시간 안에 마친 답변 ${ok} / ${list.length}개</b>${cut?` · 시간 초과로 끊김 ${cut}개`:''}${none?` · 답변 없음 ${none}개`:''}</div>`;
+}
+/* ---------- 내 답변 다시 듣기 (2026-10-07) ----------
+   라이브 면접 답변을 브라우저 메모리에만 녹음 → 결과 화면에서 문항별 재생.
+   서버로 보내지 않고 저장하지 않음(비용 0). 새 면접을 시작하거나 로그아웃하면 지워짐. */
+const AnswerAudio = {
+  items: [], audio: null, playing: -1, part: 0,
+  clear(){ this.stop(); this.items.forEach(it=>(it&&it.parts||[]).forEach(p=>{ try{ URL.revokeObjectURL(p.url); }catch(_){} })); this.items = []; },
+  async collect(asks){
+    this.clear();
+    const out = [];
+    for(let i=0;i<asks.length;i++){
+      const ps = (asks[i] && asks[i].audioParts) || [];
+      const got = [];
+      for(const pr of ps){
+        try{ const r = await Promise.race([Promise.resolve(pr), new Promise(res=>setTimeout(()=>res(null), 3000))]); if(r && r.blob && r.blob.size > 2000) got.push({ url: URL.createObjectURL(r.blob), ms: r.ms||0 }); }catch(_){}
+      }
+      out[i] = got.length ? { parts: got, ms: got.reduce((s,p)=>s+p.ms,0) } : null;
+    }
+    this.items = out;
+  },
+  has(i){ return !!(this.items[i] && this.items[i].parts.length); },
+  fmt(ms){ const s = Math.max(1, Math.round(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); },
+  buttonHtml(i){
+    if(!this.has(i)) return '';
+    return `<button type="button" class="aa-btn" id="aa-btn-${i}" onclick="event.stopPropagation(); AnswerAudio.toggle(${i})" aria-label="내 답변 다시 듣기"><span class="aa-ic" aria-hidden="true"></span><span class="aa-txt">다시 듣기</span><span class="aa-len">${this.fmt(this.items[i].ms)}</span></button>`;
+  },
+  toggle(i){ if(this.playing === i){ this.stop(); return; } this.play(i); },
+  play(i){
+    this.stop(); if(!this.has(i)) return;
+    this.playing = i; this.part = 0; this._ui(i, true); this._playPart();
+  },
+  _playPart(){
+    const it = this.items[this.playing]; if(!it){ this.stop(); return; }
+    const p = it.parts[this.part]; if(!p){ this.stop(); return; }
+    const a = new Audio(p.url); this.audio = a;
+    a.onended = ()=>{ if(this.audio !== a) return; this.part++; if(this.part < it.parts.length) this._playPart(); else this.stop(); };
+    a.onerror = ()=>{ if(this.audio !== a) return; showToast('이 브라우저에서는 녹음을 재생하지 못했어요.'); this.stop(); };
+    const pr = a.play(); if(pr && pr.catch) pr.catch(()=>{ if(this.audio === a){ showToast('재생을 시작하지 못했어요. 다시 눌러 주세요.'); this.stop(); } });
+  },
+  stop(){
+    if(this.audio){ try{ this.audio.onended = null; this.audio.pause(); }catch(_){} this.audio = null; }
+    if(this.playing >= 0) this._ui(this.playing, false);
+    this.playing = -1; this.part = 0;
+  },
+  _ui(i, on){ const b = document.getElementById('aa-btn-'+i); if(!b) return; b.classList.toggle('on', on); const t = b.querySelector('.aa-txt'); if(t) t.textContent = on ? '멈추기' : '다시 듣기'; },
+  anyRecorded(){ return this.items.some(Boolean); },
+};
 /* 6축 레이더 차트 (SVG, 외부 라이브러리 없음) */
 function radarSvg(avg){
   const keys = ['content','structure','detail','length','attitude','delivery'];
@@ -11256,6 +11494,7 @@ const StenoListener = {
       const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC();
       const src = this.ctx.createMediaStreamSource(this.stream); const an = this.ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
       const buf = new Uint8Array(an.fftSize);
+      if(this.opt.record) this._startRecording(this.stream);
       const loop = ()=>{
         if(!this.active) return;
         an.getByteTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++){ const v=(buf[i]-128)/128; sum+=v*v; }
@@ -11318,6 +11557,23 @@ const StenoListener = {
     }
   },
   _state(name, extra){ if(this.cb.onState) this.cb.onState(name, extra); },
+  /* 내 답변 다시 듣기 (2026-10-07): 같은 마이크 스트림을 브라우저 메모리에만 녹음. 서버로 보내거나 저장하지 않음 */
+  _startRecording(stream){
+    this._mr = null; this._recPromise = null;
+    try{
+      if(!window.MediaRecorder || !stream) return;
+      const types = ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];
+      const type = types.find(t=>{ try{ return MediaRecorder.isTypeSupported(t); }catch(_){ return false; } });
+      const mr = type ? new MediaRecorder(stream, { mimeType:type, audioBitsPerSecond:48000 }) : new MediaRecorder(stream);
+      const chunks = []; const t0 = Date.now();
+      mr.ondataavailable = e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+      this._recPromise = new Promise(res=>{
+        mr.onstop = ()=>{ const blob = chunks.length ? new Blob(chunks, { type: mr.mimeType || type || 'audio/webm' }) : null; res(blob ? { blob, ms: Date.now()-t0 } : null); };
+        mr.onerror = ()=>res(null);
+      });
+      mr.start(1000); this._mr = mr;
+    }catch(e){ console.warn('[StenoListener] 답변 녹음 불가', e); this._mr = null; this._recPromise = null; }
+  },
   _fail(msg){ Feedback.auto('음성 인식(라이브)', msg); if(this.cb.onError) this.cb.onError(msg); this.stop('error'); },
 
   stop(reason){
@@ -11326,13 +11582,15 @@ const StenoListener = {
     if(this.rec){ try{ this.rec.onend=null; this.rec.stop(); }catch(_){} this.rec=null; }
     if(this.raf) cancelAnimationFrame(this.raf); this.raf=null;
     if(this.timers.poll) clearInterval(this.timers.poll); this.timers={};
+    let audio = null;
+    if(this._mr){ try{ if(this._mr.state !== 'inactive') this._mr.stop(); audio = this._recPromise; }catch(_){ audio = null; } this._mr = null; this._recPromise = null; }
     if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); this.stream=null; }
     if(this.ctx){ try{ this.ctx.close(); }catch(_){} this.ctx=null; }
     const text = joinSpeech(this.transcript, this.interim);
     const durMs = this.firstSpeechAt ? Date.now()-this.firstSpeechAt : 0;
     const timing = { listenStart:this.startedAt, firstSpeech:this.firstSpeechAt||null, lastSpeech:Math.max(this.spokeAt, this.lastVoiceAt)||null, endAt:Date.now() };
     if(this.cb.onFinal) this.cb.onFinal(text);
-    if(this.cb.onEnd) this.cb.onEnd({ reason: reason||'manual', text, durMs, timing });
+    if(this.cb.onEnd) this.cb.onEnd({ reason: reason||'manual', text, durMs, timing, audioParts: audio ? [audio] : [] });
   },
 };
 
@@ -11547,6 +11805,8 @@ const DEFAULT_GREETING = { open:'안녕하세요. 오늘 면접을 진행할 면
  *   부품: StenoDialog.pickQuestions / StenoListener / StenoDialog.followup / StenoVoice
  *   콜백(onEvent)으로 화면을 갱신하므로 실제 면접 화면(Step 5)에서도 그대로 재사용됩니다.
  * ============================================================ */
+/** 실전 모드 제한 시간: 자기소개 60초, 꼬리질문 60초, 그 외 답변 90초 */
+function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개/.test(qText||'') ? 60000 : 90000; }
 const StenoLoop = {
   running:false, aborted:false, transcript:[], stats:{}, opt:{},
   async run(opt, onEvent){
@@ -11600,9 +11860,10 @@ const StenoLoop = {
           // 확인창 전에 인식됐던 부분 답변이 있으면 앞에 이어 붙임 (취소 후 다시 들은 내용과 합쳐 하나의 답변으로)
           const p = this._lastPartial; this._lastPartial = null;
           if(p && p.text){ r.text = (p.text + ' ' + (r.text||'')).trim(); if(p.timing && p.timing.firstSpeech && r.timing) r.timing.firstSpeech = p.timing.firstSpeech; }
+          if(p && p.audioParts && p.audioParts.length) r.audioParts = p.audioParts.concat(r.audioParts||[]);
           this._resumeListen=null; this._pendingListen=null; this._startListen=null; res(r);
         },
-      }, { silenceMs:this.opt.silenceMs, maxMs:this.opt.maxAnswerMs });
+      }, { silenceMs:this.opt.silenceMs, maxMs:(this._curLimit || this.opt.maxAnswerMs), noSpeechMs:(this.opt.realMode ? 10000 : undefined), record: !!this.opt.recordAnswers });
       this._startListen = startOnce;
       if(!this.micEnabled){ waitTyped('mic-off', ''); return; }   // 마이크를 꺼 둔 상태면 바로 직접 입력
       emit('listening');
@@ -11635,14 +11896,21 @@ const StenoLoop = {
         let history = [], lastAsk = q.q;
         const fuCap = fuPlan ? (fuPlan.has(qi) ? 1 : 0) : this.opt.maxFollowups;
         for(let f=0; f<=fuCap && !this.aborted; f++){
+          this._curLimit = this.opt.realMode ? realLimitMs(f===0 ? q.q : lastAsk, f>0) : this.opt.maxAnswerMs;
           const r = await listen();
           if(this.aborted){
             // 답변 도중 종료 → 지금까지 인식된 말이 있으면 답변으로 남겨 결과에 반영
             const partial = (r && r.text || '').trim();
-            if(partial){ this._log('candidate', partial); this.stats.answers++; emit('answer', {text:partial, reason:'aborted', durMs:r.durMs, timing:r.timing}); }
+            if(partial){ this._log('candidate', partial); this.stats.answers++; emit('answer', {text:partial, reason:'aborted', durMs:r.durMs, timing:r.timing, audioParts:r.audioParts||[]}); }
             break;
           }
           const answer = (r.text||'').trim();
+          if(!answer && this.opt.realMode && (r.reason==='no-speech' || r.reason==='max')){
+            // 실전 모드: 10초 동안 말이 없으면 다시 묻지 않고 다음 질문으로
+            this._log('candidate','(답변 없음 · 10초 침묵)'); emit('skipped', {realTimeout:true});
+            await say('답변이 없으시면 다음 질문으로 넘어가겠습니다.');
+            break;
+          }
           if(!answer){
             if(r.reason==='no-speech'){
               await say('답변이 들리지 않았습니다. 다시 한 번 말씀해 주시겠어요?');
@@ -11651,14 +11919,15 @@ const StenoLoop = {
               // 두 번 연속 들리지 않으면 마이크 문제일 수 있으니 직접 입력 기회를 줌 (비워 두고 제출하면 이 질문은 건너뜀)
               if(!(r2.text||'').trim() && r2.reason==='no-speech'){ r2 = await typedOnce('no-speech'); if(this.aborted) break; }
               if(!(r2.text||'').trim()){ this._log('candidate','(답변 없음)'); emit('skipped'); break; }
-              r.text = r2.text; r.reason = r2.reason; r.durMs = r2.durMs; r.timing = r2.timing;
+              r.text = r2.text; r.reason = r2.reason; r.durMs = r2.durMs; r.timing = r2.timing; r.audioParts = r2.audioParts || [];
             }
             else if(r.reason==='typed'){ this._log('candidate','(답변 없음)'); emit('skipped'); break; }   // 직접 입력에서 빈 채로 제출 = 건너뛰기
             else break;
           }
           const ans = (r.text||'').trim(); this._log('candidate', ans); this.stats.answers++;
-          emit('answer', {text:ans, reason:r.reason, durMs:r.durMs, timing:r.timing});
+          emit('answer', {text:ans, reason:r.reason, durMs:r.durMs, timing:r.timing, audioParts:r.audioParts||[], limitMs: this.opt.realMode ? this._curLimit : null});
           history.push({role:'candidate', text:ans});
+          if(this.opt.realMode && r.reason==='max' && !this.aborted) await say('네, 시간 관계상 여기까지 듣겠습니다.');
           if(f === fuCap) break;          // 이 질문의 꼬리질문 한도 → 다음 질문
           emit('thinking');
           const fu = await Promise.race([
