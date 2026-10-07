@@ -10916,7 +10916,7 @@ async function finishDialogInterview(asks, transcript){
     if(a.followup){ analysis.followup = true; analysis.evaluation = a.evaluation || ''; }
     state.answerScores[i] = analysis.score; state.answerFeedback[i] = analysis;
     state.answerDelivery[i] = computeDelivery(a.answer||'', a.timing, (a.timing && a.timing.endAt) || Date.now());
-    if(a.endReason==='silence' && state.answerDelivery[i]) state.answerDelivery[i].summary = '답변이 없어 전달력을 측정하지 않았어요.';
+    if(a.endReason==='silence' && !(state.answerDelivery[i] && state.answerDelivery[i].measured && String(a.answer||'').replace(/\s/g,'').length >= 5)) state.answerDelivery[i] = { measured:false, summary:'답변이 없어 전달력을 측정하지 않았어요.' };
   });
   state.currentQ = asks.length;
   state.questionCount = asks.length;
@@ -11036,6 +11036,11 @@ function computeDelivery(text, timing, endAt){
   const t = timing || {};
   if(!t.firstSpeech){
     return { measured:false, summary:'직접 입력한 답변이라 전달력은 측정되지 않았어요.' };
+  }
+  // 2026-10-07 수정: 소리(잡음)는 감지됐지만 알아들은 말이 거의 없으면 측정하지 않음
+  //   (예전엔 이 경우에도 measured=true로 82점 같은 점수가 붙어 리포트·실력 변화에 섞였음)
+  if((text||'').replace(/[\s.,!?~…·"'“”‘’()\-]/g,'').length < 5){
+    return { measured:false, summary:'답변이 거의 없어 전달력을 측정하지 않았어요.' };
   }
   const lastAt = t.lastSpeech ? t.lastSpeech + 500 : endAt;
   let durMs = Math.max(0, lastAt - t.firstSpeech);
