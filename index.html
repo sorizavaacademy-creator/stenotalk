@@ -2733,6 +2733,37 @@
   #modal-newpw .pw-rules span{font-size:11.5px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-3,#66666c);} #modal-newpw .pw-rules span.ok{background:#e7f3ec;color:#2f7a4a;} #modal-newpw .pw-rules span.bad{background:#fdecea;color:#b42318;}
   .au-pw-state{display:block;font-style:normal;font-size:12px;margin-top:6px;} .au-pw-state:empty{display:none;}
   .au-pw-state.wait{color:var(--c-warn,#8a5a00);} .au-pw-state.done{color:var(--c-ok,#2f7a4a);}
+  /* 안내 투어 */
+  .tour{position:fixed;inset:0;z-index:4000;}
+  .tour[hidden]{display:none;}
+  .tour-spot{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(20,20,22,.58);transition:all .25s ease;pointer-events:none;outline:2px solid #fff;outline-offset:0;}
+  .tour-card{position:fixed;width:min(360px, calc(100vw - 32px));background:#fff;border-radius:12px;padding:18px 18px 14px;color:#1c1c1e;font-family:inherit;transition:top .25s ease,left .25s ease;}
+  .tour-step{font-size:12px;font-weight:700;color:#c2401b;margin-bottom:4px;}
+  .tour-card h3{margin:0 0 6px;font-size:17px;font-weight:700;letter-spacing:-.01em;}
+  .tour-card p{margin:0;font-size:14px;line-height:1.6;color:#45454a;}
+  .tour-extra:empty{display:none;} .tour-extra{margin-top:10px;}
+  .tour-kakao{height:36px;padding:0 14px;border:0;border-radius:8px;background:#fee500;color:#191919;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .tour-foot{display:flex;align-items:center;gap:8px;margin-top:14px;}
+  .tour-skip{border:0;background:none;color:#66666c;font:inherit;font-size:13px;cursor:pointer;padding:6px 2px;text-decoration:underline;text-underline-offset:3px;}
+  .tour-dots{display:flex;gap:5px;margin-left:auto;} .tour-dots i{width:6px;height:6px;border-radius:50%;background:#d3d0ca;} .tour-dots i.on{background:#e8532a;width:16px;border-radius:3px;}
+  .tour-btn{height:36px;padding:0 16px;border-radius:8px;border:1px solid #c8441c;background:#c8441c;color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+  .tour-btn:hover{background:#ad3915;} .tour-btn.ghost{background:#fff;color:#1c1c1e;border-color:#d3d0ca;} .tour-btn.ghost:hover{background:#f6f5f3;}
+  body.tour-on #fb-fab{display:none;}
+  /* 오늘의 연습 */
+  #screen-dashboard.v3 .d3-today{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0 4px;padding:10px 14px;border:1px solid var(--c-line);border-radius:10px;background:#fff;font-size:13.5px;color:var(--c-ink-2);}
+  #screen-dashboard.v3 .d3-today .t-left{display:flex;align-items:center;gap:8px;flex:1;min-width:220px;flex-wrap:wrap;}
+  #screen-dashboard.v3 .d3-today .t-left b{color:var(--c-ink);font-weight:700;}
+  #screen-dashboard.v3 .d3-today .t-sub{color:var(--c-ink-3);font-size:12.5px;}
+  #screen-dashboard.v3 .d3-today .t-ic{width:20px;height:20px;border-radius:50%;border:2px solid var(--c-line-strong);display:inline-grid;place-items:center;flex:none;}
+  #screen-dashboard.v3 .d3-today .t-ic.ok{border:0;background:var(--c-ok);color:#fff;}
+  #screen-dashboard.v3 .d3-today .t-streak{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--c-accent-soft);color:var(--c-accent-ink);white-space:nowrap;} #screen-dashboard.v3 .d3-today .t-streak b{font-weight:800;}
+  #screen-dashboard.v3 .d3-today .t-week{display:flex;gap:6px;}
+  #screen-dashboard.v3 .d3-today .t-day{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:22px;}
+  #screen-dashboard.v3 .d3-today .t-day i{width:12px;height:12px;border-radius:50%;background:var(--c-line);}
+  #screen-dashboard.v3 .d3-today .t-day.on i{background:var(--c-ok);}
+  #screen-dashboard.v3 .d3-today .t-day.now i{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--c-ink-3);}
+  #screen-dashboard.v3 .d3-today .t-day em{font-style:normal;font-size:11px;color:var(--c-ink-3);}
+  #screen-dashboard.v3 .d3-today.done{border-color:#cfe5d7;background:#f4faf6;}
   /* 장치 선택 */
   body.v3-ui #modal-setup .dev-select-row{display:flex;align-items:center;gap:10px;margin:2px 0 0;font-size:13.5px;color:var(--c-ink-2);}
   body.v3-ui #modal-setup .dev-select-row > span{flex:none;}
@@ -2778,6 +2809,121 @@
   @media print{ .aa-btn, .aa-note{display:none !important;} }
   .mp-note{margin:10px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.5;}
   @media(max-width:560px){ .au-pw-head{flex-direction:column;} .pc-sec-body{margin-left:0;} .pc-foot{flex-direction:column;align-items:stretch;} }
+
+  /* ===== 결과 리포트 v3 (2026-10-07) — 새 디자인 톤 ===== */
+  #screen-result.v3{--c-bg:#fff;--c-surface:#f6f5f3;--c-line:#e6e4e0;--c-line-strong:#d3d0ca;--c-ink:#1c1c1e;--c-ink-2:#45454a;--c-ink-3:#66666c;--c-accent:#e8532a;--c-accent-btn:#c8441c;--c-accent-btn-hover:#ad3915;--c-accent-ink:#c2401b;--c-accent-soft:#fdf0eb;--c-dark:#1f1f21;--c-dark-ink-2:#b9b8b4;--c-ok:#2f7a4a;--c-ok-bg:#e7f3ec;--c-warn:#8a5a00;--c-warn-bg:#fff4d6;--c-danger:#b42318;--c-danger-bg:#fdecea;--r-card:12px;--r-ctrl:8px;--ease:cubic-bezier(.2,.7,.2,1);--dur:140ms;
+    background:#fff !important;color:var(--c-ink);font-family:'Pretendard Variable',Pretendard,var(--font-ui);min-height:100vh;}
+  #screen-result.v3 *{box-sizing:border-box;}
+  #screen-result.v3 .r3-actions{justify-self:end;display:flex;align-items:center;gap:8px;}
+  #screen-result.v3 .r3-btn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--c-line-strong);border-radius:8px;background:#fff;color:var(--c-ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+  #screen-result.v3 .r3-btn:hover{background:var(--c-surface);}
+  #screen-result.v3 .r3-actions .d3-avatar{margin-left:4px;}
+  #screen-result.v3 .r3-hdr .d3-hdr-inner{grid-template-columns:1fr auto !important;height:64px !important;padding-top:0 !important;}
+  #screen-result.v3 .qcard-source-badge.followup{background:var(--c-accent-soft) !important;color:var(--c-accent-ink) !important;border:0 !important;border-radius:6px !important;}
+  #screen-result.v3 .result-wrap{max-width:1160px !important;padding:28px clamp(16px,4vw,32px) 72px !important;}
+  /* 상단: 왼쪽 밝은 카드 + 오른쪽 검정 등급 카드 (대시보드와 같은 구성) */
+  #screen-result.v3 .result-hero{background:none !important;border:0 !important;box-shadow:none !important;padding:0 !important;border-radius:0 !important;grid-template-columns:1fr 260px !important;gap:16px !important;overflow:visible;margin-bottom:16px;}
+  #screen-result.v3 .result-hero-deco{display:none;}
+  #screen-result.v3 .result-hero-main{background:var(--c-surface);border-radius:var(--r-card);padding:28px;}
+  #screen-result.v3 .result-hero .badge{background:#fff !important;color:var(--c-ok) !important;border:1px solid #cfe5d7;border-radius:6px !important;font-size:12px !important;}
+  #screen-result.v3 .result-mode-chip{background:#fff !important;color:var(--c-ink-2) !important;border:1px solid var(--c-line-strong) !important;border-radius:6px !important;font-size:12px !important;}
+  #screen-result.v3 .result-hero h1{color:var(--c-ink) !important;font-size:28px !important;letter-spacing:-.02em;margin:14px 0 6px !important;}
+  #screen-result.v3 .result-meta{color:var(--c-ink-3) !important;font-size:13.5px !important;}
+  #screen-result.v3 .result-summary-line{background:#fff !important;color:var(--c-ink-2) !important;border:1px solid var(--c-line) !important;border-left:3px solid var(--c-ok) !important;border-radius:8px !important;}
+  #screen-result.v3 .result-summary-line.low{border-left-color:var(--c-warn) !important;color:var(--c-ink-2) !important;}
+  #screen-result.v3 .result-hero-grade{background:var(--c-dark) !important;box-shadow:none !important;border-radius:var(--r-card) !important;padding:24px 20px !important;align-items:flex-start !important;text-align:left !important;justify-content:space-between !important;}
+  #screen-result.v3 .rhg-label{color:#fff !important;font-size:14px !important;font-weight:700 !important;letter-spacing:0 !important;}
+  #screen-result.v3 .rhg-grade{font-family:inherit !important;font-size:72px !important;font-weight:800 !important;color:#fff !important;letter-spacing:-.03em;margin:4px 0 !important;}
+  #screen-result.v3 .rhg-grade.Ap,#screen-result.v3 .rhg-grade.A{color:#7fd4a0 !important;} #screen-result.v3 .rhg-grade.C{color:#f5c56b !important;} #screen-result.v3 .rhg-grade.D{color:#ff9a8a !important;}
+  #screen-result.v3 .rhg-score b{font-family:inherit !important;font-size:22px !important;color:#fff !important;}
+  #screen-result.v3 .rhg-score span{color:var(--c-dark-ink-2) !important;font-size:12.5px !important;}
+  #screen-result.v3 .save-banner{border-radius:8px;}
+  /* 숫자 타일 */
+  #screen-result.v3 .rstat{border:1px solid var(--c-line) !important;border-radius:var(--r-card) !important;box-shadow:none !important;padding:16px 18px !important;}
+  #screen-result.v3 .rstat .lbl{color:var(--c-ink-3) !important;font-size:12.5px !important;font-weight:600 !important;}
+  #screen-result.v3 .rstat .num{font-family:inherit !important;color:var(--c-ink) !important;font-size:22px !important;font-weight:800 !important;}
+  /* 패널 */
+  #screen-result.v3 .panel{border:1px solid var(--c-line) !important;border-radius:var(--r-card) !important;box-shadow:none !important;background:#fff;}
+  #screen-result.v3 .section-title{color:var(--c-ink) !important;font-size:17px !important;font-weight:700 !important;}
+  #screen-result.v3 .section-title:before{display:none !important;}
+  #screen-result.v3 .q-toggle-all{background:#fff !important;border:1px solid var(--c-line-strong) !important;color:var(--c-ink) !important;border-radius:8px !important;font-size:13px !important;height:32px;}
+  #screen-result.v3 .q-toggle-all:hover{background:var(--c-surface) !important;}
+  /* 종합 리포트 */
+  #screen-result.v3 .rp-radar-tile,#screen-result.v3 .rp-grade-tile{background:var(--c-surface) !important;border:0 !important;border-radius:var(--r-card) !important;}
+  #screen-result.v3 .rd-ring{stroke:#dcd9d3 !important;} #screen-result.v3 .rd-ring.outer{stroke:#c9c5be !important;} #screen-result.v3 .rd-spoke{stroke:#e6e4e0 !important;}
+  #screen-result.v3 .rd-area{fill:rgba(232,83,42,.14) !important;stroke:var(--c-accent) !important;}
+  #screen-result.v3 .rd-dot{stroke:var(--c-accent) !important;}
+  #screen-result.v3 .rd-label{fill:var(--c-ink-2) !important;} #screen-result.v3 .rd-val{fill:var(--c-accent-ink) !important;font-family:inherit !important;}
+  #screen-result.v3 .rp-grade,#screen-result.v3 .q-grade{font-family:inherit !important;font-weight:800 !important;color:var(--c-ink) !important;}
+  #screen-result.v3 .rp-grade.Ap,#screen-result.v3 .rp-grade.A,#screen-result.v3 .q-grade.Ap,#screen-result.v3 .q-grade.A{color:var(--c-ok) !important;}
+  #screen-result.v3 .rp-grade.C,#screen-result.v3 .q-grade.C{color:var(--c-warn) !important;} #screen-result.v3 .rp-grade.D,#screen-result.v3 .q-grade.D{color:var(--c-danger) !important;}
+  #screen-result.v3 .rp-label{color:var(--c-ink-2) !important;} #screen-result.v3 .rp-val{color:var(--c-ink) !important;font-family:inherit !important;}
+  #screen-result.v3 .rp-track,#screen-result.v3 .bar-track{background:#eceae6 !important;}
+  #screen-result.v3 .rp-fill,#screen-result.v3 .rp-fill.mid,#screen-result.v3 .bar-fill{background:var(--c-ink) !important;}
+  #screen-result.v3 .rp-fill.good{background:var(--c-ok) !important;} #screen-result.v3 .rp-fill.low{background:#d08a1a !important;}
+  #screen-result.v3 .rp-col{border-radius:var(--r-card) !important;}
+  #screen-result.v3 .rp-col.good{background:var(--c-ok-bg) !important;border:0 !important;} #screen-result.v3 .rp-col.good b{color:var(--c-ok) !important;}
+  #screen-result.v3 .rp-col.warn{background:var(--c-warn-bg) !important;border:0 !important;} #screen-result.v3 .rp-col.warn b{color:var(--c-warn) !important;}
+  #screen-result.v3 .rp-reco{background:var(--c-surface) !important;border:0 !important;border-radius:var(--r-card) !important;}
+  #screen-result.v3 .rp-reco b,#screen-result.v3 .rp-reco-list{color:var(--c-ink) !important;}
+  #screen-result.v3 .rp-grade-note{color:var(--c-ink-3) !important;}
+  /* 문항별 평가 */
+  #screen-result.v3 .q-result-group{border:1px solid var(--c-line) !important;border-radius:var(--r-card) !important;box-shadow:none !important;}
+  #screen-result.v3 .q-result-group.open{border-color:var(--c-line-strong) !important;box-shadow:none !important;}
+  #screen-result.v3 .q-head:hover{background:var(--c-surface) !important;}
+  #screen-result.v3 .q-num{background:var(--c-surface) !important;color:var(--c-ink) !important;font-family:inherit !important;border-radius:6px !important;}
+  #screen-result.v3 .q-title{color:var(--c-ink) !important;font-size:15px !important;}
+  #screen-result.v3 .q-type-chip{background:#fff !important;border:1px solid var(--c-line) !important;color:var(--c-ink-3) !important;border-radius:6px !important;}
+  #screen-result.v3 .q-score{color:var(--c-ink-2) !important;font-family:inherit !important;}
+  #screen-result.v3 .q-body{border-top-color:var(--c-line) !important;}
+  #screen-result.v3 .q-rubric{background:var(--c-surface) !important;border:0 !important;}
+  #screen-result.v3 .axis-chip{background:#fff !important;border:1px solid var(--c-line) !important;color:var(--c-ink) !important;border-radius:6px !important;}
+  #screen-result.v3 .axis-chip b{color:var(--c-ink-3) !important;} #screen-result.v3 .axis-chip i{color:var(--c-accent-ink) !important;}
+  #screen-result.v3 .axis-chip.good{border-color:#bfdcc9 !important;} #screen-result.v3 .axis-chip.low{border-color:#f0d9a6 !important;background:#fffaf0 !important;}
+  #screen-result.v3 .ck.ok{color:var(--c-ok) !important;} #screen-result.v3 .ck.no{color:var(--c-ink-3) !important;}
+  #screen-result.v3 .q-missing{color:var(--c-ink) !important;} #screen-result.v3 .q-missing b{color:var(--c-warn) !important;}
+  #screen-result.v3 .q-model summary{color:var(--c-accent-ink) !important;}
+  #screen-result.v3 .dchip{background:#fff !important;border:1px solid var(--c-line) !important;color:var(--c-ink-2) !important;border-radius:6px !important;}
+  #screen-result.v3 .dchip b{color:var(--c-ink-3) !important;}
+  #screen-result.v3 .dchip.warn{background:var(--c-warn-bg) !important;border-color:transparent !important;color:var(--c-warn) !important;} #screen-result.v3 .dchip.warn b{color:var(--c-warn) !important;}
+  #screen-result.v3 .delivery-note{color:var(--c-ink-2) !important;}
+  #screen-result.v3 .qanswer{border:1px solid var(--c-line) !important;border-radius:var(--r-card) !important;background:#fff !important;}
+  #screen-result.v3 .qanswer-label,#screen-result.v3 .qfeedback-label{background:var(--c-surface) !important;color:var(--c-ink) !important;border-radius:6px !important;}
+  #screen-result.v3 .qanswer p{color:var(--c-ink) !important;font-size:14px !important;}
+  #screen-result.v3 .qfeedback{background:var(--c-surface) !important;border:0 !important;border-radius:var(--r-card) !important;}
+  #screen-result.v3 .qfeedback p{color:var(--c-ink-2) !important;font-size:14px !important;}
+  #screen-result.v3 .q-rewrite{background:#fff !important;border:1px solid var(--c-line) !important;border-radius:8px !important;}
+  /* 하단 버튼 */
+  #screen-result.v3 .result-actions .btn{border-radius:8px !important;box-shadow:none !important;font-weight:700;}
+  #screen-result.v3 .btn-solid{background:var(--c-accent-btn) !important;border-color:var(--c-accent-btn) !important;color:#fff !important;box-shadow:none !important;}
+  #screen-result.v3 .btn-solid:hover{background:var(--c-accent-btn-hover) !important;}
+  #screen-result.v3 .btn-outline{background:#fff !important;border:1px solid var(--c-line-strong) !important;color:var(--c-ink) !important;}
+  #screen-result.v3 .btn-outline:hover{background:var(--c-surface) !important;}
+  @media(max-width:860px){ #screen-result.v3 .result-hero{grid-template-columns:1fr !important;} #screen-result.v3 .result-hero-grade{flex-direction:row !important;align-items:center !important;} #screen-result.v3 .rhg-grade{font-size:52px !important;} }
+  @media(max-width:560px){ #screen-result.v3 .d3-org{display:none;} #screen-result.v3 .r3-hdr .d3-hdr-inner{height:56px !important;} #screen-result.v3 .r3-btn span{display:none;} #screen-result.v3 .r3-btn{padding:0 10px;} #screen-result.v3 .result-hero-main{padding:22px;} #screen-result.v3 .result-hero h1{font-size:23px !important;} }
+  @media print{ #screen-result.v3 .result-hero{grid-template-columns:1fr 170px !important;gap:10px !important;} #screen-result.v3 .result-hero-grade{flex-direction:column !important;align-items:flex-start !important;padding:14px 16px !important;} #screen-result.v3 .rhg-grade{font-size:44px !important;} #screen-result.v3 .result-hero-main{padding:16px 18px !important;} #screen-result.v3 .r3-hdr{display:none !important;} #screen-result.v3 .result-hero-grade{-webkit-print-color-adjust:exact;print-color-adjust:exact;} #screen-result.v3 .result-hero-main{-webkit-print-color-adjust:exact;print-color-adjust:exact;} }
+
+  /* ===== 마이페이지·기록·회원가입 창 v3 (2026-10-07) ===== */
+  body.v3-ui .score-pill{background:var(--c-ok-bg) !important;color:var(--c-ok) !important;font-family:inherit !important;border-radius:6px !important;}
+  body.v3-ui .score-pill.mid{background:var(--c-warn-bg) !important;color:var(--c-warn) !important;}
+  body.v3-ui #modal-record .record-item, body.v3-ui .record-list-row{border-color:var(--c-line) !important;border-radius:12px !important;box-shadow:none !important;}
+  body.v3-ui .record-list-row:hover{background:var(--c-surface) !important;}
+  body.v3-ui .record-q{color:var(--c-ink) !important;}
+  body.v3-ui .record-a{background:var(--c-surface) !important;color:var(--c-ink-2) !important;border-radius:8px !important;}
+  body.v3-ui .record-a b{color:var(--c-ink) !important;}
+  body.v3-ui .record-fb{background:#fff !important;border:1px solid var(--c-line) !important;}
+  body.v3-ui .record-fb b{color:var(--c-accent-ink) !important;}
+  body.v3-ui .history-field{color:var(--c-ink) !important;} body.v3-ui .history-meta{color:var(--c-ink-3) !important;}
+  body.v3-ui #modal-mypage .mp-info{background:var(--c-surface) !important;border-color:transparent !important;border-radius:10px !important;}
+  body.v3-ui #modal-mypage .mp-resume{background:#fff !important;border:1px dashed var(--c-line-strong) !important;border-radius:10px !important;color:var(--c-ink-2) !important;}
+  body.v3-ui #modal-mypage .mp-info-lbl{color:var(--c-ink-3) !important;} body.v3-ui #modal-mypage .mp-info-val{color:var(--c-ink) !important;}
+  body.v3-ui .signup-head .brand-logo{background:var(--c-ink) !important;box-shadow:none !important;border-radius:10px !important;}
+  body.v3-ui .signup-step{background:var(--c-surface) !important;border:0 !important;border-radius:8px !important;color:var(--c-ink-2) !important;}
+  body.v3-ui .signup-step b{color:var(--c-accent-ink) !important;font-family:inherit !important;}
+  body.v3-ui .signup-login-link{color:var(--c-ink-3) !important;} body.v3-ui .signup-login-link a{color:var(--c-accent-ink) !important;}
+  body.v3-ui .pw-rules span{background:var(--c-surface);color:var(--c-ink-3);} body.v3-ui .pw-rules span.ok{background:var(--c-ok-bg);color:var(--c-ok);} body.v3-ui .pw-rules span.bad{background:var(--c-danger-bg);color:var(--c-danger);}
+  body.v3-ui .consent-row{background:var(--c-surface) !important;border-color:transparent !important;border-radius:8px !important;}
+  body.v3-ui .consent-row a{color:var(--c-accent-ink) !important;}
 </style>
 </head>
 <body>
@@ -2889,6 +3035,8 @@
         <div class="d3-menu" id="d3-user-menu" style="display:none;">
           <button onclick="closeUserMenu(); openMyPage()">마이페이지</button>
           <button onclick="closeUserMenu(); openAllHistory()">내 기록 전체</button>
+          <button onclick="closeUserMenu(); startTour(true)">사용 안내 다시 보기</button>
+          <button id="menu-kakao" style="display:none;" onclick="closeUserMenu(); openKakaoChannel()">카카오톡으로 문의</button>
           <button id="nav-admin-btn" onclick="closeUserMenu(); openAdminScreen()" style="display:none;">관리자 화면</button>
           <hr><button onclick="closeUserMenu(); handleLogout()">로그아웃</button>
         </div>
@@ -2903,6 +3051,7 @@
         <h1 id="hero-greeting">안녕하세요,<br>김속기 님.</h1>
         <p class="d3-lead" id="hero-sub">지원 분야를 선택하고 실전처럼 면접을 연습해보세요.</p>
         <div class="d3-banners"><div class="access-banner" id="access-banner" style="display:none;"></div><div class="access-banner quota" id="ai-quota-chip" style="display:none;" title="AI 즉석 꼬리질문·채점을 쓰는 라이브 면접 횟수예요. 한도가 차면 AI 없이 계속 연습할 수 있어요."></div></div>
+        <div class="d3-today" id="d3-today" style="display:none;"></div>
         <div class="d3-greet-actions">
           <button class="d3-btn d3-btn-primary" id="d3-start-btn" onclick="startSelectedField()"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7 5.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg><span id="d3-start-label">면접 시작</span></button>
           <span class="d3-hint" id="d3-start-hint">분야는 아래에서 바꿀 수 있어요</span>
@@ -3667,15 +3816,17 @@
 </section>
 
 <!-- ============ RESULT ============ -->
-<section id="screen-result" class="screen">
-  <nav class="topnav">
-    <span class="brand-mark nav-brand"><span class="nav-logo"><svg class="logo-mark" viewBox="0 0 24 24" fill="none"><path d="M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z" fill="#fff"/><path d="M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z" fill="#2F6FE0"/><path d="M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z" fill="#2F6FE0" opacity=".8"/></svg></span>StenoTalk<span class="bm-ai">AI</span></span>
-    <div class="nav-right">
-      <button class="btn-manage result-home-btn" onclick="goDashboard()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg><span>메인으로</span></button>
-      <button class="btn-manage result-print-btn" onclick="printReport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg><span>리포트 인쇄 · PDF 저장</span></button>
-      <div class="nav-user"><div class="nav-avatar">김</div><span>김속기 님</span></div>
+<section id="screen-result" class="screen v3">
+  <header class="d3-hdr r3-hdr">
+    <div class="d3-hdr-inner">
+      <a class="d3-brand" href="javascript:void(0)" onclick="goDashboard()"><span class="d3-logo"><i class="d3-dot"></i>StenoTalk</span><span class="d3-org">한국AI속기사협회</span></a>
+      <div class="r3-actions">
+        <button class="r3-btn" onclick="goDashboard()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 4l7 5.5V16a1 1 0 0 1-1 1h-3.5v-4.5h-5V17H4a1 1 0 0 1-1-1z"/></svg><span>메인으로</span></button>
+        <button class="r3-btn" onclick="printReport()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7V3h8v4M6 14H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M6 11h8v6H6z"/></svg><span>인쇄 · PDF</span></button>
+        <span class="d3-avatar" id="r3-avatar" title="">김</span>
+      </div>
     </div>
-  </nav>
+  </header>
   <div class="result-wrap">
     <div class="result-hero">
       <div class="result-hero-deco" aria-hidden="true"></div>
@@ -3851,6 +4002,23 @@
 </div>
 
 <!-- ============ 시작 전 점검 (로그인 전에도 열 수 있음) ============ -->
+<!-- 첫 로그인 안내 투어 (2026-10-07) -->
+<div class="tour" id="tour" role="dialog" aria-modal="true" aria-labelledby="tour-title" hidden>
+  <div class="tour-spot" id="tour-spot"></div>
+  <div class="tour-card" id="tour-card">
+    <div class="tour-step" id="tour-step">1 / 4</div>
+    <h3 id="tour-title"></h3>
+    <p id="tour-text"></p>
+    <div class="tour-extra" id="tour-extra"></div>
+    <div class="tour-foot">
+      <button type="button" class="tour-skip" onclick="endTour()">건너뛰기</button>
+      <span class="tour-dots" id="tour-dots"></span>
+      <button type="button" class="tour-btn ghost" id="tour-prev" onclick="tourGo(-1)">이전</button>
+      <button type="button" class="tour-btn" id="tour-next" onclick="tourGo(1)">다음</button>
+    </div>
+  </div>
+</div>
+
 <!-- 임시 비밀번호로 로그인했을 때: 새 비밀번호 한 번 정하기 (닫기 버튼 없음) -->
 <div class="modal-overlay" id="modal-newpw" role="dialog" aria-modal="true" aria-labelledby="np-title">
   <div class="modal-box np-box">
@@ -4264,6 +4432,8 @@
 <script>
 /* ---------------- Supabase 백엔드 연결 ---------------- */
 const SUPABASE_URL = 'https://aqkukxcjcbfxqfesmuva.supabase.co';
+/* 문의 창구: 카카오톡 채널 주소 (예: https://pf.kakao.com/_xxxxx/chat). 비워 두면 문의 버튼이 숨겨짐 */
+const KAKAO_CHANNEL_URL = 'https://pf.kakao.com/_gFdLxb';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxa3VreGNqY2JmeHFmZXNtdXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjQxNzYsImV4cCI6MjEwNTE0MDE3Nn0.KxsTHhUn8ofMNiGd5iTNgCAjcwBkresyUA7OlAmkc5A';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -6843,12 +7013,14 @@ function showToast(msg, kind){
 }
 function showScreen(id){
   try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
+  try{ if(id !== 'screen-dashboard' && typeof Tour !== 'undefined' && Tour.on){ Tour.on = false; const t = document.getElementById('tour'); if(t) t.hidden = true; document.body.classList.remove('tour-on'); } }catch(_){}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
-  document.body.classList.toggle('v3-ui', id === 'screen-login' || id === 'screen-dashboard' || id === 'screen-admin' || id === 'screen-practice' || (id === 'screen-interview' && (state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog')));
+  if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
+  document.body.classList.toggle('v3-ui', id === 'screen-login' || id === 'screen-dashboard' || id === 'screen-admin' || id === 'screen-practice' || id === 'screen-result' || (id === 'screen-interview' && (state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog')));
 }
 function svg(name){
   return `<svg class="ic-duo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
@@ -6938,7 +7110,7 @@ async function submitNewPw(){
     document.getElementById('modal-newpw').classList.remove('active');
     try{ Activity.log('password_changed'); }catch(_){}
     showToast('새 비밀번호로 바뀌었어요. 다음 로그인부터 이 비밀번호를 쓰세요.');
-    maybeOpenDemoFromUrl();
+    maybeOpenDemoFromUrl(); maybeStartTour();
   }catch(e){
     err.textContent = e.message || String(e);
   }finally{
@@ -7108,6 +7280,7 @@ async function handleLogin(){
   if(maybeForceNewPassword(profile, pw)) { startAccessWatch(); return; }
   maybeOpenDemoFromUrl();
   startAccessWatch();
+  maybeStartTour();
 }
 async function handleLogout(){
   state.resumeText = '';
@@ -7149,9 +7322,121 @@ async function tryRestoreSession(){
   startAccessWatch();
   if(maybeForceNewPassword(profile)) return;
   maybeOpenDemoFromUrl();
+  maybeStartTour();
 }
 
 /* ---------------- dashboard render ---------------- */
+/* ---------- 첫 로그인 안내 투어 (2026-10-07) ----------
+   수강생이 처음 로그인하면 대시보드에서 4단계로 화면을 짚어 줌. 본 사람은 이 브라우저에 기억(steno.tour.<id>).
+   사용자 메뉴 "사용 안내 다시 보기"로 언제든 다시 열 수 있음. */
+if(KAKAO_CHANNEL_URL){ const mk = document.getElementById('menu-kakao'); if(mk) mk.style.display = ''; }
+function openKakaoChannel(){ if(!KAKAO_CHANNEL_URL){ openFeedback(); return; } window.open(KAKAO_CHANNEL_URL, '_blank', 'noopener'); }
+const Tour = { i:0, steps:[], on:false };
+function tourSteps(){
+  const acc = accessInfo(state.currentUser && state.currentUser.accessUntil);
+  const until = acc.until && !acc.expired ? `이용 기간은 ${acc.label.slice(5).replace('-','월 ')}일까지예요. ` : '';
+  const kakao = KAKAO_CHANNEL_URL ? '<button type="button" class="tour-kakao" onclick="openKakaoChannel()">카카오톡 채널로 문의하기</button>' : '';
+  return [
+    { sel:'#field-grid', title:'1. 연습할 분야를 고르세요', text:'관리자가 열어 준 분야만 고를 수 있어요. 카드를 누르면 위쪽 시작 버튼이 그 분야로 바뀌어요.' },
+    { sel:'#d3-start-btn', title:'2. 면접 시작', text:'누르면 질문을 미리 볼 수 있는 화면으로 가요. "면접 준비실로 이동" → 마이크·카메라 확인 → 리허설 2문항 → 라이브 면접 순서로 진행돼요. 크롬이나 엣지에서 해 주세요.' },
+    { sel:'#d3-today', alt:'#d3-stats', title:'3. 하루 한 번', text:`하루 한 번 연습하면 초록 점이 채워지고 연속 일수가 늘어요. ${until}끝나면 결과 화면에서 내 답변을 다시 들어볼 수 있어요.` },
+    { sel:'#screen-dashboard .d3-nav', title:'4. 기록과 문의', text:'지난 결과는 "내 기록"에서 다시 볼 수 있어요. 마이크가 안 되거나 궁금한 점은 "의견 보내기"로 알려 주세요.' + (KAKAO_CHANNEL_URL ? ' 카카오톡 채널로 물어봐도 돼요.' : '') + ' 이 안내는 오른쪽 위 이름 메뉴에서 다시 볼 수 있어요.', extra: kakao },
+  ];
+}
+function tourKey(){ return 'steno.tour.' + ((state.currentUser && state.currentUser.id) || 'anon'); }
+function maybeStartTour(){
+  try{
+    if(!state.currentUser || state.currentUser.isAdmin) return;
+    const scr = document.querySelector('.screen.active'); if(!scr || scr.id !== 'screen-dashboard') return;
+    if(document.querySelector('.modal-overlay.active')) return;
+    let seen = null; try{ seen = localStorage.getItem(tourKey()); }catch(_){}
+    if(seen) return;
+    setTimeout(()=>{
+      const sc = document.querySelector('.screen.active');
+      if(!state.currentUser || state.currentUser.isAdmin || !sc || sc.id !== 'screen-dashboard' || document.querySelector('.modal-overlay.active')) return;
+      let s2 = null; try{ s2 = localStorage.getItem(tourKey()); }catch(_){}
+      if(!s2) startTour(false);
+    }, 700);
+  }catch(_){}
+}
+function startTour(manual){
+  if(document.querySelector('.modal-overlay.active') && !manual) return;
+  const scr = document.querySelector('.screen.active');
+  if(!scr || scr.id !== 'screen-dashboard'){ goDashboard(); setTimeout(()=>startTour(manual), 500); return; }
+  Tour.steps = tourSteps(); Tour.i = 0; Tour.on = true;
+  const el = document.getElementById('tour'); el.hidden = false; document.body.classList.add('tour-on');
+  tourRender();
+}
+function tourTarget(st){ let t = document.querySelector(st.sel); if((!t || !t.offsetParent) && st.alt) t = document.querySelector(st.alt); return (t && t.offsetParent) ? t : null; }
+function tourRender(){
+  if(!Tour.on) return;
+  const st = Tour.steps[Tour.i]; const n = Tour.steps.length;
+  document.getElementById('tour-step').textContent = `${Tour.i+1} / ${n}`;
+  document.getElementById('tour-title').textContent = st.title.replace(/^\d+\.\s*/, '');
+  document.getElementById('tour-text').textContent = st.text;
+  document.getElementById('tour-extra').innerHTML = st.extra || '';
+  document.getElementById('tour-prev').style.visibility = Tour.i ? '' : 'hidden';
+  document.getElementById('tour-next').textContent = Tour.i === n-1 ? '시작하기' : '다음';
+  document.getElementById('tour-dots').innerHTML = Tour.steps.map((_,k)=>`<i class="${k===Tour.i?'on':''}"></i>`).join('');
+  const t = tourTarget(st);
+  if(t){ t.scrollIntoView({ block:'center' }); }
+  requestAnimationFrame(()=>tourPlace(t));
+}
+function tourPlace(t){
+  const spot = document.getElementById('tour-spot'), card = document.getElementById('tour-card');
+  const vw = window.innerWidth, vh = window.innerHeight, pad = 8;
+  if(!t){ spot.style.cssText = 'left:50%;top:50%;width:0;height:0;'; card.style.left = Math.max(16,(vw-card.offsetWidth)/2)+'px'; card.style.top = Math.max(16,(vh-card.offsetHeight)/2)+'px'; return; }
+  const r = t.getBoundingClientRect();
+  const top = Math.max(4, r.top - pad), left = Math.max(4, r.left - pad);
+  const w = Math.min(vw - left - 4, r.width + pad*2), h = Math.min(vh - top - 4, r.height + pad*2);
+  spot.style.cssText = `left:${left}px;top:${top}px;width:${w}px;height:${h}px;`;
+  const cw = card.offsetWidth, ch = card.offsetHeight;
+  let cx = Math.min(Math.max(16, r.left), vw - cw - 16);
+  let cy = top + h + 12;
+  if(cy + ch > vh - 12) cy = top - ch - 12;
+  if(cy < 12) cy = Math.min(vh - ch - 12, Math.max(12, top + 12));
+  card.style.left = cx+'px'; card.style.top = cy+'px';
+}
+function tourGo(d){
+  const ni = Tour.i + d;
+  if(ni >= Tour.steps.length){ endTour(true); return; }
+  if(ni < 0) return;
+  Tour.i = ni; tourRender();
+}
+function endTour(done){
+  Tour.on = false;
+  const el = document.getElementById('tour'); if(el) el.hidden = true; document.body.classList.remove('tour-on');
+  try{ localStorage.setItem(tourKey(), new Date().toISOString()); }catch(_){}
+  if(done) showToast('준비됐어요. 분야를 고르고 면접을 시작해 보세요.');
+}
+window.addEventListener('resize', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); });
+window.addEventListener('scroll', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); }, { passive:true });
+document.addEventListener('keydown', (e)=>{ if(!Tour.on) return; if(e.key==='Escape') endTour(); else if(e.key==='ArrowRight' || e.key==='Enter') tourGo(1); else if(e.key==='ArrowLeft') tourGo(-1); });
+/* ---------- 매일 연습 유도 (2026-10-07): 오늘 연습 여부 · 연속 일수 · 최근 7일 ---------- */
+function practiceStreak(history){
+  const key = d=>{ const x = new Date(d); return x.getFullYear()+'-'+(x.getMonth()+1)+'-'+x.getDate(); };
+  const days = new Set((history||[]).map(r=>key(r.timestamp)));
+  const today = new Date(); today.setHours(0,0,0,0);
+  const doneToday = days.has(key(today));
+  let streak = 0; const d = new Date(today); if(!doneToday) d.setDate(d.getDate()-1);
+  while(days.has(key(d))){ streak++; d.setDate(d.getDate()-1); }
+  const week = []; for(let i=6;i>=0;i--){ const x = new Date(today); x.setDate(x.getDate()-i); week.push({ d:x, done: days.has(key(x)), today: i===0 }); }
+  const todayCount = (history||[]).filter(r=>key(r.timestamp)===key(today)).length;
+  return { doneToday, streak, week, todayCount };
+}
+function renderTodayStrip(history, hide){
+  const el = document.getElementById('d3-today'); if(!el) return;
+  if(hide){ el.style.display = 'none'; return; }
+  const s = practiceStreak(history); const wd = ['일','월','화','수','목','금','토'];
+  const head = s.doneToday
+    ? `<span class="t-ic ok" aria-hidden="true"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3L15 6.5"/></svg></span><b>오늘 연습 완료</b><span class="t-sub">${s.todayCount}회 했어요</span>`
+    : `<span class="t-ic" aria-hidden="true"></span><b>오늘은 아직 연습 전이에요</b><span class="t-sub">${s.streak ? `오늘 하면 ${s.streak+1}일 연속이에요` : '하루 한 번, 짧게라도 해 보세요'}</span>`;
+  const streak = s.streak ? `<span class="t-streak"><b>${s.streak}일</b> 연속</span>` : '';
+  const dots = s.week.map(w=>`<span class="t-day${w.done?' on':''}${w.today?' now':''}" title="${w.d.getMonth()+1}/${w.d.getDate()} ${w.done?'연습함':'안 함'}"><i></i><em>${w.today?'오늘':wd[w.d.getDay()]}</em></span>`).join('');
+  el.innerHTML = `<div class="t-left">${head}</div>${streak}<div class="t-week" aria-label="최근 7일 연습">${dots}</div>`;
+  el.className = 'd3-today' + (s.doneToday ? ' done' : '');
+  el.style.display = '';
+}
 async function renderDashboard(){
   const isAdmin = !!(state.currentUser && state.currentUser.isAdmin);
   const allowed = (state.currentUser && state.currentUser.allowed) || [];
@@ -7220,6 +7505,7 @@ async function renderDashboard(){
     else { startBtn.disabled = false; startLbl.textContent = `${selField.name} 면접 시작`; startHint.textContent = allowedIds.length > 1 ? '분야는 아래에서 바꿀 수 있어요' : '리허설 2문항 → 라이브 면접 순서로 진행돼요'; }
   }
 
+  renderTodayStrip(history, isAdmin || expired);
   // 기록 카드 (검정)
   const statsEl = document.getElementById('d3-stats');
   if(statsEl){
