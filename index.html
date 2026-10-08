@@ -8907,6 +8907,7 @@ function openSetup(fieldId){
   document.getElementById('modal-setup').classList.add('active');
   updateDifficultyNote();
   renderVoiceSelect(); renderPrimaryVoice();
+  { const vp = document.getElementById('voice-primary'); if(vp) vp.style.display = isAdmin ? '' : 'none'; }   // 면접관 목소리 정보는 관리자에게만 (2026-10-08)
   document.getElementById('resume-file').value = '';
   document.getElementById('resume-drop-label').textContent = 'PDF 파일을 여기로 끌어다 놓거나 클릭해서 올려주세요';
   const statusEl = document.getElementById('resume-status');
