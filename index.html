@@ -2792,6 +2792,43 @@
   /* 실전 모드 */
   .opt-new{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--c-accent-soft,#fdf0eb);color:var(--c-accent-ink,#c2401b);vertical-align:1px;}
   #rh3-timer.tl-warn{color:#b42318 !important;}
+  /* 국회 실전 세트 (2026-10-08) */
+  .realset-steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px;counter-reset:rs;}
+  .realset-steps li{counter-increment:rs;font-size:12.5px;line-height:1;padding:7px 10px 7px 8px;border:1px solid var(--c-line,#e6e4e0);border-radius:999px;background:#fff;color:var(--c-ink-2,#3a3a3f);display:inline-flex;align-items:center;gap:6px;}
+  .realset-steps li::before{content:counter(rs);display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--c-surface,#f6f5f3);font-size:11px;font-weight:700;color:var(--c-ink-3,#66666c);}
+  .realset-steps li.doc{border-color:#f3c9b8;background:#fdf6f2;}
+  #chip-timed .chip.locked{opacity:.45;pointer-events:none;}
+  /* 1분 자기소개 코치 (2026-10-08) */
+  .d3-btn-ghost{background:#fff;border-color:var(--c-line,#e6e4e0);color:var(--c-ink,#1c1c1e);} .d3-btn-ghost:hover{background:var(--c-surface,#f6f5f3);}
+  .coach-box{max-width:720px;}
+  .coach-sec{padding:4px 0 22px;border-bottom:1px solid var(--c-line,#e6e4e0);margin-bottom:20px;} .coach-sec:last-child{border-bottom:0;margin-bottom:0;padding-bottom:4px;}
+  .coach-sec-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;margin:0 0 12px;color:var(--c-ink,#1c1c1e);} .coach-sec-title small{font-size:12.5px;font-weight:500;color:var(--c-ink-3,#66666c);}
+  .coach-sec-title i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c-ink,#1c1c1e);color:#fff;font-size:12px;}
+  .coach-docs{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:8px;} .coach-docs li{font-size:13px;padding:6px 10px;border-radius:8px;background:var(--c-surface,#f6f5f3);color:var(--c-ink-2,#3a3a3f);} .coach-docs li.ok b{color:#2f7a4a;} .coach-docs li.no b{color:var(--c-ink-3,#66666c);}
+  .coach-lbl{display:block;font-size:13.5px;font-weight:600;margin:0 0 6px;} .coach-lbl small{font-weight:400;color:var(--c-ink-3,#66666c);margin-left:4px;}
+  .coach-ta{width:100%;box-sizing:border-box;font-size:15px;line-height:1.65;}
+  .coach-script{font-size:16px;line-height:1.8;background:#fffdfb;}
+  .coach-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px;}
+  .coach-make-row{margin-top:16px;}
+  .coach-meta{font-size:12.5px;color:var(--c-ink-3,#66666c);}
+  .coach-mic{display:inline-flex;align-items:center;gap:6px;} .coach-mic.rec{border-color:#e8532a;color:#c8441c;background:#fdf1ec;}
+  .coach-saved{font-size:12px;font-weight:500;color:var(--c-ink-3,#66666c);}
+  .coach-fb{margin:0 0 10px;padding:10px 12px;border-radius:8px;background:#f3f6fb;color:#34495e;font-size:13.5px;line-height:1.6;}
+  .coach-len{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;} .coach-len.ok{color:#2f7a4a;} .coach-len.warn{color:#b45309;}
+  .coach-ph{font-size:12.5px;color:#b45309;}
+  .coach-points{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;} .coach-points span{font-size:12.5px;padding:5px 10px;border-radius:999px;background:var(--c-accent-soft,#fdf0eb);color:var(--c-accent-ink,#c2401b);font-weight:600;}
+  .coach-tips{margin:10px 0 0;padding-left:18px;font-size:13.5px;line-height:1.65;color:var(--c-ink-2,#3a3a3f);}
+  .coach-timer-row{display:flex;align-items:center;gap:16px;}
+  .coach-timer{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.5px;min-width:104px;color:var(--c-ink,#1c1c1e);} .coach-timer.warn{color:#b42318;}
+  .coach-bar{position:relative;flex:1;height:8px;border-radius:999px;background:var(--c-surface,#f0eeea);} .coach-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:var(--c-ink,#1c1c1e);transition:width .3s linear;} .coach-bar i.over{background:#b42318;}
+  .coach-bar-mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:#2f7a4a;border-radius:2px;}
+  .coach-live{font-size:14.5px;line-height:1.7;color:var(--c-ink-2,#3a3a3f);min-height:48px;margin:12px 0 0;padding:10px 12px;border-radius:8px;background:var(--c-surface,#f6f5f3);}
+  .coach-result{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .coach-result .cr{padding:12px;border:1px solid var(--c-line,#e6e4e0);border-radius:10px;} .coach-result .cr b{display:block;font-size:20px;font-variant-numeric:tabular-nums;} .coach-result .cr small{font-size:12px;color:var(--c-ink-3,#66666c);} .coach-result .cr p{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:var(--c-ink-2,#3a3a3f);}
+  .coach-result .cr.ok b{color:#2f7a4a;} .coach-result .cr.warn b{color:#b45309;}
+  .coach-result .cr-wide{grid-column:1/-1;font-size:13px;line-height:1.6;color:var(--c-ink-2,#3a3a3f);}
+  @media (max-width:600px){ .coach-result{grid-template-columns:1fr;} .coach-timer{font-size:28px;min-width:86px;} }
+  #rh3-setleft{font-variant-numeric:tabular-nums;font-weight:600;} #rh3-setleft.warn{color:#b42318;border-color:#f1b5ad;background:#fdf1ef;}
   .tl-row{font-size:13px;line-height:1.5;padding:8px 12px;border-radius:8px;margin-bottom:10px;background:#e7f3ec;color:#2f7a4a;} .tl-row b{margin-right:8px;}
   .tl-row.warn{background:#fff4d6;color:#8a5a00;} .tl-row.bad{background:#fdecea;color:#b42318;}
   .tl-sum{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13.5px;color:var(--c-ink-2,#45454a);margin:0 0 10px;} .tl-sum b{color:var(--c-ink,#1c1c1e);}
@@ -3095,6 +3132,58 @@
     </div>
   </div>
 </div>
+<!-- ============ 1분 자기소개 코치 (2026-10-08) ============ -->
+<div class="modal-overlay" id="modal-coach" role="dialog" aria-modal="true" aria-labelledby="coach-title">
+  <div class="modal-box modal-wide coach-box">
+    <div class="modal-head">
+      <h2 id="coach-title">1분 자기소개 코치</h2>
+      <p>서류와 내가 해 본 자기소개로 1분 대본을 만들고, 따라 말하며 시간과 내용을 맞춰 봐요.</p>
+    </div>
+    <div class="modal-body modal-scroll">
+      <section class="coach-sec">
+        <h3 class="coach-sec-title"><i>1</i>재료 모으기</h3>
+        <ul class="coach-docs" id="coach-docs"><li>서류를 확인하는 중…</li></ul>
+        <label class="coach-lbl" for="coach-draft">내가 해 본 자기소개 <small>선택 · 말하거나 적어 주세요</small></label>
+        <textarea id="coach-draft" class="au-note coach-ta" rows="4" maxlength="1500" placeholder="예: 안녕하십니까. 3년 동안 매일 회의록 음성으로 연습해 온 지원자입니다…" oninput="coachDraftInput()"></textarea>
+        <div class="coach-row">
+          <button type="button" class="btn btn-outline coach-mic" id="coach-draft-mic" onclick="coachRecordDraft()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>말해서 넣기</span></button>
+          <span class="coach-meta" id="coach-draft-meta"></span>
+        </div>
+        <div class="coach-row coach-make-row">
+          <button type="button" class="btn btn-solid" id="coach-make" onclick="coachMake()">1분 대본 만들기</button>
+          <span class="coach-meta" id="coach-make-note">AI가 서류와 내 자기소개에 있는 내용만으로 대본을 만들어요 · 하루 10회</span>
+        </div>
+      </section>
+      <section class="coach-sec" id="coach-script-sec" hidden>
+        <h3 class="coach-sec-title"><i>2</i>1분 대본 <span class="coach-saved" id="coach-saved"></span></h3>
+        <p class="coach-fb" id="coach-feedback" hidden></p>
+        <textarea id="coach-script" class="au-note coach-ta coach-script" rows="7" maxlength="1200" oninput="coachScriptInput()"></textarea>
+        <div class="coach-row">
+          <span class="coach-len" id="coach-len"></span>
+          <span class="coach-ph" id="coach-ph" hidden>[ ] 표시는 내 정보로 바꿔 주세요</span>
+        </div>
+        <div class="coach-points" id="coach-points"></div>
+        <ul class="coach-tips" id="coach-tips"></ul>
+        <div class="coach-row"><button type="button" class="btn btn-outline" id="coach-save" onclick="coachSave()">대본 저장</button><span class="coach-meta">저장하면 다음에 열 때 그대로 나와요</span></div>
+      </section>
+      <section class="coach-sec" id="coach-practice-sec">
+        <h3 class="coach-sec-title"><i id="coach-practice-no">2</i>따라 말하기 <small>60초</small></h3>
+        <div class="coach-timer-row">
+          <div class="coach-timer" id="coach-timer">01:00</div>
+          <div class="coach-bar"><i id="coach-bar"></i><span class="coach-bar-mark" style="left:83.3%"></span></div>
+        </div>
+        <p class="coach-live" id="coach-live">시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.</p>
+        <div class="coach-row">
+          <button type="button" class="btn btn-solid" id="coach-practice-btn" onclick="coachPracticeToggle()">연습 시작</button>
+        </div>
+        <div class="coach-result" id="coach-result" hidden></div>
+      </section>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-solid" onclick="closeCoach()">닫기</button>
+    </div>
+  </div>
+</div>
 <div id="toast-container"></div>
 
 <!-- ============ LOGIN ============ -->
@@ -3168,6 +3257,7 @@
       <nav class="d3-nav" aria-label="주 메뉴">
         <a href="javascript:void(0)" aria-current="page">면접 연습</a>
         <a href="javascript:void(0)" onclick="openAllHistory()">내 기록</a>
+        <a href="javascript:void(0)" onclick="openCoach()">자기소개 코치</a>
         <a href="javascript:void(0)" onclick="openFeedback()">의견 보내기</a>
         <a href="javascript:void(0)" class="kk-link kakao-show" onclick="openKakaoChannel()" style="display:none;"><svg class="kk-ic" viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg><span class="kk-full">카카오톡 문의</span><span class="kk-short">카톡 문의</span></a>
       </nav>
@@ -3193,6 +3283,7 @@
         <div class="d3-today" id="d3-today" style="display:none;"></div>
         <div class="d3-greet-actions">
           <button class="d3-btn d3-btn-primary" id="d3-start-btn" onclick="startSelectedField()"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7 5.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg><span id="d3-start-label">면접 시작</span></button>
+          <button class="d3-btn d3-btn-ghost" id="d3-coach-btn" onclick="openCoach()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>1분 자기소개 코치</button>
           <span class="d3-hint" id="d3-start-hint">분야는 아래에서 바꿀 수 있어요</span>
         </div>
       </section>
@@ -3791,7 +3882,7 @@
   <div class="interview-wrap">
     <div class="rh3-bar rh3-only">
       <div class="rh3-bar-row">
-        <div class="rh3-bar-title"><h1 id="rh3-title">면접 리허설</h1><span class="rh3-tag rh3-nograde">채점 없음</span><span class="rh3-tag lv3-live-tag lv3-only">면접 진행 중</span><span class="rh3-tag" id="rh3-count">1 / 2문항</span></div>
+        <div class="rh3-bar-title"><h1 id="rh3-title">면접 리허설</h1><span class="rh3-tag rh3-nograde">채점 없음</span><span class="rh3-tag lv3-live-tag lv3-only">면접 진행 중</span><span class="rh3-tag" id="rh3-count">1 / 2문항</span><span class="rh3-tag" id="rh3-setleft" hidden></span></div>
         <button type="button" class="rh3-exit" onclick="openConfirmEnd()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>나가기</button>
       </div>
       <p class="rh3-bar-sub" id="rh3-bar-sub">짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않고 AI 면접 이용 횟수에도 포함되지 않아요.</p>
@@ -4085,6 +4176,13 @@
         <h3 class="setup-sec-title">면접 설정</h3>
         <p class="setup-sec-sub">선택한 값은 이번 접속 동안 그대로 유지돼요.</p>
         <div class="opt-grid">
+          <div id="setup-realset-block" class="opt-pair" style="display:none;">
+            <div class="opt" style="grid-column:1/-1;">
+              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변 시간 제한이 함께 켜지고, 15분이 지나면 바로 마지막 질문으로 넘어가요.</div>
+              <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>국회 실전 세트 (15분)</button></div>
+              <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li>국회 지식</li><li>국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
+            </div>
+          </div>
           <div id="setup-std-options" class="opt-pair">
             <div class="opt">
               <div class="opt-lbl">기본 질문 수</div><div class="opt-sub">꼬리질문을 제외한 질문 수예요.</div>
@@ -7186,6 +7284,7 @@ let state = {
   interviewStyle:'classic',    // 'classic' 기본 연습 | 'dialog' AI 대화 면접
   dialogPressure:'normal',
   timedMode:'free',   // 'real' = 실전 모드(자기소개 60초·답변 90초, 10초 침묵 시 다음 질문)
+  realSet:false,      // 국회 실전 면접 세트 (2026-10-08): 국회 면접 순서 7문항 · 전체 15분 · 실전 시간 제한 자동
   dialogFollowups:3,   // 면접 전체 꼬리질문 최대 개수 (랜덤한 질문에 1개씩 배치, 2026-10-01)
   dialogTranscript:[],
   historyRecords:[],
@@ -8798,6 +8897,7 @@ function openSetup(fieldId){
   document.getElementById('setup-title').textContent = state.selectedField.name+' 면접 준비';
   try{ const ic=document.getElementById('setup-head-ic'); if(ic && state.selectedField.icon){ ic.innerHTML = svg(state.selectedField.icon); } }catch(e){}
   document.getElementById('setup-std-options').style.display = isReview ? 'none' : '';
+  { const rb = document.getElementById('setup-realset-block'); const canSet = fieldId === 'assembly'; if(rb) rb.style.display = canSet ? '' : 'none'; if(!canSet) state.realSet = false; applyRealSetUI(); }
   state.interviewStyle = 'dialog';
   const reviewNote = document.getElementById('review-setup-note');
   reviewNote.style.display = isReview ? '' : 'none';
@@ -8899,10 +8999,12 @@ function updateSetupSummary(){
   const fu = (state.dialogFollowups===0) ? '꼬리질문 없음' : `꼬리질문 최대 ${state.dialogFollowups||3}개`;
   const cam = (document.getElementById('switch-cam')||{}).checked ? '카메라 켬' : '카메라 끔';
   const hasResume = (state.customQuestions && state.customQuestions.length) || !!state.cvText;
-  const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
+  const realSet = !isReview && state.realSet && state.selectedField && state.selectedField.id === 'assembly';
+  const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : realSet ? ['국회 실전 세트 7문항 · 15분', fu] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
   parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real') parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
   el.textContent = parts.join(' · ');
-  const ms = document.getElementById('setup-ms-config'); if(ms) ms.textContent = isReview ? `복습 ${state.questionCount||0}개` : `질문 ${state.questionCount||5}개`;
+  const ms = document.getElementById('setup-ms-config'); if(ms) ms.textContent = isReview ? `복습 ${state.questionCount||0}개` : realSet ? '실전 세트' : `질문 ${state.questionCount||5}개`;
+  try{ syncRealSetDocStep(); }catch(e){}
 }
 const RESUME_DROP_DEFAULT = 'PDF 파일을 여기로 끌어다 놓거나 클릭해서 올려주세요';
 function syncResumeCard(){
@@ -9261,8 +9363,8 @@ const Activity = {
     else console.warn('[접속 기록 실패]', msg);
   },
 };
-const ACTIVITY_LABEL = { login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정' };
-const ACTIVITY_CLS = { login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login' };
+const ACTIVITY_LABEL = { login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습' };
+const ACTIVITY_CLS = { login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end' };
 function presenceLabel(p){
   if(!p) return '';
   if(p.screen==='interview') return `<b>${escapeHtml(p.field_name||'')}</b> ${p.mode==='rehearsal' ? '리허설' : 'AI 대화 면접'}${p.question_no ? ' · 질문 '+p.question_no : ''} 진행 중`;
@@ -9376,10 +9478,12 @@ function renderLiveTimeline(){
     const byDay = new Map(); evs.forEach(e=>{ const d = formatDateFull(e.created_at); if(!byDay.has(d)) byDay.set(d, []); byDay.get(d).push(e); });
     const body = [...byDay.entries()].map(([d, list])=>`<div class="tl-day">${d}</div>` + list.map(e=>{
       const dt = e.detail || {}; let extra = '';
-      if(e.event==='interview_start') extra = `${dt.field||''}${dt.mode==='rehearsal'?' · 리허설':dt.mode==='dialog'?' · AI 대화':''}`;
+      if(e.event==='interview_start') extra = `${dt.field||''}${dt.mode==='rehearsal'?' · 리허설':dt.mode==='dialog'?' · AI 대화':''}${dt.set==='real'?' · 실전 세트':''}`;
       else if(e.event==='interview_end') extra = `${dt.field||''}${dt.count!=null?' · '+dt.count+'문항':''}${dt.score!=null?' · '+dt.score+'점':''}${dt.duration?' · '+dt.duration:''}`;
       else if(e.event==='interview_abort') extra = `${dt.field||''}${dt.stage?' · '+dt.stage:''}`;
       else if(e.event==='login' && dt.restored) extra = '(자동 로그인)';
+      else if(e.event==='intro_coach') extra = `${dt.field||''}${dt.chars?' · '+dt.chars+'자':''}`;
+      else if(e.event==='intro_coach_practice') extra = `${dt.sec!=null?dt.sec+'초':''}${dt.cov!=null?' · 대본 '+dt.cov+'%':''}`;
       const t = new Date(e.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
       return `<div class="tl-ev"><span class="t">${t}</span><span class="ev-tag ${ACTIVITY_CLS[e.event]||''}">${ACTIVITY_LABEL[e.event]||escapeHtml(e.event)}</span><span>${escapeHtml(extra)}</span></div>`;
     }).join('')).join('');
@@ -9673,8 +9777,34 @@ function selectChip(el,type){
   else if(type==='pressure') state.dialogPressure = el.dataset.val;
   else if(type==='followups') state.dialogFollowups = parseInt(el.dataset.val,10);
   else if(type==='timed') state.timedMode = el.dataset.val === 'real' ? 'real' : 'free';
+  else if(type==='realset'){ state.realSet = el.dataset.val === 'set'; applyRealSetUI(); }
   else state.difficulty = el.dataset.val;
   updateDifficultyNote(); updateSetupSummary();
+}
+/* 국회 실전 세트: 켜면 질문 수·난이도를 숨기고(순서·문항 고정) 답변 시간을 "실전"으로 고정. 끄면 전에 고른 답변 시간으로 돌아감 */
+function applyRealSetUI(){
+  const on = !!state.realSet && !!(state.selectedField && state.selectedField.id === 'assembly');
+  document.querySelectorAll('#chip-realset .chip').forEach(c=>c.classList.toggle('sel', (c.dataset.val==='set') === on));
+  const steps = document.getElementById('realset-steps'); if(steps) steps.hidden = !on;
+  const std = document.getElementById('setup-std-options');
+  const isReview = state.selectedField && state.selectedField.id === 'review';
+  if(std) std.style.display = (isReview || on) ? 'none' : '';
+  const chips = document.querySelectorAll('#chip-timed .chip');
+  if(on){
+    if(state._timedBeforeSet === undefined) state._timedBeforeSet = state.timedMode || 'free';
+    state.timedMode = 'real';
+    chips.forEach(c=>{ c.classList.toggle('sel', c.dataset.val==='real'); c.classList.toggle('locked', c.dataset.val!=='real'); });
+  }else{
+    if(state._timedBeforeSet !== undefined){ state.timedMode = state._timedBeforeSet; delete state._timedBeforeSet; }
+    chips.forEach(c=>{ c.classList.remove('locked'); c.classList.toggle('sel', c.dataset.val === (state.timedMode==='real' ? 'real' : 'free')); });
+  }
+  syncRealSetDocStep();
+  updateSetupSummary();
+}
+function syncRealSetDocStep(){
+  const s6 = document.getElementById('realset-step6'); if(!s6) return;
+  const hasDoc = !!(state.customQuestions && state.customQuestions.length);
+  s6.textContent = hasDoc ? '자기소개서 질문' : '경험 질문'; s6.classList.toggle('doc', hasDoc);
 }
 /* ---------------- 환경 점검: 실제 마이크 입력 확인 ----------------
  * 예전에는 막대가 무작위로 움직이는 애니메이션이었는데, 이제 실제 마이크 소리 크기를 보여줍니다.
@@ -10491,12 +10621,13 @@ function rh3Sync(){
 let lv3Iv = null, lv3 = { listenStart:null, lastSec:0, phase:'' };
 function lv3Apply(on){
   const sec = document.getElementById('screen-interview'); if(!sec) return;
+  { const sl = document.getElementById('rh3-setleft'); if(sl) sl.hidden = true; }
   sec.classList.toggle('lv3', !!on); sec.classList.toggle('rh3', !!on || sec.classList.contains('rh3'));
   if(!on){ if(lv3Iv){ clearInterval(lv3Iv); lv3Iv = null; } sec.classList.remove('lv3'); return; }
   if(rh3Iv){ clearInterval(rh3Iv); rh3Iv = null; }
   const t = document.getElementById('rh3-title'); if(t && state.selectedField) t.textContent = `${state.selectedField.name} 라이브 면접`;
   const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '질문이 끝나면 자동으로 답변을 듣고, 말을 마친 뒤 잠시 기다리면 다음으로 넘어가요. 이 면접은 채점돼요.';
-  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = '권장 답변 시간 30초 · 최대 90초에 자동 제출';
+  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = state.dialogRealSet ? '국회 실전 세트 · 자기소개 60초 · 답변 90초 · 전체 15분' : '권장 답변 시간 30초 · 최대 90초에 자동 제출';
   if(state.currentUser){ const n = document.getElementById('nav-username-rh3'); if(n) n.textContent = state.currentUser.name || ''; const av = document.getElementById('rh3-avatar'); if(av) av.textContent = (state.currentUser.name||'?').slice(0,1); }
   const cp = document.getElementById('cam-preview'); if(cp) cp.classList.remove('folded'); const fb = document.getElementById('lv3-fold'); if(fb) fb.textContent = '접기';
   lv3 = { listenStart:null, lastSec:0, phase:'' };
@@ -10514,6 +10645,11 @@ function lv3Sync(){
   if(ql) ql.textContent = isFu ? '꼬리질문' : isCustom ? '자기소개서 질문' : '기본 질문';
   if(qn) qn.textContent = isFu ? '' : (i ? String(i) : '');
   const ct = document.getElementById('rh3-count'); if(ct) ct.textContent = i ? `기본 질문 ${i} / ${n}` : `질문 ${n}개`;
+  // 국회 실전 세트: 전체 남은 시간 (15분)
+  { const sl = document.getElementById('rh3-setleft'); const left = (state.dialogRealSet && StenoLoop.running) ? StenoLoop.setLeftMs() : null;
+    if(sl){ if(left === null){ sl.hidden = !(state.dialogRealSet && StenoLoop.running); if(!sl.hidden) sl.textContent = '실전 세트 · 전체 15:00'; sl.classList.remove('warn'); }
+      else { const s2 = Math.max(0, Math.ceil(left/1000)); sl.hidden = false; sl.textContent = `실전 세트 · 전체 ${String(Math.floor(s2/60)).padStart(2,'0')}:${String(s2%60).padStart(2,'0')} 남음`; sl.classList.toggle('warn', s2 <= 180);
+        if(s2 <= 180 && s2 > 0 && lv3.warnedSet !== StenoLoop.runId){ lv3.warnedSet = StenoLoop.runId; showToast('전체 면접 시간이 3분 남았어요.'); } } } }
   const segs = document.getElementById('lv3-segs');
   if(segs && segs.childElementCount !== n){ segs.innerHTML = Array.from({length:n}, ()=>'<i></i>').join(''); }
   if(segs) [...segs.children].forEach((el,k)=>el.classList.toggle('on', k < i));
@@ -10815,7 +10951,8 @@ function startDialogInterview(){
   state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[]; state.pendingGrades=[]; state.followupInserted=true;
   state.interviewQuestions = []; state.dialogTranscript = [];
   state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; setSaveBanner(null);
-  Activity.log('interview_start', { field: state.selectedField.name, mode:'dialog' });
+  state.dialogRealSet = !!state.realSet && state.selectedField.id === 'assembly';
+  Activity.log('interview_start', Object.assign({ field: state.selectedField.name, mode:'dialog' }, state.dialogRealSet ? { set:'real' } : {}));
   Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:0 });
   applyInterviewModeUI();
   syncCamMicUI();
@@ -10918,10 +11055,17 @@ async function runDialogInterview(){
     fieldId: state.selectedField.id, count: state.questionCount, maxFollowups: 1, followupTotal: state.dialogFollowups, diff: state.difficulty, pressure: state.dialogPressure,
     silenceMs: 1800, maxAnswerMs: 90000, recordAnswers: true, realMode: state.timedMode === 'real',
   };
+  // 국회 실전 세트: 순서 고정 7문항 · 전체 15분 · 실전 시간 제한
+  const realSet = !!state.realSet && state.selectedField.id === 'assembly';
+  state.dialogRealSet = realSet;
+  if(realSet){ opt.realSet = true; opt.realMode = true; opt.count = 7; opt.setDurationMs = REAL_SET_MS; }
   state.dialogRealMode = opt.realMode;
-  if(opt.realMode) showToast('실전 모드예요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말이 없으면 다음 질문으로 넘어가요.', 'info');
+  if(realSet) showToast('국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 자기소개 60초·답변 90초 제한이 있고, 15분이 지나면 마지막 질문으로 넘어가요.', 'info');
+  else if(opt.realMode) showToast('실전 모드예요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말이 없으면 다음 질문으로 넘어가요.', 'info');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
+  // (실전 세트는 자기소개서 맞춤 질문 1개를 6번 "경험" 자리에 넣음)
   if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
+  else if(realSet){ if(state.customQuestions && state.customQuestions.length) opt.docQuestion = Object.assign({}, state.customQuestions[0]); }
   else if(state.customQuestions && state.customQuestions.length){ opt.extraQuestions = state.customQuestions.map(x=>Object.assign({}, x)); }
   await StenoLoop.run(opt, (type, d)=>{
     if(type==='questions'){ document.getElementById('iv-progress').textContent = `질문 0 / ${d.list.length}`; }
@@ -10930,8 +11074,8 @@ async function runDialogInterview(){
       Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:d.index });
       pendingAsk = { q: d.q.q, ref: d.q.ref, kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q) };
       qEl.textContent = d.q.q; { const qn=document.getElementById('rh-qnum'); if(qn) qn.textContent = String(d.index).padStart(2,'0'); }
-      if(d.q.custom){ badge.textContent = '자기소개서 · 이력서 기반'; badge.className='qcard-source-badge resume'; }
-      else { badge.textContent = state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
+      if(d.q.custom){ badge.textContent = d.q.slotName ? '실전 세트 · 자기소개서 기반' : '자기소개서 · 이력서 기반'; badge.className='qcard-source-badge resume'; }
+      else { badge.textContent = d.q.slotName ? `실전 세트 · ${d.q.slotName}` : state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
       ta.value=''; updateCharCount();
     }
     else if(type==='speaking'){ dialogPhase('speaking', '면접관이 말하는 중'); document.getElementById('wave-state').textContent='면접관 발화 중'; stopBtn.disabled = true; stopWaveAnim(); }
@@ -10958,6 +11102,8 @@ async function runDialogInterview(){
       ta.value=''; updateCharCount();
     }
     else if(type==='error'){ showSttAlert(d.message); }
+    else if(type==='set-timeup'){ showToast('15분이 지나 마지막 질문으로 넘어가요.', 'warn'); }
+    else if(type==='set-fallback'){ showToast('실전 세트 문항을 불러오지 못해 일반 방식으로 7문항을 진행해요.', 'warn'); }
     else if(type==='done' || type==='aborted'){
       if(state.dialogFinishedRun === StenoLoop.runId) return;   // 감시 타이머가 먼저 마무리한 경우 중복 방지
       state.dialogFinishedRun = StenoLoop.runId;
@@ -11556,7 +11702,7 @@ async function endInterview(){
   document.getElementById('rs-count').textContent = `${state.currentQ}문항`;
   document.getElementById('result-title').textContent = state.selectedField.name + (state.interviewMode==='dialog' ? ' AI 대화 면접 결과' : ' 모의면접 결과');
   try{
-    const modeChip = document.getElementById('result-mode-chip'); if(modeChip) modeChip.textContent = (state.demoResult ? '시연용 샘플 · ' : '') + (state.interviewMode==='dialog' ? 'AI 대화 면접' : '모의면접');
+    const modeChip = document.getElementById('result-mode-chip'); if(modeChip) modeChip.textContent = (state.demoResult ? '시연용 샘플 · ' : '') + (state.interviewMode==='dialog' ? 'AI 대화 면접' : '모의면접') + (state.interviewMode==='dialog' && state.dialogRealSet && !state.demoResult ? ' · 국회 실전 세트' + (StenoLoop.stats && StenoLoop.stats.setTimeUp ? ' (15분 초과)' : '') : '');
     const modeEl = document.getElementById('rs-mode'); if(modeEl) modeEl.textContent = `${state.difficulty||'중'} · ${(typeof AI_GRADING_ENABLED!=='undefined' && AI_GRADING_ENABLED && AiSwitch.on('ai_grading')) ? 'AI 채점' : '규칙 평가'}`;
     const meta = document.getElementById('result-meta'); if(meta){ const d=new Date(); meta.textContent = `${(state.currentUser&&state.currentUser.name)||''} · ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} · ${state.currentQ}문항 · ${durationLabel}`; }
   }catch(e){}
@@ -12408,6 +12554,17 @@ const StenoDialog = {
     return buildQuestionPool(field, diff || '중').slice(0, count);
   },
 
+  /* ①-2 국회 실전 세트: 순서가 정해진 7문항 (자기소개 → 지원동기 → 국회 지식 2 → 속기 실무 → 경험 → 마지막 할 말) */
+  async pickRealSet(fieldId){
+    try{
+      const { data, error } = await sb.rpc('pick_real_set', { p_field: fieldId });
+      if(error) throw new Error(error.message);
+      if(!data || data.length < 5) throw new Error('실전 세트 문항 부족 ('+(data?data.length:0)+'개)');
+      this.lastSource = 'db';
+      return data.map(r=>({ id:r.id, q:r.q, spoken:r.q_spoken||null, hint:r.hint, ref:r.ref, diff:r.diff, bank:r.bank, category:r.category, audio_url: r.audio_url||null, slot:r.slot, slotName:r.slot_name }));
+    }catch(e){ console.warn('[실전 세트: 불러오기 실패 → 일반 뽑기]', e.message); this.lastError = e.message; return null; }
+  },
+
   /* ② 답변 → ③ 꼬리질문 */
   async followup({ fieldId, question, answer, reference, history, pressure, rootQuestion, followupsDone }){
     history = history || [];
@@ -12814,7 +12971,236 @@ const DEFAULT_GREETING = { open:'안녕하세요. 오늘 면접을 진행할 면
  *   콜백(onEvent)으로 화면을 갱신하므로 실제 면접 화면(Step 5)에서도 그대로 재사용됩니다.
  * ============================================================ */
 /** 실전 모드 제한 시간: 자기소개 60초, 꼬리질문 60초, 그 외 답변 90초 */
+/* ============================================================
+ * 1분 자기소개 코치 (2026-10-08)
+ *   ① 서류(자기소개서·이력서) + 내가 해 본 자기소개 → intro-coach Edge Function → 1분 대본·핵심 포인트·팁
+ *   ② 대본을 고쳐서 user_resumes.intro_script에 저장
+ *   ③ 따라 말하기: 60초 타이머 + 음성 인식으로 걸린 시간·말 빠르기·대본 일치·핵심 포인트를 확인
+ *   녹음·음성은 서버로 보내지 않음(브라우저 음성 인식 글자만 사용)
+ * ============================================================ */
+const Coach = { uid:null, docs:{resume:'',cv:''}, script:'', points:[], tips:[], feedback:'', savedAt:null, dirty:false, busy:false, practicing:false, draftRec:false, draftDurMs:0, iv:null, t0:0 };
+const COACH_SEC_PER_CHAR = 0.2;   // 공백 뺀 1글자 ≈ 0.2초 (1분 ≈ 300자, 면접에서 또박또박 말하는 속도)
+function coachCharCount(t){ return String(t||'').replace(/\s/g,'').length; }
+function coachEstSec(t){ return Math.round(coachCharCount(t) * COACH_SEC_PER_CHAR); }
+function coachFieldInfo(){
+  const id = state.dashField || (state.selectedField && state.selectedField.id !== 'review' ? state.selectedField.id : null) || 'assembly';
+  const f = FIELDS.find(x=>x.id===id); return { id, name: f ? f.name : '속기사' };
+}
+async function openCoach(){
+  if(!state.currentUser){ showToast('먼저 로그인해 주세요.'); return; }
+  if(isAccessExpired(state.currentUser)){ showToast('이용 기간이 종료되어 사용할 수 없어요. 연장은 관리자에게 문의해 주세요.'); return; }
+  try{ closeUserMenu(); }catch(e){}
+  if(Coach.uid !== state.currentUser.id){ Object.assign(Coach, { uid: state.currentUser.id, script:'', points:[], tips:[], feedback:'', savedAt:null, dirty:false, draftDurMs:0 }); const d = document.getElementById('coach-draft'); if(d) d.value = ''; }
+  document.getElementById('modal-coach').classList.add('active');
+  coachResetPractice(); coachDraftInput();
+  const aiOn = AiSwitch.anyOn();
+  const mk = document.getElementById('coach-make'); mk.disabled = !aiOn; mk.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
+  document.getElementById('coach-make-note').textContent = aiOn ? 'AI가 서류와 내 자기소개에 있는 내용만으로 대본을 만들어요 · 하루 10회' : '관리자가 AI 기능을 꺼 두어 지금은 대본을 만들 수 없어요. 저장된 대본으로 따라 말하기는 할 수 있어요.';
+  const docsEl = document.getElementById('coach-docs'); docsEl.innerHTML = '<li>서류를 확인하는 중…</li>';
+  coachRenderScript();
+  let data = {};
+  try{
+    let r = await sb.from('user_resumes').select('file_name, resume_text, cv_file_name, cv_text, intro_script, intro_script_at').eq('user_id', state.currentUser.id).maybeSingle();
+    if(r.error && /intro_|cv_/i.test(r.error.message||'')) r = await sb.from('user_resumes').select('file_name, resume_text').eq('user_id', state.currentUser.id).maybeSingle();
+    if(r.error) throw r.error; data = r.data || {};
+  }catch(e){ console.warn('[자기소개 코치] 서류 조회 실패', e); }
+  Coach.docs = {
+    resume: String(state.resumeText || data.resume_text || '').slice(0, 2000), resumeName: data.file_name || '',
+    cv: String(state.cvText || data.cv_text || '').slice(0, 1500), cvName: data.cv_file_name || state.cvFileName || '',
+  };
+  docsEl.innerHTML = [
+    Coach.docs.resume ? `<li class="ok"><b>✓</b> 자기소개서 · ${escapeHtml(Coach.docs.resumeName || '저장됨')}</li>` : '<li class="no"><b>–</b> 자기소개서 없음</li>',
+    Coach.docs.cv ? `<li class="ok"><b>✓</b> 이력서 · ${escapeHtml(Coach.docs.cvName || '저장됨')}</li>` : '<li class="no"><b>–</b> 이력서 없음</li>',
+    (!Coach.docs.resume && !Coach.docs.cv) ? '<li>서류는 면접 준비 창이나 마이페이지에서 올릴 수 있어요. 없으면 아래에 자기소개를 직접 해 주세요.</li>' : '',
+  ].join('');
+  if(data.intro_script && !Coach.script){ Coach.script = data.intro_script; Coach.savedAt = data.intro_script_at || null; Coach.dirty = false; mk.textContent = '대본 다시 만들기'; coachRenderScript(); }
+}
+function closeCoach(){
+  if(Coach.practicing || Coach.draftRec){ try{ StenoListener.stop('manual'); }catch(e){} }
+  coachStopTimer();
+  document.getElementById('modal-coach').classList.remove('active');
+}
+function coachRenderScript(){
+  const has = !!Coach.script;
+  document.getElementById('coach-script-sec').hidden = !has;
+  document.getElementById('coach-practice-no').textContent = has ? '3' : '2';
+  if(!has) return;
+  const ta = document.getElementById('coach-script'); if(ta.value !== Coach.script) ta.value = Coach.script;
+  document.getElementById('coach-saved').textContent = Coach.savedAt ? `· ${formatDateShort(Coach.savedAt)} 저장됨` : (Coach.dirty ? '· 아직 저장 안 됨' : '');
+  const fb = document.getElementById('coach-feedback'); fb.hidden = !Coach.feedback; fb.textContent = Coach.feedback ? '내가 한 자기소개 평가 · ' + Coach.feedback : '';
+  document.getElementById('coach-points').innerHTML = (Coach.points||[]).map(p=>`<span>${escapeHtml(p)}</span>`).join('');
+  document.getElementById('coach-tips').innerHTML = (Coach.tips||[]).map(t=>`<li>${escapeHtml(t)}</li>`).join('');
+  coachUpdateLen();
+}
+function coachUpdateLen(){
+  const t = document.getElementById('coach-script').value; const n = coachCharCount(t), sec = coachEstSec(t);
+  const el = document.getElementById('coach-len');
+  el.textContent = `공백 제외 ${n}자 · 읽으면 약 ${sec}초` + (sec > 62 ? ' · 조금 줄여 보세요' : (sec < 48 && n > 0) ? ' · 조금 더 채워 보세요' : ' · 1분에 알맞아요');
+  el.className = 'coach-len ' + (sec >= 48 && sec <= 62 ? 'ok' : 'warn');
+  document.getElementById('coach-ph').hidden = !/\[[^\]]{1,24}\]/.test(t);
+}
+function coachScriptInput(){ Coach.script = document.getElementById('coach-script').value; Coach.dirty = true; Coach.savedAt = null; coachUpdateLen(); document.getElementById('coach-saved').textContent = '· 아직 저장 안 됨'; }
+function coachDraftInput(){
+  const t = (document.getElementById('coach-draft')||{}).value || '';
+  const m = document.getElementById('coach-draft-meta'); if(!m) return;
+  m.textContent = t.trim() ? `공백 제외 ${coachCharCount(t)}자` + (Coach.draftDurMs ? ` · 말한 시간 ${Math.round(Coach.draftDurMs/1000)}초` : '') : '';
+}
+async function coachRecordDraft(){
+  const btn = document.getElementById('coach-draft-mic'), ta = document.getElementById('coach-draft');
+  if(Coach.draftRec){ StenoListener.stop('manual'); return; }
+  if(Coach.practicing) return;
+  if(!StenoListener.supported()){ showToast('이 브라우저는 음성 인식을 지원하지 않아요. 크롬 또는 엣지를 사용하거나 직접 적어 주세요.'); return; }
+  const base = ta.value.trim();
+  Coach.draftRec = true; btn.classList.add('rec'); btn.querySelector('span').textContent = '듣는 중 · 누르면 끝';
+  await StenoListener.start({
+    onInterim: t=>{ ta.value = (base ? base + ' ' : '') + t; coachDraftInput(); },
+    onError: m=>showToast(m, 'warn'),
+    onEnd: r=>{
+      Coach.draftRec = false; btn.classList.remove('rec'); btn.querySelector('span').textContent = '말해서 넣기';
+      const text = (r.text||'').trim();
+      ta.value = (base ? base + ' ' : '') + text;
+      const tm = r.timing || {}; if(text) Coach.draftDurMs = (tm.firstSpeech && tm.lastSpeech) ? Math.max(0, tm.lastSpeech - tm.firstSpeech) : (r.durMs||0);
+      coachDraftInput();
+      if(!text && r.reason !== 'error') showToast('말소리가 들리지 않았어요. 다시 눌러 말해 보세요.');
+    },
+  }, { silenceMs: 5000, noSpeechMs: 12000, maxMs: 120000 });
+}
+async function coachMake(){
+  if(Coach.busy) return;
+  if(Coach.draftRec){ StenoListener.stop('manual'); }
+  const draft = document.getElementById('coach-draft').value.trim();
+  if(!Coach.docs.resume && !Coach.docs.cv && coachCharCount(draft) < 20){ showToast('서류가 없으면 자기소개를 20자 이상 말하거나 적어 주세요.'); return; }
+  if(Coach.dirty && Coach.script && !confirm('지금 대본에 고친 내용이 저장되지 않았어요. 새 대본으로 바꿀까요?')) return;
+  const btn = document.getElementById('coach-make');
+  Coach.busy = true; btn.disabled = true; btn.textContent = '대본 만드는 중… (10~20초)';
+  try{
+    const f = coachFieldInfo();
+    const invoke = sb.functions.invoke('intro-coach', { body: { field_id: f.id, field_name: f.name, resume_summary: Coach.docs.resume || null, cv_summary: Coach.docs.cv || null, draft: draft || null } });
+    const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과 (45초)')), 45000));
+    const { data, error } = await Promise.race([invoke, timeout]);
+    if(error){
+      let detail = error.message || String(error), lim = null;
+      try{ if(error.context && typeof error.context.json === 'function'){ const b = await error.context.json(); if(b && b.error) detail = b.error; if(b && b.error === 'limit') lim = b.limit || {}; } }catch(_){}
+      if(lim) throw new Error(`오늘 대본 만들기(${lim.limit||10}회)를 모두 사용했어요. 내일 다시 쓸 수 있어요`);
+      throw new Error(detail);
+    }
+    if(!data || !data.script) throw new Error('대본을 받지 못했어요');
+    Object.assign(Coach, { script: data.script, points: data.points || [], tips: data.tips || [], feedback: data.feedback || '', savedAt: null, dirty: true });
+    coachRenderScript();
+    const left = (data.limit && typeof data.limit.left === 'number' && !data.limit.admin) ? ` 오늘 ${data.limit.left}회 남았어요.` : '';
+    showToast('1분 대본이 나왔어요. [ ] 부분과 말투를 고친 뒤 저장해 보세요.' + left);
+    Activity.log('intro_coach', { field: f.name, chars: coachCharCount(data.script), draft: !!draft });
+    setTimeout(()=>{ const s = document.getElementById('coach-script-sec'); if(s && s.scrollIntoView) s.scrollIntoView({ behavior:'smooth', block:'start' }); }, 80);
+  }catch(e){
+    console.warn('[자기소개 코치] 대본 생성 실패', e);
+    showToast('대본을 만들지 못했어요: ' + (e.message || e), 'warn');
+  }finally{
+    Coach.busy = false; btn.disabled = !AiSwitch.anyOn(); btn.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
+  }
+}
+async function coachSave(){
+  const t = document.getElementById('coach-script').value.trim();
+  if(!t){ showToast('저장할 대본이 없어요.'); return; }
+  const btn = document.getElementById('coach-save'); btn.disabled = true; btn.textContent = '저장 중…';
+  try{
+    const now = new Date().toISOString();
+    const { error } = await sb.from('user_resumes').upsert({ user_id: state.currentUser.id, intro_script: t.slice(0, 1200), intro_script_at: now }, { onConflict: 'user_id' });
+    if(error) throw error;
+    Coach.script = t; Coach.savedAt = now; Coach.dirty = false; coachRenderScript();
+    showToast('대본을 저장했어요.');
+  }catch(e){ console.warn('[자기소개 코치] 저장 실패', e); showToast('저장하지 못했어요: ' + (e.message || e), 'warn'); }
+  finally{ btn.disabled = false; btn.textContent = '대본 저장'; }
+}
+function coachStopTimer(){ if(Coach.iv){ clearInterval(Coach.iv); Coach.iv = null; } }
+function coachResetPractice(){
+  coachStopTimer(); Coach.practicing = false;
+  const tm = document.getElementById('coach-timer'); if(tm){ tm.textContent = '01:00'; tm.classList.remove('warn'); }
+  const bar = document.getElementById('coach-bar'); if(bar){ bar.style.width = '0'; bar.classList.remove('over'); }
+  const btn = document.getElementById('coach-practice-btn'); if(btn) btn.textContent = '연습 시작';
+  const res = document.getElementById('coach-result'); if(res){ res.hidden = true; res.innerHTML = ''; }
+  const live = document.getElementById('coach-live'); if(live) live.textContent = Coach.script ? '대본을 보며(또는 외워서) 면접관 앞이라고 생각하고 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.' : '시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.';
+}
+function coachTick(){
+  const el = Math.max(0, (Date.now() - Coach.t0) / 1000);
+  const left = Math.round(60 - el);
+  const tm = document.getElementById('coach-timer'), bar = document.getElementById('coach-bar');
+  const a = Math.abs(left);
+  tm.textContent = (left < 0 ? '+' : '') + String(Math.floor(a/60)).padStart(2,'0') + ':' + String(a%60).padStart(2,'0');
+  tm.classList.toggle('warn', left <= 10);
+  bar.style.width = Math.min(100, el / 72 * 100) + '%'; bar.classList.toggle('over', el > 60);
+}
+function coachPracticeToggle(){ if(Coach.practicing){ StenoListener.stop('manual'); return; } coachPracticeStart(); }
+async function coachPracticeStart(){
+  if(!StenoListener.supported()){ showToast('이 브라우저는 음성 인식을 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.'); return; }
+  if(Coach.draftRec){ StenoListener.stop('manual'); }
+  coachResetPractice();
+  Coach.practicing = true; Coach.t0 = Date.now();
+  document.getElementById('coach-practice-btn').textContent = '끝내기';
+  const live = document.getElementById('coach-live'); live.textContent = '듣고 있어요. 말씀하세요.';
+  Coach.iv = setInterval(coachTick, 250); coachTick();
+  await StenoListener.start({
+    onInterim: t=>{ live.textContent = t; },
+    onError: m=>showToast(m, 'warn'),
+    onEnd: r=>coachPracticeEnd(r),
+  }, { silenceMs: 4000, noSpeechMs: 12000, maxMs: 90000 });
+}
+/** 대본과 실제로 말한 내용이 얼마나 겹치는지 (두 글자 묶음 기준, 0~100) */
+function coachCoverage(script, spoken){
+  const norm = s=>String(s||'').replace(/\[[^\]]*\]/g, '').replace(/[^0-9A-Za-z가-힣]/g, '');
+  const a = norm(script), b = norm(spoken); if(a.length < 4 || !b) return 0;
+  const grams = s=>{ const m = new Set(); for(let i=0;i<s.length-1;i++) m.add(s.slice(i,i+2)); return m; };
+  const ga = grams(a), gb = grams(b); let hit = 0; ga.forEach(g=>{ if(gb.has(g)) hit++; });
+  return Math.round(hit / ga.size * 100);
+}
+/** 핵심 포인트를 말했는지: 포인트의 두 글자 이상 낱말(조사 뺀 앞 2~3글자) 중 하나라도 말에 있으면 말한 것으로 */
+function coachPointHit(point, spoken){
+  const sp = String(spoken||'').replace(/\s/g, '');
+  const words = String(point||'').split(/[\s·,\/]+/).map(w=>w.replace(/[^0-9A-Za-z가-힣]/g, '')).filter(w=>w.length >= 2);
+  return words.some(w=>sp.includes(w.slice(0, Math.min(3, w.length))));
+}
+function coachPracticeEnd(r){
+  Coach.practicing = false; coachStopTimer();
+  document.getElementById('coach-practice-btn').textContent = '다시 연습';
+  const live = document.getElementById('coach-live'), res = document.getElementById('coach-result');
+  const text = String(r && r.text || '').trim();
+  if(!text){ live.textContent = (r && r.reason === 'error') ? '음성 인식을 시작하지 못했어요. 주소창의 마이크 권한을 확인한 뒤 다시 시작해 주세요.' : '말소리가 들리지 않았어요. 마이크를 확인하고 다시 시작해 주세요.'; return; }
+  live.textContent = text;
+  const tm = r.timing || {};
+  const durMs = (tm.firstSpeech && tm.lastSpeech) ? Math.max(0, tm.lastSpeech - tm.firstSpeech) : (r.durMs || 0);
+  const sec = Math.max(1, Math.round(durMs / 1000));
+  const n = coachCharCount(text), cps = n / sec;
+  const fillers = text.split(/\s+/).filter(w=>FILLER_WORDS.includes(w.replace(/[.,!?~…]/g, ''))).length;
+  const cards = [];
+  const tOk = sec >= 50 && sec <= 62;
+  cards.push(`<div class="cr ${tOk ? 'ok' : 'warn'}"><small>걸린 시간</small><b>${sec}초</b><p>${sec < 50 ? '조금 짧아요. 경험 하나를 숫자와 함께 더 말해 보세요.' : sec > 62 ? '1분을 넘었어요. 실전 모드(60초)에서는 끊길 수 있어요.' : '1분에 잘 맞췄어요.'}</p></div>`);
+  const sOk = cps >= 3.8 && cps <= 5.8;
+  cards.push(`<div class="cr ${sOk ? 'ok' : 'warn'}"><small>말 빠르기</small><b>초당 ${cps.toFixed(1)}자</b><p>${cps > 5.8 ? '조금 빨라요. 문장 끝에서 한 박자 쉬어 보세요.' : cps < 3.8 ? '조금 느리거나 멈춤이 길어요.' : '듣기 편한 속도예요.'}${fillers ? ` 군말 ${fillers}번.` : ''}</p></div>`);
+  if(Coach.script){
+    const cov = coachCoverage(document.getElementById('coach-script').value, text);
+    cards.push(`<div class="cr ${cov >= 70 ? 'ok' : 'warn'}"><small>대본 따라 말하기</small><b>${cov}%</b><p>${cov >= 85 ? '대본을 거의 그대로 말했어요. 이제 외워서 자연스럽게 해 보세요.' : cov >= 70 ? '흐름을 잘 따라왔어요.' : '대본과 많이 달라요. 핵심 문장부터 외워 보세요.'}</p></div>`);
+  }else{
+    cards.push(`<div class="cr"><small>대본</small><b>없음</b><p>위에서 1분 대본을 만들면 대본과 얼마나 같은지도 볼 수 있어요.</p></div>`);
+  }
+  let wide = '';
+  if(Coach.points && Coach.points.length){
+    const hits = Coach.points.map(p=>({ p, hit: coachPointHit(p, text) }));
+    const miss = hits.filter(h=>!h.hit).map(h=>h.p);
+    wide += `<div class="cr-wide">핵심 포인트 <b>${hits.length - miss.length} / ${hits.length}</b>개를 말했어요.${miss.length ? ' 빠진 것: ' + miss.map(escapeHtml).join(', ') : ''}</div>`;
+  }
+  wide += `<div class="cr-wide"><button type="button" class="btn btn-outline" onclick="coachUseSpoken()">방금 한 말로 대본 다시 다듬기</button></div>`;
+  Coach.lastSpoken = text; Coach.lastSpokenMs = durMs;
+  res.innerHTML = cards.join('') + wide; res.hidden = false;
+  Activity.log('intro_coach_practice', { sec, cps: Math.round(cps*10)/10, cov: Coach.script ? coachCoverage(Coach.script, text) : null });
+}
+function coachUseSpoken(){
+  if(!Coach.lastSpoken) return;
+  const d = document.getElementById('coach-draft'); d.value = Coach.lastSpoken; Coach.draftDurMs = Coach.lastSpokenMs || 0; coachDraftInput();
+  d.scrollIntoView({ behavior:'smooth', block:'center' });
+  showToast('방금 한 말을 "내가 해 본 자기소개"에 넣었어요. "대본 다시 만들기"를 누르면 이 말을 살려 다듬어 줘요.');
+}
+
 function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개(?!서)/.test(qText||'') ? 60000 : 90000; }
+const REAL_SET_MS = 15 * 60 * 1000;   // 국회 실전 세트 전체 시간
 const StenoLoop = {
   running:false, aborted:false, transcript:[], stats:{}, opt:{},
   async run(opt, onEvent){
@@ -12880,7 +13266,20 @@ const StenoLoop = {
     const greet = VoiceBank.greeting(this.opt.fieldId);   // 녹음된 인사말이 있으면 그 문장·음성
     try{
       emit('start', this.opt);
-      let questions = this.opt.questions ? this.opt.questions.slice() : await StenoDialog.pickQuestions(this.opt.fieldId, this.opt.count, this.opt.diff);
+      let questions = null;
+      this.setEndsAt = null; this.setTimeUp = false;
+      if(this.opt.questions) questions = this.opt.questions.slice();
+      else if(this.opt.realSet){
+        questions = await StenoDialog.pickRealSet(this.opt.fieldId);
+        if(questions && this.opt.docQuestion){
+          // 자기소개서 맞춤 질문이 있으면 6번(경험) 자리를 그 질문으로
+          const dq = Object.assign({}, this.opt.docQuestion, { slot:6, slotName:'자기소개서 질문', custom:true });
+          const k = questions.findIndex(x=>x.slot===6);
+          if(k >= 0) questions[k] = dq; else { const c = questions.findIndex(x=>x.slot===7); questions.splice(c >= 0 ? c : questions.length, 0, dq); }
+        }
+        if(!questions){ emit('set-fallback'); questions = await StenoDialog.pickQuestions(this.opt.fieldId, this.opt.count, this.opt.diff); }
+      }
+      else questions = await StenoDialog.pickQuestions(this.opt.fieldId, this.opt.count, this.opt.diff);
       if(this.opt.extraQuestions && this.opt.extraQuestions.length){
         this.opt.extraQuestions.forEach((cq, idx)=>{ const at = Math.min(idx+1, questions.length); questions.splice(at, 0, cq); });
         questions = questions.slice(0, Math.max(this.opt.count, 1) + this.opt.extraQuestions.length);
@@ -12892,12 +13291,25 @@ const StenoLoop = {
         const total = Number.isFinite(this.opt.followupTotal) ? Math.max(0, this.opt.followupTotal|0) : null;
         if(total === null) return null;
         const n = Math.min(questions.length, total === 0 ? 0 : (total <= 1 ? total : total - Math.round(Math.random())));
-        const idx = questions.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [idx[i],idx[j]] = [idx[j],idx[i]]; }
+        const idx = questions.map((_,i)=>i).filter(i=>questions[i].slot!==7); for(let i=idx.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [idx[i],idx[j]] = [idx[j],idx[i]]; }
         return new Set(idx.slice(0, n));
       })();
       this.stats.followupPlan = fuPlan ? fuPlan.size : null;
+      // 실전 세트: 전체 시간은 첫 질문부터 잼 (인사말 제외, 일시정지 시간 제외)
+      const setOver = ()=> this.setEndsAt !== null && this.setLeftMs() <= 0;
       await say(greet.open, 'interviewer', greet.openUrl);
+      if(this.opt.setDurationMs && !this.aborted){ this.setEndsAt = Date.now() + this.opt.setDurationMs; this._setPauseBase = state.pausedMs || 0; }
       for(let qi=0; qi<questions.length && !this.aborted; qi++){
+        if(setOver() && !this.setTimeUp && questions[qi].slot !== 7){
+          // 15분 초과 → 남은 질문을 건너뛰고 "마지막 할 말"로
+          this.setTimeUp = true; this.stats.setTimeUp = true;
+          const ci = questions.findIndex((x,k)=>k>=qi && x.slot===7);
+          emit('set-timeup', {});
+          if(ci < 0){ questions.splice(qi); break; }
+          questions.splice(qi, ci - qi);
+          await say('정해진 면접 시간이 다 되어 마지막 질문을 드리겠습니다.');
+          if(this.aborted) break;
+        }
         const q = questions[qi]; this.stats.questions++;
         emit('question', {index:qi+1, total:questions.length, q});
         await say(spokenOf(q), 'interviewer', q.audio_url || null);
@@ -12937,6 +13349,7 @@ const StenoLoop = {
           history.push({role:'candidate', text:ans});
           if(this.opt.realMode && r.reason==='max' && !this.aborted) await say('네, 시간 관계상 여기까지 듣겠습니다.');
           if(f === fuCap) break;          // 이 질문의 꼬리질문 한도 → 다음 질문
+          if(setOver()) break;            // 실전 세트 시간 초과 → 꼬리질문 없이 마지막 질문으로
           emit('thinking');
           const fu = await Promise.race([
             StenoDialog.followup({ fieldId:this.opt.fieldId, question:lastAsk, answer:ans, reference:q.ref, history:history.slice(0,-1), pressure:this.opt.pressure, rootQuestion:q.q, followupsDone:f }),
@@ -12958,6 +13371,13 @@ const StenoLoop = {
     return this.transcript;
   },
   _log(role, text){ this.transcript.push({role, text, at:Date.now()}); },
+  /** 실전 세트 남은 시간(ms). 일시정지한 시간은 빼고 계산. 세트가 아니면 null */
+  setLeftMs(){
+    if(this.setEndsAt === null || this.setEndsAt === undefined) return null;
+    let paused = (state.pausedMs || 0) - (this._setPauseBase || 0);
+    if(state.dialogPaused && state.pauseStartedAt) paused += Date.now() - state.pauseStartedAt;
+    return this.setEndsAt + paused - Date.now();
+  },
   /** 직접 입력 답변 제출: 'listen-typed' 이벤트 뒤 화면에서 호출. 빈 문자열이면 해당 질문 건너뛰기 */
   submitAnswer(text){
     if(!this.running || !this.typedWait) return false;
