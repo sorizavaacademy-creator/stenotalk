@@ -2798,6 +2798,39 @@
   .realset-steps li::before{content:counter(rs);display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--c-surface,#f6f5f3);font-size:11px;font-weight:700;color:var(--c-ink-3,#66666c);}
   .realset-steps li.doc{border-color:#f3c9b8;background:#fdf6f2;}
   #chip-timed .chip.locked{opacity:.45;pointer-events:none;}
+  /* 실전 세트 종합 의견 (2026-10-08) */
+  .set-review-panel[hidden]{display:none !important;}
+  .set-review-panel .section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .set-review-panel .sr-tag{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--c-accent-soft,#fdf0eb);color:var(--c-accent-ink,#c2401b);margin-left:6px;vertical-align:2px;}
+  .set-review-panel .sr-src{font-size:12px;font-weight:500;color:var(--c-ink-3,#66666c);} .set-review-panel .sr-src.loading::before{content:'';display:inline-block;width:10px;height:10px;margin-right:6px;border:2px solid #d9d6d0;border-top-color:var(--c-ink,#1c1c1e);border-radius:50%;animation:srspin .8s linear infinite;vertical-align:-1px;}
+  @keyframes srspin{to{transform:rotate(360deg);}}
+  .sr-headline{font-size:17px;font-weight:700;line-height:1.55;color:var(--c-ink,#1c1c1e);margin:4px 0 16px;}
+  .sr-slots{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:18px;}
+  .sr-slot{border:1px solid var(--c-line,#e6e4e0);border-radius:10px;padding:8px 8px 10px;display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .sr-slot small{font-size:11.5px;color:var(--c-ink-3,#66666c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sr-slot b{font-size:18px;font-variant-numeric:tabular-nums;color:var(--c-ink,#1c1c1e);}
+  .sr-slot i{display:block;height:4px;border-radius:999px;background:var(--c-surface,#f0eeea);overflow:hidden;} .sr-slot i em{display:block;height:100%;background:var(--c-ink,#1c1c1e);}
+  .sr-slot.low b{color:#b45309;} .sr-slot.low i em{background:#e8532a;} .sr-slot.none b{color:var(--c-ink-3,#66666c);font-size:13px;}
+  .sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .sr-col{padding:14px 16px;border-radius:12px;} .sr-col.good{background:#eef6f0;} .sr-col.fix{background:#fdf4ee;}
+  .sr-col b,.sr-next b{display:block;font-size:13.5px;margin-bottom:6px;} .sr-col.good b{color:#2f7a4a;} .sr-col.fix b{color:#b4531b;}
+  .sr-col ul,.sr-next ol{margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--c-ink-2,#3a3a3f);}
+  .sr-next{margin-top:12px;padding:14px 16px;border:1px solid var(--c-line,#e6e4e0);border-radius:12px;}
+  @media (max-width:760px){ .sr-slots{grid-template-columns:repeat(4,minmax(0,1fr));} .sr-grid{grid-template-columns:1fr;} }
+  @media print{ .set-review-panel .sr-src{display:none;} }
+  .srm{border:1px solid #f3c9b8;background:#fffaf7;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+  .srm-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;} .srm-head b{font-size:14px;color:#c2401b;} .srm-over{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px;background:#fdecea;color:#b42318;} .srm-src{margin-left:auto;font-size:12px;color:var(--c-ink-3,#66666c);}
+  .srm-line{margin:8px 0 10px;font-size:15px;font-weight:700;line-height:1.55;color:var(--c-ink,#1c1c1e);}
+  .srm-slots{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;} .srm-slot{font-size:12px;padding:3px 9px;border-radius:999px;background:#fff;border:1px solid var(--c-line,#e6e4e0);color:var(--c-ink-2,#3a3a3f);} .srm-slot b{font-variant-numeric:tabular-nums;} .srm-slot.low b{color:#b45309;}
+  .srm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;} .srm i{display:block;font-style:normal;font-size:12.5px;font-weight:700;color:var(--c-ink-2,#3a3a3f);margin-bottom:2px;}
+  .srm ul,.srm ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.65;color:var(--c-ink-2,#3a3a3f);} .srm-next{margin-top:8px;}
+  @media (max-width:600px){ .srm-grid{grid-template-columns:1fr;} }
+  .bt-row.rs-row{grid-template-columns:minmax(140px,1.2fr) .8fr .8fr .7fr 2fr 1fr;}
+  .rs-open{grid-column:1 / -1;background:var(--c-surface,#f6f5f3);border-radius:10px;padding:10px 12px;cursor:default;}
+  .rs-open .rs-rec{display:grid;grid-template-columns:120px 70px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--c-line,#e6e4e0);font-size:13px;} .rs-open .rs-rec:first-child{border-top:0;}
+  .rs-open .rs-rec .btn-manage{white-space:nowrap;}
+  .rs-headline{color:var(--c-ink-2,#3a3a3f);line-height:1.5;} .rs-headline small{display:block;}
+  @media(max-width:900px){ .bt-row.rs-row{grid-template-columns:1fr auto;} .rs-open .rs-rec{grid-template-columns:1fr auto;} }
   /* 1분 자기소개 코치 (2026-10-08) */
   .d3-btn-ghost{background:#fff;border-color:var(--c-line,#e6e4e0);color:var(--c-ink,#1c1c1e);} .d3-btn-ghost:hover{background:var(--c-surface,#f6f5f3);}
   .coach-box{max-width:720px;}
@@ -3366,6 +3399,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 4v5h5M8 13h8M8 17h5"/></svg>
         면접 기록
       </button>
+      <button class="admin-menu-btn" data-view="realset" onclick="showAdminView('realset')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+        실전 세트 · 코치
+      </button>
       <button class="admin-menu-btn" data-view="questions" onclick="showAdminView('questions')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
         문항 관리
@@ -3500,6 +3537,23 @@
           <div id="admin-records-list"></div>
         </div>
         <div class="uf-legend"><b>점수 색</b> <span class="score-pill hi">85점↑</span> 우수 · <span class="score-pill">75~84</span> 양호 · <span class="score-pill mid">60~74</span> 보완 필요 · <span class="score-pill low">60점↓</span> 집중 관리 · <span class="perm-chip" style="font-size:10.5px;padding:1px 7px;">AI 대화</span> AI 면접관과 대화한 라이브 면접</div>
+      </div>
+
+      <!-- 실전 세트 · 자기소개 코치 (2026-10-08) -->
+      <div class="admin-view" id="admin-view-realset">
+        <div class="admin-view-head">
+          <div><h2>실전 세트 · 자기소개 코치</h2>
+          <p>수강생(관리자 제외)마다 <b>국회 실전 세트</b>를 몇 번 봤는지, 최근 점수와 15분 초과 여부, 면접관 종합 의견을 한눈에 봐요. <b>1분 자기소개 코치</b>로 대본을 몇 번 만들고 따라 말했는지도 함께 보여요. 줄을 누르면 그 사람의 실전 세트 기록이 펼쳐져요.</p></div>
+          <div class="beta-head-btns"><button class="btn-manage" onclick="loadRealSetView(true)">새로 고침</button></div>
+        </div>
+        <div class="live-note" id="rs-note" style="display:none;"></div>
+        <div class="admin-stats beta-stats" id="rs-stats"></div>
+        <div class="admin-toolbar">
+          <div class="uf-chips" id="rs-chips"></div>
+          <input type="text" id="rs-search" class="admin-search" placeholder="이름, 휴대폰 번호로 검색" oninput="renderRealSetView()">
+        </div>
+        <div class="beta-table" id="rs-table"></div>
+        <div class="uf-legend"><b>보는 법</b> 점수는 실전 세트 종합 점수예요. <span class="bt-pill none">15분 초과</span> 시간 안에 못 끝낸 횟수 · "종합 의견"은 가장 최근 실전 세트의 면접관 한 줄 평이에요. 코치의 "대본"은 AI로 대본을 만든 횟수, "연습"은 따라 말하기 횟수예요(최근 60일).</div>
       </div>
 
       <!-- 접속 현황: 지금 접속 중 + 접속·연습 기록 -->
@@ -4120,6 +4174,17 @@
     </div>
 
     <p class="result-print-foot">StenoTalk AI · 한국AI속기사협회 AI 모의면접 리포트 — 규칙 기반 6축 평가 결과이며, 논리의 타당성은 강사 검토를 참고하세요.</p>
+    <div class="panel set-review-panel" id="set-review-panel" hidden>
+      <div class="section-title"><span>면접관 종합 의견 <small class="sr-tag">국회 실전 세트</small></span><span class="sr-src" id="sr-src"></span></div>
+      <p class="sr-headline" id="sr-headline"></p>
+      <div class="sr-slots" id="sr-slots"></div>
+      <div class="sr-grid">
+        <div class="sr-col good"><b>잘한 점</b><ul id="sr-strengths"></ul></div>
+        <div class="sr-col fix"><b>보완할 점</b><ul id="sr-improvements"></ul></div>
+      </div>
+      <div class="sr-next"><b>다음 연습</b><ol id="sr-next"></ol></div>
+    </div>
+
     <div class="panel report-panel">
       <div class="section-title">종합 리포트</div>
       <div id="result-report"></div>
@@ -8325,6 +8390,7 @@ function showAdminView(view){
   if(view === 'live') startLiveRefresh(); else stopLiveRefresh();
   if(view === 'beta') loadBetaView();
   if(view === 'questions') qmLoad();
+  if(view === 'realset') loadRealSetView();
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
   document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active', b.dataset.view === view));
   window.scrollTo({top:0});
@@ -8662,21 +8728,23 @@ async function openRecordDetail(recordId, fromList){
   body.innerHTML = '<div class="qa-empty">답변 기록을 불러오는 중…</div>';
   document.getElementById('modal-record').classList.add('active');
 
-  const { data, error } = await sb
-    .from('interview_answers')
-    .select('*')
-    .eq('record_id', recordId)
-    .order('question_index', {ascending:true});
+  const [ansRes, setRes] = await Promise.all([
+    sb.from('interview_answers').select('*').eq('record_id', recordId).order('question_index', {ascending:true}),
+    sb.from('interview_records').select('set_kind, set_overtime, set_review').eq('id', recordId).maybeSingle().then(r=>r, ()=>({data:null})),
+  ]);
+  const { data, error } = ansRes;
+  const setRow = setRes && !setRes.error ? setRes.data : null;
+  const setHead = (setRow && setRow.set_kind) ? setReviewMiniHtml(setRow) : '';
 
   if(error){
     body.innerHTML = `<div class="qa-empty" style="color:var(--danger);">답변 기록을 불러오지 못했습니다: ${escapeHtml(error.message)}</div>`;
     return;
   }
   if(!data || !data.length){
-    body.innerHTML = '<div class="qa-empty">이 면접에는 저장된 답변이 없어요. (답변 저장 기능이 추가되기 전 기록일 수 있어요)</div>';
+    body.innerHTML = setHead + '<div class="qa-empty">이 면접에는 저장된 답변이 없어요. (답변 저장 기능이 추가되기 전 기록일 수 있어요)</div>';
     return;
   }
-  body.innerHTML = data.map((a,i)=>{
+  body.innerHTML = setHead + data.map((a,i)=>{
     const scoreHtml = (a.score != null)
       ? `<span class="score-pill ${a.score<75?'mid':''}">${a.score}점</span>`
       : `<span class="score-pill" style="background:var(--slate-100);color:var(--slate-400);">채점 없음</span>`;
@@ -9229,6 +9297,88 @@ function betaRows(){
     if(acc.expired) st = 'expired';
     return { u, n, recent, avg, lastScore: rs[0] ? rs[0].score : null, last, days, errs, notes, acc, hasPerm, st };
   });
+}
+/* ---- 관리자 · 실전 세트 · 자기소개 코치 모아보기 (2026-10-08) ---- */
+async function loadRealSetView(force){
+  const note = document.getElementById('rs-note');
+  if(force || !state.adminRecords){ try{ await renderAdmin(); }catch(_){} }
+  const since = new Date(Date.now() - 60*86400000).toISOString(); const miss = [];
+  state.rsLogs = []; state.rsScripts = {};
+  try{ const r = await sb.from('activity_log').select('user_id,event,created_at').in('event', ['intro_coach','intro_coach_practice']).gte('created_at', since).limit(5000); if(r.error) throw r.error; state.rsLogs = r.data || []; }catch(e){ miss.push('코치 사용 기록'); }
+  try{ const r = await sb.from('user_resumes').select('user_id,intro_script_at'); if(r.error) throw r.error; (r.data||[]).forEach(x=>{ if(x.intro_script_at) state.rsScripts[x.user_id] = x.intro_script_at; }); }catch(e){ miss.push('저장된 대본'); }
+  const hasCols = (state.adminRecords||[]).some(r=>'set_kind' in r) || !(state.adminRecords||[]).length;
+  if(!hasCols) miss.push('실전 세트 기록(step16 SQL 필요)');
+  if(note){ note.style.display = miss.length ? '' : 'none'; if(miss.length) note.textContent = miss.join(' · ') + '을(를) 읽지 못해 그 칸은 비어 있어요.'; }
+  renderRealSetView();
+}
+function realSetRows(){
+  const users = (state.adminUsers||[]).filter(u=>!u.is_admin);
+  const recs = state.adminRecordsByUser || {}; const logs = state.rsLogs || [];
+  return users.map(u=>{
+    const sets = (recs[u.id]||[]).filter(r=>r.set_kind).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    const scores = sets.map(r=>r.score).filter(v=>v!=null);
+    const mine = logs.filter(l=>l.user_id===u.id);
+    return { u, sets, n: sets.length, last: sets[0] || null, best: scores.length ? Math.max(...scores) : null,
+      avg: scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null,
+      over: sets.filter(r=>r.set_overtime).length,
+      coachMake: mine.filter(l=>l.event==='intro_coach').length, coachPractice: mine.filter(l=>l.event==='intro_coach_practice').length,
+      script: (state.rsScripts||{})[u.id] || null };
+  });
+}
+function setRealSetFilter(v){ state.rsFilter = v; renderRealSetView(); }
+function toggleRealSetRow(uid){ state.rsOpen = state.rsOpen === uid ? null : uid; renderRealSetView(); }
+function openSetRecordFromAdmin(recordId, ev){
+  if(ev) ev.stopPropagation();
+  const r = (state.adminRecords||[]).find(x=>String(x.id)===String(recordId));
+  if(r){
+    const u = (state.adminUsers||[]).find(x=>x.id===r.user_id);
+    state.historyRecords = [{ id:r.id, fieldName: (u && u.name ? u.name+' · ' : '') + (r.field_name||''), score:r.score, durationLabel:r.duration_label||'', dateLabel:`${formatDateFull(r.created_at)} · ${r.question_count}문항` }]
+      .concat((state.historyRecords||[]).filter(h=>String(h.id)!==String(recordId)));
+  }
+  state.recordBackFn = null;
+  openRecordDetail(recordId, false);
+}
+function renderRealSetView(){
+  const all = realSetRows(); const cur = state.rsFilter || 'all';
+  const q = normalizeSearch((document.getElementById('rs-search')||{}).value || '');
+  const setsAll = all.reduce((a,r)=>a.concat(r.sets), []);
+  const setPeople = all.filter(r=>r.n).length, coachPeople = all.filter(r=>r.coachMake || r.coachPractice || r.script).length;
+  const sc = setsAll.map(r=>r.score).filter(v=>v!=null); const avg = sc.length ? Math.round(sc.reduce((a,b)=>a+b,0)/sc.length) : null;
+  const over = setsAll.filter(r=>r.set_overtime).length;
+  const mk = all.reduce((a,r)=>a+r.coachMake,0), pr = all.reduce((a,r)=>a+r.coachPractice,0);
+  document.getElementById('rs-stats').innerHTML =
+      statTile(`${setsAll.length}<i>회</i>`, '실전 세트 응시', {foot:`${setPeople}명이 응시 · 수강생 ${all.length}명 중`})
+    + statTile(avg!=null ? `${avg}<i>점</i>` : '–', '실전 세트 평균 점수', {foot: sc.length ? `최고 ${Math.max(...sc)}점 · 최저 ${Math.min(...sc)}점` : '아직 기록 없음'})
+    + statTile(`${over}<i>회</i>`, '15분 초과', {cls: over ? 'warn' : '', foot: setsAll.length ? `전체의 ${Math.round(over/setsAll.length*100)}%` : '–'})
+    + statTile(`${mk}<i>회</i>`, '자기소개 대본 생성', {foot:`따라 말하기 ${pr}회 · ${coachPeople}명 사용`});
+  const defs = [['all','전체',all.length],['set','실전 세트 응시',setPeople],['noset','아직 안 봄',all.length-setPeople],['over','15분 초과 있음',all.filter(r=>r.over).length],['coach','코치 사용',coachPeople]];
+  document.getElementById('rs-chips').innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setRealSetFilter('${v}')">${l} <b>${n}</b></button>`).join('');
+  const pass = r => cur==='all' || (cur==='set' && r.n) || (cur==='noset' && !r.n) || (cur==='over' && r.over) || (cur==='coach' && (r.coachMake || r.coachPractice || r.script));
+  const rows = all.filter(pass).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
+    .sort((a,b)=>((b.last ? new Date(b.last.created_at).getTime() : 0) - (a.last ? new Date(a.last.created_at).getTime() : 0)) || (b.coachMake+b.coachPractice) - (a.coachMake+a.coachPractice) || (a.u.name||'').localeCompare(b.u.name||''));
+  const el = document.getElementById('rs-table');
+  if(!rows.length){ el.innerHTML = `<div class="qa-empty" style="margin:12px;">${all.length ? '조건에 맞는 사람이 없어요.' : '아직 수강생이 없어요.'}</div>`; return; }
+  el.innerHTML = `<div class="bt-row rs-row bt-head"><span>면접자</span><span>실전 세트</span><span>최근 점수</span><span>15분 초과</span><span>최근 종합 의견</span><span>자기소개 코치</span></div>` + rows.map(r=>{
+    const rv = r.last && r.last.set_review || null;
+    const head = r.last ? (rv && rv.headline ? `<span class="rs-headline">${escapeHtml(rv.headline)}<small>${rv.source==='ai'?'AI 면접관':'점수 기준'} · ${formatDateShort(r.last.created_at)}</small></span>` : `<span class="muted">의견 없음 · ${formatDateShort(r.last.created_at)}</span>`) : '<span class="muted">아직 안 봄</span>';
+    const coach = (r.coachMake || r.coachPractice || r.script) ? `<b>대본 ${r.coachMake} · 연습 ${r.coachPractice}</b><small>${r.script ? '저장된 대본 있음 · '+formatDateShort(r.script) : '저장된 대본 없음'}</small>` : '<span class="muted">사용 안 함</span>';
+    let open = '';
+    if(state.rsOpen === r.u.id){
+      open = `<div class="rs-open" onclick="event.stopPropagation()">` + (r.sets.length ? r.sets.slice(0,10).map(x=>{
+        const v = x.set_review || {};
+        return `<div class="rs-rec"><span>${formatDateFull(x.created_at)}<small>${escapeHtml(x.duration_label||'')}</small></span><span><b>${x.score!=null?x.score+'점':'–'}</b>${x.set_overtime?'<small class="bt-bad">15분 초과</small>':''}</span><span class="rs-headline">${escapeHtml(v.headline || '종합 의견 없음')}${(v.improvements||[]).length ? `<small>보완: ${escapeHtml(v.improvements[0])}</small>` : ''}</span><button type="button" class="btn-manage" onclick="openSetRecordFromAdmin('${x.id}', event)">기록 보기</button></div>`;
+      }).join('') : '<div class="muted" style="padding:6px 0;">실전 세트 기록이 아직 없어요.</div>') + `<div style="padding-top:8px;"><button type="button" class="btn-manage" onclick="event.stopPropagation(); openAdminUserDetail('${r.u.id}')">면접자 상세 열기</button></div></div>`;
+    }
+    return `<div class="bt-row rs-row" onclick="toggleRealSetRow('${r.u.id}')" title="누르면 실전 세트 기록이 펼쳐져요">
+      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
+      <span class="bt-cell" data-l="실전 세트">${r.n ? `<b>${r.n}회</b><small>평균 ${r.avg!=null?r.avg+'점':'–'}</small>` : '<span class="muted">0회</span>'}</span>
+      <span class="bt-cell" data-l="최근 점수">${r.last && r.last.score!=null ? `<b>${r.last.score}점</b><small>최고 ${r.best!=null?r.best+'점':'–'}</small>` : '<span class="muted">–</span>'}</span>
+      <span class="bt-cell" data-l="15분 초과">${r.over ? `<span class="bt-pill none">${r.over}회</span>` : (r.n ? '<span class="muted">없음</span>' : '<span class="muted">–</span>')}</span>
+      <span class="bt-cell" data-l="종합 의견">${head}</span>
+      <span class="bt-cell" data-l="코치">${coach}</span>
+      ${open}
+    </div>`;
+  }).join('');
 }
 function setBetaFilter(v){ state.betaFilter = v; renderBetaView(); }
 function renderBetaView(){
@@ -11066,6 +11216,7 @@ async function runDialogInterview(){
   let asks = [];         // 면접관이 던진 질문/꼬리질문 목록 (결과 화면용)
   state.dialogAsks = asks; state.dialogFinishedRun = 0;
   let pendingAsk = null; // 지금 답변을 기다리는 질문
+  let curSlotName = '';  // 실전 세트: 지금 질문의 칸 이름 (꼬리질문도 같은 칸으로 묶음)
   const opt = {
     fieldId: state.selectedField.id, count: state.questionCount, maxFollowups: 1, followupTotal: state.dialogFollowups, diff: state.difficulty, pressure: state.dialogPressure,
     silenceMs: 1800, maxAnswerMs: 90000, recordAnswers: true, realMode: state.timedMode === 'real',
@@ -11087,7 +11238,8 @@ async function runDialogInterview(){
     else if(type==='question'){
       state.currentQ = d.index; document.getElementById('iv-progress').textContent = `질문 ${d.index} / ${d.total}`;
       Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:d.index });
-      pendingAsk = { q: d.q.q, ref: d.q.ref, kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q) };
+      pendingAsk = { q: d.q.q, ref: d.q.ref, kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q), slot: d.q.slot || null, slotName: d.q.slotName || '' };
+      curSlotName = d.q.slotName || '';
       qEl.textContent = d.q.q; { const qn=document.getElementById('rh-qnum'); if(qn) qn.textContent = String(d.index).padStart(2,'0'); }
       if(d.q.custom){ badge.textContent = d.q.slotName ? '실전 세트 · 자기소개서 기반' : '자기소개서 · 이력서 기반'; badge.className='qcard-source-badge resume'; }
       else { badge.textContent = d.q.slotName ? `실전 세트 · ${d.q.slotName}` : state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
@@ -11112,7 +11264,7 @@ async function runDialogInterview(){
     }
     else if(type==='thinking'){ dialogPhase('thinking', '면접관이 답변을 듣고 생각하는 중…'); document.getElementById('wave-state').textContent='꼬리질문 준비 중'; }
     else if(type==='followup'){
-      pendingAsk = { q: d.followup, ref: null, kind:'followup', followup:true, source:d.source, evaluation:d.evaluation||'' };
+      pendingAsk = { q: d.followup, ref: null, kind:'followup', followup:true, source:d.source, evaluation:d.evaluation||'', slotName: curSlotName };
       qEl.textContent = d.followup; badge.textContent = d.source==='llm' ? 'AI 꼬리질문' : 'AI 꼬리질문 (템플릿)'; badge.className='qcard-source-badge followup';
       ta.value=''; updateCharCount();
     }
@@ -11161,7 +11313,7 @@ async function openDemoReport(){
     if(!state.currentUser){ showToast('먼저 로그인해 주세요.'); return; }
     state.demoResult = true;
     state.selectedField = FIELDS.find(f=>f.id==='court') || FIELDS[0];
-    state.difficulty = '중'; state.interviewMode = 'dialog'; state.interviewStyle = 'dialog';
+    state.difficulty = '중'; state.interviewMode = 'dialog'; state.interviewStyle = 'dialog'; state.dialogRealSet = false;
     state.startTime = Date.now() - 8*60*1000 - 32*1000; state.pausedMs = 0; state.pendingGrades = [];
     state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.micOn = false; state.camOn = false;
     state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[];
@@ -11179,7 +11331,8 @@ function maybeOpenDemoFromUrl(){
 async function finishDialogInterview(asks, transcript){
   // 결과 화면·저장 코드가 기대하는 형태로 옮겨 담기 (기존 채점·전달력 측정 재사용)
   state.dialogTranscript = transcript || [];
-  state.interviewQuestions = asks.map(a=>({ q: a.q, ref: a.ref, followup: !!a.followup, custom: !!a.custom, evaluation: a.evaluation||'' }));
+  state.interviewQuestions = asks.map(a=>({ q: a.q, ref: a.ref, followup: !!a.followup, custom: !!a.custom, evaluation: a.evaluation||'', slotName: a.slotName||'' }));
+  state.setOvertime = !!(state.dialogRealSet && StenoLoop.stats && StenoLoop.stats.setTimeUp);
   state.answerTexts = asks.map(a=>a.answer || '');
   state.answerScores = []; state.answerFeedback = []; state.answerDelivery = [];
   state.answerTimeLimit = asks.map(a=>{
@@ -11730,12 +11883,17 @@ async function endInterview(){
   }
   renderResultBars();
   renderResultSummary();
+  // 국회 실전 세트: 면접관 종합 의견 (규칙으로 먼저 보여 주고, AI가 켜져 있으면 저장 뒤 AI 의견으로 바꿈)
+  const isSetResult = state.interviewMode==='dialog' && !!state.dialogRealSet;
+  SetReview.reset();
+  if(isSetResult){ state.setReview = SetReview.local(); SetReview.render(state.setReview, SetReview.aiWanted() ? 'loading' : ''); }
   showScreen('screen-result');
   if(!state.demoResult){
     Activity.log('interview_end', { field: state.selectedField.name, mode: state.interviewMode==='dialog'?'dialog':'classic', count: state.currentQ, score: state.lastAverageScore||0, duration: durationLabel });
     Activity.setPresence('result', { field: state.selectedField.name });
   }
   await saveInterviewRecord(durationLabel);
+  if(isSetResult && SetReview.aiWanted()) SetReview.fetchAi(durationLabel);
 }
 function setSaveBanner(kind, text){
   const b = document.getElementById('save-banner'); if(!b) return;
@@ -11772,9 +11930,15 @@ async function _saveInterviewRecordOnce(durationLabel){
     duration_label: durationLabel,
     mode: state.interviewMode === 'dialog' ? 'dialog' : 'classic',
   };
+  if(state.interviewMode === 'dialog' && state.dialogRealSet){ recRow.set_kind = 'assembly_real'; recRow.set_overtime = !!state.setOvertime; if(state.setReview) recRow.set_review = state.setReview; }
   // 기록 행은 한 번만 만들고(재시도 시 중복 방지), 답변 행 저장만 실패했으면 답변만 다시 저장
   if(!state.savedRecordId){
     let { data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single();
+    if(recErr && /set_(kind|overtime|review)/i.test(recErr.message||'')){
+      console.warn('[interview_records 실전 세트 칸 없음 → 빼고 저장] SQL: supabase/sql/step16_set_review.sql');
+      delete recRow.set_kind; delete recRow.set_overtime; delete recRow.set_review;
+      ({ data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single());
+    }
     if(recErr && /mode/i.test(recErr.message||'')){
       console.warn('[interview_records.mode 컬럼 없음 → mode 제외하고 저장] SQL: supabase/sql/step5_dialog.sql');
       delete recRow.mode;
@@ -12117,10 +12281,13 @@ async function renderAdmin(){
   state.adminUsers = users;
 
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
-  const { data: records, error: recErr } = await sb
+  let { data: records, error: recErr } = await sb
     .from('interview_records')
-    .select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at')
+    .select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at, set_kind, set_overtime, set_review')
     .order('created_at', {ascending:false});
+  if(recErr && /set_/i.test(recErr.message||'')){   // step16 SQL 전이면 실전 세트 칸 없이
+    ({ data: records, error: recErr } = await sb.from('interview_records').select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at').order('created_at', {ascending:false}));
+  }
   if(recErr){ showToast('면접 기록을 불러오지 못했습니다: '+recErr.message); }
   const allRecords = records || [];
   state.adminRecords = allRecords;
@@ -13213,6 +13380,106 @@ function coachUseSpoken(){
   d.scrollIntoView({ behavior:'smooth', block:'center' });
   showToast('방금 한 말을 "내가 해 본 자기소개"에 넣었어요. "대본 다시 만들기"를 누르면 이 말을 살려 다듬어 줘요.');
 }
+
+/* ============================================================
+ * 국회 실전 세트 · 면접관 종합 의견 (2026-10-08)
+ *   결과 화면에서 규칙으로 먼저 만들고(바로 보임), AI가 켜져 있으면 set-review Edge Function으로 다시 씀.
+ *   기록 저장 때 interview_records.set_review에 함께 저장, AI 의견이 오면 save_set_review로 덮어씀.
+ * ============================================================ */
+/** 기록 상세(수강생·관리자 공통) 맨 위의 실전 세트 종합 의견 요약 */
+function setReviewMiniHtml(row){
+  const rv = row.set_review || {};
+  const li = arr=>(arr||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+  const slots = (rv.slots||[]).map(s=>`<span class="srm-slot${s.score!=null && s.score<60?' low':''}">${escapeHtml(s.name)} <b>${s.score==null?'–':s.score}</b></span>`).join('');
+  return `<div class="srm"><div class="srm-head"><b>국회 실전 세트</b>${row.set_overtime?'<span class="srm-over">15분 초과</span>':''}<span class="srm-src">${rv.source==='ai'?'AI 면접관 의견':rv.headline?'점수 기준 의견':''}</span></div>`
+    + (rv.headline ? `<p class="srm-line">${escapeHtml(rv.headline)}</p>` : '<p class="srm-line">종합 의견이 저장되지 않은 기록이에요.</p>')
+    + (slots ? `<div class="srm-slots">${slots}</div>` : '')
+    + ((rv.strengths||[]).length || (rv.improvements||[]).length ? `<div class="srm-grid"><div><i>잘한 점</i><ul>${li(rv.strengths)}</ul></div><div><i>보완할 점</i><ul>${li(rv.improvements)}</ul></div></div>` : '')
+    + ((rv.next||[]).length ? `<div class="srm-next"><i>다음 연습</i><ol>${li(rv.next)}</ol></div>` : '') + `</div>`;
+}
+const SET_SLOT_ORDER = ['자기소개','지원동기','국회 지식','속기 실무 상황','경험','자기소개서 질문','마지막 할 말'];
+const SET_SLOT_TIP = {
+  '자기소개': '1분 자기소개 코치로 대본을 만들고 60초 안에 말하는 연습을 해 보세요.',
+  '지원동기': '왜 하필 국회인지(다른 기관과 다른 점)를 첫 문장으로 말해 보세요.',
+  '국회 지식': '질문 준비 화면의 국회 이해 문항으로 용어 정의를 30초씩 말해 보세요.',
+  '속기 실무 상황': '첫 행동 → 확인 절차 → 보고 순서로 답하는 연습을 해 보세요.',
+  '경험': '상황 → 내가 한 행동 → 결과(숫자) → 배운 점 순서로 다시 말해 보세요.',
+  '자기소개서 질문': '자기소개서에 쓴 경험을 기간·역할·결과 숫자로 정리해 두세요.',
+  '마지막 할 말': '감사 인사 + 강점 하나 + 각오로 30초 안에 끝내 보세요.',
+};
+const SetReview = {
+  _seq: 0,
+  reset(){ this._seq++; const p = document.getElementById('set-review-panel'); if(p) p.hidden = true; },
+  aiWanted(){ return !state.demoResult && typeof AiSwitch !== 'undefined' && AiSwitch.anyOn() && (typeof AiQuota === 'undefined' || AiQuota.canUse()); },
+  /** 칸별 점수: 본 질문과 그 꼬리질문 점수를 평균 */
+  slots(){
+    const qs = state.interviewQuestions || [], sc = state.answerScores || [], tx = state.answerTexts || [];
+    const map = new Map();
+    qs.forEach((q, i)=>{
+      const name = q.slotName || (q.custom ? '자기소개서 질문' : '기타'); const answered = String(tx[i]||'').replace(/\s/g,'').length >= 5;
+      if(!map.has(name)) map.set(name, { name, scores:[], answered:false, q: q.followup ? '' : q.q });
+      const m = map.get(name); if(answered && sc[i] != null) m.scores.push(sc[i]); if(answered) m.answered = true; if(!m.q && !q.followup) m.q = q.q;
+    });
+    // 국회 지식은 두 문항이라 하나로 합쳐 보여 줌 (위 Map이 이름으로 합침)
+    const list = [...map.values()].map(m=>({ name:m.name, score: m.scores.length ? Math.round(m.scores.reduce((a,b)=>a+b,0)/m.scores.length) : null, answered:m.answered }));
+    list.sort((a,b)=>{ const ia = SET_SLOT_ORDER.indexOf(a.name), ib = SET_SLOT_ORDER.indexOf(b.name); return (ia<0?99:ia) - (ib<0?99:ib); });
+    return list;
+  },
+  local(){
+    const slots = this.slots(); const avg = state.lastAverageScore || 0;
+    const scored = slots.filter(s=>s.score != null);
+    const byHigh = scored.slice().sort((a,b)=>b.score - a.score), byLow = scored.slice().sort((a,b)=>a.score - b.score);
+    const missing = slots.filter(s=>!s.answered).map(s=>s.name);
+    const headline = avg >= 85 ? '전체 흐름이 안정적이에요. 실전에서도 이 페이스를 지키면 돼요.'
+      : avg >= 75 ? '전체 흐름은 좋아요. 아래 보완점 두 가지만 다듬어 보세요.'
+      : avg >= 60 ? '기본기는 갖췄어요. 약한 칸을 집중해서 연습하면 금방 올라가요.'
+      : '아직 연습이 더 필요해요. 한 칸씩 차근차근 다져 보세요.';
+    const strengths = byHigh.filter(s=>s.score >= 70).slice(0,2).map(s=>`${s.name}: 답변 구성이 안정적이었어요 (${s.score}점).`);
+    if(!strengths.length && byHigh[0]) strengths.push(`${byHigh[0].name}: 이번 면접에서 가장 나은 답변이었어요. 이 방식을 다른 질문에도 써 보세요.`);
+    if(strengths.length < 2 && !state.setOvertime && slots.length >= 6) strengths.push('15분 안에 7문항을 모두 마쳤어요. 시간 배분이 좋았어요.');
+    const improvements = byLow.filter(s=>!strengths.some(t=>t.startsWith(s.name+':'))).slice(0,2).map(s=>`${s.name} (${s.score}점): ${SET_SLOT_TIP[s.name] || '핵심 → 근거 → 마무리 순서로 다시 정리해 보세요.'}`);
+    if(missing.length) improvements.unshift(`${missing.join(', ')}에 답변이 없었어요. 모르는 질문도 아는 데까지 말하고 마무리하는 연습을 하세요.`);
+    const next = [];
+    if(state.setOvertime) next.push('15분을 넘겼어요. 한 답변을 1분 안팎으로 줄여 다시 실전 세트를 해 보세요.');
+    byLow.slice(0,2).forEach(s=>{ const t = SET_SLOT_TIP[s.name]; if(t && !next.includes(t)) next.push(t); });
+    next.push('같은 실전 세트를 한 번 더 보고 "내 실력 변화"에서 칸별 점수를 비교해 보세요.');
+    return { headline, strengths: strengths.slice(0,2), improvements: improvements.slice(0,2), next: next.slice(0,3), slots, source:'rule', overall: avg, overtime: !!state.setOvertime };
+  },
+  render(rv, status){
+    const p = document.getElementById('set-review-panel'); if(!p || !rv) return;
+    p.hidden = false;
+    document.getElementById('sr-headline').textContent = rv.headline || '';
+    const src = document.getElementById('sr-src');
+    src.className = 'sr-src' + (status === 'loading' ? ' loading' : '');
+    src.textContent = status === 'loading' ? 'AI 면접관이 종합 의견을 쓰는 중…' : rv.source === 'ai' ? 'AI 면접관 의견' : (status === 'failed' ? '점수 기준 의견 (AI 의견을 받지 못했어요)' : '점수 기준 의견');
+    document.getElementById('sr-slots').innerHTML = (rv.slots || []).map(s=>s.score == null
+      ? `<div class="sr-slot none"><small>${escapeHtml(s.name)}</small><b>답변 없음</b><i><em style="width:0"></em></i></div>`
+      : `<div class="sr-slot${s.score < 60 ? ' low' : ''}"><small title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</small><b>${s.score}</b><i><em style="width:${Math.max(4, Math.min(100, s.score))}%"></em></i></div>`).join('');
+    const li = arr=>(arr||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+    document.getElementById('sr-strengths').innerHTML = li(rv.strengths) || '<li>이번에는 눈에 띄는 강점을 찾지 못했어요.</li>';
+    document.getElementById('sr-improvements').innerHTML = li(rv.improvements) || '<li>큰 보완점은 없었어요.</li>';
+    document.getElementById('sr-next').innerHTML = li(rv.next);
+  },
+  async fetchAi(durationLabel){
+    const seq = this._seq; const base = state.setReview || this.local();
+    try{
+      const qs = state.interviewQuestions || [];
+      const items = qs.map((q,i)=>({ slot_name: q.slotName || (q.custom ? '자기소개서 질문' : ''), q: q.q, answer: String((state.answerTexts||[])[i]||'').slice(0,600), score: (state.answerScores||[])[i] || 0, followup: !!q.followup }));
+      const invoke = sb.functions.invoke('set-review', { body: { field_name: state.selectedField ? state.selectedField.name : '국회 속기사', interview_id: String(state.startTime||''), overall_score: state.lastAverageScore||0, duration_label: durationLabel||'', overtime: !!state.setOvertime, items } });
+      const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과')), 40000));
+      const { data, error } = await Promise.race([invoke, timeout]);
+      if(error) throw new Error(error.message || String(error));
+      if(!data || (!data.headline && !(data.strengths||[]).length)) throw new Error('빈 응답');
+      if(seq !== this._seq) return;   // 그 사이 다른 결과 화면으로 바뀜
+      const rv = Object.assign({}, base, { headline: data.headline || base.headline, strengths: (data.strengths||[]).length ? data.strengths : base.strengths, improvements: (data.improvements||[]).length ? data.improvements : base.improvements, next: (data.next||[]).length ? data.next : base.next, source:'ai', model: data.model || '' });
+      state.setReview = rv; this.render(rv, '');
+      if(state.savedRecordId){ const r = await sb.rpc('save_set_review', { p_record_id: state.savedRecordId, p_review: rv }); if(r && r.error) console.warn('[종합 의견 저장 실패]', r.error.message); }
+    }catch(e){
+      console.warn('[실전 세트 종합 의견: AI 실패 → 점수 기준 의견 유지]', e.message || e);
+      if(seq === this._seq) this.render(base, 'failed');
+    }
+  },
+};
 
 function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개(?!서)/.test(qText||'') ? 60000 : 90000; }
 const REAL_SET_MS = 15 * 60 * 1000;   // 국회 실전 세트 전체 시간
