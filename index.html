@@ -2627,7 +2627,7 @@
   #screen-login.v3 .lg-form{margin-top:28px;display:grid;gap:4px;} #screen-login.v3 .lg-field{display:grid;gap:6px;margin-bottom:16px;} #screen-login.v3 .lg-field label{font-size:14px;font-weight:600;color:var(--c-ink);}
   #screen-login.v3 .lg-input{display:flex;align-items:center;gap:10px;height:50px;padding:0 6px 0 14px;border:1px solid var(--c-line-strong);border-radius:10px;background:#fff;transition:border-color var(--dur),box-shadow var(--dur);box-sizing:border-box;}
   #screen-login.v3 .lg-input > svg{color:var(--c-ink-3);flex:none;} #screen-login.v3 .lg-input:hover{border-color:#b9b6af;} #screen-login.v3 .lg-input:focus-within{border-color:var(--c-ink);box-shadow:0 0 0 3px rgba(28,28,30,.1);}
-  #screen-login.v3 .lg-input input{flex:1;min-width:0;height:100%;border:0;background:transparent;font:inherit;font-size:16px;color:var(--c-ink);padding:0;margin:0;box-shadow:none;} #screen-login.v3 .lg-input input:focus{outline:none;box-shadow:none;} #screen-login.v3 .lg-input input::placeholder{color:#8a8984;}
+  #screen-login.v3 .lg-input input{flex:1;min-width:0;width:100%;height:100%;border:0;background:transparent;font:inherit;font-size:16px;color:var(--c-ink);padding:0;margin:0;box-shadow:none;} #screen-login.v3 .lg-input input:focus{outline:none;box-shadow:none;} #screen-login.v3 .lg-input input::placeholder{color:#8a8984;}
   #screen-login.v3 .lg-eye{width:40px;height:40px;border:0;background:none;border-radius:8px;display:grid;place-items:center;color:var(--c-ink-2);cursor:pointer;flex:none;padding:0;} #screen-login.v3 .lg-eye:hover{background:var(--c-surface);color:var(--c-ink);} #screen-login.v3 .lg-eye.on{color:var(--c-ink);}
   #screen-login.v3 .lg-alert{display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:#fff7f6;border:1px solid #f3c9c4;margin-bottom:14px;} #screen-login.v3 .lg-alert > svg{color:var(--c-danger);flex:none;margin-top:1px;} #screen-login.v3 .lg-alert .t{margin:0;font-size:14px;font-weight:700;color:var(--c-danger);} #screen-login.v3 .lg-alert .d{margin:2px 0 0;font-size:13px;color:var(--c-ink-2);}
   #screen-login.v3 .lg-rem{display:grid;gap:2px;margin:2px 0 18px;} #screen-login.v3 .lg-check{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;min-height:32px;justify-self:start;color:var(--c-ink);}
@@ -2955,6 +2955,10 @@
     #screen-result .section-title{font-size:16px !important;}
     #screen-result .result-actions .btn{padding-top:11px !important;padding-bottom:11px !important;font-size:14.5px !important;}
     .sr-headline{font-size:15.5px !important;}
+    /* 9. (2026-10-08) 프리텐다드는 글자 폭이 넓어서 입력칸 기본 너비가 커짐 → 로그인 칸이 화면보다 넓어져 휴대폰이 화면을 축소해 보여 주던 문제 */
+    #screen-login.v3 .lg-form{grid-template-columns:minmax(0,1fr) !important;}
+    #screen-login.v3 .lg-form > *, #screen-login.v3 .lg-field > *{min-width:0;}
+    #screen-login.v3 .lg-input input{width:100%;}
     /* 6. 종합 의견 칸 이름이 잘리지 않게 */
     .sr-slots{grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
     .sr-slot small{white-space:normal;overflow:visible;line-height:1.35;}
