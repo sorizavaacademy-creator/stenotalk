@@ -3056,6 +3056,12 @@
 .gr-d{font-size:11.5px;font-weight:700;color:#66666c;} .gr-d.up::before{content:'▲ ';color:#0e7c5c;font-size:9px;} .gr-d.down::before{content:'▼ ';color:#b42318;font-size:9px;}
 .gr-ax .gr-chip{display:none;}
 @media (max-width:640px){ .gr-ax{grid-template-columns:58px 1fr 58px;gap:8px;} }
+
+/* ---------- 이력서 칸 (2026-10-07) ---------- */
+.doc-slot-lbl{font-size:13px;font-weight:700;color:#1c1c1e;margin:14px 0 6px;}
+.doc-slot-lbl small{font-weight:500;color:#66666c;margin-left:6px;font-size:12px;}
+.setup-sec .doc-slot-lbl:first-of-type{margin-top:10px;}
+#cv-card-badge:not(.ok){background:#f6f5f3;color:#45454a;}
 </style>
 </head>
 <body>
@@ -4129,7 +4135,8 @@
 
       <section class="setup-sec">
         <h3 class="setup-sec-title">자기소개서·이력서 <span class="sec-tag">선택 사항</span></h3>
-        <p class="setup-sec-sub">서류를 첨부하면 내용을 참고한 맞춤 질문이 함께 나와요. 첨부하지 않아도 면접을 시작할 수 있어요.<br>PDF 1개 · 최대 10MB · 글자를 선택할 수 있는 PDF만 읽을 수 있어요(스캔 이미지 제외). 자기소개서와 이력서를 함께 쓰려면 하나의 PDF로 합쳐 올려 주세요.</p>
+        <p class="setup-sec-sub">서류를 첨부하면 내용을 참고한 맞춤 질문이 함께 나오고, AI 꼬리질문이 켜져 있으면 면접관이 서류 내용과 답변을 연결해 되물어요. 첨부하지 않아도 면접을 시작할 수 있어요.<br>각각 PDF 1개 · 글자를 선택할 수 있는 PDF만 읽을 수 있어요(스캔 이미지 제외). 한 번 올리면 계정에 저장돼 다음 면접에도 쓰여요.</p>
+        <div class="doc-slot-lbl">자기소개서</div>
         <label class="resume-drop" for="resume-file" id="resume-drop"
           ondragover="handleResumeDragOver(event)" ondragleave="handleResumeDragLeave(event)" ondrop="handleResumeDrop(event)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
@@ -4144,6 +4151,21 @@
         </div>
         <input type="file" id="resume-file" accept=".pdf,.hwp,.doc,.docx" style="display:none;" onchange="handleResumeUpload(event)">
         <div id="resume-status" class="resume-status" style="display:none;"></div>
+        <div class="doc-slot-lbl">이력서 <small>학력·경력·자격증</small></div>
+        <label class="resume-drop" for="cv-file" id="cv-drop"
+          ondragover="event.preventDefault(); this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleCvDrop(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
+          <span id="cv-drop-label">이력서 PDF를 여기로 끌어다 놓거나 클릭해서 올려주세요</span>
+        </label>
+        <div class="resume-card" id="cv-card" style="display:none;">
+          <span class="rc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span>
+          <div class="rc-text"><b id="cv-card-name"></b><small id="cv-card-meta"></small></div>
+          <span class="rc-badge ok" id="cv-card-badge">✓ AI 꼬리질문에 활용</span>
+          <button type="button" class="btn-manage" onclick="document.getElementById('cv-file').click()">교체</button>
+          <button type="button" class="rc-del" onclick="removeCv()">삭제</button>
+        </div>
+        <input type="file" id="cv-file" accept=".pdf" style="display:none;" onchange="handleCvUpload(event)">
+        <div id="cv-status" class="resume-status" style="display:none;"></div>
       </section>
     </div>
     <div class="modal-foot setup-foot">
@@ -4435,7 +4457,7 @@
       </div>
       <p class="au-hint" style="margin-top:8px;">이름·휴대폰 번호·비밀번호를 바꾸고 싶으시면 관리자(교육팀)에게 요청해 주세요.</p>
 
-      <div class="subhead">자기소개서 · 이력서</div>
+      <div class="subhead">자기소개서</div>
       <div id="mp-resume" class="mp-resume"></div>
       <div class="mp-resume-actions">
         <label class="btn btn-outline mp-upload-btn" for="mp-resume-file">새 PDF 올리기</label>
@@ -4443,6 +4465,14 @@
         <button class="btn btn-outline mp-delete-btn" id="mp-resume-delete" onclick="deleteSavedResumeFromMyPage()">저장된 자기소개서 삭제</button>
       </div>
       <div id="mp-resume-status" class="resume-status" style="display:none;"></div>
+      <div class="subhead" style="margin-top:16px;">이력서</div>
+      <div id="mp-cv" class="mp-resume"></div>
+      <div class="mp-resume-actions">
+        <label class="btn btn-outline mp-upload-btn" for="mp-cv-file">이력서 PDF 올리기</label>
+        <input type="file" id="mp-cv-file" accept=".pdf" style="display:none;" onchange="handleMyPageCvUpload(event)">
+        <button class="btn btn-outline mp-delete-btn" id="mp-cv-delete" onclick="removeCvFromMyPage()">저장된 이력서 삭제</button>
+      </div>
+      <div id="mp-cv-status" class="resume-status" style="display:none;"></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-solid" onclick="closeMyPage()">닫기</button>
@@ -4607,7 +4637,7 @@
       <p>한국AI속기사협회 StenoTalk AI는 모의면접 연습 서비스 제공을 위해 아래 정보를 수집·이용합니다.</p>
       <table class="privacy-table">
         <tr><th>수집 항목</th><td>이름, 이메일, 휴대폰 번호, 지원 기관(선택), 자기소개서·이력서 파일 내용(선택), 면접 답변 원문·점수·피드백, 연습 일시</td></tr>
-        <tr><th>이용 목적</th><td>회원 식별과 로그인, 면접 연습 기록 저장·결과 제공, 관리자의 연습 현황 확인과 면접 일정 안내 연락, 자기소개서 기반 맞춤 질문 생성</td></tr>
+        <tr><th>이용 목적</th><td>회원 식별과 로그인, 면접 연습 기록 저장·결과 제공, 관리자의 연습 현황 확인과 면접 일정 안내 연락, 자기소개서·이력서 기반 맞춤 질문과 AI 꼬리질문 생성</td></tr>
         <tr><th>동의 거부</th><td>동의하지 않을 권리가 있으나, 필수 항목에 동의하지 않으면 서비스 이용(회원가입)이 불가합니다.</td></tr>
       </table>
       <p class="privacy-note">카메라 화면은 본인 확인용 미리보기로만 사용되며 저장·전송되지 않습니다.</p>
@@ -7475,7 +7505,7 @@ async function handleLogin(){
   maybeStartTour();
 }
 async function handleLogout(){
-  state.resumeText = '';
+  state.resumeText = ''; state.cvText = ''; state.cvFileName = '';
   try{ AnswerAudio.clear(); }catch(_){}
   if(accessWatchTimer){ clearInterval(accessWatchTimer); accessWatchTimer = null; }
   await Activity.log('logout'); await Activity.offline();
@@ -8868,7 +8898,7 @@ function updateSetupSummary(){
   const pr = {soft:'부드럽게', normal:'보통', hard:'압박'}[state.dialogPressure||'normal'] || '보통';
   const fu = (state.dialogFollowups===0) ? '꼬리질문 없음' : `꼬리질문 최대 ${state.dialogFollowups||3}개`;
   const cam = (document.getElementById('switch-cam')||{}).checked ? '카메라 켬' : '카메라 끔';
-  const hasResume = state.customQuestions && state.customQuestions.length;
+  const hasResume = (state.customQuestions && state.customQuestions.length) || !!state.cvText;
   const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
   parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real') parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
   el.textContent = parts.join(' · ');
@@ -8881,7 +8911,7 @@ function syncResumeCard(){
   if(!card || !drop) return;
   const has = label && label !== RESUME_DROP_DEFAULT;
   card.style.display = has ? '' : 'none'; drop.style.display = has ? 'none' : '';
-  const ms = document.getElementById('setup-ms-resume'); if(ms){ ms.textContent = has ? '첨부됨' : '선택'; ms.className = has ? 'ok' : ''; }
+  const ms = document.getElementById('setup-ms-resume'); if(ms){ const any = has || !!state.cvText; ms.textContent = any ? '첨부됨' : '선택'; ms.className = any ? 'ok' : ''; }
   if(has){
     const ok = st && st.classList.contains('ok'), warn = st && st.classList.contains('warn');
     document.getElementById('resume-card-name').textContent = label;
@@ -9419,8 +9449,10 @@ async function openMyPage(){
   const st = document.getElementById('mp-status');
   st.innerHTML = u.isAdmin ? '관리자' : `<span class="status-chip ${statusChipClass(u.status||'준비 중')}">${escapeHtml(u.status||'준비 중')}</span>`;
   const s = document.getElementById('mp-resume-status'); s.style.display='none'; s.className='resume-status'; s.textContent='';
+  const cs = document.getElementById('mp-cv-status'); if(cs){ cs.style.display='none'; cs.className='resume-status'; cs.textContent=''; }
   document.getElementById('modal-mypage').classList.add('active');
   await renderMyPageResume();
+  await renderMyPageCv();
 }
 function closeMyPage(){ document.getElementById('modal-mypage').classList.remove('active'); }
 
@@ -9480,6 +9512,85 @@ async function deleteSavedResumeFromMyPage(){
   await renderMyPageResume();
 }
 
+
+/* ---------------- 이력서 (2026-10-07) ----------------
+ * 자기소개서와 따로 올리는 이력서 PDF. user_resumes.cv_* 칸에 저장(step12).
+ * AI 꼬리질문(followup-question)에 cv_summary(앞 1,200자)로 함께 보내 서류 내용과 답변을 연결해 되묻게 함. */
+const CV_DROP_DEFAULT = '이력서 PDF를 여기로 끌어다 놓거나 클릭해서 올려주세요';
+function syncCvCard(){
+  const card = document.getElementById('cv-card'), drop = document.getElementById('cv-drop');
+  if(!card || !drop) return;
+  const has = !!state.cvText;
+  card.style.display = has ? '' : 'none'; drop.style.display = has ? 'none' : '';
+  if(has){
+    document.getElementById('cv-card-name').textContent = state.cvFileName || '이력서';
+    document.getElementById('cv-card-meta').textContent = state.cvUpdatedAt ? `${formatDateShort(state.cvUpdatedAt)} 저장 · 계정에 저장된 서류` : '계정에 저장된 서류';
+    const b = document.getElementById('cv-card-badge');
+    if(b){ const on = (typeof AiSwitch !== 'undefined') && AiSwitch.on('ai_followup'); b.textContent = on ? '✓ AI 꼬리질문에 활용' : '저장됨 · AI 꼬리질문이 켜지면 활용'; b.className = 'rc-badge' + (on ? ' ok' : ''); }
+  }
+  const lbl = document.getElementById('cv-drop-label'); if(lbl && !has) lbl.textContent = CV_DROP_DEFAULT;
+  const ms = document.getElementById('setup-ms-resume'); if(ms){ const any = has || !!(state.customQuestions && state.customQuestions.length); ms.textContent = any ? '첨부됨' : '선택'; ms.className = any ? 'ok' : ''; }
+  if(typeof updateSetupSummary === 'function') updateSetupSummary();
+}
+async function readCvPdf(file, statusEl){
+  const say = (cls, msg)=>{ if(statusEl){ statusEl.style.display=''; statusEl.className='resume-status' + (cls ? ' '+cls : ''); statusEl.textContent = msg; } };
+  if(!file) return null;
+  if(!/\.pdf$/i.test(file.name)){ say('warn', 'PDF 파일만 올릴 수 있어요. 한글·워드 파일은 PDF로 저장한 뒤 올려 주세요.'); return null; }
+  if(typeof pdfjsLib === 'undefined'){ say('warn', 'PDF 분석 라이브러리를 불러오지 못했습니다. 네트워크 상태를 확인해 주세요.'); return null; }
+  say('', '이력서를 읽는 중입니다…');
+  try{
+    const text = await extractPdfText(file);
+    if(!text || !text.trim()){ say('warn', 'PDF에서 글자를 읽지 못했어요. 스캔 이미지 PDF가 아닌, 글자가 선택되는 PDF로 올려 주세요.'); return null; }
+    return text;
+  }catch(err){ say('warn', 'PDF 내용을 읽는 중 문제가 발생했어요: ' + (err.message || err)); return null; }
+}
+async function saveCvText(fileName, text){
+  if(!state.currentUser) return false;
+  const now = new Date().toISOString();
+  const { error } = await sb.from('user_resumes').upsert({ user_id: state.currentUser.id, cv_file_name: fileName, cv_text: (text||'').slice(0, 20000), cv_updated_at: now, updated_at: now });
+  if(error){ console.warn('[이력서 저장 실패] ' + error.message + ' — supabase/sql/step12_cv_text.sql을 확인해 주세요.'); return false; }
+  state.cvUpdatedAt = now;
+  return true;
+}
+async function processCvFile(file){
+  const st = document.getElementById('cv-status');
+  const text = await readCvPdf(file, st); if(!text) return;
+  state.cvText = text.slice(0, 2000); state.cvFileName = file.name;
+  const ok = await saveCvText(file.name, text);
+  st.style.display=''; st.className = 'resume-status ok';
+  st.textContent = `이력서를 읽었어요 (${file.name}).` + ((typeof AiSwitch !== 'undefined' && AiSwitch.on('ai_followup')) ? ' AI 꼬리질문에서 이력서 내용과 답변을 연결해 물어봐요.' : ' AI 꼬리질문이 켜지면 이력서 내용을 참고해 물어봐요.') + (ok ? ' 계정에 저장돼 다음 면접에도 쓰여요.' : '');
+  syncCvCard();
+}
+function handleCvUpload(event){ const f = event.target.files && event.target.files[0]; event.target.value = ''; if(f) processCvFile(f); }
+function handleCvDrop(event){ event.preventDefault(); const d = document.getElementById('cv-drop'); if(d) d.classList.remove('dragover'); const f = event.dataTransfer.files && event.dataTransfer.files[0]; if(f) processCvFile(f); }
+async function deleteSavedCv(){
+  if(!state.currentUser) return false;
+  const { error } = await sb.from('user_resumes').update({ cv_file_name: null, cv_text: null, cv_updated_at: null }).eq('user_id', state.currentUser.id);
+  if(error){ showToast('이력서를 삭제하지 못했어요: ' + error.message); return false; }
+  state.cvText = ''; state.cvFileName = ''; state.cvUpdatedAt = null;
+  return true;
+}
+async function removeCv(){ if(await deleteSavedCv()){ const st = document.getElementById('cv-status'); if(st){ st.style.display='none'; st.textContent=''; } showToast('저장된 이력서를 삭제했어요'); } syncCvCard(); }
+async function renderMyPageCv(){
+  const box = document.getElementById('mp-cv'), del = document.getElementById('mp-cv-delete'); if(!box) return;
+  box.innerHTML = '<span style="color:var(--slate-400);">불러오는 중…</span>';
+  const { data, error } = await sb.from('user_resumes').select('cv_file_name, cv_text, cv_updated_at').eq('user_id', state.currentUser.id).maybeSingle();
+  if(error){ box.innerHTML = `<span style="color:var(--danger);">불러오지 못했습니다: ${escapeHtml(error.message)}</span>`; if(del) del.style.display='none'; return; }
+  if(!data || !data.cv_text){ box.innerHTML = '<span style="color:var(--slate-400);">저장된 이력서가 없어요. PDF를 올리면 AI 꼬리질문이 이력서의 경력·자격을 참고해 물어봐요.</span>'; if(del) del.style.display='none'; return; }
+  box.innerHTML = `<div class="mp-resume-name">${escapeHtml(data.cv_file_name || '이력서')}</div><div class="mp-resume-meta">${data.cv_updated_at ? formatDateFull(data.cv_updated_at) + ' 저장 · ' : ''}약 ${data.cv_text.length.toLocaleString()}자</div><p class="mp-resume-preview">${escapeHtml(data.cv_text.slice(0, 300))}</p>`;
+  if(del) del.style.display = '';
+}
+async function handleMyPageCvUpload(event){
+  const f = event.target.files && event.target.files[0]; event.target.value = ''; if(!f) return;
+  const st = document.getElementById('mp-cv-status');
+  const text = await readCvPdf(f, st); if(!text) return;
+  const ok = await saveCvText(f.name, text);
+  if(!ok){ st.className='resume-status warn'; st.textContent='저장에 실패했어요. 잠시 후 다시 시도해 주세요.'; return; }
+  state.cvText = text.slice(0, 2000); state.cvFileName = f.name;
+  st.className='resume-status ok'; st.textContent = `'${f.name}'을(를) 저장했어요. 다음 면접부터 AI 꼬리질문에 쓰여요.`;
+  await renderMyPageCv(); syncCvCard();
+}
+async function removeCvFromMyPage(){ if(await deleteSavedCv()) showToast('저장된 이력서를 삭제했어요'); await renderMyPageCv(); syncCvCard(); }
 /* ---------------- 자기소개서 텍스트 저장 / 자동 불러오기 (user_resumes 테이블) ---------------- */
 async function saveResumeText(fileName, text){
   if(!state.currentUser) return false;
@@ -9495,13 +9606,17 @@ async function saveResumeText(fileName, text){
   }
   return true;
 }
-async function loadSavedResume(){ try{ await loadSavedResumeInner(); } finally { state.resumeFileSize = 0; syncResumeCard(); } }
+async function loadSavedResume(){ try{ await loadSavedResumeInner(); } finally { state.resumeFileSize = 0; syncResumeCard(); syncCvCard(); } }
 async function loadSavedResumeInner(){
   const statusEl = document.getElementById('resume-status');
   if(!state.currentUser) return;
-  const { data, error } = await sb.from('user_resumes').select('file_name, resume_text, updated_at')
+  let { data, error } = await sb.from('user_resumes').select('file_name, resume_text, updated_at, cv_file_name, cv_text, cv_updated_at')
     .eq('user_id', state.currentUser.id).maybeSingle();
+  if(error && /cv_/i.test(error.message||'')){   // step12 SQL 전이면 이력서 칸 없이
+    ({ data, error } = await sb.from('user_resumes').select('file_name, resume_text, updated_at').eq('user_id', state.currentUser.id).maybeSingle());
+  }
   if(error){ console.warn('[저장된 자기소개서 조회 실패] '+error.message); return; }
+  if(data && data.cv_text && !state.cvText){ state.cvText = data.cv_text.slice(0, 2000); state.cvFileName = data.cv_file_name || '저장된 이력서'; state.cvUpdatedAt = data.cv_updated_at; syncCvCard(); }
   if(!data || !data.resume_text) return;
   if(!state.resumeText) state.resumeText = data.resume_text.slice(0, 2000);
   // 그 사이 사용자가 새 파일을 올렸으면 덮어쓰지 않음
@@ -9517,7 +9632,9 @@ async function loadSavedResumeInner(){
 }
 async function deleteSavedResume(){
   if(!state.currentUser) return;
-  const { error } = await sb.from('user_resumes').delete().eq('user_id', state.currentUser.id);
+  // 2026-10-07: 이력서(cv_*)는 같은 행에 있으므로 행을 지우지 않고 자기소개서 칸만 비움
+  let { error } = await sb.from('user_resumes').update({ file_name: null, resume_text: null }).eq('user_id', state.currentUser.id);
+  if(error){ ({ error } = await sb.from('user_resumes').delete().eq('user_id', state.currentUser.id)); }
   if(error){ showToast('삭제에 실패했습니다: '+error.message); return; }
   state.customQuestions = []; state.resumeText = '';
   document.getElementById('resume-drop-label').textContent = 'PDF 파일을 여기로 끌어다 놓거나 클릭해서 올려주세요';
@@ -12302,6 +12419,7 @@ const StenoDialog = {
           body: { field_id: fieldId, question, answer, reference: reference || null, history, pressure: pressure || 'normal',
                   root_question: root, qtype: qtype || undefined, followups_done: (typeof followupsDone === 'number') ? followupsDone : undefined,
                   resume_summary: state.resumeText ? state.resumeText.slice(0, 1200) : null,
+                  cv_summary: state.cvText ? state.cvText.slice(0, 1200) : null,
                   interview_id: state.demoResult ? null : String(state.startTime || '') },
         });
         const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과 ('+(STEP1.followupTimeoutMs/1000)+'초)')), STEP1.followupTimeoutMs));
