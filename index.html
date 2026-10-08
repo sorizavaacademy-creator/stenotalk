@@ -4191,7 +4191,7 @@
         <div class="opt-grid">
           <div id="setup-realset-block" class="opt-pair" style="display:none;">
             <div class="opt" style="grid-column:1/-1;">
-              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변 시간 제한이 함께 켜지고, 15분이 지나면 바로 마지막 질문으로 넘어가요.</div>
+              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 말을 마치면 면접관이 바로 다음 질문을 해요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
               <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>국회 실전 세트 (15분)</button></div>
               <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li>국회 지식</li><li>국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
             </div>
@@ -9015,7 +9015,7 @@ function updateSetupSummary(){
   const hasResume = (state.customQuestions && state.customQuestions.length) || !!state.cvText;
   const realSet = !isReview && state.realSet && state.selectedField && state.selectedField.id === 'assembly';
   const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : realSet ? ['국회 실전 세트 7문항 · 15분', fu] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
-  parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real') parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
+  parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real' && !realSet) parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
   el.textContent = parts.join(' · ');
   const ms = document.getElementById('setup-ms-config'); if(ms) ms.textContent = isReview ? `복습 ${state.questionCount||0}개` : realSet ? '실전 세트' : `질문 ${state.questionCount||5}개`;
   try{ syncRealSetDocStep(); }catch(e){}
@@ -9803,15 +9803,8 @@ function applyRealSetUI(){
   const std = document.getElementById('setup-std-options');
   const isReview = state.selectedField && state.selectedField.id === 'review';
   if(std) std.style.display = (isReview || on) ? 'none' : '';
-  const chips = document.querySelectorAll('#chip-timed .chip');
-  if(on){
-    if(state._timedBeforeSet === undefined) state._timedBeforeSet = state.timedMode || 'free';
-    state.timedMode = 'real';
-    chips.forEach(c=>{ c.classList.toggle('sel', c.dataset.val==='real'); c.classList.toggle('locked', c.dataset.val!=='real'); });
-  }else{
-    if(state._timedBeforeSet !== undefined){ state.timedMode = state._timedBeforeSet; delete state._timedBeforeSet; }
-    chips.forEach(c=>{ c.classList.remove('locked'); c.classList.toggle('sel', c.dataset.val === (state.timedMode==='real' ? 'real' : 'free')); });
-  }
+  // 실전 세트는 답변별 시간 제한 없이 대화처럼 진행 → 답변 시간 칸을 숨김 (2026-10-08). 고른 값은 일반 면접용으로 그대로 둠
+  const tb = document.getElementById('setup-time-block'); if(tb) tb.style.display = on ? 'none' : '';
   syncRealSetDocStep();
   updateSetupSummary();
 }
@@ -10641,7 +10634,7 @@ function lv3Apply(on){
   if(rh3Iv){ clearInterval(rh3Iv); rh3Iv = null; }
   const t = document.getElementById('rh3-title'); if(t && state.selectedField) t.textContent = `${state.selectedField.name} 라이브 면접`;
   const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '질문이 끝나면 자동으로 답변을 듣고, 말을 마친 뒤 잠시 기다리면 다음으로 넘어가요. 이 면접은 채점돼요.';
-  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = state.dialogRealSet ? '국회 실전 세트 · 자기소개 60초 · 답변 90초 · 전체 15분' : '권장 답변 시간 30초 · 최대 90초에 자동 제출';
+  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = state.dialogRealSet ? '국회 실전 세트 · 말을 마치면 다음 질문으로 · 전체 15분' : '권장 답변 시간 30초 · 최대 90초에 자동 제출';
   if(state.currentUser){ const n = document.getElementById('nav-username-rh3'); if(n) n.textContent = state.currentUser.name || ''; const av = document.getElementById('rh3-avatar'); if(av) av.textContent = (state.currentUser.name||'?').slice(0,1); }
   const cp = document.getElementById('cam-preview'); if(cp) cp.classList.remove('folded'); const fb = document.getElementById('lv3-fold'); if(fb) fb.textContent = '접기';
   lv3 = { listenStart:null, lastSec:0, phase:'' };
@@ -11080,9 +11073,9 @@ async function runDialogInterview(){
   // 국회 실전 세트: 순서 고정 7문항 · 전체 15분 · 실전 시간 제한
   const realSet = !!state.realSet && state.selectedField.id === 'assembly';
   state.dialogRealSet = realSet;
-  if(realSet){ opt.realSet = true; opt.realMode = true; opt.count = 7; opt.setDurationMs = REAL_SET_MS; }
+  if(realSet){ opt.realSet = true; opt.realMode = false; opt.count = 7; opt.setDurationMs = REAL_SET_MS; opt.maxAnswerMs = 5 * 60 * 1000; opt.silenceMs = 7000; }   // 답변별 시간 제한 없음: 말을 마치고 7초 조용하면 다음으로(생각할 틈), 안전장치로 한 답변 최대 5분
   state.dialogRealMode = opt.realMode;
-  if(realSet) showToast('국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 자기소개 60초·답변 90초 제한이 있고, 15분이 지나면 마지막 질문으로 넘어가요.', 'info');
+  if(realSet) showToast('국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 답변마다 시간 제한은 없고, 말을 마치고 7초쯤 조용하면 면접관이 이어서 질문해요. 일찍 끝내려면 "답변 끝내기"를 누르세요. 15분이 지나면 마지막 질문으로 넘어가요.', 'info');
   else if(opt.realMode) showToast('실전 모드예요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말이 없으면 다음 질문으로 넘어가요.', 'info');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
   // (실전 세트는 자기소개서 맞춤 질문 1개를 6번 "경험" 자리에 넣음)
