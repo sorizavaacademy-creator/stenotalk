@@ -7,7 +7,11 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
 <meta name="theme-color" content="#ffffff">
 <!-- 2026-10-08 홈 화면 아이콘: 휴대폰 홈 화면에 추가하면 아이콘만 눌러 바로 들어옴 (주소는 그대로) -->
-<link rel="manifest" href="manifest.webmanifest">
+<script>
+/* 삼성 인터넷은 홈 화면 앱을 자체 방식으로 포장해서 설치할 때 "안전하지 않은 앱 차단됨"(Play 프로텍트) 경고가 뜸.
+   → 삼성 인터넷에서는 앱 설치 정보(manifest)를 빼서, "홈 화면에 추가"가 경고 없는 바로가기로 만들어지게 함. 크롬·아이폰은 그대로. */
+(function(){ try{ if(/SamsungBrowser/i.test(navigator.userAgent)) return; var l=document.createElement('link'); l.rel='manifest'; l.href='manifest.webmanifest'; document.head.appendChild(l); }catch(e){} })();
+</script>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="StenoTalk">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3417,8 +3421,9 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <!-- 갤럭시 삼성 인터넷 (설치 버튼이 바로 안 뜨는 경우) -->
     <div class="hs-pane" data-hs="samsung">
       <ol class="hs-steps">
-        <li><span>주소창 오른쪽 <b>설치 버튼</b>을 눌러요<small>없으면 오른쪽 아래 메뉴 ⋮ → <b>현재 페이지 추가</b> → <b>홈 화면</b></small></span><span class="hs-fig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v8M8.5 11.5L12 15l3.5-3.5"/></svg></span></li>
-        <li><span><b>설치</b>(또는 추가)를 누르면 끝이에요</span><span class="hs-fig">설치</span></li>
+        <li><span>오른쪽 아래 <b>메뉴(⋮ 또는 ≡)</b>를 눌러요</span><span class="hs-fig"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></span></li>
+        <li><span><b>현재 페이지 추가</b> → <b>홈 화면</b>을 눌러요</span><span class="hs-fig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li>
+        <li><span><b>추가</b>를 누르면 끝이에요</span><span class="hs-fig">추가</span></li>
       </ol>
     </div>
     <!-- 안드로이드인데 크롬·삼성 인터넷이 아닌 경우 -->
@@ -14975,7 +14980,7 @@ const HomeApp = {
     if(this.isIOS()) return { mode: this.isStandalone() ? 'ios-redo' : (/CriOS|FxiOS|EdgiOS|Whale|NAVER|KAKAO|DaumApps/i.test(u) ? 'ios-other' : 'ios') };
     if(this.isAndroid()){
       const other = /SamsungBrowser/i.test(u) ? '삼성 인터넷' : /Whale\//i.test(u) ? '웨일' : /OPR\//i.test(u) ? '오페라' : /Firefox\//i.test(u) ? '파이어폭스' : /EdgA\//i.test(u) ? '' : (!/Chrome\//i.test(u) ? '이 브라우저' : '');
-      if(other === '삼성 인터넷') return { mode: this.deferred ? 'android-prompt' : 'samsung', samsung:true };   // 삼성 인터넷도 바로 설치 (크롬으로 옮길 필요 없음)
+      if(other === '삼성 인터넷') return { mode:'samsung', samsung:true };   // 삼성 인터넷: 앱 설치 대신 바로가기로 추가 (Play 프로텍트 경고 없음)
       if(other) return { mode:'android-other', bname: other };
       return { mode: this.deferred ? 'android-prompt' : 'android-manual' };
     }
