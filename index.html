@@ -2834,6 +2834,12 @@
   /* 1분 자기소개 코치 (2026-10-08) */
   .d3-btn-ghost{background:#fff;border-color:var(--c-line,#e6e4e0);color:var(--c-ink,#1c1c1e);} .d3-btn-ghost:hover{background:var(--c-surface,#f6f5f3);}
   .coach-box{max-width:720px;}
+  #modal-coach .btn{width:auto !important;flex:0 0 auto !important;min-width:0;height:40px;padding:0 18px;font-size:14px;border-radius:10px;}
+  #modal-coach .coach-mic{height:36px;padding:0 14px;font-size:13.5px;}
+  #modal-coach .modal-foot{display:flex;justify-content:flex-end;}
+  #modal-coach .modal-foot .btn{min-width:88px;}
+  #modal-coach #coach-make.is-off{opacity:.55;}
+  #modal-coach .coach-practice-row{justify-content:flex-start;}
   .coach-sec{padding:4px 0 22px;border-bottom:1px solid var(--c-line,#e6e4e0);margin-bottom:20px;} .coach-sec:last-child{border-bottom:0;margin-bottom:0;padding-bottom:4px;}
   .coach-sec-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;margin:0 0 12px;color:var(--c-ink,#1c1c1e);} .coach-sec-title small{font-size:12.5px;font-weight:500;color:var(--c-ink-3,#66666c);}
   .coach-sec-title i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c-ink,#1c1c1e);color:#fff;font-size:12px;}
@@ -3196,7 +3202,6 @@
         </div>
         <div class="coach-row coach-make-row">
           <button type="button" class="btn btn-solid" id="coach-make" onclick="coachMake()">1분 대본 만들기</button>
-          <span class="coach-meta" id="coach-make-note">AI가 서류와 내 자기소개에 있는 내용만으로 대본을 만들어요 · 하루 10회</span>
         </div>
       </section>
       <section class="coach-sec" id="coach-script-sec" hidden>
@@ -3225,7 +3230,7 @@
       </section>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-solid" onclick="closeCoach()">닫기</button>
+      <button class="btn btn-outline" onclick="closeCoach()">닫기</button>
     </div>
   </div>
 </div>
@@ -13176,8 +13181,7 @@ async function openCoach(){
   document.getElementById('modal-coach').classList.add('active');
   coachResetPractice(); coachDraftInput();
   const aiOn = AiSwitch.anyOn();
-  const mk = document.getElementById('coach-make'); mk.disabled = !aiOn; mk.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
-  document.getElementById('coach-make-note').textContent = aiOn ? 'AI가 서류와 내 자기소개에 있는 내용만으로 대본을 만들어요 · 하루 10회' : '관리자가 AI 기능을 꺼 두어 지금은 대본을 만들 수 없어요. 저장된 대본으로 따라 말하기는 할 수 있어요.';
+  const mk = document.getElementById('coach-make'); mk.disabled = false; mk.classList.toggle('is-off', !aiOn); mk.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
   const docsEl = document.getElementById('coach-docs'); docsEl.innerHTML = '<li>서류를 확인하는 중…</li>';
   coachRenderScript();
   let data = {};
@@ -13249,6 +13253,7 @@ async function coachRecordDraft(){
 }
 async function coachMake(){
   if(Coach.busy) return;
+  if(!AiSwitch.anyOn()){ showToast('지금은 AI 기능이 꺼져 있어 대본을 만들 수 없어요. 저장된 대본으로 따라 말하기는 할 수 있어요.', 'warn'); return; }
   if(Coach.draftRec){ StenoListener.stop('manual'); }
   const draft = document.getElementById('coach-draft').value.trim();
   if(!Coach.docs.resume && !Coach.docs.cv && coachCharCount(draft) < 20){ showToast('서류가 없으면 자기소개를 20자 이상 말하거나 적어 주세요.'); return; }
@@ -13277,7 +13282,7 @@ async function coachMake(){
     console.warn('[자기소개 코치] 대본 생성 실패', e);
     showToast('대본을 만들지 못했어요: ' + (e.message || e), 'warn');
   }finally{
-    Coach.busy = false; btn.disabled = !AiSwitch.anyOn(); btn.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
+    Coach.busy = false; btn.disabled = false; btn.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
   }
 }
 async function coachSave(){
