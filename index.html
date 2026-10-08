@@ -3273,6 +3273,7 @@ body.hs-open #help-fab, body.hs-open #fb-fab{display:none !important;}
 .hs-btn{flex:1;height:44px;border-radius:10px;border:1px solid #d3d0ca;background:#fff;color:#1c1c1e;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;}
 .hs-btn.pri{background:#c8441c;border-color:#c8441c;color:#fff;}
 .hs-btn.pri:active{background:#ad3915;}
+.hs-alt{margin:12px 0 0;font-size:12.5px;color:#66666c;text-align:center;} .hs-alt button{border:0;background:none;padding:0;font:inherit;font-weight:700;color:#2f6fe0;text-decoration:underline;cursor:pointer;}
 .hs-copy{margin-top:10px;width:100%;height:40px;border-radius:10px;border:1px dashed #d3d0ca;background:#fff;font:inherit;font-size:13px;color:#45454a;cursor:pointer;}
 /* 로그인 화면·마이페이지 안의 작은 버튼 */
 .hs-link{display:none;margin:14px auto 0;padding:9px 14px;border-radius:999px;border:1px solid #e6e4e0;background:#fff;color:#45454a;font:inherit;font-size:13px;font-weight:600;align-items:center;gap:8px;cursor:pointer;}
@@ -3413,15 +3414,18 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       </ol>
     </div>
     <!-- 안드로이드인데 크롬이 아닌 경우 (삼성 인터넷 등) -->
-    <div class="hs-pane" data-hs="android-other">
-      <p class="hs-note">지금 브라우저(<span class="hs-bname">삼성 인터넷</span>)에서는 음성 인식이 잘 안 돼요. <b>크롬</b>으로 이 주소를 연 다음 홈 화면에 추가해 주세요.</p>
+    <!-- 갤럭시 삼성 인터넷 (설치 버튼이 바로 안 뜨는 경우) -->
+    <div class="hs-pane" data-hs="samsung">
       <ol class="hs-steps">
-        <li><span>아래 <b>주소 복사</b>를 눌러요</span><span class="hs-fig">복사</span></li>
-        <li><span><b>크롬</b>을 열고 주소창에 붙여 넣어요</span><span class="hs-fig">크롬</span></li>
-        <li><span>로그인하면 이 안내가 다시 떠요. <b>추가하기</b>를 눌러요</span><span class="hs-fig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span></li>
+        <li><span>주소창 오른쪽 <b>설치 버튼</b>을 눌러요<small>없으면 오른쪽 아래 메뉴 ⋮ → <b>현재 페이지 추가</b> → <b>홈 화면</b></small></span><span class="hs-fig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v8M8.5 11.5L12 15l3.5-3.5"/></svg></span></li>
+        <li><span><b>설치</b>(또는 추가)를 누르면 끝이에요</span><span class="hs-fig">설치</span></li>
       </ol>
-      <button type="button" class="hs-copy" onclick="HomeApp.copyLink(this)">주소 복사</button>
     </div>
+    <!-- 안드로이드인데 크롬·삼성 인터넷이 아닌 경우 -->
+    <div class="hs-pane" data-hs="android-other">
+      <p class="hs-note">지금 브라우저(<span class="hs-bname">이 브라우저</span>)에서는 홈 화면 추가가 잘 안 돼요. 아래 버튼을 누르면 <b>크롬</b>에서 바로 열려요.</p>
+    </div>
+    <p class="hs-alt" id="hs-alt" style="display:none;">면접할 때 음성 인식이 잘 안 되면 <button type="button" onclick="HomeApp.openChrome()">크롬으로 열기</button></p>
     <!-- 아이폰·아이패드 사파리 -->
     <div class="hs-pane" data-hs="ios">
       <ol class="hs-steps">
@@ -14971,6 +14975,7 @@ const HomeApp = {
     if(this.isIOS()) return { mode: this.isStandalone() ? 'ios-redo' : (/CriOS|FxiOS|EdgiOS|Whale|NAVER|KAKAO|DaumApps/i.test(u) ? 'ios-other' : 'ios') };
     if(this.isAndroid()){
       const other = /SamsungBrowser/i.test(u) ? '삼성 인터넷' : /Whale\//i.test(u) ? '웨일' : /OPR\//i.test(u) ? '오페라' : /Firefox\//i.test(u) ? '파이어폭스' : /EdgA\//i.test(u) ? '' : (!/Chrome\//i.test(u) ? '이 브라우저' : '');
+      if(other === '삼성 인터넷') return { mode: this.deferred ? 'android-prompt' : 'samsung', samsung:true };   // 삼성 인터넷도 바로 설치 (크롬으로 옮길 필요 없음)
       if(other) return { mode:'android-other', bname: other };
       return { mode: this.deferred ? 'android-prompt' : 'android-manual' };
     }
@@ -14986,7 +14991,8 @@ const HomeApp = {
     document.getElementById('hs-title').textContent = redo ? '사파리로 다시 추가해 주세요' : '홈 화면에 StenoTalk 추가하기';
     const sub = sh.querySelector('.hs-top p'); if(sub) sub.textContent = redo ? '아이폰은 사파리로 열려야 마이크·음성 인식이 잘 돼요. 한 번만 다시 추가하면 돼요.' : '다음부터는 아이콘만 누르면 바로 들어와요. 로그인도 유지돼요.';
     const go = document.getElementById('hs-go'), later = document.getElementById('hs-later');
-    const txt = { 'ios-redo':'알겠어요', 'android-prompt':'추가하기', 'android-manual':'알겠어요', 'android-other':'알겠어요', 'ios':'알겠어요', 'ios-other':'알겠어요', 'inapp':'알겠어요' };
+    const alt = document.getElementById('hs-alt'); if(alt) alt.style.display = m.samsung ? '' : 'none';
+    const txt = { 'samsung':'알겠어요', 'ios-redo':'알겠어요', 'android-prompt':'추가하기', 'android-manual':'알겠어요', 'android-other':'크롬으로 열기', 'ios':'알겠어요', 'ios-other':'알겠어요', 'inapp':'알겠어요' };
     go.textContent = txt[m.mode] || '알겠어요';
     later.style.display = (m.mode === 'android-prompt' || this.auto) ? '' : 'none';
     // 아이폰: 홈 화면 아이콘이 저장할 주소에 표시를 붙여 둠 → 아이콘으로 들어오면 "추가함"으로 기억하고 안내를 다시 안 띄움
@@ -14995,7 +15001,10 @@ const HomeApp = {
   },
   close(){ const sh = document.getElementById('home-sheet'); if(sh) sh.classList.remove('on'); document.body.classList.remove('hs-open'); },
   later(){ this.close(); if(this.auto) this.set({ later: Date.now() }); },
+  chromeUrl(){ const q = new URLSearchParams(location.search); q.delete('from'); const qs = q.toString(); return 'intent://' + location.host + location.pathname + (qs ? '?' + qs : '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.origin + location.pathname) + ';end'; },
+  openChrome(){ try{ location.href = this.chromeUrl(); }catch(_){ } },
   async install(){
+    if(this.mode === 'android-other'){ this.close(); this.openChrome(); return; }
     if(this.mode === 'android-prompt' && this.deferred){
       const ev = this.deferred; this.deferred = null;
       try{ ev.prompt(); const r = await ev.userChoice; this.close();
@@ -15047,7 +15056,7 @@ const HomeApp = {
     const d = document.getElementById('mp-home-d'), btn = document.getElementById('mp-home-btn');
     if(!this.isMobile() && d){ d.textContent = '휴대폰 카메라로 QR을 비추면 바로 들어와요. 로그인 후 홈 화면에 아이콘을 만들 수 있어요.'; if(btn){ btn.textContent = 'QR 보기'; btn.setAttribute('onclick','HomeApp.showPcCardAgain()'); } const t = document.querySelector('#mp-home .t'); if(t) t.textContent = '휴대폰으로 들어오기'; }
     if(this.isStandalone() && d){ d.textContent = '지금 홈 화면 아이콘으로 쓰고 있어요.'; if(btn) btn.style.display = 'none'; }
-    window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); this.deferred = e; const sh = document.getElementById('home-sheet'); if(sh && sh.classList.contains('on') && this.mode === 'android-manual') this.open(!this.auto); });
+    window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); this.deferred = e; const sh = document.getElementById('home-sheet'); if(sh && sh.classList.contains('on') && (this.mode === 'android-manual' || this.mode === 'samsung')) this.open(!this.auto); });
     window.addEventListener('appinstalled', ()=>{ this.set({ installed: Date.now() }); this.close(); });
     if('serviceWorker' in navigator && location.protocol === 'https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
   }
