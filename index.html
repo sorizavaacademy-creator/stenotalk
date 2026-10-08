@@ -6,6 +6,8 @@
 <script>
 /* 2026-10-08 새 홈페이지 주소(dev.sorizavaacademy.com/stenotalk)로 열릴 때 주소 끝에 / 가 없으면 붙임
    → manifest·아이콘 같은 파일 경로가 /stenotalk/ 아래로 맞게 잡힘 */
+/* 2026-10-08 예전 주소(GitHub)로 들어오면 새 홈페이지 주소로 자동 이동 (예전 홈 화면 아이콘·링크도 새 주소로 열림) */
+(function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
@@ -15098,7 +15100,7 @@ const HomeApp = {
   pcKey(){ return 'stenotalk_pcqr_' + ((state.currentUser && state.currentUser.id) || 'anon'); },
   pcCard(count, isAdmin){
     const el = document.getElementById('pc-qr-card'); if(!el) return;
-    try{ const dev = /(^|\.)sorizavaacademy\.com$/i.test(location.hostname); const g = el.querySelector('.pcq-q-gh'), d = el.querySelector('.pcq-q-dev'); if(g) g.style.display = dev ? 'none' : ''; if(d) d.style.display = dev ? '' : 'none'; }catch(_){}
+    try{ const dev = !/\.github\.io$/i.test(location.hostname); /* 새 주소 QR이 기본, GitHub 주소일 때만 예전 QR */ const g = el.querySelector('.pcq-q-gh'), d = el.querySelector('.pcq-q-dev'); if(g) g.style.display = dev ? 'none' : ''; if(d) d.style.display = dev ? '' : 'none'; }catch(_){}
     let hidden = null; try{ hidden = localStorage.getItem(this.pcKey()); }catch(_){}
     el.style.display = (!this.isMobile() && !hidden && (isAdmin || count >= 1)) ? '' : 'none';
   },
