@@ -2226,6 +2226,14 @@
   .d3-stat-mid{display:flex;align-items:baseline;gap:3px;} .d3-stat-mid .num{font-size:24px;font-weight:700;line-height:1.2;} .d3-stat-mid .unit{font-size:14px;font-weight:500;}
   .d3-stat-mid.up .num,.d3-stat-mid.up .unit{color:#ff8a62;} .d3-stat-mid.down .num,.d3-stat-mid.down .unit{color:#b9b8b4;} .d3-stat-mid.muted .num{font-size:15px;font-weight:500;color:var(--c-dark-ink-2);}
   .d3-stat-foot{font-size:12px;color:var(--c-dark-ink-2);margin:4px 0 0;}
+  .as-hero{margin-top:18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .as-alert{appearance:none;border:0;cursor:pointer;background:#e8532a;color:#fff;border-radius:10px;padding:10px 14px;font:inherit;font-size:14px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.3;text-align:left;transition:background var(--dur) var(--ease);} .as-alert:hover{background:#c8441c;} .as-alert em{font-style:normal;font-size:14px;font-weight:600;} .as-alert b{font-size:18px;font-weight:800;margin-left:2px;} .as-alert span{font-size:12.5px;opacity:.9;}
+  .as-ok{font-size:13px;color:#8fd3a8;background:rgba(143,211,168,.12);border-radius:999px;padding:6px 12px;font-weight:600;}
+  .as-live{display:inline-flex;align-items:center;gap:6px;color:#8fd3a8;font-weight:600;} .as-live i{width:8px;height:8px;border-radius:50%;background:#4fd38a;box-shadow:0 0 0 3px rgba(79,211,138,.2);}
+  .as-bar{margin-top:18px;height:10px;border-radius:999px;background:#38383b;display:flex;overflow:hidden;gap:2px;} .as-bar-open{background:#4fd38a;border-radius:999px;} .as-bar-wait{background:#ff8a62;border-radius:999px;}
+  .as-legend{margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--c-dark-ink-2);} .as-legend b{color:#fff;font-weight:700;margin-left:2px;} .as-legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;} .as-legend .dot.open{background:#4fd38a;} .as-legend .dot.wait{background:#ff8a62;}
+  .as-mini{margin-top:auto;padding-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;} .as-mini > div{background:#2a2a2d;border-radius:10px;padding:12px;min-width:0;} .as-mini p{margin:0 0 4px;padding-left:3px;font-size:12.5px;color:var(--c-dark-ink-2);white-space:nowrap;} .as-mini .as-k{font-size:24px;font-weight:800;letter-spacing:-.02em;} .as-mini .as-k.muted{color:var(--c-dark-ink-2);font-weight:500;} .as-mini .as-u{font-size:13px;font-weight:600;margin-left:2px;} .as-mini .as-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4fd38a;box-shadow:0 0 0 3px rgba(79,211,138,.2);margin-right:6px;vertical-align:1px;} .as-mini .live .as-k,.as-mini .live .as-u{color:#8fd3a8;} .as-mini .warn .as-k,.as-mini .warn .as-u{color:#ff8a62;}
+  .as-go{appearance:none;margin-top:12px;width:100%;min-height:44px;border:1px solid #48484c;background:transparent;color:#fff;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background var(--dur) var(--ease);} .as-go:hover{background:#2a2a2d;}
   .d3-stats-empty{margin:auto 0;color:var(--c-dark-ink-2);font-size:15px;padding-top:20px;} .d3-stats-empty strong{color:#fff;display:block;font-size:17px;margin-bottom:4px;}
   .d3-section{margin-top:32px;} .d3-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
   .d3-section-title{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0;color:var(--c-ink);border:none;padding:0;} .d3-section-note{font-size:13px;color:var(--c-ink-3);margin:0;}
@@ -8784,13 +8792,31 @@ async function renderDashboard(){
       state.adminUsers = list;
       const students = list.filter(u=>!u.is_admin);
       const opened = students.filter(u=>(u.allowed_fields||[]).length>0).length, waiting = students.length - opened;
+      const now = Date.now(), weekAgoIso = new Date(now - 7*86400000).toISOString();
+      const [pr, rr] = await Promise.all([
+        sb.from('user_presence').select('user_id,screen,updated_at').then(r=>r, ()=>({error:true})),
+        sb.from('interview_records').select('user_id,created_at').gte('created_at', weekAgoIso).limit(2000).then(r=>r, ()=>({error:true}))
+      ]);
+      const sIds = new Set(students.map(u=>u.id));
+      const onlineN = (pr && !pr.error && pr.data) ? pr.data.filter(x=>sIds.has(x.user_id) && x.screen!=='offline' && now - new Date(x.updated_at).getTime() < 90000).length : null;
+      const weekN = (rr && !rr.error && rr.data) ? new Set(rr.data.filter(x=>sIds.has(x.user_id)).map(x=>x.user_id)).size : null;
+      const soonN = students.filter(u=>{ const a = accessInfo(u.access_until); return a.until && !a.expired && a.daysLeft <= 3; }).length;
+      const expN = students.filter(u=>accessInfo(u.access_until).expired).length;
+      const total = students.length, pctOpen = total ? Math.round(opened/total*100) : 0;
+      const kv = (v,u)=> v==null ? '<span class="as-k muted">–</span>' : `<span class="as-k">${v}</span><span class="as-u">${u}</span>`;
       statsEl.innerHTML = `<div class="d3-stats-head"><p class="d3-stats-title">면접자 현황</p><span class="d3-stats-scope">관리자 · 전체</span></div>
-        <div class="d3-stats-tri">
-          <div><p class="d3-stat-label">등록된 면접자</p><div class="d3-stat-mid eq"><span class="num">${students.length}</span><span class="unit">명</span></div></div>
-          <div><p class="d3-stat-label"><span class="lbl-l">분야를 열어 준 사람</span><span class="lbl-s">분야 열어 줌</span></p><div class="d3-stat-mid eq"><span class="num">${opened}</span><span class="unit">명</span></div></div>
-          <div><p class="d3-stat-label">권한 대기 중</p><div class="d3-stat-mid eq${waiting?' up':''}"><span class="num">${waiting}</span><span class="unit">명</span></div></div>
+        <div class="as-hero">
+          <div><p class="d3-stat-label">등록된 면접자</p><div class="d3-stat-big"><span class="num">${total}</span><span class="unit">명</span></div></div>
+          ${waiting ? `<button type="button" class="as-alert" onclick="dashAdminGo('__pending')"><em>권한 대기 <b>${waiting}명</b></em><span>눌러서 권한 주기 →</span></button>` : (total ? `<span class="as-ok">✓ 모두 분야가 열려 있어요</span>` : '')}
         </div>
-        <p class="d3-stat-foot tri-foot">권한 열기와 기록 확인은 관리자 화면 → 면접자 관리에서 해요.</p>`;
+        <div class="as-bar" role="img" aria-label="분야 열어 줌 ${opened}명, 권한 대기 ${waiting}명"><span class="as-bar-open" style="width:${total?pctOpen:0}%"></span>${waiting?`<span class="as-bar-wait" style="width:${100-pctOpen}%"></span>`:''}</div>
+        <div class="as-legend"><span><i class="dot open"></i>분야 열어 줌 <b>${opened}</b></span><span><i class="dot wait"></i>권한 대기 <b>${waiting}</b></span></div>
+        <div class="as-mini">
+          <div><p>7일간 연습</p><div>${kv(weekN,'명')}</div></div>
+          <div class="${onlineN?'live':''}"><p>${onlineN?'<i class="as-dot"></i>':''}지금 접속</p><div>${kv(onlineN,'명')}</div></div>
+          <div class="${(soonN||expN)?'warn':''}"><p>${expN ? '기간 만료' : '3일 안 만료'}</p><div>${kv(expN||soonN,'명')}</div></div>
+        </div>
+        <button type="button" class="as-go" onclick="dashAdminGo('')">면접자 관리 열기 <span aria-hidden="true">→</span></button>`;
     }else{
       const now = Date.now(), DAY = 86400000;
       const inRange = (r, from, to) => r.timestamp > now - from*DAY && r.timestamp <= now - to*DAY;
@@ -9080,6 +9106,11 @@ async function openGrowthView(field){
   const more = document.getElementById('gr-more'); if(more) more.innerHTML = axisHtml + repHtml;
 }
 /* ---------------- 관리자 화면 (사이드바 메뉴) ---------------- */
+async function dashAdminGo(filter){
+  await openAdminScreen('users');
+  const sel = document.getElementById('admin-status-filter');
+  if(sel && filter !== undefined){ sel.value = filter; if(typeof filterAdminUsers==='function') filterAdminUsers(); }
+}
 async function openAdminScreen(view){
   if(!state.currentUser || !state.currentUser.isAdmin){ showToast('관리자만 들어갈 수 있어요.'); return; }
   const nameEl = document.getElementById('nav-username-admin');
