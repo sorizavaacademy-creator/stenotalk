@@ -1223,6 +1223,10 @@
   .axis-chip.good{border-color:rgba(22,163,74,.4);} .axis-chip.low{border-color:rgba(217,119,6,.5);background:#FFF8EE;} .axis-chip.na{color:var(--slate-400);}
   .q-checklist{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;margin-bottom:6px;}
   .ck.ok{color:var(--success);} .ck.no{color:var(--slate-400);}
+  .sound-gate{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3000;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;border:0;border-radius:99px;background:#1c1c1e;color:#fff;font:inherit;font-size:16px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;animation:sgPulse 1.6s ease-in-out infinite;}
+  .rstat .num.na{font-size:17px;color:var(--c-ink-3,#8a8a8a);font-weight:600;}
+  .sound-gate[hidden]{display:none;}
+  @keyframes sgPulse{50%{box-shadow:0 10px 30px rgba(0,0,0,.25),0 0 0 8px rgba(200,68,28,.25);}}
   .rh3-startgate{order:1;margin:6px 0 4px;padding:16px 18px;border:1px dashed #f2b9a3;background:#fff7f3;border-radius:12px;display:flex;flex-direction:column;gap:12px;}
   .rh3-startgate[hidden]{display:none !important;}
   .rh3-startgate p{margin:0;font-size:14px;line-height:1.6;color:#45454a;} .rh3-startgate p b{display:block;font-size:16px;color:#1c1c1e;margin-bottom:2px;}
@@ -3146,7 +3150,27 @@
   .help-fab .hq{width:24px;height:24px;border-radius:50%;background:#1c1c1e;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800;}
   body:has(.modal-overlay.active) #help-fab, body.tour-on #help-fab{display:none !important;}
   @media print{ .help-fab{display:none !important;} }
-  @media(max-width:640px){ .help-fab{bottom:68px;right:14px;} }
+  @media(max-width:640px){
+    .help-fab{bottom:calc(70px + env(safe-area-inset-bottom));right:14px;height:44px;width:44px;padding:0;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.12);}
+    .help-fab > span:not(.hq){display:none;}
+    body:has(#screen-dashboard.active) .fb-fab{bottom:calc(16px + env(safe-area-inset-bottom));}
+    #screen-dashboard.active{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
+    #toast-container{width:calc(100vw - 32px);}
+    .toast{max-width:100%;}
+  }
+  .toast{cursor:pointer;}
+  .ready-steps{padding:4px 24px 8px;display:flex;flex-direction:column;gap:12px;}
+  .rs-step{display:flex;gap:12px;align-items:flex-start;}
+  .rs-no{flex:none;width:24px;height:24px;border-radius:50%;background:#fdf0eb;color:#c2401b;font-size:13px;font-weight:800;display:grid;place-items:center;margin-top:1px;}
+  .rs-step b{display:block;font-size:14.5px;color:#1c1c1e;line-height:1.45;}
+  .rs-step span{display:block;font-size:13px;color:#66666c;line-height:1.5;margin-top:2px;}
+  .rs-tip{margin:2px 0 0;padding:10px 12px;border-radius:8px;background:#f6f5f3;font-size:12.5px;color:#45454a;line-height:1.55;}
+  body.v3-ui .pause-icon{background:#fdf0eb;color:#c2401b;}
+  body.v3-ui .pause-timer{font-family:inherit;font-variant-numeric:tabular-nums;font-size:34px;font-weight:800;letter-spacing:0;color:#1c1c1e;}
+  body.v3-ui #modal-pause h2{font-size:19px !important;color:#1c1c1e;}
+  body.v3-ui #modal-pause p:not(.pause-reason){color:#66666c !important;}
+  .delivery-note.na{margin:4px 0 10px;font-size:12.5px;color:var(--c-ink-3,#8a8a8a);}
+  .pause-reason{margin:12px auto 0;max-width:320px;padding:8px 12px;border-radius:8px;background:#fdf0eb;color:#a3391a;font-size:13px;line-height:1.5;}
   /* 문항 관리 */
   .qm-toolbar{flex-wrap:wrap;gap:10px;align-items:center;}
   .qm-sel{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--c-ink-2,#45454a);}
@@ -4585,7 +4609,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <div class="opt-grid">
           <div id="setup-realset-block" class="opt-pair" style="display:none;">
             <div class="opt" style="grid-column:1/-1;">
-              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 말을 마치면 면접관이 바로 다음 질문을 해요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
+              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 다 말씀하신 뒤 <b>답변 완료</b>를 누르면 다음 질문으로 넘어가요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
               <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>국회 실전 세트 (15분)</button></div>
               <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li>국회 지식</li><li>국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
             </div>
@@ -4815,6 +4839,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <h2 id="ready-title">준비되셨나요?</h2>
       <p id="ready-desc">카메라와 마이크는 이미 켜져 있어요. 화면 속 내 모습과 소리를 확인하고, 준비되면 시작해 주세요.</p>
     </div>
+    <div class="ready-steps" id="ready-steps" hidden></div>
     <div class="modal-foot">
       <button class="btn btn-solid" onclick="confirmReady()" style="width:100%;">네, 시작할게요</button>
     </div>
@@ -4828,6 +4853,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <div class="pause-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg></div>
       <h2 style="margin:0 0 6px;font-size:18px;">면접이 일시정지되었어요</h2>
       <p style="margin:0;font-size:13.5px;color:var(--slate-400);line-height:1.6;">잠시 쉬었다가 준비되면 이어서 진행하세요.<br>면접관은 멈춘 문장을 처음부터 다시 읽고, 답변 중이었다면 이어서 들어요.</p>
+      <p class="pause-reason" id="pause-reason" hidden>다른 앱이나 화면으로 나가셔서 면접을 자동으로 멈춰 두었어요.</p>
       <div class="pause-timer" id="pause-timer">00:00</div>
       <div class="help-sub" style="margin-top:4px;">일시정지한 시간은 면접 시간에서 빠져요</div>
     </div>
@@ -7723,9 +7749,26 @@ function togglePw(id, btn){
   el.type = show ? 'text' : 'password';
   if(btn){ btn.classList.toggle('on', show); btn.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 표시'); }
 }
+/** 오류를 사용자에게 보여 줄 말로 바꿈 (관리자에게만 원문을 짧게 덧붙임) */
+function friendlyErr(e){
+  const raw = String((e && (e.message || e.error_description || e.msg)) || e || '');
+  let t;
+  if((typeof navigator!=='undefined' && navigator.onLine === false) || /Failed to fetch|NetworkError|Load failed|network|ERR_/i.test(raw)) t = '인터넷 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.';
+  else if(/JWT|expired|401|not authenticated|invalid claim|refresh token/i.test(raw)) t = '로그인이 만료됐어요. 다시 로그인한 뒤 시도해 주세요.';
+  else if(/timeout|timed out|AbortError|시간 초과/i.test(raw)) t = '응답이 늦어지고 있어요. 잠시 후 다시 시도해 주세요.';
+  else if(/quota|429|rate limit|too many/i.test(raw)) t = '요청이 몰려 잠시 쉬어야 해요. 1분 뒤 다시 시도해 주세요.';
+  else if(/permission|policy|403|row-level|not allowed/i.test(raw)) t = '권한이 없어 처리하지 못했어요. 교육팀에 문의해 주세요.';
+  else t = '잠시 후 다시 시도해 주세요.';
+  const admin = !!(typeof state!=='undefined' && state.currentUser && state.currentUser.isAdmin);
+  return admin && raw ? t + ' (' + raw.slice(0, 80) + ')' : t;
+}
 function showToast(msg, kind){
   if(/실패|오류/.test(msg) && !/보내기 실패|저장 실패|삭제 실패/.test(msg) && typeof Feedback !== 'undefined' && !(state.currentUser && state.currentUser.isAdmin)) Feedback.auto('기능 실패', msg);
   const c=document.getElementById('toast-container');
+  if(!c) return;
+  // 같은 문구가 이미 떠 있으면 다시 띄우지 않고, 한 번에 최대 3개까지만 보여 줌
+  for(const old of c.querySelectorAll('.toast')){ const m0 = old.querySelector('.toast-msg'); if(m0 && m0.textContent === msg && !old.classList.contains('out')) return; }
+  { const live = [...c.querySelectorAll('.toast:not(.out)')]; while(live.length >= 3){ const o = live.shift(); o.classList.add('out'); setTimeout(()=>o.remove(), 260); } }
   const t=document.createElement('div');
   const k = kind || (/실패|오류|못했|않아요|없어요|차단|만료|종료되어|맞지 않아요|불가/.test(msg) ? 'warn' : /완료|저장되었|성공|부여|열렸|되었어요|했어요/.test(msg) ? 'ok' : 'info');
   t.className='toast '+k;
@@ -7734,8 +7777,12 @@ function showToast(msg, kind){
           : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>';
   t.innerHTML = '<span class="toast-ic">'+ic+'</span><span class="toast-msg"></span>';
   t.querySelector('.toast-msg').textContent = msg;
+  t.setAttribute('role', k==='warn' ? 'alert' : 'status');
+  const close = ()=>{ if(t.classList.contains('out')) return; t.classList.add('out'); setTimeout(()=>t.remove(), 260); };
+  t.addEventListener('click', close);   // 눌러서 바로 닫기
   c.appendChild(t);
-  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 260); }, 4000);
+  // 긴 안내는 끝까지 읽을 수 있게 글자 수에 맞춰 더 오래 보여 줌 (3.5~9초)
+  setTimeout(close, Math.max(3500, Math.min(9000, 2200 + String(msg).length * 55)));
 }
 function showScreen(id){
   try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
@@ -7746,6 +7793,7 @@ function showScreen(id){
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
+  try{ if(typeof ScreenKeep !== 'undefined'){ if(id === 'screen-interview') ScreenKeep.on(); else ScreenKeep.off(); } }catch(_){}
   if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
   document.body.classList.toggle('v3-ui', id === 'screen-login' || id === 'screen-dashboard' || id === 'screen-admin' || id === 'screen-practice' || id === 'screen-result' || (id === 'screen-interview' && (state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog')));
 }
@@ -8002,7 +8050,7 @@ async function handleLogin(){
   document.getElementById('hero-greeting').innerHTML = `안녕하세요,<br>${escapeHtml(state.currentUser.name)} 님.`;
   await renderDashboard();
   showScreen('screen-dashboard');
-  showToast('로그인되었습니다');
+  showToast('로그인했어요');
   Activity.log('login'); Activity.setPresence('dashboard');
   QuestionBank.load(); try{ RubricPoints.load(); }catch(_){}
   if(maybeForceNewPassword(profile, pw)) { startAccessWatch(); return; }
@@ -8019,7 +8067,7 @@ async function handleLogout(){
   await sb.auth.signOut();
   state.currentUser = null;
   showScreen('screen-login');
-  showToast('로그아웃되었습니다');
+  showToast('로그아웃했어요');
 }
 async function tryRestoreSession(){
   const { data } = await sb.auth.getSession();
@@ -9115,12 +9163,20 @@ async function openRecordDetail(recordId, fromList){
 }
 /* 저장된 피드백 문자열 → 본문 + [리포트 등급 · 축 점수] 줄을 등급/축 칩으로 */
 function renderFeedbackBlock(fb){
-  const m = String(fb).match(/\n?\[리포트\s+([A-D]\+?)\s*·\s*([^\]]+)\]\s*$/);
-  const body = m ? String(fb).slice(0, m.index).trim() : String(fb);
+  // 리포트 줄이 끝에 있든(현재 저장 형식) 앞에 있든(예전 기록) 본문에서 떼어 내 칩으로 보여 줌
+  const src = String(fb||'');
+  const m = src.match(/\[리포트\s+([A-D]\+?)\s*·\s*([^\]]+)\]/);
+  let body = (m ? src.replace(m[0], '') : src);
+  const dm = body.match(/\[전달력\s*(\d+)\s*점\][^\n]*/); if(dm) body = body.replace(dm[0], '');
+  body = body.replace(/\n{2,}/g, '\n').trim();
   let chips = '';
   if(m){
     const grade = m[1];
-    const parts = m[2].split('·').map(x=>x.trim()).filter(Boolean).map(x=>{ const mm = x.match(/^(.+?)\s+(\d+)$/); return mm ? {k:mm[1], v:+mm[2]} : null; }).filter(Boolean);
+    let parts = m[2].split('·').map(x=>x.trim()).filter(Boolean).map(x=>{ const mm = x.match(/^(.+?)\s+(\d+)$/); return mm ? {k:mm[1], v:+mm[2]} : null; }).filter(Boolean);
+    // "태도·언어"처럼 이름 안의 가운뎃점으로 쪼개진 조각 합치기 + 예전 5점 척도는 100점으로 환산
+    { const raw = m[2].split('·').map(x=>x.trim()); const fixed=[]; let carry=''; raw.forEach(x=>{ const mm = x.match(/^(.+?)\s+(\d+)$/); if(mm){ fixed.push({k:(carry?carry+'·':'')+mm[1], v:+mm[2]}); carry=''; } else if(x){ carry = carry ? carry+'·'+x : x; } }); parts = fixed; }
+    if(parts.length && parts.every(p=>p.v<=5)) parts = parts.map(p=>({k:p.k, v:p.v*20}));
+    if(dm) parts.push({k:'전달력', v:+dm[1]});
     chips = `<div class="rec-rubric"><span class="q-grade ${grade.replace('+','p')}">${grade}</span>${parts.map(p=>`<span class="axis-chip ${p.v>=75?'good':p.v>=55?'mid':'low'}"><b>${escapeHtml(p.k)}</b>${p.v}점</span>`).join('')}</div>`;
   }
   const label = /AI|OpenAI/.test(body.slice(0,40)) ? 'AI 피드백' : '피드백';
@@ -9135,7 +9191,7 @@ function openPractice(fieldId){
   const isAdmin = !!(state.currentUser && state.currentUser.isAdmin);
   const allowed = (state.currentUser && state.currentUser.allowed) || [];
   if(!isAdmin && !allowed.includes(fieldId)){
-    showToast('이 분야는 권한이 없어 연습할 수 없습니다.');
+    showToast('이 분야는 아직 열리지 않았어요. 교육팀에 문의해 주세요.');
     return;
   }
   const field = FIELDS.find(f=>f.id===fieldId);
@@ -9314,7 +9370,7 @@ function openSetup(fieldId){
   const allowed = (state.currentUser && state.currentUser.allowed) || [];
   if(isAccessExpired(state.currentUser)){ showToast('이용 기간이 종료되어 면접 연습을 시작할 수 없어요. 연장은 관리자에게 문의해 주세요.'); return; }
   if(!isReview && !isAdmin && !allowed.includes(fieldId)){
-    showToast('이 분야는 권한이 없어 시작할 수 없습니다.');
+    showToast('이 분야는 아직 열리지 않았어요. 교육팀에 문의해 주세요.');
     return;
   }
   if(isReview){
@@ -9357,6 +9413,55 @@ function closeSetup(){
   document.getElementById('modal-setup').classList.remove('active');
   stopMicLevelAnim(); stopCamPreview();
 }
+/* ---- 휴대폰 소리 안정화 (2026-10-12) ----
+   문제: 휴대폰에서 마이크를 쓴 뒤 면접관 음성이 0처럼 작아지거나 끊김.
+   원인: ① 안드로이드는 에코 제거를 켠 마이크가 열려 있으면 "통화 모드"로 바뀌어 미디어 볼륨 대신 통화 볼륨으로 재생
+         ② 아이폰은 마이크를 쓰면 오디오 세션이 녹음 모드로 바뀌고, 음성을 WebAudio로 돌리면 세션이 끊길 때 무음이 됨
+         ③ 시작 버튼을 누른 뒤 몇 초 뒤에 새 오디오를 재생하면 자동재생 제한에 걸릴 수 있음
+   해결: 휴대폰은 마이크를 에코 제거 없이 열고, 말하기 직전에 남은 마이크를 모두 닫고, 오디오 세션을 재생 모드로 돌리고,
+         시작 버튼을 누를 때 재생기를 한 번 "깨워 둔" 같은 오디오 요소를 계속 다시 씀. 입 모양은 휴대폰에서 시간 기준으로. */
+const MobileAudio = {
+  isMobile: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '') || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent || '')),
+  isIOS: /iPhone|iPad|iPod/i.test(navigator.userAgent || '') || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent || '')),
+  el: null, streams: new Set(), unlocked: false,
+  SILENT: 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=',
+  /** 사용자가 버튼을 누른 그 순간에 부름: 재생기·음성합성·오디오 세션을 미리 깨워 둠 */
+  unlock(){
+    try{
+      if(!this.el){ this.el = new Audio(); this.el.setAttribute('playsinline', ''); this.el.preload = 'auto'; }
+      this.session('playback');
+      const a = this.el; a.muted = false; a.volume = 1; a.src = this.SILENT;
+      const pr = a.play(); if(pr && pr.then) pr.then(()=>{ this.unlocked = true; }).catch(()=>{});
+    }catch(_){}
+    try{ if(typeof Persona !== 'undefined' && Persona.ctx && Persona.ctx.state !== 'running') Persona.ctx.resume().catch(()=>{}); }catch(_){}
+    try{ if('speechSynthesis' in window && this.isMobile){ const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'ko-KR'; window.speechSynthesis.speak(u); } }catch(_){}
+  },
+  /** 면접관 음성용 오디오 요소 (휴대폰은 깨워 둔 같은 요소를 계속 사용) */
+  element(src){
+    if(this.isMobile){
+      if(!this.el){ this.el = new Audio(); this.el.setAttribute('playsinline', ''); }
+      const a = this.el; try{ a.pause(); }catch(_){} a.onended = null; a.onerror = null; a.muted = false; a.volume = 1; a.src = src; return a;
+    }
+    const a = new Audio(src); a.setAttribute('playsinline', ''); return a;
+  },
+  /** iOS 17+ 오디오 세션 종류 (지원하지 않으면 무시) */
+  session(type){ try{ if(navigator.audioSession && navigator.audioSession.type !== type) navigator.audioSession.type = type; }catch(_){} },
+  track(stream){ if(stream) this.streams.add(stream); return stream; },
+  /** 말하기 직전: 듣는 중이 아닌 마이크를 모두 닫아 통화 모드에서 빠져나옴 */
+  beforeSpeak(){
+    const keep = (typeof StenoListener !== 'undefined' && StenoListener.active) ? StenoListener.stream : null;
+    this.streams.forEach(st=>{ if(st === keep) return;
+      try{ if(typeof rhMeter !== 'undefined' && rhMeter.stream === st){ stopRehearsalMeter(); this.streams.delete(st); return; } }catch(_){}
+      try{ st.getTracks().forEach(t=>{ if(t.readyState !== 'ended') t.stop(); }); }catch(_){} this.streams.delete(st); });
+    this.session('playback');
+  },
+  /** 휴대폰은 에코 제거·잡음 제거를 끈 채로 마이크를 엶 (통화 모드 방지) */
+  constraints(base){
+    const b = Object.assign({}, base || {});
+    if(this.isMobile){ b.echoCancellation = false; b.noiseSuppression = false; b.autoGainControl = false; }
+    return b;
+  },
+};
 /* ---- 장치 선택 (2026-10-07): 면접 준비 창에서 고른 마이크·카메라를 면접 전체에 사용 ----
    브라우저에 "고른 장치 id"만 기억(개인정보 아님). 고른 장치가 빠지면 자동으로 기본 장치로 돌아감 */
 const DevicePref = {
@@ -9364,7 +9469,11 @@ const DevicePref = {
   cam: (()=>{ try{ return localStorage.getItem('steno.camId') || ''; }catch(_){ return ''; } })(),
   set(kind, id){ id = (id==='default') ? '' : (id||''); this[kind] = id; try{ if(id) localStorage.setItem('steno.'+kind+'Id', id); else localStorage.removeItem('steno.'+kind+'Id'); }catch(_){} },
   async audio(base){
-    const b = Object.assign({}, base||{});
+    const b = MobileAudio.constraints(base);
+    if(MobileAudio.isMobile) MobileAudio.session('play-and-record');
+    return MobileAudio.track(await this._audio(b));
+  },
+  async _audio(b){
     if(this.mic){ try{ return await navigator.mediaDevices.getUserMedia({ audio: Object.assign({}, b, { deviceId:{ exact:this.mic } }) }); }
       catch(e){ if(e && (e.name==='OverconstrainedError' || e.name==='NotFoundError')){ console.warn('[장치] 고른 마이크가 없어 기본 마이크로', e); this.set('mic',''); } else throw e; } }
     return await navigator.mediaDevices.getUserMedia({ audio: Object.keys(b).length ? b : true });
@@ -9595,7 +9704,7 @@ async function sendFeedback(){
   if(text.length < 5){ showToast('내용을 조금 더 적어 주세요 (5자 이상)'); ta.focus(); return; }
   const btn = document.getElementById('fb-send'); btn.disabled = true; btn.textContent = '보내는 중…';
   try{ await Feedback.send(fbKind, text); ta.value = ''; closeFeedback(); showToast('보냈어요. 교육팀이 확인할게요. 고마워요!', 'ok'); }
-  catch(e){ showToast('보내기 실패: ' + (e.message||e) + (/feedback/.test(e.message||'') ? ' (관리자: step8_feedback.sql 실행 필요)' : '')); }
+  catch(e){ showToast('의견을 보내지 못했어요. ' + friendlyErr(e) + ((state.currentUser && state.currentUser.isAdmin && /feedback/.test(e.message||'')) ? ' (관리자: step8_feedback.sql 실행 필요)' : ''), 'warn'); }
   btn.disabled = false; btn.textContent = '보내기';
 }
 
@@ -10188,7 +10297,7 @@ function handleCvDrop(event){ event.preventDefault(); const d = document.getElem
 async function deleteSavedCv(){
   if(!state.currentUser) return false;
   const { error } = await sb.from('user_resumes').update({ cv_file_name: null, cv_text: null, cv_updated_at: null }).eq('user_id', state.currentUser.id);
-  if(error){ showToast('이력서를 삭제하지 못했어요: ' + error.message); return false; }
+  if(error){ showToast('이력서를 삭제하지 못했어요. ' + friendlyErr(error), 'warn'); return false; }
   state.cvText = ''; state.cvFileName = ''; state.cvUpdatedAt = null;
   return true;
 }
@@ -10257,12 +10366,12 @@ async function deleteSavedResume(){
   // 2026-10-07: 이력서(cv_*)는 같은 행에 있으므로 행을 지우지 않고 자기소개서 칸만 비움
   let { error } = await sb.from('user_resumes').update({ file_name: null, resume_text: null }).eq('user_id', state.currentUser.id);
   if(error){ ({ error } = await sb.from('user_resumes').delete().eq('user_id', state.currentUser.id)); }
-  if(error){ showToast('삭제에 실패했습니다: '+error.message); return; }
+  if(error){ showToast('자기소개서를 삭제하지 못했어요. '+friendlyErr(error), 'warn'); return; }
   state.customQuestions = []; state.resumeText = '';
   document.getElementById('resume-drop-label').textContent = 'PDF 파일을 여기로 끌어다 놓거나 클릭해서 올려주세요';
   const statusEl = document.getElementById('resume-status');
   statusEl.style.display='none'; statusEl.className='resume-status'; statusEl.textContent='';
-  showToast('저장된 자기소개서를 삭제했습니다');
+  showToast('저장된 자기소개서를 삭제했어요');
   syncResumeCard();
 }
 
@@ -10377,9 +10486,12 @@ async function startMicLevelAnim(){
       micCheck.srTested = true; micCheck.srResult = null;
       quickSpeechTest(6000).then(r=>{
         micCheck.srResult = r;
-        if(!r.ok && r.error!=='timeout' && r.error!=='ended'){
+        if(!r.ok && r.error!=='timeout' && r.error!=='ended' && r.error!=='no-speech' && r.error!=='aborted'){
           const why = (r.error==='not-allowed'||r.error==='service-not-allowed') ? (location.protocol==='file:' ? '파일을 직접 연 페이지라 브라우저가 음성 인식을 막았어요' : '음성 인식 권한이 차단되어 있어요')
-            : r.error==='network' ? '음성 인식 서버에 연결하지 못했어요' : '음성 인식을 시작하지 못했어요 ('+r.error+')';
+            : r.error==='network' ? '음성 인식 서버에 연결하지 못했어요(인터넷 연결 확인)'
+            : r.error==='audio-capture' ? '다른 앱(통화·녹음·카메라 앱)이 마이크를 쓰고 있어 음성 인식을 시작하지 못했어요'
+            : r.error==='language-not-supported' ? '이 브라우저가 한국어 음성 인식을 지원하지 않아요'
+            : '음성 인식을 시작하지 못했어요';
           setMicCheck('err', `마이크는 정상이지만 ${why}. 이대로 시작하면 답변을 직접 입력하게 돼요 → "마이크가 안 되나요?"에서 진단 실행`);
           micCheck.srBlocked = true;
         }
@@ -10663,7 +10775,7 @@ async function gradeAnswerWithAI(question, refText, answerText, fieldName, extra
     console.warn('[AI 채점 실패 → 로컬 채점으로 대체]', e);
     if(!aiGradingWarned){
       aiGradingWarned = true;
-      showToast('AI 채점 서버에 연결하지 못해 기본 채점으로 대체합니다: '+(e.message||e));
+      showToast('AI 채점이 잠시 응답하지 않아 기본 채점으로 진행해요. 결과는 그대로 저장돼요.' + ((state.currentUser && state.currentUser.isAdmin) ? ' ('+String(e.message||e).slice(0,80)+')' : ''), 'info');
     }
     return null;
   }
@@ -11638,6 +11750,7 @@ function toggleAllRhTips(){
 /** 점검을 마친 뒤 첫 질문 낭독 시작 (그 전에는 음성이 나오지 않음) */
 function beginRehearsalQuestions(){
   if(state.interviewMode !== 'rehearsal' || !state.rehearsalPrep) return;
+  MobileAudio.unlock();
   state.rehearsalPrep = false;
   const gate = document.getElementById('rh3-startgate'); if(gate) gate.hidden = true;
   { const ad = document.getElementById('btn-answer-done'); if(ad) ad.disabled = false; const rp0 = document.querySelector('#screen-interview .rh3-replay'); if(rp0) rp0.style.visibility = ''; }
@@ -11767,7 +11880,7 @@ function lv3Sync(){
   if(!sec || !sec.classList.contains('lv3') || !sec.classList.contains('active') || state.interviewMode !== 'dialog'){ if(lv3Iv){ clearInterval(lv3Iv); lv3Iv = null; } return; }
   // 진행: "질문 i / N"
   const pt = (document.getElementById('iv-progress')||{}).textContent || '';
-  const m = pt.match(/(\d+)\s*\/\s*(\d+)/); const i = m ? +m[1] : 0, n = m ? +m[2] : (state.questionCount||5);
+  const m = pt.match(/(\d+)\s*\/\s*(\d+)/); const isSet = !!(state.dialogRealSet || (state.realSet && state.selectedField && state.selectedField.id === 'assembly')); const i = m ? +m[1] : 0, n = m ? +m[2] : (isSet ? 7 : (state.questionCount||5));
   const badge = (document.getElementById('iv-source-badge')||{}).textContent || '';
   const isFu = /꼬리/.test(badge), isCustom = /자기소개서/.test(badge);
   const ql = document.getElementById('rh3-qlabel'); const qn = document.getElementById('rh3-qno');
@@ -11825,6 +11938,7 @@ function lv3Sync(){
 }
 function toggleLv3Fold(){ const cp = document.getElementById('cam-preview'); if(!cp) return; cp.classList.toggle('folded'); const b = document.getElementById('lv3-fold'); if(b) b.textContent = cp.classList.contains('folded') ? '펼치기' : '접기'; }
 function rh3Replay(){
+  MobileAudio.unlock();
   const item = state.interviewQuestions[state.currentQ-1]; if(!item) return;
   if(state.answered){ speakQuestion(item.q, null); } else { presentCurrentQuestion(); }
 }
@@ -11835,12 +11949,24 @@ document.addEventListener('click', (e)=>{ const u = document.querySelector('#scr
 function showReadyGate(){
   const title = document.getElementById('ready-title');
   const desc = document.getElementById('ready-desc');
+  { const st0 = document.getElementById('ready-steps'); if(st0){ st0.hidden = true; st0.innerHTML = ''; } }
   if(state.interviewMode === 'rehearsal'){
     title.textContent = '워밍업부터 시작할게요';
     desc.textContent = '리허설은 면접관 없이 진행돼요. 카메라 속 내 모습과 목소리 크기를 보면서 질문 2개에 편하게 답해 보세요. 채점되지 않고, 끝나면 바로 라이브 면접으로 넘어갑니다.';
   }else if(state.interviewMode === 'dialog'){
     title.textContent = 'AI 대화 면접 준비되셨나요?';
-    desc.textContent = '시작을 누르면 면접관이 연결된 뒤 인사와 함께 질문을 시작해요. 질문이 끝나면 자동으로 듣기 시작하니, 마이크 버튼을 누르지 말고 바로 답변해 주세요. 말이 잠깐 멈춰도 넘어가지 않아요. 다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어갑니다.';
+    desc.textContent = '시작을 누르면 면접관이 연결되고, 아래 순서로 진행돼요.';
+    const steps = document.getElementById('ready-steps');
+    if(steps){
+      const isSet = !!(state.realSet && state.selectedField && state.selectedField.id === 'assembly');
+      steps.innerHTML = [
+        ['면접관이 인사와 함께 질문해요', isSet ? '국회 실전 순서로 7문항, 전체 15분이에요.' : '질문이 끝나면 자동으로 듣기 시작해요.'],
+        ['바로 말로 답하세요', '마이크 버튼은 누르지 않아도 돼요. 잠깐 멈춰도 넘어가지 않아요.'],
+        ['다 말했으면 "답변 완료 · 다음으로"', '버튼을 눌러야 면접관이 다음 질문을 해요.'],
+      ].map((x,k)=>`<div class="rs-step"><span class="rs-no">${k+1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join('')
+        + (MobileAudio.isMobile ? '<p class="rs-tip">휴대폰은 <b>무음 모드를 끄고</b> 소리를 조금 키워 주세요. 이어폰을 쓰면 더 또렷하게 들려요.</p>' : '');
+      steps.hidden = false;
+    }
   }else{
     title.textContent = '라이브 면접 준비되셨나요?';
     desc.textContent = '카메라와 마이크는 이미 켜져 있어요. 화면 속 내 모습과 소리를 확인하고, 준비되면 시작해 주세요.';
@@ -11870,6 +11996,7 @@ async function connectInterviewer(){
   return true;
 }
 function confirmReady(){
+  MobileAudio.unlock();
   document.getElementById('modal-ready').classList.remove('active');
   if(state.interviewMode === 'dialog'){ connectInterviewer().then(ok=>{ if(ok) runDialogInterview(); }); return; }
   presentCurrentQuestion();
@@ -11885,6 +12012,7 @@ function restartRehearsal(){
   startRehearsal();
 }
 function closeRehearsalDoneAndGoLive(){
+  MobileAudio.unlock();
   document.getElementById('modal-rehearsal-done').classList.remove('active');
   // 카메라는 끄지 않고 그대로 이어서 사용 (껐다 켜면 잠시 검게 나오거나 권한을 다시 묻는 문제가 있었음)
   startDialogInterview();   // 라이브 면접 = AI 대화 면접
@@ -12037,7 +12165,9 @@ function speakQuestion(text, onDone){
   state.ttsSupported = 'speechSynthesis' in window;
   if(!state.ttsSupported || !text){ if(onDone) onDone(); return; }
   window.speechSynthesis.cancel();
+  MobileAudio.beforeSpeak();
   const utter = new SpeechSynthesisUtterance(sanitizeForSpeech(text));
+  utter.volume = 1;
   utter.lang = 'ko-KR';
   utter.rate = 0.95;   // 면접관답게 살짝 차분한 속도
   utter.pitch = 1.0;
@@ -12065,6 +12195,8 @@ function presentCurrentQuestion(){
   StenoVoice.speak(text, ()=>{
     // 질문 낭독이 끝난 순간부터 "머뭇거림" 시간을 잽니다
     if(state.qTiming && !state.qTiming.listenStart) state.qTiming.listenStart = Date.now();
+    // 휴대폰: 질문을 읽기 전에 닫은 리허설 마이크 측정기를 다시 켬
+    if(MobileAudio.isMobile && state.interviewMode === 'rehearsal' && typeof rhMeter !== 'undefined' && !rhMeter.stream){ try{ startRehearsalMeter(); }catch(_){} }
     if(state.micOn){ startRecognition(); }
   }, (item && item.audio_url) ? { url: item.audio_url } : undefined);
   if(!('speechSynthesis' in window)){
@@ -12152,6 +12284,7 @@ let pauseTimerIv = null;
 function dialogPause(){
   if(state.interviewMode !== 'dialog' || !StenoLoop.running || state.dialogPaused) return;
   state.dialogPaused = true; state.pauseStartedAt = Date.now();
+  { const pr = document.getElementById('pause-reason'); if(pr) pr.hidden = true; }
   StenoLoop.pause();
   updateListeningUI(false); stopWaveAnim();
   dialogPhase('', '일시 정지');
@@ -12162,6 +12295,8 @@ function dialogPause(){
   document.getElementById('modal-pause').classList.add('active');
 }
 function dialogResume(){
+  MobileAudio.unlock(); ScreenKeep.on();
+  { const pr = document.getElementById('pause-reason'); if(pr) pr.hidden = true; }
   document.getElementById('modal-pause').classList.remove('active');
   clearInterval(pauseTimerIv);
   if(!state.dialogPaused) return;
@@ -12299,7 +12434,7 @@ async function openDemoReport(){
     state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[];
     await finishDialogInterview(buildDemoAsks(), []);
     showToast('시연용 샘플 리포트예요. DB에는 저장되지 않아요.', 'info');
-  }catch(e){ console.error(e); showToast('샘플 리포트를 여는 중 문제가 생겼어요: '+(e.message||e)); }
+  }catch(e){ console.error(e); showToast('샘플 리포트를 열지 못했어요. '+friendlyErr(e), 'warn'); }
 }
 function maybeOpenDemoFromUrl(){
   try{
@@ -12890,7 +13025,7 @@ async function saveInterviewRecord(durationLabel){
   if(state.demoResult){ setSaveBanner(null); return; }
   if(!state.currentUser) return;
   if(state.saveInFlight) return;                          // 중복 클릭 방지
-  if(state.saveDone) { setSaveBanner('ok', '면접 기록이 저장되었습니다.'); return; }   // 이미 저장됨 → 두 번 저장하지 않음
+  if(state.saveDone) { setSaveBanner('ok', '면접 기록을 저장했어요.'); return; }   // 이미 저장됨 → 두 번 저장하지 않음
   state.lastSaveArgs = { durationLabel };
   state.saveInFlight = true;
   setSaveBanner(null);
@@ -12898,7 +13033,7 @@ async function saveInterviewRecord(durationLabel){
     await _saveInterviewRecordOnce(durationLabel);
   }catch(e){
     console.error('[기록 저장 예외]', e);
-    setSaveBanner('err', '면접 기록을 저장하지 못했어요 (' + (e && e.message ? e.message : '네트워크 오류') + '). 인터넷 연결을 확인하고 다시 저장해 주세요.');
+    setSaveBanner('err', '면접 기록을 저장하지 못했어요. ' + friendlyErr(e) + ' 결과는 화면에 그대로 있으니 "다시 저장"을 눌러 주세요.');
   }finally{ state.saveInFlight = false; }
 }
 async function _saveInterviewRecordOnce(durationLabel){
@@ -12926,7 +13061,7 @@ async function _saveInterviewRecordOnce(durationLabel){
       ({ data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single());
     }
     if(recErr){
-      setSaveBanner('err', '면접 기록을 저장하지 못했어요 (' + recErr.message + '). 결과는 화면에 남아 있으니 "다시 저장"을 눌러 주세요.');
+      setSaveBanner('err', '면접 기록을 저장하지 못했어요. ' + friendlyErr(recErr) + ' 결과는 화면에 그대로 있으니 "다시 저장"을 눌러 주세요.');
       return;
     }
     state.savedRecordId = recordData.id;
@@ -12954,10 +13089,10 @@ async function _saveInterviewRecordOnce(durationLabel){
       console.warn('[interview_answers.feedback 컬럼 없음 → 피드백 제외하고 저장] SQL: alter table public.interview_answers add column if not exists feedback text;');
       ({ error: ansErr } = await sb.from('interview_answers').insert(answerRows.map(r=>{ const c=Object.assign({},r); delete c.feedback; return c; })));
     }
-    if(ansErr){ setSaveBanner('err', '문항별 답변 저장에 실패했어요 (' + ansErr.message + '). "다시 저장"을 눌러 주세요.'); return; }
+    if(ansErr){ setSaveBanner('err', '문항별 답변을 저장하지 못했어요. ' + friendlyErr(ansErr) + ' "다시 저장"을 눌러 주세요.'); return; }
   }
   state.saveDone = true;
-  setSaveBanner('ok', '면접 기록이 저장되었습니다. 대시보드에서 다시 볼 수 있어요.');
+  setSaveBanner('ok', '면접 기록을 저장했어요. "내 기록"에서 언제든 다시 볼 수 있어요.');
 }
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13046,10 +13181,10 @@ function renderResultBars(){
         <div class="q-body">
         ${timeLimitHtml(i-1)}
         ${rubricHtml}
-        <div class="bar-row">
-          <div class="bar-top"><span>전달력</span><span>${d && d.measured ? d.score+'점' : '측정 안 됨'}</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${d && d.measured ? d.score : 0}%"></div></div>
-        </div>
+        ${d && d.measured ? `<div class="bar-row">
+          <div class="bar-top"><span>전달력</span><span>${d.score}점</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${d.score}%"></div></div>
+        </div>` : ''}
         ${d && d.measured ? `<div class="delivery-chips">
             <span class="dchip ${/느림|빠름/.test(d.rateLabel)?'warn':''}"><b>말하기 속도</b>${d.rate}자/분 · ${d.rateLabel}</span>
             <span class="dchip ${d.fillers>0 && d.notes.some(n=>n.includes('군말'))?'warn':''}"><b>군말</b>${d.fillerLabel}</span>
@@ -13057,7 +13192,7 @@ function renderResultBars(){
             <span class="dchip ${d.hesSec!=null && d.hesSec>4?'warn':''}"><b>머뭇거림</b>${d.hesLabel}</span>
           </div>
           <p class="delivery-note">${escapeHtml(d.notes.join(' '))}</p>`
-          : `<p class="delivery-note">${escapeHtml(d ? d.summary : '전달력을 측정할 음성 기록이 없어요.')}</p>`}
+          : `<p class="delivery-note na">${escapeHtml(d ? d.summary : '전달력을 측정할 음성 기록이 없어요.')}</p>`}
         <div class="qanswer">
           <div class="qanswer-head"><span class="qanswer-label">내 답변</span>${AnswerAudio.buttonHtml(i-1)}</div>
           <p>${answerText}</p>
@@ -13072,7 +13207,7 @@ function renderResultBars(){
   AnswerAudio.stop();
   wrap.innerHTML = timeLimitSummaryHtml() + (AnswerAudio.anyRecorded() ? '<p class="aa-note">"다시 듣기"로 내 답변 목소리를 들어볼 수 있어요. 녹음은 이 화면에서만 들을 수 있고 어디에도 저장되지 않아요.</p>' : '') + rows;
   const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
-  document.getElementById('rs-pronun').textContent = deliveryList.length ? avg(deliveryList)+'점' : '–';
+  { const pe = document.getElementById('rs-pronun'); pe.textContent = deliveryList.length ? avg(deliveryList)+'점' : '측정 안 됨'; pe.classList.toggle('na', !deliveryList.length); pe.title = deliveryList.length ? '' : '말로 한 답변이 있어야 속도·군말·시간을 잴 수 있어요.'; }
   state.lastAverageScore = avg((state.answerScores||[]).filter(s=>s!=null));
   countUpEl(document.getElementById('rs-content'), state.lastAverageScore, '점');
   renderResultReport();
@@ -13933,7 +14068,7 @@ const StenoListener = {
     this.rec = rec;
     this._srTrack = (DevicePref.mic && this.stream && this.stream.getAudioTracks()[0]) || null;
     try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }
-    catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); }catch(e2){ this._fail('음성 인식을 시작하지 못했어요: '+(e2.message||e2)); return false; } } else { this._fail('음성 인식을 시작하지 못했어요: '+(e.message||e)); return false; } }
+    catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); }catch(e2){ console.warn('[음성 인식] start 실패', e2); this._fail('음성 인식을 시작하지 못했어요. 잠시 뒤 마이크 버튼을 다시 누르거나 답변을 직접 입력해 주세요.'); return false; } } else { console.warn('[음성 인식] start 실패', e); this._fail('음성 인식을 시작하지 못했어요. 잠시 뒤 마이크 버튼을 다시 누르거나 답변을 직접 입력해 주세요.'); return false; } }
     this._state('listening');
     return true;
   },
@@ -13994,8 +14129,9 @@ const StenoListener = {
     if(this.timers.poll) clearInterval(this.timers.poll); this.timers={};
     let audio = null;
     if(this._mr){ try{ if(this._mr.state !== 'inactive') this._mr.stop(); audio = this._recPromise; }catch(_){ audio = null; } this._mr = null; this._recPromise = null; }
-    if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); this.stream=null; }
+    if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); MobileAudio.streams.delete(this.stream); this.stream=null; }
     if(this.ctx){ try{ this.ctx.close(); }catch(_){} this.ctx=null; }
+    MobileAudio.session('playback');
     const text = joinSpeech(this.transcript, this.interim);
     const durMs = this.firstSpeechAt ? Date.now()-this.firstSpeechAt : 0;
     const timing = { listenStart:this.startedAt, firstSpeech:this.firstSpeechAt||null, lastSpeech:Math.max(this.spokeAt, this.lastVoiceAt)||null, endAt:Date.now() };
@@ -14138,6 +14274,26 @@ const Persona = {
   _timed(){ const t = performance.now()/1000; return 0.15 + 0.85*Math.abs(Math.sin(t*9.3)) * (0.55 + 0.45*Math.abs(Math.sin(t*2.1))); },
   _stop(){ if(this.raf) cancelAnimationFrame(this.raf); this.raf = null; },
 };
+/* 자동재생이 막혔을 때: 화면 아래에 "면접관 목소리 듣기" 버튼을 띄우고, 누르면 이어서 재생 */
+const SoundGate = {
+  _wait: null,
+  ask(){
+    if(this._wait) return this._wait;
+    let el = document.getElementById('sound-gate');
+    if(!el){
+      el = document.createElement('button'); el.type = 'button'; el.id = 'sound-gate'; el.className = 'sound-gate';
+      el.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>눌러서 면접관 목소리 듣기</span>';
+      document.body.appendChild(el);
+    }
+    el.hidden = false;
+    this._wait = new Promise(res=>{ el.onclick = ()=>{ MobileAudio.unlock(); el.hidden = true; this._wait = null; res(); }; });
+    return this._wait;
+  },
+};
+async function playWithGate(a){
+  try{ await a.play(); }
+  catch(e){ if(e && e.name === 'NotAllowedError'){ await SoundGate.ask(); await a.play(); } else throw e; }
+}
 const StenoVoice = {
   provider: 'browser', openaiVoice: 'onyx', speed: 0.9, ttsModel: 'gpt-4o-mini-tts', instructions: '', audio: null, _seq: 0,
   /** 관리자 목소리 비교 화면에서 저장한 설정을 적용 */
@@ -14156,12 +14312,13 @@ const StenoVoice = {
           try{ const r = await fetch(storedUrl); if(r.ok){ objUrl = URL.createObjectURL(await r.blob()); src = objUrl; } }catch(_){}
           if(my !== this._seq){ if(objUrl) URL.revokeObjectURL(objUrl); return; }
         }
-        const a = new Audio(src); this.audio = a;
-        if(state.interviewMode === 'dialog') Persona.attachAudio(a, !!objUrl);
+        MobileAudio.beforeSpeak();
+        const a = MobileAudio.element(src); this.audio = a;
+        if(state.interviewMode === 'dialog') Persona.attachAudio(a, !!objUrl && !MobileAudio.isMobile);
         await new Promise((res, rej)=>{
           a.onended = ()=>{ if(this.audio===a) this.audio=null; if(objUrl) URL.revokeObjectURL(objUrl); res(); };
           a.onerror = ()=>rej(new Error('저장된 음성 재생 실패'));
-          a.play().catch(rej);
+          playWithGate(a).catch(rej);
         });
         if(my !== this._seq) return;
         if(onDone) onDone();
@@ -14177,15 +14334,16 @@ const StenoVoice = {
         const blob = await fetchSpeechBlob(sanitizeForSpeech(text), this.openaiVoice, this.speed, this.ttsModel, this.instructions);
         if(my !== this._seq) return;   // 그 사이 다른 발화가 시작됨
         const url = URL.createObjectURL(blob);
-        const a = new Audio(url); this.audio = a;
-        if(state.interviewMode === 'dialog') Persona.attachAudio(a, true);
+        MobileAudio.beforeSpeak();
+        const a = MobileAudio.element(url); this.audio = a;
+        if(state.interviewMode === 'dialog') Persona.attachAudio(a, !MobileAudio.isMobile);
         a.onended = ()=>{ URL.revokeObjectURL(url); if(this.audio===a) this.audio=null; if(onDone) onDone(); };
         a.onerror = ()=>{ URL.revokeObjectURL(url); speakQuestion(text, onDone); };
-        await a.play();
+        await playWithGate(a);
         return;
       }catch(e){
         console.warn('[OpenAI 음성 실패 → 브라우저 음성으로 대체]', e.message);
-        if(!this._warned){ this._warned = true; showToast('OpenAI 음성을 불러오지 못해 브라우저 음성으로 읽어요: '+e.message); }
+        if(!this._warned){ this._warned = true; showToast('면접관 목소리를 불러오지 못해 기본 음성으로 읽어요. 면접은 그대로 진행돼요.' + ((state.currentUser && state.currentUser.isAdmin) ? ' ('+String(e.message||e).slice(0,80)+')' : ''), 'info'); }
       }
     }
     speakQuestion(text, onDone);
@@ -14439,7 +14597,7 @@ async function coachMake(){
       showToast('서류와 내 말에서 뽑은 기본 대본이에요. [ ] 부분과 말투를 내 경험에 맞게 고친 뒤 저장해 보세요.');
       Activity.log('intro_coach', { field: f.name, chars: coachCharCount(r.script), draft: !!draft, local: true });
       setTimeout(()=>{ const sc = document.getElementById('coach-script-sec'); if(sc && sc.scrollIntoView) sc.scrollIntoView({ behavior:'smooth', block:'start' }); }, 80);
-    }catch(e){ console.warn('[자기소개 코치] 기본 대본 실패', e); showToast('대본을 만들지 못했어요: ' + (e.message || e), 'warn'); }
+    }catch(e){ console.warn('[자기소개 코치] 기본 대본 실패', e); showToast('대본을 만들지 못했어요. ' + friendlyErr(e), 'warn'); }
     document.getElementById('coach-make').textContent = '대본 다시 만들기';
     return;
   }
@@ -14465,7 +14623,7 @@ async function coachMake(){
     setTimeout(()=>{ const s = document.getElementById('coach-script-sec'); if(s && s.scrollIntoView) s.scrollIntoView({ behavior:'smooth', block:'start' }); }, 80);
   }catch(e){
     console.warn('[자기소개 코치] 대본 생성 실패', e);
-    showToast('대본을 만들지 못했어요: ' + (e.message || e), 'warn');
+    showToast('대본을 만들지 못했어요. ' + friendlyErr(e), 'warn');
   }finally{
     Coach.busy = false; btn.disabled = false; btn.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
   }
@@ -14480,7 +14638,7 @@ async function coachSave(){
     if(error) throw error;
     Coach.script = t; Coach.savedAt = now; Coach.dirty = false; coachRenderScript();
     showToast('대본을 저장했어요.');
-  }catch(e){ console.warn('[자기소개 코치] 저장 실패', e); showToast('저장하지 못했어요: ' + (e.message || e), 'warn'); }
+  }catch(e){ console.warn('[자기소개 코치] 저장 실패', e); showToast('저장하지 못했어요. ' + friendlyErr(e), 'warn'); }
   finally{ btn.disabled = false; btn.textContent = '대본 저장'; }
 }
 function coachStopTimer(){ if(Coach.iv){ clearInterval(Coach.iv); Coach.iv = null; } }
@@ -14916,6 +15074,33 @@ window.addEventListener('online', ()=>{ showToast('인터넷 연결이 다시 �
 window.addEventListener('beforeunload', (e)=>{
   if(!interviewInProgress()) return;
   e.preventDefault(); e.returnValue = '';
+});
+/* 휴대폰 면접 안정화 (2026-10-12)
+   - 면접 화면에서는 화면이 저절로 꺼지지 않게 (꺼지면 마이크·소리가 끊김)
+   - 면접 중 다른 앱·탭으로 나가면 자동 일시정지 → 돌아오면 "이어서 진행"으로 자연스럽게 재개 */
+const ScreenKeep = {
+  lock: null,
+  async on(){
+    try{
+      if(!('wakeLock' in navigator) || this.lock || document.visibilityState !== 'visible') return;
+      this.lock = await navigator.wakeLock.request('screen');
+      this.lock.addEventListener('release', ()=>{ this.lock = null; });
+    }catch(_){ this.lock = null; }
+  },
+  off(){ try{ if(this.lock) this.lock.release(); }catch(_){} this.lock = null; },
+};
+document.addEventListener('visibilitychange', ()=>{
+  const iv = document.getElementById('screen-interview');
+  const onIv = !!(iv && iv.classList.contains('active'));
+  if(document.visibilityState === 'hidden'){
+    if(onIv && state.interviewMode === 'dialog' && StenoLoop.running && !state.dialogPaused){
+      try{ dialogPause(); state.autoPaused = true; const pr = document.getElementById('pause-reason'); if(pr) pr.hidden = false; }catch(_){}
+    }
+  }else if(onIv){
+    ScreenKeep.on();
+    try{ if(Persona.ctx && Persona.ctx.state === 'suspended') Persona.ctx.resume(); }catch(_){}
+    if(state.autoPaused){ state.autoPaused = false; }
+  }
 });
 // 탭이 실제로 닫히거나 이동하면 마이크·카메라를 확실히 해제
 window.addEventListener('pagehide', ()=>{
@@ -15856,7 +16041,7 @@ async function submitSignup(){
   const userId = data.user ? data.user.id : null;
   if(!userId){
     restoreBtn();
-    showToast('가입 요청은 보냈지만 사용자 정보를 받지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    showToast('가입 요청은 보냈지만 계정 정보를 받지 못했어요. 잠시 후 다시 시도해 주세요.');
     return;
   }
   const profileRow = { id: userId, name, phone, note: note || '서류 결과 확인 중', is_admin:false, allowed_fields: [], privacy_agreed_at: new Date().toISOString() };
@@ -15875,7 +16060,7 @@ async function submitSignup(){
   }
   restoreBtn();
   if(insertErr){
-    showToast('프로필 저장에 실패했습니다: '+insertErr.message);
+    showToast('가입 정보를 저장하지 못했어요. '+friendlyErr(insertErr), 'warn');
     return;
   }
   closeSignup();
@@ -15888,9 +16073,9 @@ async function submitSignup(){
     document.getElementById('hero-greeting').innerHTML = `안녕하세요,<br>${escapeHtml(name)} 님.`;
     await renderDashboard();
     showScreen('screen-dashboard');
-    showToast('회원가입이 완료되었습니다. 관리자가 권한을 부여하면 면접 연습을 시작할 수 있어요.');
+    showToast('회원가입을 마쳤어요. 교육팀이 이용 권한을 열어 드리면 바로 연습할 수 있어요.');
   }else{
-    showToast('회원가입이 완료되었습니다. 이메일 확인 후 로그인해 주세요.');
+    showToast('회원가입을 마쳤어요. 이메일 확인 후 로그인해 주세요.');
   }
 }
 
