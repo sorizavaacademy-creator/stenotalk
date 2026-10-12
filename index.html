@@ -9,6 +9,8 @@
 /* 2026-10-08 예전 주소(GitHub)로 들어오면 새 홈페이지 주소로 자동 이동 (예전 홈 화면 아이콘·링크도 새 주소로 열림) */
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
+(function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
+var APP_VERSION = '2026-10-12c';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3526,6 +3528,43 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     .dev-hint, .dev-note, .opt-sub, .setup-sec-sub, .help-sub, .diff-note, .mic-check-text, .coach-meta, .coach-ph, .delivery-note, .rp-grade-note, .gr-note, .history-meta, .d3-stat-foot, .d3-stat-label, .lg-hint, .hs-note, .insight-note, .mp-note, .q-real-note, .setup-summary, .setup-foot-text, .rp-real-src, .sr-src, .q-checklist, .review-setup-note, .coach-saved, .gr-legend, #modal-setup .opt-sub, #modal-setup .dev-hint{font-size:13px !important;line-height:1.55 !important;}
     #modal-setup .opt-sub, #modal-setup .dev-hint, .dev-hint, .opt-sub, .setup-sec-sub, .help-sub, .rp-grade-note, .delivery-note, .history-meta, .d3-stat-foot{color:#55555b !important;}
   }
+
+/* ---------- 새 버전 알림 (2026-10-12) ---------- */
+.update-bar{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translate(-50%,-8px);opacity:0;z-index:260;display:flex;align-items:center;gap:12px;width:min(560px,calc(100vw - 24px));box-sizing:border-box;padding:12px 12px 12px 16px;border-radius:12px;background:#1f1f21;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.25);font-family:'Pretendard Variable',Pretendard,var(--font-ui);transition:opacity .18s ease,transform .18s ease;word-break:keep-all;}
+.update-bar.on{opacity:1;transform:translate(-50%,0);}
+.update-bar[hidden]{display:none;}
+.update-bar .ub-dot{flex:none;width:10px;height:10px;border-radius:50%;background:#4fd38a;box-shadow:0 0 0 4px rgba(79,211,138,.2);}
+.update-bar .ub-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.45;color:#cfcfcb;}
+.update-bar .ub-txt b{font-size:14.5px;color:#fff;font-weight:700;}
+.update-bar button{appearance:none;border:0;font:inherit;cursor:pointer;border-radius:8px;min-height:40px;padding:0 14px;font-size:14px;font-weight:700;white-space:nowrap;}
+.update-bar .ub-go{background:#e8532a;color:#fff;} .update-bar .ub-go:hover{background:#c8441c;}
+.update-bar .ub-x{background:transparent;color:#b9b8b4;padding:0 8px;font-weight:600;} .update-bar .ub-x:hover{color:#fff;}
+@media(max-width:480px){ .update-bar{flex-wrap:wrap;} .update-bar .ub-txt{flex-basis:calc(100% - 26px);} .update-bar .ub-go{flex:1;} }
+/* ---------- 마이크 차단 안내 (2026-10-12) ---------- */
+#modal-micblock .modal-box{max-width:480px;}
+#modal-micblock .modal-head h2{display:flex;align-items:center;gap:8px;}
+.mb-ic{flex:none;width:32px;height:32px;border-radius:50%;background:#fdecea;color:#b42318;display:inline-flex;align-items:center;justify-content:center;} .mb-ic svg{width:18px;height:18px;}
+.mb-pic{margin:4px 0 14px;border:1px solid #e6e4e0;border-radius:12px;background:#f6f5f3;padding:14px;}
+.mb-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #d3d0ca;border-radius:999px;height:40px;padding:0 6px 0 6px;font-size:13px;color:#45454a;position:relative;}
+.mb-bar .mb-hit{flex:none;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#1c1c1e;background:#fdf0eb;box-shadow:0 0 0 2px #e8532a;animation:mbPulse 1.6s ease-in-out infinite;font-size:12px;font-weight:800;}
+.mb-bar .mb-hit svg{width:16px;height:16px;}
+.mb-bar .mb-url{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mb-bar .mb-dim{flex:none;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#66666c;}
+.mb-bar .mb-dim svg{width:16px;height:16px;}
+@keyframes mbPulse{0%,100%{box-shadow:0 0 0 2px #e8532a;}50%{box-shadow:0 0 0 6px rgba(232,83,42,.25);}}
+@media (prefers-reduced-motion: reduce){ .mb-bar .mb-hit{animation:none;} }
+.mb-arrow{display:flex;align-items:center;gap:6px;margin:8px 0 0 10px;font-size:12.5px;color:#c2401b;font-weight:700;}
+.mb-pop{margin-top:10px;background:#fff;border:1px solid #e6e4e0;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13.5px;color:#1c1c1e;}
+.mb-pop .mb-tg{flex:none;width:38px;height:22px;border-radius:999px;background:#2f7a4a;position:relative;} .mb-pop .mb-tg::after{content:'';position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;}
+.mb-pop .mb-sel{flex:none;font-size:12.5px;font-weight:700;color:#2f7a4a;background:#e7f3ec;border-radius:6px;padding:3px 8px;}
+.mb-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.mb-steps li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.55;color:#1c1c1e;word-break:keep-all;}
+.mb-steps li i{flex:none;width:24px;height:24px;border-radius:50%;background:#1f1f21;color:#fff;font-style:normal;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;line-height:1;margin-top:1px;}
+.mb-steps .kbd{display:inline-block;padding:0 6px;border:1px solid #d3d0ca;border-radius:5px;background:#fff;font-size:13px;font-weight:600;}
+.mb-alt{margin:12px 0 0;font-size:13px;color:#55555b;line-height:1.55;background:#f6f5f3;border-radius:8px;padding:10px 12px;word-break:keep-all;}
+.mb-state{margin:12px 0 0;font-size:13.5px;font-weight:600;min-height:1em;} .mb-state.bad{color:#b42318;} .mb-state.ok{color:#2f7a4a;}
+#modal-micblock .modal-foot{display:flex;gap:8px;flex-wrap:wrap;} #modal-micblock .modal-foot .btn{flex:1;min-height:46px;}
+.mb-more{display:block;text-align:center;margin:12px 0 0;font-size:13px;color:#66666c;text-decoration:underline;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -3611,6 +3650,30 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   </div>
 </div>
 <div id="toast-container"></div>
+<div id="update-bar" class="update-bar" hidden role="status" aria-live="polite">
+  <span class="ub-dot" aria-hidden="true"></span>
+  <div class="ub-txt"><b>새 버전이 나왔어요</b><span>새로고침하면 바로 적용돼요. 저장된 기록은 그대로예요.</span></div>
+  <button type="button" class="ub-go" onclick="AppUpdate.reload()">새로고침</button>
+  <button type="button" class="ub-x" onclick="AppUpdate.later()">나중에</button>
+</div>
+<div class="modal-overlay" id="modal-micblock" style="z-index:135;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2><span class="mb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg></span>마이크가 막혀 있어요</h2>
+      <p id="mb-sub">이 사이트의 마이크가 '차단'으로 되어 있어서 답변을 들을 수 없어요. 아래 순서대로 한 번만 바꿔 주세요.</p>
+    </div>
+    <div class="modal-body modal-scroll">
+      <div id="mb-guide"></div>
+      <p class="mb-state" id="mb-state" aria-live="polite"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="MicGuard.close()">닫기</button>
+      <button class="btn btn-solid" id="mb-recheck" onclick="MicGuard.recheck()">바꿨어요 · 다시 확인</button>
+    </div>
+    <a class="mb-more" onclick="MicGuard.close(); openMicHelp()">그래도 안 되면: 자세한 해결 방법 보기</a>
+  </div>
+</div>
+
 <!-- ============ 2026-10-08 홈 화면에 추가 안내 (휴대폰) ============ -->
 <div class="hs-wrap" id="home-sheet" onclick="if(event.target===this) HomeApp.later()">
   <div class="hs-sheet" role="dialog" aria-modal="true" aria-labelledby="hs-title">
@@ -8000,6 +8063,7 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  try{ setTimeout(()=>AppUpdate.maybeShow(), 300); }catch(_){}
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
@@ -8783,6 +8847,7 @@ async function renderDashboard(){
   }
 
   renderTodayStrip(history, isAdmin || expired);
+  if(!isAdmin) setTimeout(()=>{ try{ PendingSave.flush(); }catch(_){} }, 800);
   // 기록 카드 (검정)
   const statsEl = document.getElementById('d3-stats');
   if(statsEl){
@@ -8795,7 +8860,7 @@ async function renderDashboard(){
       const now = Date.now(), weekAgoIso = new Date(now - 7*86400000).toISOString();
       const [pr, rr] = await Promise.all([
         sb.from('user_presence').select('user_id,screen,updated_at').then(r=>r, ()=>({error:true})),
-        sb.from('interview_records').select('user_id,created_at').gte('created_at', weekAgoIso).limit(2000).then(r=>r, ()=>({error:true}))
+        sbAll(()=>sb.from('interview_records').select('user_id,created_at').gte('created_at', weekAgoIso)).then(r=>r, ()=>({error:true}))
       ]);
       const sIds = new Set(students.map(u=>u.id));
       const onlineN = (pr && !pr.error && pr.data) ? pr.data.filter(x=>sIds.has(x.user_id) && x.screen!=='offline' && now - new Date(x.updated_at).getTime() < 90000).length : null;
@@ -8989,9 +9054,8 @@ const Growth = {
   answered(a){ return a && String(a.answer_text||'').replace(/\s/g,'').length >= 5; },
   async answersFor(recordIds, qTexts){
     if(!recordIds.length) return [];
-    let q = sb.from('interview_answers').select('record_id,question_text,answer_text,score,feedback,kind,question_index').in('record_id', recordIds);
-    if(qTexts && qTexts.length) q = q.in('question_text', qTexts);
-    const { data, error } = await q;
+    const mk = ()=>{ let q = sb.from('interview_answers').select('record_id,question_text,answer_text,score,feedback,kind,question_index'); if(qTexts && qTexts.length) q = q.in('question_text', qTexts); return q.order('record_id').order('question_index'); };
+    const { data, error } = await sbAllIn(mk, 'record_id', recordIds);
     if(error){ console.warn('[실력 변화] 답변을 읽지 못함', error.message); return []; }
     return data || [];
   },
@@ -9337,9 +9401,7 @@ async function renderReviewPanel(history){
     listEl.innerHTML = '<div class="qa-empty">면접을 한 번 마치면, 점수가 낮았던 질문을 여기에 모아 드려요.</div>';
     return;
   }
-  const { data, error } = await sb.from('interview_answers')
-    .select('question_text, score, created_at')
-    .in('record_id', recordIds);
+  const { data, error } = await sbAllIn(()=>sb.from('interview_answers').select('question_text, score, created_at').order('created_at'), 'record_id', recordIds);
   if(error){
     listEl.innerHTML = `<div class="qa-empty" style="color:var(--danger);">답변 기록을 불러오지 못했습니다: ${escapeHtml(error.message)}</div>`;
     return;
@@ -9700,6 +9762,7 @@ function startFromPractice(){
 /* ---------------- setup modal ---------------- */
 function openSetup(fieldId){
   state.demoResult = false;
+  setTimeout(()=>{ try{ const m = document.getElementById('modal-setup'); if(m && m.classList.contains('active')) MicGuard.precheck('setup'); }catch(_){} }, 350);
   micCheck.srTested = false; micCheck.srBlocked = false;   // 환경 점검을 열 때마다 음성 인식 검사 다시
   const isReview = fieldId === 'review';
   const isAdmin = !!(state.currentUser && state.currentUser.isAdmin);
@@ -10003,7 +10066,7 @@ const Feedback = {
     const ua = navigator.userAgent || '';
     const browser = /Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : '기타';
     const mobile = /Mobi|Android|iPhone|iPad/.test(ua);
-    return { browser, mobile, ua: ua.slice(0,200), width: window.innerWidth, field: state.selectedField ? state.selectedField.name : null, mode: state.interviewMode || null,
+    return { ver: (typeof APP_VERSION!=='undefined'?APP_VERSION:''), browser, mobile, ua: ua.slice(0,200), width: window.innerWidth, field: state.selectedField ? state.selectedField.name : null, mode: state.interviewMode || null,
       lastError: this.lastError, url: location.href.split('?')[0].slice(-80), when: new Date().toISOString() };
   },
   /** 자동 오류 기록: 같은 내용은 10분에 한 번, 세션당 30건까지 */
@@ -10071,8 +10134,8 @@ async function loadBetaView(force){
   if(force){ try{ await renderAdmin(); }catch(_){} }
   const since = new Date(Date.now() - 30*86400000).toISOString();
   let logs = [], fb = [], miss = [];
-  try{ const r = await sb.from('activity_log').select('user_id,event,created_at').gte('created_at', since).order('created_at', {ascending:false}).limit(5000); if(r.error) throw r.error; logs = r.data || []; }catch(e){ miss.push('접속 기록'); }
-  try{ const r = await sb.from('feedback').select('user_id,auto,kind,status,created_at').limit(2000); if(r.error) throw r.error; fb = r.data || []; }catch(e){ miss.push('의견·오류'); }
+  try{ const r = await sbAll(()=>sb.from('activity_log').select('user_id,event,created_at').gte('created_at', since).order('created_at', {ascending:false})); if(r.error) throw r.error; logs = r.data || []; }catch(e){ miss.push('접속 기록'); }
+  try{ const r = await sbAll(()=>sb.from('feedback').select('user_id,auto,kind,status,created_at').order('created_at', {ascending:false})); if(r.error) throw r.error; fb = r.data || []; }catch(e){ miss.push('의견·오류'); }
   state.betaLogs = logs; state.betaFb = fb;
   if(note){ note.style.display = miss.length ? '' : 'none'; if(miss.length) note.textContent = miss.join('·') + ' 표를 읽지 못해 그 칸은 비어 있어요.'; }
   renderBetaView();
@@ -10106,7 +10169,7 @@ async function loadRealSetView(force){
   if(force || !state.adminRecords){ try{ await renderAdmin(); }catch(_){} }
   const since = new Date(Date.now() - 60*86400000).toISOString(); const miss = [];
   state.rsLogs = []; state.rsScripts = {};
-  try{ const r = await sb.from('activity_log').select('user_id,event,created_at').in('event', ['intro_coach','intro_coach_practice']).gte('created_at', since).limit(5000); if(r.error) throw r.error; state.rsLogs = r.data || []; }catch(e){ miss.push('코치 사용 기록'); }
+  try{ const r = await sbAll(()=>sb.from('activity_log').select('user_id,event,created_at').in('event', ['intro_coach','intro_coach_practice']).gte('created_at', since).order('created_at', {ascending:false})); if(r.error) throw r.error; state.rsLogs = r.data || []; }catch(e){ miss.push('코치 사용 기록'); }
   try{ const r = await sb.from('user_resumes').select('user_id,intro_script_at'); if(r.error) throw r.error; (r.data||[]).forEach(x=>{ if(x.intro_script_at) state.rsScripts[x.user_id] = x.intro_script_at; }); }catch(e){ miss.push('저장된 대본'); }
   const hasCols = (state.adminRecords||[]).some(r=>'set_kind' in r) || !(state.adminRecords||[]).length;
   if(!hasCols) miss.push('실전 세트 기록(step16 SQL 필요)');
@@ -10362,7 +10425,7 @@ async function refreshLiveView(){
     const r1 = await sb.from('user_presence').select('*').order('updated_at', {ascending:false});
     if(r1.error) throw r1.error; presence = r1.data || [];
     const since = new Date(Date.now() - 30*86400000).toISOString();
-    const r2 = await sb.from('activity_log').select('*').gte('created_at', since).order('created_at', {ascending:false}).limit(2000);
+    const r2 = await sbAll(()=>sb.from('activity_log').select('*').gte('created_at', since).order('created_at', {ascending:false}), 20000);
     if(r2.error) throw r2.error; logs = (r2.data || []).slice().sort((a,b)=>new Date(b.created_at) - new Date(a.created_at));
   }catch(e){ tableMissing = true; console.warn('[접속 현황 읽기 실패]', e.message||e); }
   if(note){ note.style.display = tableMissing ? '' : 'none'; if(tableMissing) note.textContent = '접속 기록 표가 아직 없어요. supabase/sql/step5b_activity.sql 을 SQL Editor에서 실행하면 이 화면이 채워집니다.'; }
@@ -10977,7 +11040,8 @@ async function copyMicDiagnostic(){
   catch(_){ prompt('아래 내용을 복사해 주세요', micDiagReport); }
 }
 function openMicHelp(reason){
-  if(reason) document.getElementById('mic-help-reason').textContent = reason;
+  if(reason && reason.length > 8) document.getElementById('mic-help-reason').textContent = reason;
+  try{ MicGuard.state().then(v=>{ if(v === 'denied'){ closeMicHelp(); MicGuard.open('help'); } }); }catch(_){}
   document.getElementById('modal-mic-help').classList.add('active');
 }
 function closeMicHelp(){ document.getElementById('modal-mic-help').classList.remove('active'); }
@@ -12138,7 +12202,7 @@ function startRehearsal(){
     }).catch(()=>{});
   }
 
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
   applyInterviewModeUI();
   syncCamMicUI();
   document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
@@ -12314,6 +12378,7 @@ function readyStepsHtml(){
     + (state.camOn !== false && state.camPref !== false ? '<p class="rs-tip">카메라가 켜져 있으면 답하는 모습을 <b>이 기기에서만</b> 녹화·분석해서, 결과 화면에서 다시 보고 표정·시선 피드백을 받을 수 있어요. 서버에는 올리지 않아요.</p>' : '');
 }
 function showReadyGate(){
+  try{ MicGuard.precheck('live'); }catch(_){}
   const title = document.getElementById('ready-title');
   const desc = document.getElementById('ready-desc');
   { const st0 = document.getElementById('ready-steps'); if(st0){ st0.hidden = true; st0.innerHTML = ''; } }
@@ -12404,7 +12469,7 @@ function startInterview(){
 
   state.interviewQuestions = buildQuestionSet(state.questionCount);
 
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
   applyInterviewModeUI();
   syncCamMicUI();
   document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
@@ -12892,7 +12957,7 @@ async function draftShowResult(){
   try{
     state.demoResult = false; state.interviewMode = 'dialog'; state.dialogRealSet = !!d.realSet;
     state.startTime = d.startTime; state.pausedMs = Math.max(0, (Date.now() - d.startTime) - (d.activeMs || 0));
-    state.pendingGrades = []; state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null;
+    state.pendingGrades = []; state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null;
     state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[];
     StenoLoop.stats = { setTimeUp:false };
     try{ Activity.log('draft_result', { answered: d.asks.length }); }catch(_){}
@@ -12913,7 +12978,7 @@ function startDialogInterview(){
   state.startTime = Date.now();
   state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[]; state.pendingGrades=[]; state.followupInserted=true;
   state.interviewQuestions = []; state.dialogTranscript = [];
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
   state.dialogRealSet = !!state.realSet && state.selectedField.id === 'assembly';
   Activity.log('interview_start', Object.assign({ field: state.selectedField.name, mode:'dialog' }, state.dialogRealSet ? { set:'real' } : {}));
   Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:0 });
@@ -13145,7 +13210,7 @@ async function openDemoReport(){
     state.selectedField = FIELDS.find(f=>f.id==='court') || FIELDS[0];
     state.difficulty = '중'; state.interviewMode = 'dialog'; state.interviewStyle = 'dialog'; state.dialogRealSet = false;
     state.startTime = Date.now() - 8*60*1000 - 32*1000; state.pausedMs = 0; state.pendingGrades = [];
-    state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.micOn = false; state.camOn = false;
+    state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; state.micOn = false; state.camOn = false;
     state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[];
     await finishDialogInterview(buildDemoAsks(), []);
     showToast('시연용 샘플 리포트예요. DB에는 저장되지 않아요.', 'info');
@@ -13741,6 +13806,7 @@ async function endInterview(){
   if(isSetResult && SetReview.aiWanted()) SetReview.fetchAi(durationLabel);
 }
 function setSaveBanner(kind, text){
+  if(kind === 'ok'){ try{ setTimeout(()=>AppUpdate.maybeShow(), 1500); }catch(_){} }
   const b = document.getElementById('save-banner'); if(!b) return;
   if(!kind){ b.style.display='none'; return; }
   b.style.display=''; b.classList.toggle('ok', kind==='ok'); document.getElementById('save-banner-text').textContent = text;
@@ -13758,15 +13824,45 @@ async function saveInterviewRecord(durationLabel){
   state.lastSaveArgs = { durationLabel };
   state.saveInFlight = true;
   setSaveBanner(null);
+  let lastErr = null;
   try{
-    await _saveInterviewRecordOnce(durationLabel);
+    if(!state.savePayload) state.savePayload = buildSavePayload(durationLabel);
+    const p = state.savePayload;
+    const waits = [0, 2000, 5000, 10000];                  // 실패하면 2초·5초·10초 뒤 자동으로 다시 (2026-10-12)
+    for(let i=0;i<waits.length;i++){
+      if(waits[i]){ setSaveBanner('saving', `인터넷이 불안정해서 다시 저장하고 있어요… (${i}/${waits.length-1})`); await new Promise(r=>setTimeout(r, waits[i])); }
+      try{ await savePayloadOnce(p, i>0 || !!p.recordId); lastErr = null; break; }
+      catch(e){ lastErr = e; if(p.recordId) state.savedRecordId = p.recordId; console.warn('[기록 저장 실패 '+(i+1)+'회]', e.message||e); if(saveErrPermanent(e)) break; }
+    }
+    if(!lastErr){
+      state.savedRecordId = p.recordId; state.saveDone = true;
+      PendingSave.remove(p.pid);
+      try{ InterviewDraft.clear(); }catch(_){}
+      setSaveBanner('ok', '면접 기록을 저장했어요. "내 기록"에서 언제든 다시 볼 수 있어요.');
+      return;
+    }
+    // 그래도 안 되면 이 기기에 보관 → 인터넷이 돌아오거나 다음에 로그인하면 자동 저장
+    const kept = !saveErrPermanent(lastErr) && PendingSave.add(p);
+    if(kept){
+      try{ InterviewDraft.clear(); }catch(_){}           // 결과는 보관함에 있으니 "이어서 하기" 안내와 겹치지 않게
+      setSaveBanner('err', '인터넷이 불안정해서 아직 저장하지 못했어요. 이 기기에 보관해 두었다가 연결되면 자동으로 저장해요. 바로 하려면 "다시 저장"을 눌러 주세요.');
+    }else{
+      setSaveBanner('err', '면접 기록을 저장하지 못했어요. ' + friendlyErr(lastErr.sbErr || lastErr) + ' 결과는 화면에 그대로 있으니 "다시 저장"을 눌러 주세요.');
+    }
+    try{ Feedback.auto('기록 저장', (lastErr.stage==='answers'?'[답변] ':'[기록] ') + (lastErr.message||lastErr), { kept }); }catch(_){}
   }catch(e){
     console.error('[기록 저장 예외]', e);
     setSaveBanner('err', '면접 기록을 저장하지 못했어요. ' + friendlyErr(e) + ' 결과는 화면에 그대로 있으니 "다시 저장"을 눌러 주세요.');
   }finally{ state.saveInFlight = false; }
 }
-async function _saveInterviewRecordOnce(durationLabel){
-  const recRow = {
+/** 권한·형식 문제처럼 다시 해도 안 되는 오류 (인터넷 문제가 아님) */
+function saveErrPermanent(e){
+  const er = (e && e.sbErr) || e || {};
+  const code = String(er.code||''), msg = String(er.message||'');
+  return code === '42501' || /row-level security|violates|invalid input syntax|permission denied/i.test(msg);
+}
+function buildSavePayload(durationLabel){
+  const rec = {
     user_id: state.currentUser.id,
     field_id: state.selectedField.id,
     field_name: state.selectedField.name,
@@ -13775,30 +13871,9 @@ async function _saveInterviewRecordOnce(durationLabel){
     duration_label: durationLabel,
     mode: state.interviewMode === 'dialog' ? 'dialog' : 'classic',
   };
-  if(state.nonverbal) recRow.nonverbal = state.nonverbal;
-  if(state.interviewMode === 'dialog' && state.dialogRealSet){ recRow.set_kind = 'assembly_real'; recRow.set_overtime = !!state.setOvertime; if(state.setReview) recRow.set_review = state.setReview; }
-  // 기록 행은 한 번만 만들고(재시도 시 중복 방지), 답변 행 저장만 실패했으면 답변만 다시 저장
-  if(!state.savedRecordId){
-    let { data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single();
-    if(recErr && /nonverbal/i.test(recErr.message||'')){ delete recRow.nonverbal; ({ data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single()); }
-    if(recErr && /set_(kind|overtime|review)/i.test(recErr.message||'')){
-      console.warn('[interview_records 실전 세트 칸 없음 → 빼고 저장] SQL: supabase/sql/step16_set_review.sql');
-      delete recRow.set_kind; delete recRow.set_overtime; delete recRow.set_review;
-      ({ data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single());
-    }
-    if(recErr && /mode/i.test(recErr.message||'')){
-      console.warn('[interview_records.mode 컬럼 없음 → mode 제외하고 저장] SQL: supabase/sql/step5_dialog.sql');
-      delete recRow.mode;
-      ({ data: recordData, error: recErr } = await sb.from('interview_records').insert(recRow).select().single());
-    }
-    if(recErr){
-      setSaveBanner('err', '면접 기록을 저장하지 못했어요. ' + friendlyErr(recErr) + ' 결과는 화면에 그대로 있으니 "다시 저장"을 눌러 주세요.');
-      return;
-    }
-    state.savedRecordId = recordData.id;
-  }
-  const answerRows = state.interviewQuestions.slice(0, state.currentQ).map((item,i)=>({
-    record_id: state.savedRecordId,
+  if(state.nonverbal) rec.nonverbal = state.nonverbal;
+  if(state.interviewMode === 'dialog' && state.dialogRealSet){ rec.set_kind = 'assembly_real'; rec.set_overtime = !!state.setOvertime; if(state.setReview) rec.set_review = state.setReview; }
+  const answers = state.interviewQuestions.slice(0, state.currentQ).map((item,i)=>({
     question_index: i,
     question_text: item.q,
     answer_text: state.answerTexts[i] || '',
@@ -13809,22 +13884,118 @@ async function _saveInterviewRecordOnce(durationLabel){
       + ((state.answerFeedback[i] && state.answerFeedback[i].rubric && !state.answerFeedback[i].rubric.empty) ? '\n[리포트 '+state.answerFeedback[i].rubric.grade+' · '+['content','structure','detail','length','attitude'].map(k=>Rubric.AXIS_LABELS[k]+' '+state.answerFeedback[i].rubric.axes[k].score).join(' · ')+']' : '')
       + ((state.answerDelivery && state.answerDelivery[i] && state.answerDelivery[i].measured) ? '\n[전달력 '+state.answerDelivery[i].score+'점] '+state.answerDelivery[i].summary : '') || null,
   }));
-  if(answerRows.length){
-    let { error: ansErr } = await sb.from('interview_answers').insert(answerRows);
-    if(ansErr && /kind/i.test(ansErr.message||'')){
-      console.warn('[interview_answers.kind 컬럼 없음 → kind 제외하고 저장] SQL: supabase/sql/step5_dialog.sql');
-      ({ error: ansErr } = await sb.from('interview_answers').insert(answerRows.map(r=>{ const c=Object.assign({},r); delete c.kind; return c; })));
-    }
-    // interview_answers 테이블에 feedback 컬럼이 아직 없으면(SQL 미적용), 피드백만 빼고 다시 저장합니다.
-    if(ansErr && /feedback/i.test(ansErr.message||'')){
-      console.warn('[interview_answers.feedback 컬럼 없음 → 피드백 제외하고 저장] SQL: alter table public.interview_answers add column if not exists feedback text;');
-      ({ error: ansErr } = await sb.from('interview_answers').insert(answerRows.map(r=>{ const c=Object.assign({},r); delete c.feedback; return c; })));
-    }
-    if(ansErr){ setSaveBanner('err', '문항별 답변을 저장하지 못했어요. ' + friendlyErr(ansErr) + ' "다시 저장"을 눌러 주세요.'); return; }
+  return { pid: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2,6), uid: state.currentUser.id, ts: Date.now(), field: state.selectedField.name, rec, answers, recordId: state.savedRecordId || null, tries: 0 };
+}
+/** 기록 행 저장 (DB에 아직 없는 칸은 빼고 다시 시도) */
+async function insertRecordRow(row){
+  const recRow = Object.assign({}, row);
+  let { data, error } = await sb.from('interview_records').insert(recRow).select().single();
+  if(error && /nonverbal/i.test(error.message||'')){ delete recRow.nonverbal; ({ data, error } = await sb.from('interview_records').insert(recRow).select().single()); }
+  if(error && /set_(kind|overtime|review)/i.test(error.message||'')){
+    console.warn('[interview_records 실전 세트 칸 없음 → 빼고 저장] SQL: supabase/sql/step16_set_review.sql');
+    delete recRow.set_kind; delete recRow.set_overtime; delete recRow.set_review;
+    ({ data, error } = await sb.from('interview_records').insert(recRow).select().single());
   }
-  state.saveDone = true;
-  try{ InterviewDraft.clear(); }catch(_){}
-  setSaveBanner('ok', '면접 기록을 저장했어요. "내 기록"에서 언제든 다시 볼 수 있어요.');
+  if(error && /mode/i.test(error.message||'')){
+    console.warn('[interview_records.mode 컬럼 없음 → mode 제외하고 저장] SQL: supabase/sql/step5_dialog.sql');
+    delete recRow.mode;
+    ({ data, error } = await sb.from('interview_records').insert(recRow).select().single());
+  }
+  return { data, error };
+}
+async function insertAnswerRows(rows){
+  let { error } = await sb.from('interview_answers').insert(rows);
+  if(error && /kind/i.test(error.message||'')){
+    console.warn('[interview_answers.kind 컬럼 없음 → kind 제외하고 저장] SQL: supabase/sql/step5_dialog.sql');
+    rows = rows.map(r=>{ const c=Object.assign({},r); delete c.kind; return c; });
+    ({ error } = await sb.from('interview_answers').insert(rows));
+  }
+  if(error && /feedback/i.test(error.message||'')){
+    console.warn('[interview_answers.feedback 컬럼 없음 → 피드백 제외하고 저장]');
+    ({ error } = await sb.from('interview_answers').insert(rows.map(r=>{ const c=Object.assign({},r); delete c.feedback; return c; })));
+  }
+  return { error };
+}
+/** 보관된 결과 한 건 저장. 기록 행은 한 번만 만들고, 답변은 이미 들어가 있으면 다시 넣지 않음(중복 방지) */
+async function savePayloadOnce(p, isRetry){
+  const fail = (error, stage)=>{ const e = new Error((error && error.message) || String(error||'저장 실패')); e.sbErr = error; e.stage = stage; return e; };
+  if(!p.recordId){
+    const { data, error } = await insertRecordRow(p.rec);
+    if(error || !data) throw fail(error, 'record');
+    p.recordId = data.id;
+    if(state.savePayload && state.savePayload.pid === p.pid) state.savedRecordId = p.recordId;
+  }
+  if(p.answers && p.answers.length){
+    if(isRetry){
+      try{ const c = await sb.from('interview_answers').select('id', { count:'exact', head:true }).eq('record_id', p.recordId); if(!c.error && (c.count||0) >= p.answers.length) return p.recordId; }catch(_){}
+    }
+    const { error } = await insertAnswerRows(p.answers.map(a=>Object.assign({ record_id: p.recordId }, a)));
+    if(error) throw fail(error, 'answers');
+  }
+  return p.recordId;
+}
+/* ---------------- 저장 못 한 결과 보관함 (2026-10-12) ----------------
+ * 면접 결과 저장이 자동 재시도까지 실패하면 이 기기(localStorage)에 보관했다가
+ * 인터넷이 다시 연결될 때 · 다음에 로그인할 때 · 화면으로 돌아올 때 자동으로 올립니다. */
+const PendingSave = {
+  running:false,
+  key(uid){ return 'stenotalk_pending_rec_' + uid; },
+  list(uid){ if(!uid) return []; try{ const a = JSON.parse(localStorage.getItem(this.key(uid)) || '[]'); return Array.isArray(a) ? a : []; }catch(_){ return []; } },
+  write(uid, arr){ try{ if(arr.length) localStorage.setItem(this.key(uid), JSON.stringify(arr)); else localStorage.removeItem(this.key(uid)); return true; }catch(_){ return false; } },
+  add(p){ if(!p || !p.uid) return false; const arr = this.list(p.uid).filter(x=>x.pid !== p.pid); arr.push(p); return this.write(p.uid, arr.slice(-10)); },
+  remove(pid, uid){ uid = uid || (state.currentUser && state.currentUser.id); if(!uid || !pid) return; const arr = this.list(uid); const next = arr.filter(x=>x.pid !== pid); if(next.length !== arr.length) this.write(uid, next); },
+  count(){ return state.currentUser ? this.list(state.currentUser.id).length : 0; },
+  async flush(){
+    if(this.running || !state.currentUser || state.demoResult) return;
+    if(typeof navigator !== 'undefined' && navigator.onLine === false) return;
+    const uid = state.currentUser.id; const arr = this.list(uid); if(!arr.length) return;
+    this.running = true; let ok = 0;
+    try{
+      for(const p of arr){
+        if(p.uid !== uid) continue;
+        const isCurrent = !!(state.savePayload && state.savePayload.pid === p.pid);
+        if(isCurrent && state.saveInFlight) continue;
+        try{
+          await savePayloadOnce(p, true);
+          ok++; this.remove(p.pid, uid);
+          if(isCurrent){ state.savedRecordId = p.recordId; state.saveDone = true; setSaveBanner('ok', '면접 기록을 저장했어요. "내 기록"에서 언제든 다시 볼 수 있어요.'); }
+        }catch(e){
+          p.tries = (p.tries||0) + 1;
+          if(saveErrPermanent(e) || p.tries >= 20){ this.remove(p.pid, uid); try{ Feedback.auto('기록 저장', '보관함 저장 포기: ' + (e.message||e), { tries: p.tries }); }catch(_){} }
+          else this.add(p);   // 기록 행 번호(recordId)가 생겼으면 함께 보관
+        }
+      }
+    }finally{ this.running = false; }
+    if(ok){
+      showToast(`저장하지 못했던 면접 기록 ${ok}건을 저장했어요.`);
+      try{ const d = document.getElementById('screen-dashboard'); if(d && d.classList.contains('active') && !state.currentUser.isAdmin) renderDashboard(); }catch(_){}
+    }
+  }
+};
+/* ---------------- 많은 행 나눠 받기 (2026-10-12) ----------------
+ * Supabase는 한 번에 최대 1,000행만 돌려줘서(.limit(5000)이어도 1,000) 기록이 쌓이면 통계가 조용히 틀어짐.
+ * make: 매번 새 쿼리를 만드는 함수 (쿼리 객체는 한 번만 쓸 수 있음). 1,000행씩 .range()로 이어 받음. */
+async function sbAll(make, max){
+  max = max || 50000; const PAGE = 1000; let out = [], from = 0;
+  while(true){
+    const r = await make().range(from, from + PAGE - 1);
+    if(r.error) return out.length ? { data: out, error: null, partial: true } : { data: null, error: r.error };
+    const rows = r.data || []; out = out.concat(rows);
+    if(rows.length < PAGE || out.length >= max) break;
+    from += PAGE;
+  }
+  return { data: out, error: null };
+}
+/** .in(칸, 목록)이 길면 주소가 너무 길어져 실패 → 100개씩 나눠 받아 합침 */
+async function sbAllIn(make, col, ids, max){
+  const CH = 100; let out = [];
+  for(let i=0;i<ids.length;i+=CH){
+    const part = ids.slice(i, i+CH);
+    const r = await sbAll(()=>make().in(col, part), max);
+    if(r.error) return out.length ? { data: out, error: null, partial: true } : r;
+    out = out.concat(r.data || []);
+  }
+  return { data: out, error: null };
 }
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -14199,12 +14370,12 @@ async function renderAdmin(){
   state.adminUsers = users;
 
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
-  let { data: records, error: recErr } = await sb
+  let { data: records, error: recErr } = await sbAll(()=>sb
     .from('interview_records')
     .select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at, set_kind, set_overtime, set_review')
-    .order('created_at', {ascending:false});
+    .order('created_at', {ascending:false}));
   if(recErr && /set_/i.test(recErr.message||'')){   // step16 SQL 전이면 실전 세트 칸 없이
-    ({ data: records, error: recErr } = await sb.from('interview_records').select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at').order('created_at', {ascending:false}));
+    ({ data: records, error: recErr } = await sbAll(()=>sb.from('interview_records').select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at').order('created_at', {ascending:false})));
   }
   if(recErr){ showToast('면접 기록을 불러오지 못했습니다: '+recErr.message); }
   const allRecords = records || [];
@@ -14232,7 +14403,7 @@ async function renderAdmin(){
   try{ const { data: ss, error: sErr } = await sb.from('active_sessions').select('*'); if(sErr) throw sErr; (ss||[]).forEach(r=>{ state.adminSessions[r.user_id] = r; }); }catch(e){ console.warn('[기기 정보 읽기 실패]', e.message||e); }
   try{
     const since = new Date(Date.now() - 14*86400000).toISOString();
-    const { data: ev, error: eErr } = await sb.from('activity_log').select('user_id,event,detail,created_at').in('event', ['session_claim','session_kicked']).gte('created_at', since).order('created_at', {ascending:false}).limit(5000);
+    const { data: ev, error: eErr } = await sbAll(()=>sb.from('activity_log').select('user_id,event,detail,created_at').in('event', ['session_claim','session_kicked']).gte('created_at', since).order('created_at', {ascending:false}));
     if(eErr) throw eErr;
     const wk = Date.now() - 7*86400000;
     (ev||[]).forEach(e=>{
@@ -15203,6 +15374,7 @@ async function openCoach(){
   try{ closeUserMenu(); }catch(e){}
   if(Coach.uid !== state.currentUser.id){ Object.assign(Coach, { uid: state.currentUser.id, script:'', points:[], tips:[], feedback:'', savedAt:null, dirty:false, draftDurMs:0 }); const d = document.getElementById('coach-draft'); if(d) d.value = ''; }
   document.getElementById('modal-coach').classList.add('active');
+  try{ MicGuard.precheck('coach'); }catch(_){}
   coachResetPractice(); coachDraftInput();
   const aiOn = AiSwitch.anyOn();
   const mk = document.getElementById('coach-make'); mk.disabled = false; mk.classList.remove('is-off'); void aiOn; mk.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
@@ -15873,6 +16045,154 @@ const StenoLoop = {
 };
 
 /* ---------------- 안정화: 네트워크 끊김·새로고침·탭 닫힘 처리 ---------------- */
+/* ---------------- 새 버전 알림 (2026-10-12) ----------------
+ * 사이트를 고쳐 올려도 이미 열어 둔 창·홈 화면 앱은 예전 화면 그대로라서,
+ * 5분마다(+ 화면으로 돌아올 때) 서버 파일의 수정 시각(Last-Modified)만 가볍게 확인 → 바뀌면 위쪽에 알림.
+ * 면접 중·결과 저장 전·자기소개 코치 중에는 띄우지 않고, 끝난 뒤 다음 화면에서 띄움. */
+const AppUpdate = {
+  base:null, latest:null, dismissed:null, timer:null, checking:false,
+  async head(){
+    try{
+      if(location.protocol !== 'https:') return null;
+      const r = await fetch(location.pathname + '?vc=' + Date.now(), { method:'HEAD', cache:'no-store' });
+      if(!r.ok) return null;
+      return r.headers.get('last-modified') || r.headers.get('etag') || null;
+    }catch(_){ return null; }
+  },
+  async init(){
+    this.base = await this.head(); if(!this.base) return;
+    this.timer = setInterval(()=>this.check(), 5*60*1000);
+    document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') this.check(); });
+  },
+  async check(){
+    if(!this.base || this.checking || document.visibilityState !== 'visible') return;
+    this.checking = true;
+    try{ const v = await this.head(); if(v && v !== this.base){ this.latest = v; this.maybeShow(); } }finally{ this.checking = false; }
+  },
+  busy(){
+    const act = document.querySelector('.screen.active'); const id = act ? act.id : '';
+    if(id === 'screen-interview') return true;
+    try{ if(StenoLoop.running || StenoListener.active) return true; }catch(_){}
+    if(id === 'screen-result' && (state.saveInFlight || (!state.saveDone && !state.demoResult && state.lastSaveArgs))) return true;
+    const coach = document.getElementById('modal-coach'); if(coach && coach.classList.contains('active')) return true;
+    const setup = document.getElementById('modal-setup'); if(setup && setup.classList.contains('active')) return true;
+    return false;
+  },
+  maybeShow(){
+    if(!this.latest || this.latest === this.dismissed) return;
+    const bar = document.getElementById('update-bar'); if(!bar) return;
+    if(this.busy()){ this.hide(); return; }
+    if(!bar.hidden) return;
+    bar.hidden = false; requestAnimationFrame(()=>bar.classList.add('on'));
+  },
+  hide(){ const bar = document.getElementById('update-bar'); if(!bar || bar.hidden) return; bar.classList.remove('on'); bar.hidden = true; },
+  later(){ this.dismissed = this.latest; this.hide(); },
+  reload(){
+    if(this.busy() && !confirm('지금 새로고침하면 진행 중인 화면이 처음으로 돌아가요. 새로고침할까요?')) return;
+    try{ const q = new URLSearchParams(location.search); q.set('v', String(Date.now())); location.replace(location.pathname + '?' + q.toString() + location.hash); }
+    catch(_){ location.reload(); }
+  }
+};
+
+/* ---------------- 마이크 권한 미리 확인 (2026-10-12) ----------------
+ * 자동 오류 기록의 대부분이 "마이크 권한 차단" → 면접·코치를 시작할 때 미리 확인하고,
+ * 막혀 있으면 지금 쓰는 기기·브라우저에 맞춰 그림과 함께 푸는 방법을 보여 줌. */
+const MicGuard = {
+  st:null, watching:false, shownAt:0,
+  async state(){
+    try{
+      if(!navigator.permissions || !navigator.permissions.query) return 'unknown';
+      const st = await navigator.permissions.query({ name:'microphone' });
+      if(!this.watching){ this.watching = true; this.st = st; try{ st.onchange = ()=>this.onChange(st.state); }catch(_){} }
+      return st.state;
+    }catch(_){ return 'unknown'; }
+  },
+  onChange(v){
+    const m = document.getElementById('modal-micblock');
+    if(v === 'granted' && m && m.classList.contains('active')){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
+  },
+  /** 면접·코치 시작 전에 호출. 막혀 있으면 안내창을 띄우고 true */
+  async precheck(where){
+    const v = await this.state();
+    if(v === 'denied'){ this.open(where); return true; }
+    return false;
+  },
+  platform(){
+    const ua = navigator.userAgent || '';
+    let inApp = ''; try{ inApp = browserInfo().inApp; }catch(_){}
+    if(inApp) return 'inapp';
+    const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if(ios) return /CriOS|EdgiOS|FxiOS|Whale/.test(ua) ? 'ios-other' : 'ios-safari';
+    if(/Android/.test(ua)) return /SamsungBrowser/.test(ua) ? 'samsung' : 'android';
+    if(/Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome\/|Edg\/|Whale\//.test(ua)) return 'mac-safari';
+    return 'pc';
+  },
+  guideHtml(pf){
+    const host = location.host || 'dev.sorizavaacademy.com';
+    const I = {
+      tune:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
+      lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+      reload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg>',
+      menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+      dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>'
+    };
+    const bar = (hit, right, arrow)=>`<div class="mb-bar"><span class="mb-hit">${hit}</span><span class="mb-url">${escapeHtml(host)}/stenotalk</span><span class="mb-dim">${right||I.reload}</span></div><div class="mb-arrow">↑ ${arrow}</div>`;
+    const pop = (label, ctl)=>`<div class="mb-pop"><span>🎙 ${label}</span>${ctl==='sel' ? '<span class="mb-sel">허용</span>' : '<span class="mb-tg" aria-hidden="true"></span>'}</div>`;
+    const steps = arr => '<ol class="mb-steps">' + arr.map((t,i)=>`<li><i>${i+1}</i><span>${t}</span></li>`).join('') + '</ol>';
+    const G = {
+      pc: { pic: bar(I.tune, I.reload, '주소창 맨 왼쪽 아이콘을 눌러요') + pop('마이크', 'tg'),
+        steps: ['주소창 맨 왼쪽의 <b>조절 아이콘</b>(또는 <b>자물쇠</b>)을 눌러요.', '<b>마이크</b>를 <b>켜기(허용)</b>로 바꿔요.', '<b>새로고침</b>(<span class="kbd">F5</span>)을 누르면 끝이에요.'],
+        alt: '그래도 안 되면 윈도우 <b>설정 → 개인 정보 및 보안 → 마이크</b>에서 "마이크 액세스"가 켜져 있는지 확인해 주세요.' },
+      'mac-safari': { pic: pop('마이크', 'sel'),
+        steps: ['화면 맨 위 메뉴에서 <b>Safari → 설정</b>을 열어요.', '<b>웹 사이트</b> 탭 → 왼쪽 <b>마이크</b>를 눌러요.', `<b>${escapeHtml(host)}</b>를 <b>허용</b>으로 바꾸고 새로고침해요.`],
+        alt: '크롬으로 여는 걸 더 추천해요. 음성 인식이 더 안정적이에요.' },
+      android: { pic: bar(I.tune, I.dots, '주소창 왼쪽 아이콘을 눌러요') + pop('권한 → 마이크', 'tg'),
+        steps: ['주소창 왼쪽의 <b>조절 아이콘</b>(또는 자물쇠)을 눌러요.', '<b>권한</b> → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '화면을 아래로 당기거나 <b>새로고침</b>해요.'],
+        alt: '목록에 마이크가 없으면 휴대폰 <b>설정 → 애플리케이션 → Chrome → 권한 → 마이크</b>를 "앱 사용 중에만 허용"으로 바꿔 주세요.' },
+      samsung: { pic: bar(I.lock, I.menu, '주소창 왼쪽 자물쇠를 눌러요') + pop('마이크', 'sel'),
+        steps: ['주소창 왼쪽의 <b>자물쇠</b>를 눌러요.', '<b>권한</b>(또는 사이트 권한) → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
+        alt: '자물쇠가 없으면 아래쪽 <b>≡ 메뉴 → 설정 → 사이트 및 다운로드 → 사이트 권한 → 마이크</b>에서 바꿔요. 휴대폰 <b>설정 → 애플리케이션 → 삼성 인터넷 → 권한 → 마이크</b>도 확인해 주세요.' },
+      'ios-safari': { pic: bar('가가', I.reload, '주소창의 "가가"(aA) 버튼을 눌러요') + pop('웹 사이트 설정 → 마이크', 'sel'),
+        steps: ['주소창의 <b>"가가"</b>(aA) 버튼을 눌러요. (안 보이면 주소창을 한 번 눌러요)', '<b>웹 사이트 설정</b> → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
+        alt: '그래도 안 되면 아이폰 <b>설정 → 앱 → Safari → 마이크</b>를 "허용"으로 바꿔 주세요. 홈 화면 아이콘으로 열었다면 Safari에서 직접 열어 보세요.' },
+      'ios-other': { pic: pop('설정 → 앱 → 이 브라우저 → 마이크', 'tg'),
+        steps: ['아이폰 <b>설정</b> 앱을 열어요.', '<b>앱</b> → 지금 쓰는 브라우저(예: <b>Chrome</b>)를 찾아요.', '<b>마이크</b>를 켜고, 이 화면으로 돌아와 새로고침해요.'],
+        alt: '아이폰은 <b>Safari</b>로 여는 게 가장 안정적이에요.' },
+      inapp: { pic: bar(I.dots, I.dots, '오른쪽 위 ⋮ 또는 공유 버튼') ,
+        steps: ['카카오톡·네이버 같은 앱 안의 창에서는 마이크가 막혀 있어요.', '오른쪽 위 <b>⋮</b>(또는 공유 버튼) → <b>"다른 브라우저로 열기"</b>를 눌러요.', '<b>크롬</b>(아이폰은 <b>Safari</b>)에서 다시 로그인해요.'],
+        alt: '' }
+    };
+    const g = G[pf] || G.pc;
+    return `<div class="mb-pic">${g.pic}</div>${steps(g.steps)}${g.alt ? `<p class="mb-alt">${g.alt}</p>` : ''}`;
+  },
+  open(where){
+    const m = document.getElementById('modal-micblock'); if(!m) return;
+    const pf = this.platform();
+    document.getElementById('mb-guide').innerHTML = this.guideHtml(pf);
+    const sub = document.getElementById('mb-sub');
+    if(sub) sub.textContent = pf === 'inapp' ? '지금 열린 창에서는 마이크를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.'
+      : (where === 'coach' ? '자기소개 연습을 하려면 마이크가 필요해요. ' : '면접 답변을 들으려면 마이크가 필요해요. ') + "지금 이 사이트의 마이크가 '차단'으로 되어 있어요. 아래 순서대로 한 번만 바꿔 주세요.";
+    const rb = document.getElementById('mb-recheck'); if(rb) rb.style.display = pf === 'inapp' ? 'none' : '';
+    this.setState('', '');
+    m.classList.add('active'); this.shownAt = Date.now();
+    try{ Feedback.auto('마이크 차단 안내', '권한 차단 상태에서 시작 시도 (' + pf + ')', { where: where||'' }); }catch(_){}
+  },
+  close(){ const m = document.getElementById('modal-micblock'); if(m) m.classList.remove('active'); },
+  setState(cls, t){ const el = document.getElementById('mb-state'); if(!el) return; el.className = 'mb-state' + (cls ? ' ' + cls : ''); el.textContent = t; },
+  async recheck(){
+    const btn = document.getElementById('mb-recheck'); if(btn){ btn.disabled = true; btn.textContent = '확인 중…'; }
+    try{
+      let v = await this.state();
+      if(v !== 'denied'){
+        try{ const st = await navigator.mediaDevices.getUserMedia({ audio:true }); st.getTracks().forEach(t=>t.stop()); v = 'granted'; }
+        catch(e){ if(e && e.name === 'NotAllowedError') v = 'denied'; }
+      }
+      if(v === 'granted'){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
+      else if(v === 'denied'){ this.setState('bad', '아직 막혀 있어요. 위 순서대로 바꾼 뒤 새로고침하고 다시 눌러 주세요.'); }
+      else { this.setState('ok', '이제 시작할 때 마이크를 물어보면 "허용"을 눌러 주세요.'); setTimeout(()=>this.close(), 1600); }
+    }finally{ if(btn){ btn.disabled = false; btn.textContent = '바꿨어요 · 다시 확인'; } }
+  }
+};
 function interviewInProgress(){
   const scr = document.querySelector('.screen.active');
   return !!(scr && scr.id === 'screen-interview' && (StenoLoop.running || state.interviewMode === 'live' || state.interviewMode === 'rehearsal'));
@@ -15880,7 +16200,7 @@ function interviewInProgress(){
 window.addEventListener('offline', ()=>{
   showToast('인터넷 연결이 끊겼어요. 음성 인식과 기록 저장이 멈출 수 있어요. 연결이 돌아오면 자동으로 이어집니다.');
 });
-window.addEventListener('online', ()=>{ showToast('인터넷 연결이 다시 잡혔어요.'); });
+window.addEventListener('online', ()=>{ showToast('인터넷 연결이 다시 잡혔어요.'); setTimeout(()=>{ try{ PendingSave.flush(); }catch(_){} }, 1500); });
 // 면접 도중 새로고침·탭 닫기 → 브라우저 기본 확인창 ("변경사항이 저장되지 않을 수 있습니다")
 window.addEventListener('beforeunload', (e)=>{
   if(!interviewInProgress()) return;
@@ -17018,6 +17338,7 @@ try{ HomeApp.init(); }catch(e){ console.warn('HomeApp', e); }
 
 loadRememberedEmail();
 tryRestoreSession();
+try{ AppUpdate.init(); }catch(e){ console.warn('AppUpdate', e); }
 </script>
 </body>
 </html>
