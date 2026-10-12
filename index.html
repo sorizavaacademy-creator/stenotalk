@@ -3162,6 +3162,19 @@
     .toast{max-width:100%;}
   }
   .toast{cursor:pointer;}
+  .up-dev{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:12px;color:#66666c;line-height:1.4;}
+  .up-dev-ic svg{width:12px;height:12px;display:block;}
+  .up-dev.warn{color:#a3391a;}
+  .up-dev-tag{display:inline-block;padding:1px 6px;border-radius:5px;background:#fdecec;color:#c62828;font-size:11.5px;font-weight:700;}
+  .au-devices{margin:14px 0 4px;padding:12px 14px;border:1px solid #e6e4e0;border-radius:10px;background:#fff;}
+  .au-devices:empty{display:none;}
+  .au-dev-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;} .au-dev-head b{font-size:14px;} .au-dev-head small{flex-basis:100%;font-size:12.5px;color:#66666c;}
+  .au-dev-now{margin-top:8px;font-size:13px;color:#45454a;}
+  .au-dev-list{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;}
+  .au-dev-list li{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 8px;border-radius:6px;background:#f6f5f3;} .au-dev-list em{font-style:normal;color:#66666c;font-size:12px;white-space:nowrap;}
+  .au-dev-note{margin:8px 0 0;font-size:12px;color:#66666c;line-height:1.5;}
+  .au-dev-empty{font-size:12.5px;color:#66666c;}
+  .draft-del{background:none;border:0;color:#66666c;font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:6px;}
   .kicked-ic{width:48px;height:48px;border-radius:50%;background:#fdf0eb;color:#c2401b;display:grid;place-items:center;margin-bottom:12px;}
   .kicked-ic svg{width:24px;height:24px;}
   .kicked-note{margin-top:10px !important;padding:10px 12px;border-radius:8px;background:#f6f5f3;font-size:13px !important;color:#45454a !important;}
@@ -4932,6 +4945,22 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   </div>
 </div>
 
+<!-- ============ 끊겼던 면접 (2026-10-12) ============ -->
+<div class="modal-overlay" id="modal-draft">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-head">
+      <div class="kicked-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l2.5 2.5"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <h2>끝나지 않은 면접이 있어요</h2>
+      <p id="draft-desc">중간에 끊긴 면접의 답변이 이 기기에 저장되어 있어요.</p>
+    </div>
+    <div class="modal-foot" style="flex-direction:column;gap:8px;">
+      <button class="btn btn-solid" id="draft-resume" onclick="draftResume()" style="width:100%;">이어서 하기</button>
+      <button class="btn btn-outline" onclick="draftShowResult()" style="width:100%;">지금까지 답한 내용으로 결과 보기</button>
+      <button type="button" class="draft-del" onclick="draftDiscard()">기록 지우기</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ READY GATE MODAL ============ -->
 <div class="modal-overlay" id="modal-ready">
   <div class="modal-box" style="max-width:400px;">
@@ -5169,6 +5198,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 
       <div class="subhead">연습 현황</div>
       <div class="admin-stats au-stats" id="au-stats"></div>
+        <div class="au-devices" id="au-devices"></div>
       <div class="trend-chart au-trend" id="au-trend"></div>
 
       <div class="subhead">면접 기록 <span style="font-weight:400;">(클릭하면 문항별 답변을 볼 수 있어요)</span></div>
@@ -8190,6 +8220,7 @@ async function handleLogin(){
   maybeOpenDemoFromUrl();
   startAccessWatch();
   maybeStartTour();
+  setTimeout(()=>{ try{ InterviewDraft.offer(); }catch(_){} }, 900);
 }
 /* ---------------- 한 계정은 한 기기에서만 (2026-10-12) ----------------
    - 로그인하면 이 기기(로그인 세션)를 "지금 쓰는 기기"로 등록하고, 다른 기기의 로그인은 끊음 (나중에 로그인한 기기 우선)
@@ -8331,6 +8362,7 @@ async function tryRestoreSession(){
   if(maybeForceNewPassword(profile)) return;
   maybeOpenDemoFromUrl();
   maybeStartTour();
+  setTimeout(()=>{ try{ InterviewDraft.offer(); }catch(_){} }, 900);
 }
 
 /* ---------------- dashboard render ---------------- */
@@ -9039,7 +9071,7 @@ function filterAdminUsers(){
   let shown = 0;
   document.querySelectorAll('#admin-list .admin-row').forEach(row=>{
     const hay = (row.dataset.search || '');
-    const stOk = !st || (st === '__admin' ? row.dataset.admin === '1' : st === '__expired' ? row.dataset.expired === '1' : st === '__pending' ? row.dataset.pending === '1' : st === '__active' ? row.dataset.active === '1' : row.dataset.status === st);
+    const stOk = !st || (st === '__devwarn' ? row.dataset.devwarn === '1' : st === '__admin' ? row.dataset.admin === '1' : st === '__expired' ? row.dataset.expired === '1' : st === '__pending' ? row.dataset.pending === '1' : st === '__active' ? row.dataset.active === '1' : row.dataset.status === st);
     const ok = (!q || hay.includes(q)) && stOk;
     row.style.display = ok ? '' : 'none';
     if(ok) shown++;
@@ -9047,7 +9079,7 @@ function filterAdminUsers(){
   const empty = document.getElementById('admin-list-empty');
   if(empty) empty.style.display = shown ? 'none' : '';
   const cnt = document.getElementById('admin-user-count'); if(cnt) cnt.textContent = `${shown}명`;
-  document.querySelectorAll('#uf-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === (['','__pending','__active','__expired','__admin'].includes(st) ? st : '__status')));
+  document.querySelectorAll('#uf-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === (['','__pending','__active','__expired','__admin','__devwarn'].includes(st) ? st : '__status')));
 }
 function setUserFilter(v){ const sel = document.getElementById('admin-status-filter'); if(sel){ sel.value = v; } filterAdminUsers(); }
 // 더 보기(⋯) 메뉴: 다른 곳을 누르면 닫힘
@@ -10233,6 +10265,12 @@ function presenceLabel(p){
   if(p.screen==='admin') return '관리자 화면';
   if(p.screen==='dashboard') return '대시보드';
   return escapeHtml(p.screen||'');
+}
+/** 관리자: 기기 사용이 의심스러운지 (최근 7일 기기 3대 이상 또는 다른 기기로 넘어간 로그인 4회 이상) */
+function adminDeviceInfo(uid){
+  const s = (state.adminSessions||{})[uid] || null, d = (state.adminDevices||{})[uid] || null;
+  const dev7 = d ? d.dev7.size : 0, rep7 = d ? d.replaced7 : 0;
+  return { s, d, dev7, rep7, warn: dev7 >= 3 || rep7 >= 4 };
 }
 function agoLabel(iso){
   const s = Math.max(0, Math.round((Date.now() - new Date(iso).getTime())/1000));
@@ -12208,6 +12246,11 @@ function showReadyGate(){
   if(state.interviewMode === 'rehearsal'){
     title.textContent = '워밍업부터 시작할게요';
     desc.textContent = '리허설은 면접관 없이 진행돼요. 카메라 속 내 모습과 목소리 크기를 보면서 질문 2개에 편하게 답해 보세요. 채점되지 않고, 끝나면 바로 라이브 면접으로 넘어갑니다.';
+  }else if(state.interviewMode === 'dialog' && state.resumeDraft){
+    const rd = state.resumeDraft;
+    title.textContent = '이어서 면접을 진행할게요';
+    desc.textContent = `${(rd.doneQ||0)+1}번째 질문부터 이어서 해요. 앞에서 답한 ${rd.asks.filter(a=>String(a.answer||'').trim()).length}개는 결과에 그대로 들어가요.`;
+    const steps = document.getElementById('ready-steps'); if(steps){ steps.innerHTML = readyStepsHtml(); steps.hidden = false; }
   }else if(state.interviewMode === 'dialog'){
     title.textContent = 'AI 대화 면접 준비되셨나요?';
     desc.textContent = '시작을 누르면 면접관이 연결되고, 아래 순서로 진행돼요.';
@@ -12463,6 +12506,89 @@ const DIALOG_VOICE_PROVIDER = 'openai';    // speak-text 배포 완료(2026-09-2
 function dialogPhase(cls, text){ const p=document.getElementById('dialog-phase'); if(!p) return; p.className='dialog-phase '+(cls||''); document.getElementById('dialog-phase-text').textContent=text;
   const li=document.getElementById('live-interviewer'); if(li){ li.classList.remove('speaking','listening','thinking'); if(cls) li.classList.add(cls); } const lt=document.getElementById('live-phase-text'); if(lt) lt.textContent=text;
   if(typeof Persona !== 'undefined') Persona.setState(cls); }
+/* ---------------- 면접 중간 저장 (2026-10-12) ----------------
+   답변 하나가 끝날 때마다 이 기기에 임시 저장 → 휴대폰이 꺼지거나 새로고침·창 닫힘으로 끊겨도
+   다시 들어오면 "이어서 하기 / 지금까지 결과 보기 / 지우기"를 고를 수 있음. 결과가 저장되면 지움. (음성 녹음 파일은 저장하지 않음) */
+const InterviewDraft = {
+  key(){ return 'stenotalk_iv_draft_' + ((state.currentUser && state.currentUser.id) || 'anon'); },
+  save(part){
+    if(!state.currentUser || state.demoResult || state.interviewMode !== 'dialog') return;
+    const asks = (part.asks || []).map(a=>{ const o = Object.assign({}, a); delete o.audioParts; return o; });
+    const d = {
+      v:1, uid: state.currentUser.id, savedAt: Date.now(), startTime: state.startTime,
+      activeMs: Math.max(0, Date.now() - state.startTime - (state.pausedMs||0)),
+      fieldId: state.selectedField && state.selectedField.id, fieldName: state.selectedField && state.selectedField.name,
+      realSet: !!state.dialogRealSet, difficulty: state.difficulty, questionCount: state.questionCount, pressure: state.dialogPressure,
+      followups: state.dialogFollowups, timedMode: state.timedMode,
+      reviewQuestions: (state.selectedField && state.selectedField.id === 'review') ? (state.reviewQuestions || null) : null,
+      questions: part.questions || null, doneQ: part.doneQ || 0, setLeftMs: part.setLeftMs, asks,
+    };
+    try{ localStorage.setItem(this.key(), JSON.stringify(d)); }catch(_){}
+  },
+  load(){
+    try{
+      const d = JSON.parse(localStorage.getItem(this.key()) || 'null');
+      if(!d || d.v !== 1 || !state.currentUser || d.uid !== state.currentUser.id) return null;
+      if(Date.now() - d.savedAt > 3 * 86400000){ this.clear(); return null; }   // 3일 지난 것은 버림
+      if(!(d.asks || []).some(a=>String(a.answer||'').trim())){ this.clear(); return null; }   // 답한 게 없으면 버림
+      return d;
+    }catch(_){ return null; }
+  },
+  clear(){ try{ localStorage.removeItem(this.key()); }catch(_){} },
+  /** 대시보드에 들어왔을 때 끝나지 않은 면접이 있으면 안내 */
+  offer(){
+    if(!state.currentUser || state.currentUser.isAdmin) return;
+    if(typeof interviewInProgress === 'function' && interviewInProgress()) return;
+    const d = this.load(); if(!d) return;
+    const answered = d.asks.filter(a=>String(a.answer||'').trim()).length;
+    const total = d.questions ? d.questions.length : null;
+    const left = total != null ? Math.max(0, total - (d.doneQ||0)) : null;
+    const t = new Date(d.savedAt);
+    const when = `${t.getMonth()+1}월 ${t.getDate()}일 ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('draft-desc').textContent = `${when}에 하던 ${d.fieldName || ''} ${d.realSet ? '실전 세트 ' : ''}면접이 중간에 끊겼어요. 답변 ${answered}개는 이 기기에 저장되어 있어요.`;
+    const rb = document.getElementById('draft-resume');
+    if(rb){ rb.hidden = !(left && d.questions); rb.textContent = left ? `이어서 하기 (남은 질문 ${left}개)` : '이어서 하기'; }
+    document.getElementById('modal-draft').classList.add('active');
+    try{ Activity.log('draft_offer', { answered, left }); }catch(_){}
+  },
+  applyState(d){
+    const f = FIELDS.find(x=>x.id === d.fieldId) || (d.fieldId === 'review' ? REVIEW_FIELD : null);
+    if(!f) return false;
+    state.selectedField = f; state.difficulty = d.difficulty || state.difficulty; state.questionCount = d.questionCount || state.questionCount;
+    state.dialogPressure = d.pressure || state.dialogPressure; if(d.followups != null) state.dialogFollowups = d.followups;
+    state.timedMode = d.timedMode || 'free'; state.realSet = !!d.realSet; state.interviewStyle = 'dialog';
+    if(d.reviewQuestions) state.reviewQuestions = d.reviewQuestions;
+    return true;
+  },
+};
+function draftClose(){ document.getElementById('modal-draft').classList.remove('active'); }
+/** 이어서 하기: 같은 면접(같은 문항 목록)으로 남은 질문부터 */
+function draftResume(){
+  const d = InterviewDraft.load(); draftClose();
+  if(!d || !InterviewDraft.applyState(d)){ showToast('이어서 할 면접 정보를 찾지 못했어요.', 'warn'); return; }
+  MobileAudio.unlock();
+  state.resumeDraft = d;
+  try{ Activity.log('draft_resume', { done: d.doneQ }); }catch(_){}
+  startDialogInterview();
+}
+/** 지금까지 결과 보기: 답한 내용으로 결과 리포트를 만들고 기록에 저장 */
+async function draftShowResult(){
+  const d = InterviewDraft.load(); draftClose();
+  if(!d || !InterviewDraft.applyState(d)){ showToast('저장된 답변을 찾지 못했어요.', 'warn'); return; }
+  try{
+    state.demoResult = false; state.interviewMode = 'dialog'; state.dialogRealSet = !!d.realSet;
+    state.startTime = d.startTime; state.pausedMs = Math.max(0, (Date.now() - d.startTime) - (d.activeMs || 0));
+    state.pendingGrades = []; state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null;
+    state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[];
+    StenoLoop.stats = { setTimeUp:false };
+    try{ Activity.log('draft_result', { answered: d.asks.length }); }catch(_){}
+    await finishDialogInterview(d.asks.map(a=>Object.assign({}, a)), []);
+  }catch(e){ console.error(e); showToast('결과를 만들지 못했어요. '+friendlyErr(e), 'warn'); }
+}
+function draftDiscard(){
+  if(!confirm('저장된 답변을 지울까요? 지우면 되돌릴 수 없어요.')) return;
+  InterviewDraft.clear(); draftClose(); showToast('끊겼던 면접 기록을 지웠어요.', 'info');
+}
 function startDialogInterview(){
   try{ SessionGuard.check('interview'); }catch(_){}
   AnswerAudio.clear(); state.answerTimeLimit = null;
@@ -12574,8 +12700,15 @@ async function runDialogInterview(){
   const qEl = document.getElementById('iv-example-q');
   const badge = document.getElementById('iv-source-badge');
   const stopBtn = document.getElementById('btn-dialog-stop-listen');
-  let asks = [];         // 면접관이 던진 질문/꼬리질문 목록 (결과 화면용)
+  // 2026-10-12: 끊겼던 면접을 이어서 하는 경우 앞에서 답한 내용과 문항 목록을 그대로 이어받음
+  const resume = state.resumeDraft || null; state.resumeDraft = null;
+  let asks = resume ? resume.asks.map(a=>Object.assign({}, a)) : [];         // 면접관이 던진 질문/꼬리질문 목록 (결과 화면용)
   state.dialogAsks = asks; state.dialogFinishedRun = 0;
+  if(resume){
+    state.startTime = resume.startTime;   // 같은 면접으로 이어짐 (AI 횟수도 다시 세지 않음)
+    state.pausedMs = Math.max(0, (Date.now() - resume.startTime) - (resume.activeMs || 0));   // 끊겨 있던 시간은 면접 시간에서 뺌
+  }
+  let planned = resume ? resume.questions.slice() : null, doneQ = resume ? (resume.doneQ||0) : 0, curQIndex = doneQ;
   let pendingAsk = null; // 지금 답변을 기다리는 질문
   let curSlotName = '';  // 실전 세트: 지금 질문의 칸 이름 (꼬리질문도 같은 칸으로 묶음)
   const opt = {
@@ -12596,9 +12729,15 @@ async function runDialogInterview(){
   if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
   else if(realSet){ if(state.customQuestions && state.customQuestions.length) opt.docQuestion = Object.assign({}, state.customQuestions[0]); }
   else if(state.customQuestions && state.customQuestions.length){ opt.extraQuestions = state.customQuestions.map(x=>Object.assign({}, x)); }
+  if(resume){
+    opt.questions = resume.questions.map(x=>Object.assign({}, x)); delete opt.extraQuestions; delete opt.docQuestion;
+    opt.resume = { startIndex: doneQ, setLeftMs: resume.setLeftMs != null ? resume.setLeftMs : null };
+  }
+  const saveDraft = ()=>{ try{ InterviewDraft.save({ asks, questions: planned, doneQ, setLeftMs: (StenoLoop.setEndsAt != null && typeof StenoLoop.setLeftMs === 'function') ? StenoLoop.setLeftMs() : null }); }catch(_){} };
   await StenoLoop.run(opt, (type, d)=>{
-    if(type==='questions'){ document.getElementById('iv-progress').textContent = `질문 0 / ${d.list.length}`; }
+    if(type==='questions'){ planned = d.list.map(x=>{ const o = Object.assign({}, x); delete o.audioBlob; return o; }); document.getElementById('iv-progress').textContent = `질문 ${doneQ} / ${d.list.length}`; saveDraft(); }
     else if(type==='question'){
+      curQIndex = d.index;
       state.currentQ = d.index; document.getElementById('iv-progress').textContent = `질문 ${d.index} / ${d.total}`;
       Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:d.index });
       pendingAsk = { q: d.q.q, ref: d.q.ref, hint: d.q.hint || '', qid: (d.q.id != null ? d.q.id : d.q.dbId), kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q), slot: d.q.slot || null, slotName: d.q.slotName || '' };
@@ -12615,6 +12754,8 @@ async function runDialogInterview(){
     else if(type==='skipped'){
       hideSttAlert(); setDialogTypedUI(false); ta.value=''; updateCharCount(); showToast(d && d.realTimeout ? '10초 동안 답변이 없어 다음 질문으로 넘어가요.' : '답변 없이 다음 질문으로 넘어갑니다.');
       if(d && d.realTimeout && pendingAsk){ pendingAsk.answer = ''; pendingAsk.endReason = 'silence'; pendingAsk.limitMs = StenoLoop._curLimit || null; asks.push(pendingAsk); pendingAsk = null; }
+      if(!pendingAsk || pendingAsk.kind === 'question') doneQ = Math.max(doneQ, curQIndex);
+      saveDraft();
     }
     else if(type==='listen-state'){
       if(d.name==='pause'){ dialogPhase('listening', '잠시 멈췄어요 · 이어서 말하거나 "답변 완료"'); stopBtn.classList.add('nudge'); }
@@ -12628,7 +12769,10 @@ async function runDialogInterview(){
       ta.value = d.text; updateCharCount();
       if(pendingAsk){
         pendingAsk.answer = d.text; pendingAsk.durMs = d.durMs; pendingAsk.timing = d.timing || null; pendingAsk.audioParts = d.audioParts || [];
-        pendingAsk.endReason = d.reason || ''; pendingAsk.limitMs = d.limitMs || null; asks.push(pendingAsk); pendingAsk = null;
+        pendingAsk.endReason = d.reason || ''; pendingAsk.limitMs = d.limitMs || null; asks.push(pendingAsk);
+        if(pendingAsk.kind === 'question') doneQ = Math.max(doneQ, curQIndex);   // 본 질문에 답했으면 다음에 이어서 할 때 그다음 질문부터
+        pendingAsk = null;
+        if(d.reason !== 'aborted') saveDraft();
       }
     }
     else if(type==='thinking'){ dialogPhase('thinking', '면접관이 답변을 듣고 생각하는 중…'); document.getElementById('wave-state').textContent='꼬리질문 준비 중'; stopBtn.disabled = true; stopBtn.textContent = '면접관이 생각하는 중…'; }
@@ -13358,6 +13502,7 @@ async function _saveInterviewRecordOnce(durationLabel){
     if(ansErr){ setSaveBanner('err', '문항별 답변을 저장하지 못했어요. ' + friendlyErr(ansErr) + ' "다시 저장"을 눌러 주세요.'); return; }
   }
   state.saveDone = true;
+  try{ InterviewDraft.clear(); }catch(_){}
   setSaveBanner('ok', '면접 기록을 저장했어요. "내 기록"에서 언제든 다시 볼 수 있어요.');
 }
 function escapeHtml(s){
@@ -13760,6 +13905,25 @@ async function renderAdmin(){
     await AiSwitch.load();
   }catch(e){ console.warn('[AI 사용량 조회 실패 — step7_ai_usage_limit.sql 실행 여부 확인]', e.message||e); }
   try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].message !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; } } }catch(_){}
+  // 2026-10-12: 한 계정 한 기기 — 지금 쓰는 기기와 최근 기기 전환 (active_sessions + activity_log)
+  state.adminSessions = {}; state.adminDevices = {};
+  try{ const { data: ss, error: sErr } = await sb.from('active_sessions').select('*'); if(sErr) throw sErr; (ss||[]).forEach(r=>{ state.adminSessions[r.user_id] = r; }); }catch(e){ console.warn('[기기 정보 읽기 실패]', e.message||e); }
+  try{
+    const since = new Date(Date.now() - 14*86400000).toISOString();
+    const { data: ev, error: eErr } = await sb.from('activity_log').select('user_id,event,detail,created_at').in('event', ['session_claim','session_kicked']).gte('created_at', since).order('created_at', {ascending:false}).limit(5000);
+    if(eErr) throw eErr;
+    const wk = Date.now() - 7*86400000;
+    (ev||[]).forEach(e=>{
+      const o = state.adminDevices[e.user_id] = state.adminDevices[e.user_id] || { devices:{}, dev7:new Set(), replaced7:0, kicked7:0, recent:[] };
+      const det = e.detail || {}; const t = new Date(e.created_at).getTime();
+      if(e.event === 'session_claim'){
+        const dv = det.device || '알 수 없는 기기';
+        o.devices[dv] = o.devices[dv] || { n:0, last:e.created_at }; o.devices[dv].n++;
+        if(t >= wk){ o.dev7.add(dv); if(det.replaced) o.replaced7++; }
+        if(o.recent.length < 8) o.recent.push({ at:e.created_at, device:dv, replaced:!!det.replaced });
+      }else if(e.event === 'session_kicked' && t >= wk) o.kicked7++;
+    });
+  }catch(e){ console.warn('[기기 전환 기록 읽기 실패]', e.message||e); }
   const aiTotalUsed = Object.values(state.adminAiUsage).reduce((s,u)=>s+(u.used_total||0),0);
   const aiTodayUsed = Object.values(state.adminAiUsage).reduce((s,u)=>s+(u.used_today||0),0);
 
@@ -13806,6 +13970,7 @@ async function renderAdmin(){
     if(activeStudents.length && idle.length) items.push({ cls:'', txt:`<b>${idle.length}명</b>이 3일 넘게 연습이 없어요 <small>(${idle.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${idle.length>4?' 외':''})</small>`, go:"adminGo('live')", btn:'접속 현황' });
     const nearCap = Object.entries(state.adminAiUsage||{}).filter(([id,u])=>{ const p = users.find(x=>x.id===id); if(!p || p.is_admin) return false; const lim = AiSwitch.limits.total + (p.ai_bonus||0); return lim && u.used_total >= lim*0.8; }).length;
     if(nearCap) items.push({ cls:'', txt:`<b>${nearCap}명</b>이 AI 면접 총 한도의 80% 이상을 썼어요`, go:"adminGo('users','')", btn:'횟수 추가' });
+    { const dw = students.filter(u=>adminDeviceInfo(u.id).warn); if(dw.length) items.push({ cls:'warn', txt:`<b>${dw.length}명</b>이 최근 7일 동안 여러 기기를 번갈아 썼어요 <small>(${dw.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${dw.length>4?' 외':''} · 계정 공유 의심)</small>`, go:"adminGo('users','__devwarn')", btn:'확인' }); }
     const fbNew = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length;
     if(fbNew) items.push({ cls:'warn', txt:`아직 안 읽은 <b>의견·문제 ${fbNew}건</b>이 있어요${(state.feedbackRows||[]).some(r=>r.status==='새 글' && r.auto) ? ' <small>(자동 기록된 오류 포함)</small>' : ''}`, go:"adminGo('feedback')", btn:'읽으러 가기' });
     todoEl.innerHTML = `<div class="ov-todo-title"><span>확인이 필요한 것</span><small>${items.length ? items.length+'개 항목' : '0개 항목'}</small></div>` + (items.length
@@ -13876,7 +14041,9 @@ async function renderAdmin(){
     const isActive = !u.is_admin && allowedFields.length > 0 && !acc.expired;
     const isPending = !u.is_admin && allowedFields.length === 0;
     const isExpiring = !u.is_admin && (acc.expired || (acc.until && acc.daysLeft <= 3));
-    return `<div class="admin-row" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    const di = u.is_admin ? null : adminDeviceInfo(u.id);
+    const devLine = !di || !di.s ? '' : `<div class="up-dev${di.warn ? ' warn' : ''}" title="최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회 · 누적 기기 전환 ${di.s.takeovers||0}회"><span class="up-dev-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/></svg></span>${escapeHtml(di.s.device || '기기 정보 없음')} · ${agoLabel(di.s.last_seen)}${di.warn ? ' <b class="up-dev-tag">기기 주의</b>' : (di.rep7 ? ` · 전환 ${di.rep7}회` : '')}</div>`;
+    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
@@ -13886,7 +14053,7 @@ async function renderAdmin(){
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
         ${u.is_admin ? '' : `<div class="up-state">${acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
-      <div class="up-cell">${practiceCell}</div>
+      <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
       <div class="admin-perms">${chips || '<span class="none">아직 열어 준 분야 없음</span>'}</div>
       <div class="admin-row-actions">
@@ -13905,6 +14072,7 @@ async function renderAdmin(){
   if(chipsEl){
     const expiringCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.expired || (a.until && a.daysLeft <= 3); }).length;
     const defs = [['', '전체', users.length], ['__pending', '권한 대기', pendingCount], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__expired', '만료 · 임박', expiringCount], ['__admin', '관리자', users.length - students.length]];
+    { const dw = students.filter(u=>adminDeviceInfo(u.id).warn).length; if(dw) defs.splice(4, 0, ['__devwarn', '기기 주의', dw]); }
     chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip" data-val="${v}" onclick="setUserFilter('${v}')">${l} <b>${n}</b></button>`).join('');
   }
 
@@ -13912,7 +14080,7 @@ async function renderAdmin(){
   const stSel = document.getElementById('admin-status-filter');
   if(stSel){
     const cur = stSel.value;
-    stSel.innerHTML = '<option value="">모든 상태</option>' + USER_STATUSES.map(s=>`<option value="${s}">${s}</option>`).join('') + '<option value="__pending">권한 대기</option><option value="__active">이용 중</option><option value="__admin">관리자만</option><option value="__expired">이용 기간 만료 · 임박</option>';
+    stSel.innerHTML = '<option value="">모든 상태</option>' + USER_STATUSES.map(s=>`<option value="${s}">${s}</option>`).join('') + '<option value="__pending">권한 대기</option><option value="__active">이용 중</option><option value="__devwarn">기기 주의</option><option value="__admin">관리자만</option><option value="__expired">이용 기간 만료 · 임박</option>';
     stSel.value = cur;
   }
   filterAdminUsers();
@@ -15246,9 +15414,11 @@ const StenoLoop = {
       this.stats.followupPlan = fuPlan ? fuPlan.size : null;
       // 실전 세트: 전체 시간은 면접관 인사부터 잼 (일시정지 시간 제외)
       const setOver = ()=> this.setEndsAt !== null && this.setLeftMs() <= 0;
-      if(this.opt.setDurationMs && !this.aborted){ this.setEndsAt = Date.now() + this.opt.setDurationMs; this._setPauseBase = state.pausedMs || 0; }
-      await say(greet.open, 'interviewer', greet.openUrl);
-      for(let qi=0; qi<questions.length && !this.aborted; qi++){
+      const rs = this.opt.resume || null;
+      if(this.opt.setDurationMs && !this.aborted){ this.setEndsAt = Date.now() + (rs && rs.setLeftMs != null ? Math.max(60000, rs.setLeftMs) : this.opt.setDurationMs); this._setPauseBase = state.pausedMs || 0; }
+      if(rs) await say('다시 이어서 진행하겠습니다. 다음 질문 드리겠습니다.');
+      else await say(greet.open, 'interviewer', greet.openUrl);
+      for(let qi=(rs ? Math.min(rs.startIndex||0, questions.length) : 0); qi<questions.length && !this.aborted; qi++){
         if(setOver() && !this.setTimeUp && questions[qi].slot !== 7){
           // 15분 초과 → 남은 질문을 건너뛰고 "마지막 할 말"로
           this.setTimeUp = true; this.stats.setTimeUp = true;
@@ -15928,6 +16098,19 @@ function openAdminUserDetail(userId){
       <div class="au-ai-actions"><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 10)">횟수 +10</button><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 30)">+30</button><button class="btn-manage" onclick="adminResetAiUsage('${userId}')" title="이 사람의 AI 면접 사용 기록을 0으로 되돌려요">사용 기록 초기화</button></div></div>`}
   `;
 
+  // 2026-10-12: 기기 정보 (한 계정 한 기기)
+  { const box = document.getElementById('au-devices');
+    if(box){
+      const di = u.is_admin ? null : adminDeviceInfo(userId);
+      if(!di || (!di.s && !di.d)){ box.innerHTML = u.is_admin ? '' : '<div class="au-dev-empty">아직 기기 기록이 없어요. 다음 로그인부터 쌓여요.</div>'; }
+      else {
+        const devs = di.d ? Object.entries(di.d.devices).sort((a,b)=>b[1].n-a[1].n) : [];
+        box.innerHTML = `<div class="au-dev-head"><b>기기</b>${di.warn ? '<span class="up-dev-tag">기기 주의</span>' : ''}<small>최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회${di.d && di.d.kicked7 ? ` · 접속 종료 안내 ${di.d.kicked7}회` : ''}</small></div>`
+          + (di.s ? `<div class="au-dev-now">지금 쓰는 기기 <b>${escapeHtml(di.s.device||'정보 없음')}</b> · 마지막 확인 ${agoLabel(di.s.last_seen)} · 누적 기기 전환 ${di.s.takeovers||0}회</div>` : '')
+          + (devs.length ? `<ul class="au-dev-list">${devs.map(([name,v])=>`<li><span>${escapeHtml(name)}</span><em>로그인 ${v.n}회 · 마지막 ${formatDateShort(v.last)}</em></li>`).join('')}</ul><p class="au-dev-note">최근 14일 기록이에요. 같은 사람이 PC와 휴대폰을 번갈아 쓰면 2대로 보일 수 있어요. 짧은 시간에 서로 다른 기기가 계속 바뀌면 계정 공유를 의심해 볼 수 있어요.</p>` : '');
+      }
+    }
+  }
   // 점수 추이 (최근 8회, 오래된 순)
   const trend = recs.slice(0,8).slice().reverse();
   const trendEl = document.getElementById('au-trend');
