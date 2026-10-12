@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-12c';
+var APP_VERSION = '2026-10-12e';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -2236,6 +2236,25 @@ var APP_VERSION = '2026-10-12c';
   .as-legend{margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--c-dark-ink-2);} .as-legend b{color:#fff;font-weight:700;margin-left:2px;} .as-legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;} .as-legend .dot.open{background:#4fd38a;} .as-legend .dot.wait{background:#ff8a62;}
   .as-mini{margin-top:auto;padding-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;} .as-mini > div{background:#2a2a2d;border-radius:10px;padding:12px;min-width:0;} .as-mini p{margin:0 0 4px;padding-left:3px;font-size:12.5px;color:var(--c-dark-ink-2);white-space:nowrap;} .as-mini .as-k{font-size:24px;font-weight:800;letter-spacing:-.02em;} .as-mini .as-k.muted{color:var(--c-dark-ink-2);font-weight:500;} .as-mini .as-u{font-size:13px;font-weight:600;margin-left:2px;} .as-mini .as-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4fd38a;box-shadow:0 0 0 3px rgba(79,211,138,.2);margin-right:6px;vertical-align:1px;} .as-mini .live .as-k,.as-mini .live .as-u{color:#8fd3a8;} .as-mini .warn .as-k,.as-mini .warn .as-u{color:#ff8a62;}
   .as-go{appearance:none;margin-top:12px;width:100%;min-height:44px;border:1px solid #48484c;background:transparent;color:#fff;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background var(--dur) var(--ease);} .as-go:hover{background:#2a2a2d;}
+  .us-top{margin-top:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .us-chip{display:inline-block;margin-top:8px;font-size:12.5px;color:#cfcfcb;background:#2a2a2d;border-radius:999px;padding:4px 10px;} .us-chip b{color:#ff8a62;font-weight:700;} .us-chip.ok{color:#8fd3a8;background:rgba(143,211,168,.12);font-weight:600;}
+  .us-diff{flex:none;text-align:right;display:flex;flex-direction:column;gap:2px;padding-top:20px;font-size:12.5px;color:var(--c-dark-ink-2);line-height:1.4;} .us-diff b{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em;} .us-diff.up b{color:#4fd38a;} .us-diff.down b{color:#ff8a62;} .us-diff.muted{font-size:12.5px;padding-top:26px;}
+  .us-chart{position:relative;margin-top:16px;height:84px;border-bottom:1px solid #48484c;}
+  .us-bars{position:absolute;inset:0;display:flex;align-items:flex-end;gap:6px;padding:0 2px;}
+  .us-bar{flex:1;max-width:34px;background:#4a4a4e;border-radius:4px 4px 0 0;position:relative;transition:height .4s var(--ease);} .us-bar.last{background:#e8532a;} .us-bar.ghost{background:repeating-linear-gradient(135deg,#333336 0 4px,#2a2a2d 4px 8px);}
+  .us-bar em{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);font-style:normal;font-size:12px;font-weight:800;color:#fff;white-space:nowrap;}
+  .us-goal{position:absolute;left:0;right:0;border-top:1px dashed rgba(143,211,168,.55);z-index:1;pointer-events:none;} .us-goal span{position:absolute;right:0;top:-17px;font-size:11px;color:#8fd3a8;font-weight:600;background:var(--c-dark);padding-left:4px;}
+  .us-goal-key{display:inline-block;width:14px;border-top:1px dashed #8fd3a8;vertical-align:3px;margin-right:4px;} .us-chart-cap{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:var(--c-dark-ink-2);}
+  .us-empty{margin:auto 0 0;padding-top:16px;font-size:14px;color:var(--c-dark-ink-2);line-height:1.55;word-break:keep-all;}
+  .us-mini{padding-top:16px;}
+  /* 2026-10-12 기록 카드 바탕: 짙은 남색 (면접자·관리자 공통) */
+  #d3-stats.d3-stats{--c-dark:#1e2a3a;--c-dark-ink-2:#b3bccb;background:#1e2a3a;}
+  #d3-stats .d3-stats-sub,#d3-stats .d3-stat-foot.tri-foot{border-top-color:#33435a;}
+  #d3-stats .as-mini > div,#d3-stats .us-chip{background:#273548;}
+  #d3-stats .us-bar{background:#3d4d63;} #d3-stats .us-bar.last{background:#e8532a;}
+  #d3-stats .us-bar.ghost{background:repeating-linear-gradient(135deg,#33435a 0 4px,#273548 4px 8px);}
+  #d3-stats .us-chart{border-bottom-color:#3d4d63;} #d3-stats .as-bar{background:#33435a;}
+  #d3-stats .as-go{border-color:#3d4d63;} #d3-stats .as-go:hover{background:#273548;}
   .d3-stats-empty{margin:auto 0;color:var(--c-dark-ink-2);font-size:15px;padding-top:20px;} .d3-stats-empty strong{color:#fff;display:block;font-size:17px;margin-bottom:4px;}
   .d3-section{margin-top:32px;} .d3-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
   .d3-section-title{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0;color:var(--c-ink);border:none;padding:0;} .d3-section-note{font-size:13px;color:var(--c-ink-3);margin:0;}
@@ -8889,13 +8908,47 @@ async function renderDashboard(){
       const avg = arr => arr.length ? arr.reduce((s,r)=>s+(r.score||0),0)/arr.length : null;
       const a30 = avg(last30), aw = avg(week), ap = avg(prev);
       const delta = (aw!=null && ap!=null) ? Math.round(aw-ap) : null;
-      if(!history.length){
-        statsEl.innerHTML = `<div class="d3-stats-head"><p class="d3-stats-title">나의 기록</p><span class="d3-stats-scope">전체 분야 · 최근 30일</span></div><div class="d3-stats-empty"><strong>아직 기록이 없어요</strong>첫 모의면접을 마치면 평균 점수와 변화가 여기에 표시돼요.</div>`;
+      // 2026-10-12 새 디자인: 평균 + 최근 점수 막대 + 지난번 대비 + 작은 칸 3개
+      const GOAL = 75;
+      const recent = history.slice(0, 10).slice().reverse();          // 오래된 것 → 최근
+      const last = history[0], prevOne = history[1];
+      const diff = (last && prevOne) ? Math.round((last.score||0) - (prevOne.score||0)) : null;
+      const best = history.length ? Math.max(...history.map(r=>r.score||0)) : null;
+      const weekN = week.length;
+      const ghost = !history.length;
+      const bars = (ghost ? [38,52,46,60,57,68] : recent.map(r=>r.score||0)).map((v,i,arr)=>{
+        const isLast = !ghost && i === arr.length-1;
+        const r = ghost ? null : recent[i];
+        const tip = r ? `${r.dateShort||''} · ${r.fieldName||''} · ${v}점` : '';
+        return `<span class="us-bar${isLast?' last':''}${ghost?' ghost':''}" style="height:${Math.max(4, v)}%"${tip?` title="${escapeHtml(tip)}"`:''}>${isLast?`<em>${v}</em>`:''}</span>`;
+      }).join('');
+      const chart = `<div class="us-chart" role="img" aria-label="${ghost ? '아직 점수 기록 없음' : `최근 ${recent.length}회 점수: ${recent.map(r=>r.score||0).join(', ')}점`}">
+          <div class="us-goal" style="bottom:${GOAL}%"></div>
+          <div class="us-bars">${bars}</div>
+        </div>
+        <div class="us-chart-cap"><span>${ghost ? '연습하면 점수가 여기 쌓여요' : `최근 ${recent.length}회 점수`} · <i class="us-goal-key"></i>목표 ${GOAL}점</span>${ghost ? '' : `<span>${escapeHtml(last.dateShort||'')} 최근</span>`}</div>`;
+      const head = `<div class="d3-stats-head"><p class="d3-stats-title">나의 기록</p><span class="d3-stats-scope">전체 분야 · 최근 30일</span></div>`;
+      if(ghost){
+        statsEl.innerHTML = head + `<div class="us-top"><div><p class="d3-stat-label">평균 점수</p><div class="d3-stat-big"><span class="num muted">–</span><span class="of">아직 기록 없음</span></div></div></div>
+          ${chart}
+          <p class="us-empty">첫 모의면접을 마치면 평균 점수와 변화가 여기에 표시돼요.</p>`;
       }else{
-        statsEl.innerHTML = `<div class="d3-stats-head"><p class="d3-stats-title">나의 기록</p><span class="d3-stats-scope">전체 분야 · 최근 30일</span></div>
-          <div class="d3-stats-main"><p class="d3-stat-label">평균 점수</p><div class="d3-stat-big">${a30!=null ? `<span class="num">${Math.round(a30)}</span><span class="unit">점</span><span class="of">/ 100점</span>` : `<span class="num muted">–</span><span class="of">최근 30일 기록 없음</span>`}</div></div>
-          <div class="d3-stats-sub"><div><p class="d3-stat-label">완료한 연습</p><div class="d3-stat-mid"><span class="num">${history.length}</span><span class="unit">회</span></div></div>
-          <div><p class="d3-stat-label">점수 변화</p>${delta!=null ? `<div class="d3-stat-mid${delta>0?' up':delta<0?' down':''}"><span class="num">${delta>0?'+':''}${delta}</span><span class="unit">점</span></div><p class="d3-stat-foot">최근 7일 평균, 직전 7일 대비</p>` : `<div class="d3-stat-mid muted"><span class="num">비교할 기록이 더 필요해요</span></div><p class="d3-stat-foot">2주 이상 연습하면 표시돼요</p>`}</div></div>`;
+        const avgTxt = a30!=null ? Math.round(a30) : null;
+        const goalChip = avgTxt==null ? '' : avgTxt >= GOAL ? `<span class="us-chip ok">✓ 목표 ${GOAL}점 넘었어요</span>` : `<span class="us-chip">목표까지 <b>${GOAL-avgTxt}점</b></span>`;
+        const diffHtml = diff==null
+          ? `<div class="us-diff muted">한 번 더 하면<br>변화가 보여요</div>`
+          : `<div class="us-diff ${diff>0?'up':diff<0?'down':''}"><b>${diff>0?'▲ +':diff<0?'▼ ':''}${diff===0?'변화 없음':diff+'점'}</b><span>지난번보다</span></div>`;
+        statsEl.innerHTML = head + `<div class="us-top">
+            <div><p class="d3-stat-label">평균 점수</p><div class="d3-stat-big">${avgTxt!=null ? `<span class="num">${avgTxt}</span><span class="unit">점</span><span class="of">/ 100</span>` : `<span class="num muted">–</span><span class="of">최근 30일 기록 없음</span>`}</div>${goalChip}</div>
+            ${diffHtml}
+          </div>
+          ${chart}
+          <div class="as-mini us-mini">
+            <div><p>완료한 연습</p><div><span class="as-k">${history.length}</span><span class="as-u">회</span></div></div>
+            <div><p>이번 주</p><div><span class="as-k">${weekN}</span><span class="as-u">회</span></div></div>
+            <div><p>최고 점수</p><div><span class="as-k">${best}</span><span class="as-u">점</span></div></div>
+          </div>
+          <button type="button" class="as-go" onclick="openAllHistory()">내 기록 자세히 보기 <span aria-hidden="true">→</span></button>`;
       }
     }
   }
