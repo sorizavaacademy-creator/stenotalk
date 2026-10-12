@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-12e';
+var APP_VERSION = '2026-10-12f';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3584,6 +3584,49 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .mb-state{margin:12px 0 0;font-size:13.5px;font-weight:600;min-height:1em;} .mb-state.bad{color:#b42318;} .mb-state.ok{color:#2f7a4a;}
 #modal-micblock .modal-foot{display:flex;gap:8px;flex-wrap:wrap;} #modal-micblock .modal-foot .btn{flex:1;min-height:46px;}
 .mb-more{display:block;text-align:center;margin:12px 0 0;font-size:13px;color:#66666c;text-decoration:underline;cursor:pointer;}
+
+/* ---------- 어려운 문항 (2026-10-12) ---------- */
+.hq-toolbar{flex-wrap:wrap;gap:10px;}
+.hq-summary{margin:4px 0 12px;font-size:14px;color:var(--c-ink-2,#45454a);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;}
+.hq-summary b{color:var(--c-ink,#1c1c1e);}
+.hq-list{display:flex;flex-direction:column;gap:8px;}
+.hq-item{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:12px;overflow:hidden;}
+.hq-item[open]{border-color:var(--c-line-strong,#d3d0ca);}
+.hq-item > summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:40px 1fr 128px;gap:14px;align-items:center;padding:14px 16px;}
+.hq-item > summary::-webkit-details-marker{display:none;}
+.hq-item > summary:hover{background:var(--c-surface,#f6f5f3);}
+.hq-rank{font-size:22px;font-weight:800;color:var(--c-ink-3,#66666c);text-align:center;letter-spacing:-.02em;}
+.hq-item.top .hq-rank{color:#c2401b;}
+.hq-q{font-size:15px;font-weight:600;color:var(--c-ink,#1c1c1e);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;}
+.hq-item[open] .hq-q{-webkit-line-clamp:unset;display:block;}
+.hq-meta{margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px;color:var(--c-ink-3,#66666c);}
+.hq-meta .hq-f{color:var(--c-ink-2,#45454a);background:var(--c-surface,#f6f5f3);border-radius:5px;padding:1px 7px;font-weight:600;}
+.hq-meta .hq-weak{color:#8a5a00;} .hq-meta .hq-skip{color:#b42318;}
+.hq-score{text-align:right;}
+.hq-score b{font-size:24px;font-weight:800;letter-spacing:-.02em;} .hq-score small{font-size:13px;color:var(--c-ink-3,#66666c);margin-left:2px;}
+.hq-score .hq-bar{margin-top:6px;height:6px;border-radius:999px;background:var(--c-surface,#f0eee9);overflow:hidden;} .hq-score .hq-bar i{display:block;height:100%;border-radius:999px;}
+.hq-score.b1 b{color:#b42318;} .hq-score.b1 .hq-bar i{background:#d9442a;}
+.hq-score.b2 b{color:#8a5a00;} .hq-score.b2 .hq-bar i{background:#e0a21b;}
+.hq-score.b3 b{color:#2f5d8a;} .hq-score.b3 .hq-bar i{background:#5b8ac0;}
+.hq-score.b4 b{color:#2f7a4a;} .hq-score.b4 .hq-bar i{background:#3f9a62;}
+.hq-body{border-top:1px solid var(--c-line,#e6e4e0);padding:14px 16px 16px 70px;display:grid;gap:14px;background:#fcfbfa;}
+.hq-body h4{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--c-ink-2,#45454a);}
+.hq-axes{display:flex;flex-wrap:wrap;gap:6px;}
+.hq-axes span{font-size:12.5px;border-radius:6px;padding:3px 8px;background:#fff;border:1px solid var(--c-line,#e6e4e0);color:var(--c-ink-2,#45454a);} .hq-axes span.low{border-color:#f1c7bd;background:#fdf0eb;color:#c2401b;font-weight:700;}
+.hq-ans{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none;}
+.hq-ans li{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.6;color:var(--c-ink,#1c1c1e);word-break:keep-all;}
+.hq-ans .hq-who{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--c-ink-3,#66666c);margin-bottom:4px;} .hq-ans .hq-who b{color:var(--c-ink,#1c1c1e);} .hq-ans .hq-who em{font-style:normal;font-weight:700;margin-left:auto;}
+.hq-ans .hq-empty{color:#b42318;} .hq-ans em.b1{color:#b42318;} .hq-ans em.b2{color:#8a5a00;} .hq-ans em.b3{color:#2f5d8a;} .hq-ans em.b4{color:#2f7a4a;}
+.hq-ref{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.65;color:var(--c-ink-2,#45454a);white-space:pre-wrap;word-break:keep-all;}
+.hq-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.hq-more-wrap{text-align:center;margin-top:12px;}
+.hq-emptybox{padding:40px 16px;text-align:center;color:var(--c-ink-3,#66666c);font-size:14.5px;border:1px dashed var(--c-line-strong,#d3d0ca);border-radius:12px;background:#fff;}
+@media(max-width:640px){
+  .hq-item > summary{grid-template-columns:28px 1fr;gap:10px;padding:12px;}
+  .hq-score{grid-column:2;text-align:left;display:flex;align-items:center;gap:10px;} .hq-score .hq-bar{flex:1;margin:0;}
+  .hq-rank{font-size:18px;}
+  .hq-body{padding:12px;}
+}
 </style>
 </head>
 <body>
@@ -3949,6 +3992,10 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 4v5h5M8 13h8M8 17h5"/></svg>
         면접 기록
       </button>
+      <button class="admin-menu-btn" data-view="hardq" onclick="showAdminView('hardq')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 16V9M11 16V5M16 16v-4"/><path d="M19 4l-2.5 2.5M19 4v3M19 4h-3"/></svg>
+        어려운 문항
+      </button>
       <button class="admin-menu-btn" data-view="realset" onclick="showAdminView('realset')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
         실전 세트 · 코치
@@ -4087,6 +4134,24 @@ body.hs-mobile #pc-qr-card{display:none !important;}
           <div id="admin-records-list"></div>
         </div>
         <div class="uf-legend lg-list"><b class="lg-t">점수 색</b><span class="lg-i"><span class="score-pill hi">85점↑</span>우수</span><span class="lg-i"><span class="score-pill">75~84</span>양호</span><span class="lg-i"><span class="score-pill mid">60~74</span>보완 필요</span><span class="lg-i"><span class="score-pill low">60점↓</span>집중 관리</span><span class="lg-i"><span class="perm-chip" style="font-size:10.5px;padding:1px 7px;">AI 대화</span>AI 면접관과 대화한 라이브 면접</span></div>
+      </div>
+
+      <!-- 어려운 문항 TOP 10 (2026-10-12) -->
+      <div class="admin-view" id="admin-view-hardq">
+        <div class="admin-view-head">
+          <div><h2>어려운 문항</h2>
+          <p>모든 면접자의 답변 점수를 문항별로 모아 <b>평균이 낮은 문항</b>부터 보여 줘요. 수업이나 모범답안을 보강할 곳을 찾을 때 써요. 줄을 누르면 실제 답변과 모범답안이 열려요. (AI 꼬리질문은 문항마다 달라서 빼고 계산해요)</p></div>
+          <div class="beta-head-btns"><button class="btn-manage" onclick="loadHardQ(true)">새로 고침</button></div>
+        </div>
+        <div class="live-note" id="hq-note" style="display:none;"></div>
+        <div class="admin-toolbar hq-toolbar">
+          <label class="qm-sel"><span>분야</span><select id="hq-field" onchange="renderHardQ()"><option value="">모든 분야</option></select></label>
+          <label class="qm-sel"><span>기간</span><select id="hq-period" onchange="renderHardQ()"><option value="0">전체 기간</option><option value="7">최근 7일</option><option value="30">최근 30일</option></select></label>
+          <label class="qm-sel"><span>최소 응답</span><select id="hq-min" onchange="renderHardQ()"><option value="1">1회 이상</option><option value="2" selected>2회 이상</option><option value="3">3회 이상</option></select></label>
+        </div>
+        <div class="hq-summary" id="hq-summary"></div>
+        <div class="hq-list" id="hq-list"></div>
+        <div class="hq-more-wrap" id="hq-more-wrap" style="display:none;"><button type="button" class="btn-manage" onclick="HardQ.limit+=10; renderHardQ()">10개 더 보기</button></div>
       </div>
 
       <!-- 실전 세트 · 자기소개 코치 (2026-10-08) -->
@@ -9237,6 +9302,118 @@ async function openAdminScreen(view){
   showAdminView(view || state.adminView || 'overview');
   await renderAdmin();
 }
+/* ---------------- 어려운 문항 TOP 10 (관리자 · 2026-10-12) ----------------
+ * interview_answers(꼬리질문 제외)를 문항 문장별로 모아 평균 점수가 낮은 순으로 보여 줌.
+ * 답변 피드백 끝의 [리포트 등급 · 내용 70 · 구조 60 …]을 읽어 문항별로 가장 약한 부분도 표시. */
+const HardQ = { rows:null, recs:{}, loadedAt:0, limit:10, loading:false, qRows:null };
+async function loadHardQ(force){
+  const note = document.getElementById('hq-note'), list = document.getElementById('hq-list');
+  if(HardQ.loading) return;
+  if(!force && HardQ.rows && Date.now() - HardQ.loadedAt < 60000){ renderHardQ(); return; }
+  HardQ.loading = true;
+  if(list && !HardQ.rows) list.innerHTML = '<div class="hq-emptybox">답변을 모으는 중…</div>';
+  try{
+    if(!state.adminRecords || !state.adminRecords.length || force){ try{ await renderAdmin(); }catch(_){} }
+    const recs = {}; (state.adminRecords || []).forEach(r=>{ recs[r.id] = r; });
+    HardQ.recs = recs;
+    const r = await sbAll(()=>sb.from('interview_answers').select('record_id,question_text,answer_text,score,feedback,kind,created_at').order('created_at', {ascending:false}));
+    if(r.error) throw r.error;
+    HardQ.rows = (r.data || []).filter(a=>a.kind !== 'followup' && a.score != null && recs[a.record_id]);
+    HardQ.loadedAt = Date.now();
+    if(!HardQ.qRows){ try{ const q = await sbAll(()=>sb.from('questions').select('id,field_id,q,ref').order('id')); if(!q.error) HardQ.qRows = q.data || []; }catch(_){} }
+    if(note) note.style.display = 'none';
+  }catch(e){
+    if(note){ note.style.display = ''; note.textContent = '답변을 불러오지 못했어요: ' + friendlyErr(e); }
+  }finally{ HardQ.loading = false; }
+  const sel = document.getElementById('hq-field');
+  if(sel && sel.options.length <= 1){
+    const names = {}; Object.values(HardQ.recs).forEach(r=>{ if(r.field_id) names[r.field_id] = r.field_name || r.field_id; });
+    sel.innerHTML = '<option value="">모든 분야</option>' + Object.entries(names).map(([id,n])=>`<option value="${escapeHtml(id)}">${escapeHtml(n)}</option>`).join('');
+  }
+  renderHardQ();
+}
+function hardQAxes(fb){
+  const m = String(fb||'').match(/\[리포트 [^·\]]+·([^\]]+)\]/); if(!m) return null;
+  const out = {}; for(const mm of m[1].matchAll(/\s*([^\d]+?)\s+(\d+)\s*(?:·|$)/g)){ const k = mm[1].replace(/^[·\s]+/,'').trim(); if(k) out[k] = +mm[2]; }
+  return Object.keys(out).length ? out : null;
+}
+function hardQBand(v){ return v >= 85 ? 'b4' : v >= 75 ? 'b3' : v >= 60 ? 'b2' : 'b1'; }
+function renderHardQ(){
+  const list = document.getElementById('hq-list'), sum = document.getElementById('hq-summary'), more = document.getElementById('hq-more-wrap');
+  if(!list) return;
+  const rows = HardQ.rows || [];
+  const field = (document.getElementById('hq-field')||{}).value || '';
+  const days = +((document.getElementById('hq-period')||{}).value || 0);
+  const minN = +((document.getElementById('hq-min')||{}).value || 2);
+  const since = days ? Date.now() - days*86400000 : 0;
+  const users = {}; (state.adminUsers||[]).forEach(u=>{ users[u.id] = u; });
+  const groups = new Map();
+  rows.forEach(a=>{
+    const rec = HardQ.recs[a.record_id]; if(!rec) return;
+    if(field && rec.field_id !== field) return;
+    if(since && new Date(rec.created_at).getTime() < since) return;
+    const u = users[rec.user_id]; if(u && u.is_admin) return;      // 관리자 연습은 빼고
+    const key = String(a.question_text||'').replace(/\s+/g,' ').trim(); if(!key) return;
+    let g = groups.get(key); if(!g){ g = { q:key, items:[], people:new Set(), fields:new Set(), axes:{} }; groups.set(key, g); }
+    g.items.push({ a, rec }); g.people.add(rec.user_id); g.fields.add(rec.field_name || rec.field_id || '');
+    const ax = hardQAxes(a.feedback); if(ax) Object.entries(ax).forEach(([k,v])=>{ (g.axes[k] = g.axes[k] || []).push(v); });
+  });
+  const all = [...groups.values()].map(g=>{
+    const sc = g.items.map(x=>x.a.score||0);
+    const avg = sc.reduce((s,v)=>s+v,0) / sc.length;
+    const skip = g.items.filter(x=>String(x.a.answer_text||'').replace(/\s/g,'').length < 5).length;
+    const axAvg = Object.entries(g.axes).map(([k,arr])=>[k, Math.round(arr.reduce((s,v)=>s+v,0)/arr.length)]).sort((a,b)=>a[1]-b[1]);
+    return Object.assign(g, { n:g.items.length, avg, skip, axAvg });
+  });
+  const ranked = all.filter(g=>g.n >= minN).sort((a,b)=> a.avg - b.avg || b.n - a.n);
+  const totalAns = all.reduce((s,g)=>s+g.n,0);
+  const overall = totalAns ? Math.round(all.reduce((s,g)=>s+g.avg*g.n,0)/totalAns) : null;
+  if(sum) sum.innerHTML = totalAns
+    ? `<span>답변 <b>${totalAns}개</b> · 문항 <b>${all.length}개</b></span><span>응답 ${minN}회 이상 문항 <b>${ranked.length}개</b></span>${overall!=null?`<span>전체 평균 <b>${overall}점</b></span>`:''}`
+    : '';
+  if(!HardQ.rows){ return; }
+  if(!ranked.length){
+    list.innerHTML = `<div class="hq-emptybox">${totalAns ? `응답이 ${minN}회 이상인 문항이 아직 없어요. 위 '최소 응답'을 1회 이상으로 바꿔 보세요.` : '아직 모인 답변이 없어요. 면접자가 연습을 하면 여기에 쌓여요.'}</div>`;
+    if(more) more.style.display = 'none'; return;
+  }
+  const shown = ranked.slice(0, HardQ.limit);
+  list.innerHTML = shown.map((g,i)=>{
+    const avg = Math.round(g.avg), band = hardQBand(avg);
+    const weak = g.axAvg.length ? g.axAvg[0] : null;
+    const fieldTxt = [...g.fields].filter(Boolean).slice(0,2).join(', ') + (g.fields.size > 2 ? ' 외' : '');
+    const recent = g.items.slice().sort((x,y)=>new Date(y.rec.created_at)-new Date(x.rec.created_at)).slice(0,3);
+    const ansHtml = recent.map(x=>{
+      const u = users[x.rec.user_id]; const t = String(x.a.answer_text||'').trim();
+      const short = t.length > 160 ? t.slice(0,160) + '…' : t;
+      return `<li><div class="hq-who"><b>${escapeHtml(u ? (u.name||'') : '(삭제된 계정)')}</b><span>${escapeHtml(formatDateShort(x.rec.created_at))}</span><em class="${hardQBand(x.a.score||0)}">${x.a.score}점</em></div>${t.replace(/\s/g,'').length < 5 ? '<span class="hq-empty">(답을 거의 못 했어요)</span>' : escapeHtml(short)}</li>`;
+    }).join('');
+    const qRow = (HardQ.qRows||[]).find(r=>String(r.q||'').replace(/\s+/g,' ').trim() === g.q);
+    const refHtml = qRow && qRow.ref ? `<div><h4>모범답안</h4><div class="hq-ref">${escapeHtml(String(qRow.ref).slice(0,600))}${String(qRow.ref).length>600?'…':''}</div></div>` : '';
+    const axHtml = g.axAvg.length ? `<div><h4>항목별 평균 <small style="font-weight:500;color:var(--c-ink-3,#66666c)">(낮은 순)</small></h4><div class="hq-axes">${g.axAvg.map(([k,v],j)=>`<span class="${j===0?'low':''}">${escapeHtml(k)} ${v}</span>`).join('')}</div></div>` : '';
+    return `<details class="hq-item${i<3?' top':''}" data-q="${escapeHtml(g.q)}">
+      <summary>
+        <span class="hq-rank">${i+1}</span>
+        <div><div class="hq-q">${escapeHtml(g.q)}</div>
+          <div class="hq-meta">${fieldTxt?`<span class="hq-f">${escapeHtml(fieldTxt)}</span>`:''}<span>응답 ${g.n}회 · ${g.people.size}명</span>${weak?`<span class="hq-weak">약한 부분: ${escapeHtml(weak[0])}</span>`:''}${g.skip?`<span class="hq-skip">답 못 함 ${g.skip}회</span>`:''}</div></div>
+        <div class="hq-score ${band}"><div><b>${avg}</b><small>점</small></div><div class="hq-bar"><i style="width:${Math.max(3,avg)}%"></i></div></div>
+      </summary>
+      <div class="hq-body">
+        ${axHtml}
+        <div><h4>최근 답변 ${recent.length}개</h4><ul class="hq-ans">${ansHtml}</ul></div>
+        ${refHtml}
+        <div class="hq-actions">${qRow ? `<button type="button" class="btn-manage" onclick="hardQOpenQm(${JSON.stringify(qRow.field_id).replace(/"/g,'&quot;')}, this.closest('.hq-item').dataset.q)">문항 관리에서 고치기</button>` : ''}</div>
+      </div>
+    </details>`;
+  }).join('');
+  if(more) more.style.display = ranked.length > HardQ.limit ? '' : 'none';
+}
+async function hardQOpenQm(fieldId, q){
+  showAdminView('questions');
+  const wait = ()=>new Promise(r=>setTimeout(r,150));
+  for(let i=0;i<30 && !(Qm.rows && Qm.rows.length);i++) await wait();
+  const sel = document.getElementById('qm-field'); if(sel && fieldId){ sel.value = fieldId; qmSetField(fieldId); }
+  const inp = document.getElementById('qm-search'); if(inp){ inp.value = String(q||'').slice(0, 24); qmRender(); inp.scrollIntoView({block:'center'}); }
+}
 function showAdminView(view){
   state.adminView = view;
   if(view === 'pipeline') pipeInit();
@@ -9246,6 +9423,7 @@ function showAdminView(view){
   if(view === 'beta') loadBetaView();
   if(view === 'questions') qmLoad();
   if(view === 'realset') loadRealSetView();
+  if(view === 'hardq') loadHardQ();
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
   document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active', b.dataset.view === view));
   window.scrollTo({top:0});
