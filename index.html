@@ -3162,6 +3162,10 @@
     .toast{max-width:100%;}
   }
   .toast{cursor:pointer;}
+  .kicked-ic{width:48px;height:48px;border-radius:50%;background:#fdf0eb;color:#c2401b;display:grid;place-items:center;margin-bottom:12px;}
+  .kicked-ic svg{width:24px;height:24px;}
+  .kicked-note{margin-top:10px !important;padding:10px 12px;border-radius:8px;background:#f6f5f3;font-size:13px !important;color:#45454a !important;}
+  #modal-kicked{z-index:5000;}
   /* 창이 떠 있을 때 뒤 화면이 손가락으로 따라 움직이지 않게 (2026-10-12) */
   body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden;}
   .modal-overlay, .more-sheet{overscroll-behavior:contain;}
@@ -4909,6 +4913,21 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeConfirmEnd()">계속하기</button>
       <button class="btn btn-solid" id="btn-confirm-end" style="background:var(--danger)" onclick="endInterview()">면접 종료</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 다른 기기에서 로그인 (2026-10-12) ============ -->
+<div class="modal-overlay" id="modal-kicked">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-head">
+      <div class="kicked-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+      <h2>다른 기기에서 로그인했어요</h2>
+      <p id="kicked-desc">이 계정으로 다른 기기에서 새로 로그인해서, 이 기기의 접속을 종료했어요. 한 계정은 한 기기에서만 쓸 수 있어요.</p>
+      <p class="kicked-note">본인이 로그인한 게 아니라면 교육팀에 비밀번호 변경을 요청해 주세요.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-solid" onclick="SessionGuard.finish()" style="width:100%;">확인</button>
     </div>
   </div>
 </div>
@@ -8165,11 +8184,106 @@ async function handleLogin(){
   showScreen('screen-dashboard');
   showToast('로그인했어요');
   Activity.log('login'); Activity.setPresence('dashboard');
+  SessionGuard.claim();   // 한 계정 한 기기: 이 기기를 지금 쓰는 기기로 등록 (이전 기기는 로그아웃)
   QuestionBank.load(); try{ RubricPoints.load(); }catch(_){}
   if(maybeForceNewPassword(profile, pw)) { startAccessWatch(); return; }
   maybeOpenDemoFromUrl();
   startAccessWatch();
   maybeStartTour();
+}
+/* ---------------- 한 계정은 한 기기에서만 (2026-10-12) ----------------
+   - 로그인하면 이 기기(로그인 세션)를 "지금 쓰는 기기"로 등록하고, 다른 기기의 로그인은 끊음 (나중에 로그인한 기기 우선)
+   - 20초마다·화면에 돌아올 때·면접 시작 전에 확인 → 다른 기기에서 로그인했으면 안내 후 이 기기만 로그아웃
+   - 면접 중이었다면 지금까지 답한 내용으로 결과를 저장한 뒤 종료
+   - 서버도 확인: 지금 쓰는 기기가 아니면 AI 채점·꼬리질문·대본 만들기를 거절 (session_is_current)
+   - 관리자 계정은 여러 기기에서 쓸 수 있게 예외 */
+const SessionGuard = {
+  timer:null, kicked:false, busy:false,
+  device(){
+    const ua = navigator.userAgent || '';
+    const os = /iPhone/.test(ua) ? '아이폰' : /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? '아이패드'
+      : /Android/.test(ua) ? (/Mobile/.test(ua) ? '안드로이드 휴대폰' : '안드로이드 태블릿') : /Windows/.test(ua) ? 'Windows PC' : /Macintosh/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux PC' : '기기';
+    const br = /SamsungBrowser/.test(ua) ? '삼성 인터넷' : /Edg\//.test(ua) ? '엣지' : /Whale/.test(ua) ? '웨일' : /KAKAOTALK/i.test(ua) ? '카카오톡' : /NAVER/.test(ua) ? '네이버' : /CriOS|Chrome\//.test(ua) ? '크롬' : /Firefox|FxiOS/.test(ua) ? '파이어폭스' : /Safari/.test(ua) ? '사파리' : '브라우저';
+    return `${os} · ${br}`;
+  },
+  active(){ return !!(state.currentUser && !state.currentUser.isAdmin); },
+  async claim(){
+    if(!this.active()) return;
+    this.kicked = false;
+    try{
+      const { data, error } = await sb.rpc('session_claim', { p_device: this.device() });
+      if(error) throw error;
+      if(data && data.replaced) showToast(`${data.prev_device || '다른 기기'}에서 쓰던 접속을 종료했어요. 한 계정은 한 기기에서만 쓸 수 있어요.`, 'info');
+      try{ await sb.auth.signOut({ scope:'others' }); }catch(_){}   // 다른 기기의 로그인 갱신도 끊음 (늦어도 1시간 안에 완전히 만료)
+      try{ Activity.log('session_claim', { device: this.device(), replaced: !!(data && data.replaced) }); }catch(_){}
+    }catch(e){ console.warn('[한 기기 확인] 등록 실패 — 기능은 그대로 진행', e && e.message || e); }
+    this.start();
+  },
+  /** 화면에 아무것도 바꾸지 않고 상태만 확인 */
+  async peek(){
+    try{ const { data, error } = await sb.rpc('session_check', { p_device: this.device() }); if(error) throw error; return data; }
+    catch(e){ return null; }   // 함수가 없거나 네트워크 오류 → 막지 않음
+  },
+  async check(why){
+    if(!this.active() || this.kicked || this.busy) return true;
+    this.busy = true;
+    try{
+      const r = await this.peek();
+      if(r && r.ok === false && r.reason === 'replaced'){ await this.kick(r); return false; }
+    }finally{ this.busy = false; }
+    return true;
+  },
+  start(){ this.stop(); if(!this.active()) return; this.timer = setInterval(()=>{ if(document.visibilityState === 'visible') this.check('timer'); }, 20000); },
+  stop(){ if(this.timer){ clearInterval(this.timer); this.timer = null; } },
+  async kick(info){
+    if(this.kicked) return; this.kicked = true; this.stop();
+    let saved = false;
+    try{ saved = await endInterviewForKick(); }catch(e){ console.warn('[한 기기] 면접 정리 실패', e); }
+    try{ Activity.log('session_kicked', { by: info && info.device, saved }); }catch(_){}
+    this.showKicked(info, { saved });
+  },
+  showKicked(info, opt){
+    opt = opt || {};
+    const dev = (info && info.device) ? `"${info.device}"` : '다른 기기';
+    const d = document.getElementById('kicked-desc');
+    if(d) d.textContent = `이 계정으로 ${dev}에서 새로 로그인해서, 이 기기의 접속을 종료했어요. 한 계정은 한 기기에서만 쓸 수 있어요.` + (opt.saved ? ' 진행 중이던 면접은 지금까지 답한 내용으로 저장했어요.' : '');
+    this._restore = !!opt.restore;
+    document.querySelectorAll('.modal-overlay.active').forEach(m=>{ if(m.id !== 'modal-kicked') m.classList.remove('active'); });
+    document.getElementById('modal-kicked').classList.add('active');
+  },
+  async finish(){
+    document.getElementById('modal-kicked').classList.remove('active');
+    if(this._restore || !state.currentUser){ try{ await sb.auth.signOut({ scope:'local' }); }catch(_){} state.currentUser = null; showScreen('screen-login'); }
+    else { await handleLogout(); }
+    this.kicked = false;
+  },
+};
+/** 다른 기기 로그인으로 끊길 때: 진행 중인 면접은 지금까지 답한 내용으로 결과 저장 (최대 약 10초 기다림) */
+async function endInterviewForKick(){
+  const scr = document.querySelector('.screen.active');
+  if(!scr || scr.id !== 'screen-interview') return false;
+  const wait = ms => new Promise(r=>setTimeout(r, ms));
+  try{ StenoVoice.stop(); }catch(_){} try{ window.speechSynthesis && speechSynthesis.cancel(); }catch(_){}
+  document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active'));
+  try{ clearInterval(pauseTimerIv); }catch(_){}
+  if(state.interviewMode === 'dialog' && StenoLoop.running){
+    if(state.dialogPaused){ state.dialogPaused = false; state.pausedMs = (state.pausedMs||0) + (Date.now() - (state.pauseStartedAt||Date.now())); }
+    const rid = StenoLoop.runId;
+    StenoLoop.stop();
+    for(let i=0;i<20 && state.dialogFinishedRun !== rid;i++) await wait(200);
+    if(state.dialogFinishedRun !== rid){
+      StenoLoop.running = false; StenoLoop.aborted = true;
+      try{ if(StenoListener.active) StenoListener.stop('manual'); }catch(_){}
+      state.dialogFinishedRun = rid;
+      try{ await finishDialogInterview(state.dialogAsks || [], StenoLoop.transcript); }catch(_){}
+    }
+    for(let i=0;i<30 && !state.saveDone;i++) await wait(200);
+    return !!state.saveDone;
+  }
+  // 리허설·준비 단계: 저장할 것이 없으므로 마이크·카메라만 정리
+  try{ if(StenoListener.active) StenoListener.stop('manual'); }catch(_){}
+  try{ stopRehearsalMeter(); }catch(_){} try{ stopRecognition(); }catch(_){} try{ stopCamera(); }catch(_){}
+  return false;
 }
 async function handleLogout(){
   state.resumeText = ''; state.cvText = ''; state.cvFileName = '';
@@ -8177,7 +8291,8 @@ async function handleLogout(){
   if(accessWatchTimer){ clearInterval(accessWatchTimer); accessWatchTimer = null; }
   await Activity.log('logout'); await Activity.offline();
   stopLiveRefresh();
-  await sb.auth.signOut();
+  try{ SessionGuard.stop(); }catch(_){}
+  try{ await sb.auth.signOut({ scope:'local' }); }catch(_){ try{ await sb.auth.signOut(); }catch(__){} }   // 이 기기만 로그아웃
   state.currentUser = null;
   showScreen('screen-login');
   showToast('로그아웃했어요');
@@ -8189,6 +8304,8 @@ async function tryRestoreSession(){
   const { data: profile, error } = await sb.from('profiles').select('*').eq('id', userId).single();
   if(error || !profile) return;
   if(await rejectIfExpired(profile)) return;
+  // 한 계정 한 기기: 그사이 다른 기기에서 로그인했다면 이 기기는 들어오지 않고 안내
+  if(!profile.is_admin){ const cur = await SessionGuard.peek(); if(cur && cur.ok === false && cur.reason === 'replaced'){ SessionGuard.showKicked(cur, { restore:true }); return; } }
   state.currentUser = {
     id: userId,
     email: data.session.user.email,
@@ -8208,6 +8325,7 @@ async function tryRestoreSession(){
   await renderDashboard();
   showScreen('screen-dashboard');
   Activity.log('login', {restored:true}); Activity.setPresence('dashboard');
+  SessionGuard.start();
   startAccessWatch();
   QuestionBank.load(); try{ RubricPoints.load(); }catch(_){}
   if(maybeForceNewPassword(profile)) return;
@@ -12346,6 +12464,7 @@ function dialogPhase(cls, text){ const p=document.getElementById('dialog-phase')
   const li=document.getElementById('live-interviewer'); if(li){ li.classList.remove('speaking','listening','thinking'); if(cls) li.classList.add(cls); } const lt=document.getElementById('live-phase-text'); if(lt) lt.textContent=text;
   if(typeof Persona !== 'undefined') Persona.setState(cls); }
 function startDialogInterview(){
+  try{ SessionGuard.check('interview'); }catch(_){}
   AnswerAudio.clear(); state.answerTimeLimit = null;
   closeSetup();
   state.interviewMode = 'dialog';
@@ -14019,6 +14138,7 @@ const AiQuota = {
   /** 이번 면접에서 AI를 써도 되는지 (한도에 이미 닿았으면 false) */
   canUse(){ return this.limitedInterview !== String(state.startTime); },
   hit(st){
+    if(st && st.reason === 'session'){ this.limitedInterview = String(state.startTime); try{ SessionGuard.check('ai'); }catch(_){} return; }   // 다른 기기에서 로그인됨 → 횟수 안내 대신 기기 확인
     this.limitedInterview = String(state.startTime);
     if(st) this.status = Object.assign({}, this.status||{}, st);
     if(!this.noticed){ this.noticed = true; showToast(this.message(st), 'warn'); }
@@ -14809,6 +14929,7 @@ async function coachMake(){
     if(error){
       let detail = error.message || String(error), lim = null;
       try{ if(error.context && typeof error.context.json === 'function'){ const b = await error.context.json(); if(b && b.error) detail = b.error; if(b && b.error === 'limit') lim = b.limit || {}; } }catch(_){}
+      if(lim && lim.reason === 'session'){ try{ SessionGuard.check('ai'); }catch(_){} throw new Error('다른 기기에서 로그인되어 이 기기에서는 쓸 수 없어요'); }
       if(lim) throw new Error(`오늘 대본 만들기(${lim.limit||10}회)를 모두 사용했어요. 내일 다시 쓸 수 있어요`);
       throw new Error(detail);
     }
@@ -15274,6 +15395,7 @@ window.addEventListener('beforeunload', (e)=>{
   e.preventDefault(); e.returnValue = '';
 });
 try{ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>ScrollLock.init()); else ScrollLock.init(); }catch(_){}
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible'){ const iv = document.getElementById('screen-interview'); if(!(iv && iv.classList.contains('active'))) try{ SessionGuard.check('visible'); }catch(_){} } });
 /* 휴대폰 면접 안정화 (2026-10-12)
    - 면접 화면에서는 화면이 저절로 꺼지지 않게 (꺼지면 마이크·소리가 끊김)
    - 면접 중 다른 앱·탭으로 나가면 자동 일시정지 → 돌아오면 "이어서 진행"으로 자연스럽게 재개 */
@@ -15296,6 +15418,7 @@ document.addEventListener('visibilitychange', ()=>{
       try{ dialogPause(); state.autoPaused = true; const pr = document.getElementById('pause-reason'); if(pr) pr.hidden = false; }catch(_){}
     }
   }else if(onIv){
+    try{ SessionGuard.check('visible'); }catch(_){}
     ScreenKeep.on();
     try{ if(Persona.ctx && Persona.ctx.state === 'suspended') Persona.ctx.resume(); }catch(_){}
     if(state.autoPaused){ state.autoPaused = false; }
