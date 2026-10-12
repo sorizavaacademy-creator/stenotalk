@@ -3153,12 +3153,62 @@
   @media(max-width:640px){
     .help-fab{bottom:calc(70px + env(safe-area-inset-bottom));right:14px;height:44px;width:44px;padding:0;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.12);}
     .help-fab > span:not(.hq){display:none;}
-    body:has(#screen-dashboard.active) .fb-fab{bottom:calc(16px + env(safe-area-inset-bottom));}
-    #screen-dashboard.active{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
+    /* 위 메뉴에 "의견 보내기"가 있는 화면은 떠 있는 버튼을 숨김 (중복·내용 가림 방지) */
+    body:has(#screen-dashboard.active) .fb-fab, body:has(#screen-practice.active) .fb-fab{display:none !important;}
+    body:has(#screen-dashboard.active) .help-fab{bottom:calc(16px + env(safe-area-inset-bottom));}
+    body:has(#screen-result.active) .fb-fab{padding:11px !important;opacity:.85;} body:has(#screen-result.active) .fb-fab span{display:none;}
+    #screen-dashboard.active{padding-bottom:calc(76px + env(safe-area-inset-bottom));}
     #toast-container{width:calc(100vw - 32px);}
     .toast{max-width:100%;}
   }
   .toast{cursor:pointer;}
+  .setup-reco{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 18px;padding:14px 16px;border:1px solid #f3cdbd;border-radius:12px;background:#fdf6f2;}
+  .setup-reco[hidden]{display:none;}
+  .setup-reco .sr-txt{flex:1 1 240px;min-width:0;}
+  .setup-reco .sr-txt b{display:block;font-size:14.5px;color:#1c1c1e;}
+  .setup-reco .sr-txt span{display:block;margin-top:3px;font-size:13px;color:#55555b;line-height:1.5;}
+  .setup-reco .btn{flex:none;height:42px;padding:0 16px;white-space:nowrap;}
+  @media (max-width:640px){ .setup-reco .btn{flex:1 1 100%;} }
+  .result-focus{padding:22px 24px !important;}
+  .result-focus .rf-head h2{margin:0 0 12px;font-size:18px;font-weight:800;color:#1c1c1e;}
+  .rf-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .rf-list li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.6;color:#2b2b2f;}
+  .rf-no{flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;background:#fdf0eb;color:#c2401b;font-size:12.5px;font-weight:800;display:grid;place-items:center;}
+  .rf-weak{margin-top:16px;padding-top:14px;border-top:1px solid #efede9;}
+  .rf-weak > b{display:block;font-size:13.5px;color:#45454a;margin-bottom:8px;}
+  .rf-q{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin-bottom:6px;border:1px solid #e6e4e0;border-radius:10px;background:#fff;font:inherit;text-align:left;cursor:pointer;}
+  .rf-q:hover{background:#faf9f7;}
+  .rf-q .q-grade{flex:none;}
+  .rf-qt{flex:1;min-width:0;font-size:14px;color:#1c1c1e;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .rf-qt em{font-style:normal;font-size:12px;font-weight:700;color:#c2401b;}
+  .rf-qs{flex:none;font-size:13.5px;font-weight:700;color:#45454a;}
+  .rf-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .rf-actions:empty{display:none;}
+  .rf-actions .btn{flex:1 1 200px;}
+  .rf-guide{margin-top:14px;font-size:13.5px;color:#45454a;}
+  .rf-guide summary{cursor:pointer;font-weight:700;color:#45454a;padding:4px 0;}
+  .rf-guide ul{margin:8px 0 0;padding-left:18px;line-height:1.65;}
+  .rf-guide li{margin-bottom:4px;}
+  @media print{ .rf-actions{display:none !important;} }
+  @media (max-width:640px){ .result-focus{padding:18px 16px !important;} .rf-actions .btn{flex:1 1 100%;} }
+  .more-btn{display:none;position:relative;}
+  .more-btn .more-dot{display:none;position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#e8532a;box-shadow:0 0 0 2px #fff;}
+  .more-btn.alert .more-dot{display:block;}
+  .more-sheet{position:fixed;inset:0;z-index:1500;}
+  .more-sheet[hidden]{display:none;}
+  .ms-backdrop{position:absolute;inset:0;background:rgba(20,20,22,.45);opacity:0;transition:opacity .18s;}
+  .ms-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;padding:8px 16px calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .2s cubic-bezier(.2,.7,.2,1);box-shadow:0 -10px 30px rgba(0,0,0,.12);}
+  .more-sheet.open .ms-backdrop{opacity:1;} .more-sheet.open .ms-panel{transform:none;}
+  .ms-grip{width:40px;height:4px;border-radius:4px;background:#d3d0ca;margin:4px auto 10px;}
+  .ms-item{display:flex;align-items:center;gap:14px;width:100%;padding:12px 6px;border:0;border-bottom:1px solid #efede9;background:none;font:inherit;text-align:left;cursor:pointer;color:#1c1c1e;}
+  .ms-item:last-of-type{border-bottom:0;}
+  .ms-ic{flex:none;width:40px;height:40px;border-radius:12px;background:#f6f5f3;display:grid;place-items:center;color:#45454a;}
+  .ms-ic svg{width:20px;height:20px;}
+  .ms-txt b{display:block;font-size:15.5px;font-weight:700;} .ms-txt small{display:block;margin-top:2px;font-size:13px;color:#66666c;line-height:1.45;}
+  .ms-item.off .ms-ic{background:#fdf0eb;color:#c2401b;}
+  .ms-item.danger .ms-ic{background:#fdecec;color:#c62828;} .ms-item.danger b{color:#c62828;}
+  .ms-close{display:block;width:100%;height:48px;margin-top:8px;border:1px solid #d3d0ca;border-radius:10px;background:#fff;font:inherit;font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;}
+  @media (min-width:761px){ .more-sheet{display:none !important;} }
   .ready-steps{padding:4px 24px 8px;display:flex;flex-direction:column;gap:12px;}
   .rs-step{display:flex;gap:12px;align-items:flex-start;}
   .rs-no{flex:none;width:24px;height:24px;border-radius:50%;background:#fdf0eb;color:#c2401b;font-size:13px;font-weight:800;display:grid;place-items:center;margin-top:1px;}
@@ -3407,6 +3457,25 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .hs-bar > b{display:block;font-size:14px;margin-bottom:2px;}
 .hs-bar button{margin-top:8px;height:34px;padding:0 12px;border-radius:8px;border:0;background:#fff;color:#1c1c1e;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
 .hs-bar button.x{background:transparent;color:#b9b8b4;margin-left:6px;}
+  /* 휴대폰 라이브 면접 아래 버튼 정리 (2026-10-12) */
+  @media (max-width:760px){
+    #screen-interview.lv3 .ctl-av, #screen-interview.lv3 #btn-end-interview, #screen-interview.lv3 .live-help{display:none !important;}
+    #screen-interview.lv3 .control-bar{display:flex !important;padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px)) !important;}
+    #screen-interview.lv3 .ctl-right{display:none !important;}
+    #screen-interview.lv3 .ctl-center{display:flex !important;flex:1 1 auto;gap:8px;width:100%;min-width:0;}
+    #screen-interview.lv3 #btn-dialog-stop-listen{flex:1 1 auto !important;min-width:0 !important;height:50px !important;font-size:16px !important;}
+    #screen-interview.lv3 #btn-dialog-pause{flex:none !important;width:50px !important;min-width:0 !important;height:50px !important;padding:0 !important;justify-content:center;}
+    #screen-interview.lv3 #btn-dialog-pause span{display:none;}
+    #screen-interview.lv3 #btn-more{display:inline-flex !important;flex:none;width:50px;height:50px;padding:0 !important;align-items:center;justify-content:center;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:10px;background:#fff;color:#1c1c1e;}
+    #screen-interview.lv3 #btn-more svg{width:22px;height:22px;}
+    #screen-interview.lv3 .li-text{display:none !important;}   /* 좁은 화면: 면접관 상태는 질문 칸 배지에 이미 있어 겹치지 않게 숨김 */
+  }
+  /* 휴대폰 가독성 (2026-10-12): 설명용 작은 회색 글씨를 한 단계 키우고 진하게 */
+  @media (max-width:640px){
+    .screen, .modal-overlay{--c-ink-3:#5a5a60 !important;}
+    .dev-hint, .dev-note, .opt-sub, .setup-sec-sub, .help-sub, .diff-note, .mic-check-text, .coach-meta, .coach-ph, .delivery-note, .rp-grade-note, .gr-note, .history-meta, .d3-stat-foot, .d3-stat-label, .lg-hint, .hs-note, .insight-note, .mp-note, .q-real-note, .setup-summary, .setup-foot-text, .rp-real-src, .sr-src, .q-checklist, .review-setup-note, .coach-saved, .gr-legend, #modal-setup .opt-sub, #modal-setup .dev-hint{font-size:13px !important;line-height:1.55 !important;}
+    #modal-setup .opt-sub, #modal-setup .dev-hint, .dev-hint, .opt-sub, .setup-sec-sub, .help-sub, .rp-grade-note, .delivery-note, .history-meta, .d3-stat-foot{color:#55555b !important;}
+  }
 </style>
 </head>
 <body>
@@ -3479,7 +3548,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
           <div class="coach-timer" id="coach-timer">01:00</div>
           <div class="coach-bar"><i id="coach-bar"></i><span class="coach-bar-mark" style="left:83.3%"></span></div>
         </div>
-        <p class="coach-live" id="coach-live">시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.</p>
+        <p class="coach-live" id="coach-live">시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 다 말한 뒤 "다 말했어요 · 결과 보기"를 누르면 결과가 나와요.</p>
         <div class="coach-row">
           <button type="button" class="btn btn-solid" id="coach-practice-btn" onclick="coachPracticeToggle()">연습 시작</button>
         </div>
@@ -4480,6 +4549,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <span>일시정지</span>
       </button>
       <button class="ctl-btn" id="btn-next-q" onclick="nextQuestion()" disabled>다음 질문</button>
+      <button type="button" class="ctl-btn more-btn" id="btn-more" onclick="openMoreSheet()" aria-label="더보기: 마이크·카메라·문제 신고·면접 종료"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><i class="more-dot" aria-hidden="true"></i></button>
       </div>
       <div class="ctl-right">
       <button class="ctl-btn danger" id="btn-end-interview" onclick="openConfirmEnd()">면접 종료</button>
@@ -4518,6 +4588,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <div class="rhg-score"><b id="rs-content">–</b><span>종합 점수 · 6축 평가</span></div>
       </div>
     </div>
+
+    <div class="panel result-focus" id="result-focus" hidden></div>
 
     <div class="result-stats">
       <div class="rstat"><div class="lbl">총 소요 시간</div><div class="num" id="rs-time">14:32</div></div>
@@ -4576,6 +4648,10 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     </div>
     <div class="modal-body setup-body">
       <div id="review-setup-note" class="review-setup-note" style="display:none;"></div>
+      <div class="setup-reco" id="setup-reco">
+        <div class="sr-txt"><b>처음이라면 추천 설정으로 시작해 보세요</b><span>일반 면접 · 질문 5개 · 난이도 중 · 면접관 보통 · 꼬리질문 최대 3개 · 시간 제한 없음</span></div>
+        <button type="button" class="btn btn-solid" onclick="startWithRecommended()">추천 설정으로 바로 시작</button>
+      </div>
 
       <section class="setup-sec">
         <h3 class="setup-sec-title">장치 확인</h3>
@@ -4832,6 +4908,19 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   </div>
 </div>
 
+<!-- ============ 휴대폰 라이브 면접: 더보기 (2026-10-12) ============ -->
+<div class="more-sheet" id="more-sheet" hidden>
+  <div class="ms-backdrop" onclick="closeMoreSheet()"></div>
+  <div class="ms-panel" role="dialog" aria-label="면접 도구">
+    <div class="ms-grip" aria-hidden="true"></div>
+    <button type="button" class="ms-item" id="ms-mic" onclick="closeMoreSheet(); toggleMic();"><span class="ms-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><span class="ms-txt"><b id="ms-mic-t">마이크 끄기</b><small id="ms-mic-s">끄면 답변을 직접 입력해요</small></span></button>
+    <button type="button" class="ms-item" id="ms-cam" onclick="closeMoreSheet(); toggleCam();"><span class="ms-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></span><span class="ms-txt"><b id="ms-cam-t">카메라 끄기</b><small>내 화면만 꺼지고 면접은 그대로 진행돼요</small></span></button>
+    <button type="button" class="ms-item" onclick="closeMoreSheet(); openMicHelp('live');"><span class="ms-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></svg></span><span class="ms-txt"><b>소리·마이크 문제 해결</b><small>안 들리거나 인식이 안 될 때 · 문제 신고</small></span></button>
+    <button type="button" class="ms-item danger" onclick="closeMoreSheet(); openConfirmEnd();"><span class="ms-ic"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></span><span class="ms-txt"><b>면접 종료</b><small>지금까지 답한 내용으로 결과를 만들어요</small></span></button>
+    <button type="button" class="ms-close" onclick="closeMoreSheet()">닫기</button>
+  </div>
+</div>
+
 <!-- ============ READY GATE MODAL ============ -->
 <div class="modal-overlay" id="modal-ready">
   <div class="modal-box" style="max-width:400px;">
@@ -4869,8 +4958,9 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   <div class="modal-box" style="max-width:400px;">
     <div class="modal-head">
       <h2>리허설이 끝났어요</h2>
-      <p>표정과 목소리는 충분히 풀어보셨나요? 이제 AI 면접관이 답변을 듣고 꼬리질문을 이어가는 라이브 면접으로 넘어갈 수 있어요. 채점도 시작돼요.</p>
+      <p>목소리와 화면은 충분히 확인하셨나요? 라이브 시작을 누르면 바로 AI 면접관이 연결되고 채점이 시작돼요.</p>
     </div>
+    <div class="ready-steps" id="rhd-steps"></div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="restartRehearsal()">한 번 더</button>
       <button class="btn btn-solid" onclick="closeRehearsalDoneAndGoLive()">라이브 시작</button>
@@ -7777,6 +7867,7 @@ function showToast(msg, kind){
           : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>';
   t.innerHTML = '<span class="toast-ic">'+ic+'</span><span class="toast-msg"></span>';
   t.querySelector('.toast-msg').textContent = msg;
+  t.dataset.t = String(Date.now());
   t.setAttribute('role', k==='warn' ? 'alert' : 'status');
   const close = ()=>{ if(t.classList.contains('out')) return; t.classList.add('out'); setTimeout(()=>t.remove(), 260); };
   t.addEventListener('click', close);   // 눌러서 바로 닫기
@@ -7785,6 +7876,8 @@ function showToast(msg, kind){
   setTimeout(close, Math.max(3500, Math.min(9000, 2200 + String(msg).length * 55)));
 }
 function showScreen(id){
+  // 화면이 바뀌면 이전 화면에서 띄운 안내(1초 넘게 지난 것)는 정리 — 새 화면 내용을 가리지 않게
+  try{ const now = Date.now(); document.querySelectorAll('#toast-container .toast').forEach(t=>{ if(now - (+t.dataset.t||0) > 1000 && !t.classList.contains('out')){ t.classList.add('out'); setTimeout(()=>t.remove(), 260); } }); }catch(_){}
   try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
   try{ if(id !== 'screen-dashboard' && typeof Tour !== 'undefined' && Tour.on){ Tour.on = false; const t = document.getElementById('tour'); if(t) t.hidden = true; document.body.classList.remove('tour-on'); } }catch(_){}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -7793,6 +7886,7 @@ function showScreen(id){
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
+  try{ if(id !== 'screen-interview') closeMoreSheet(); }catch(_){}
   try{ if(typeof ScreenKeep !== 'undefined'){ if(id === 'screen-interview') ScreenKeep.on(); else ScreenKeep.off(); } }catch(_){}
   if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
   document.body.classList.toggle('v3-ui', id === 'screen-login' || id === 'screen-dashboard' || id === 'screen-admin' || id === 'screen-practice' || id === 'screen-result' || (id === 'screen-interview' && (state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog')));
@@ -9375,7 +9469,8 @@ function openSetup(fieldId){
   }
   if(isReview){
     state.selectedField = REVIEW_FIELD;
-    state.reviewQuestions = (state.reviewCandidates || []).slice();
+    // 결과 화면의 "약한 문항 다시"·"추천 질문으로 연습"은 reviewOverride로 넘어옴 (없으면 대시보드 복습 후보)
+    state.reviewQuestions = (state.reviewOverride && state.reviewOverride.length ? state.reviewOverride : (state.reviewCandidates || [])).slice(); state.reviewOverride = null;
     state.questionCount = state.reviewQuestions.length;
   }else{
     state.selectedField = FIELDS.find(f=>f.id===fieldId);
@@ -9393,8 +9488,10 @@ function openSetup(fieldId){
   const reviewNote = document.getElementById('review-setup-note');
   reviewNote.style.display = isReview ? '' : 'none';
   if(isReview){
-    reviewNote.textContent = `점수가 낮았던 질문 ${state.reviewQuestions.length}개로 복습 면접을 진행합니다. 리허설 후 라이브 면접에서 채점되고, 결과는 "복습 모드"로 기록돼요.`;
+    reviewNote.textContent = `${state.reviewLabel || '점수가 낮았던 질문'} ${state.reviewQuestions.length}개로 복습 면접을 진행합니다. 리허설 후 라이브 면접에서 채점되고, 결과는 "복습 모드"로 기록돼요.`;
   }
+  state.reviewLabel = null;
+  { const rc = document.getElementById('setup-reco'); if(rc) rc.hidden = isReview; }
   document.getElementById('modal-setup').classList.add('active');
   updateDifficultyNote();
   renderVoiceSelect(); renderPrimaryVoice();
@@ -10395,6 +10492,17 @@ function toggleSwitch(el,type){
   const on = el.classList.contains('on');
   if(type==='mic'){ if(on) startMicLevelAnim(); else { stopMicLevelAnim(); setMicCheck('', '마이크가 꺼져 있어요. 직접 입력으로 답변할 수 있어요.'); } }
   showToast((type==='mic'?'마이크':'카메라')+(on?' 연결됨':' 연결 해제됨'));
+}
+/** 면접 준비: 추천 설정으로 칩을 맞추고 바로 리허설 시작 (장치 점검은 리허설 화면에서 그대로 진행) */
+function startWithRecommended(){
+  const want = { realset:'normal', count:'5', diff:'중', pressure:'normal', followups:'3', timed:'free' };
+  Object.entries(want).forEach(([type, val])=>{
+    const row = document.getElementById('chip-' + type); if(!row || row.offsetParent === null && type === 'realset' && document.getElementById('setup-realset-block').style.display === 'none') return;
+    const chip = row && row.querySelector(`.chip[data-val="${val}"]`);
+    if(chip && !chip.classList.contains('sel')) selectChip(chip, type);
+  });
+  try{ Activity.log('setup_recommended', { field: state.selectedField && state.selectedField.id }); }catch(_){}
+  startRehearsal();
 }
 function selectChip(el,type){
   const row = el.parentElement;
@@ -11946,6 +12054,16 @@ function toggleRh3Tips(){ const p = document.getElementById('rh-panel'); if(p) p
 function toggleRh3UserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('rh3-user-menu'), b = document.getElementById('rh3-user-btn'); if(!m) return; const open = m.style.display === 'none'; m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 function closeRh3UserMenu(){ const m = document.getElementById('rh3-user-menu'), b = document.getElementById('rh3-user-btn'); if(m) m.style.display = 'none'; if(b) b.setAttribute('aria-expanded','false'); }
 document.addEventListener('click', (e)=>{ const u = document.querySelector('#screen-interview .d3-user'); if(u && !u.contains(e.target)) closeRh3UserMenu(); });
+/** 라이브 면접 진행 순서 3단계 (준비 창·리허설 완료 창에서 같이 사용) */
+function readyStepsHtml(){
+  const isSet = !!(state.realSet && state.selectedField && state.selectedField.id === 'assembly');
+  return [
+    ['면접관이 인사와 함께 질문해요', isSet ? '국회 실전 순서로 7문항, 전체 15분이에요.' : '질문이 끝나면 자동으로 듣기 시작해요.'],
+    ['바로 말로 답하세요', '마이크 버튼은 누르지 않아도 돼요. 잠깐 멈춰도 넘어가지 않아요.'],
+    ['다 말했으면 "답변 완료 · 다음으로"', '버튼을 눌러야 면접관이 다음 질문을 해요.'],
+  ].map((x,k)=>`<div class="rs-step"><span class="rs-no">${k+1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join('')
+    + (MobileAudio.isMobile ? '<p class="rs-tip">휴대폰은 <b>무음 모드를 끄고</b> 소리를 조금 키워 주세요. 이어폰을 쓰면 더 또렷하게 들려요.</p>' : '');
+}
 function showReadyGate(){
   const title = document.getElementById('ready-title');
   const desc = document.getElementById('ready-desc');
@@ -11958,13 +12076,7 @@ function showReadyGate(){
     desc.textContent = '시작을 누르면 면접관이 연결되고, 아래 순서로 진행돼요.';
     const steps = document.getElementById('ready-steps');
     if(steps){
-      const isSet = !!(state.realSet && state.selectedField && state.selectedField.id === 'assembly');
-      steps.innerHTML = [
-        ['면접관이 인사와 함께 질문해요', isSet ? '국회 실전 순서로 7문항, 전체 15분이에요.' : '질문이 끝나면 자동으로 듣기 시작해요.'],
-        ['바로 말로 답하세요', '마이크 버튼은 누르지 않아도 돼요. 잠깐 멈춰도 넘어가지 않아요.'],
-        ['다 말했으면 "답변 완료 · 다음으로"', '버튼을 눌러야 면접관이 다음 질문을 해요.'],
-      ].map((x,k)=>`<div class="rs-step"><span class="rs-no">${k+1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join('')
-        + (MobileAudio.isMobile ? '<p class="rs-tip">휴대폰은 <b>무음 모드를 끄고</b> 소리를 조금 키워 주세요. 이어폰을 쓰면 더 또렷하게 들려요.</p>' : '');
+      steps.innerHTML = readyStepsHtml();
       steps.hidden = false;
     }
   }else{
@@ -12005,6 +12117,7 @@ function showRehearsalComplete(){
   stopRecognition();
   stopSpeaking();
   stopRehearsalMeter();
+  { const st = document.getElementById('rhd-steps'); if(st) st.innerHTML = readyStepsHtml(); }
   document.getElementById('modal-rehearsal-done').classList.add('active');
 }
 function restartRehearsal(){
@@ -12015,6 +12128,8 @@ function closeRehearsalDoneAndGoLive(){
   MobileAudio.unlock();
   document.getElementById('modal-rehearsal-done').classList.remove('active');
   // 카메라는 끄지 않고 그대로 이어서 사용 (껐다 켜면 잠시 검게 나오거나 권한을 다시 묻는 문제가 있었음)
+  // 2026-10-12: 리허설 완료 창에서 진행 순서를 이미 보여 줬으므로 "준비되셨나요?" 창은 건너뛰고 바로 연결
+  state.skipReadyGate = true;
   startDialogInterview();   // 라이브 면접 = AI 대화 면접
 }
 
@@ -12232,7 +12347,7 @@ function startDialogInterview(){
   document.getElementById('steno-input').value=''; document.getElementById('steno-input').readOnly = true; updateCharCount();
   document.getElementById('steno-input').placeholder = '면접관의 질문이 끝나면 자동으로 듣기 시작해요. 말씀하시면 이곳에 실시간으로 표시됩니다.';
   buildWaveBars(); resetControls();
-  document.getElementById('btn-dialog-stop-listen').disabled = true;
+  { const sb0 = document.getElementById('btn-dialog-stop-listen'); sb0.disabled = true; sb0.classList.remove('typed'); sb0.textContent = '면접관 연결 중…'; }
   dialogPhase('', '준비 중');
   showScreen('screen-interview');
   hideSttAlert(); setDialogTypedUI(false); StenoLoop.micEnabled = true; state.pausedMs = 0; state.dialogPaused = false;
@@ -12252,7 +12367,8 @@ function startDialogInterview(){
   }
   if(!StenoListener.supported()){ showToast('이 브라우저는 음성 인식을 지원하지 않아 답변을 직접 입력하는 방식으로 진행돼요. 말로 답변하려면 크롬 또는 엣지를 사용해 주세요.'); }
   startCamera();
-  showReadyGate();
+  if(state.skipReadyGate){ state.skipReadyGate = false; confirmReady(); }
+  else showReadyGate();
 }
 function dialogStopListening(){
   if(StenoLoop.running && StenoLoop.typedWait){ StenoLoop.submitAnswer(document.getElementById('steno-input').value); return; }   // 직접 입력 제출
@@ -12354,7 +12470,7 @@ async function runDialogInterview(){
       else { badge.textContent = d.q.slotName ? `실전 세트 · ${d.q.slotName}` : state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
       ta.value=''; updateCharCount();
     }
-    else if(type==='speaking'){ dialogPhase('speaking', '면접관이 말하는 중'); document.getElementById('wave-state').textContent='면접관 발화 중'; stopBtn.disabled = true; stopWaveAnim(); }
+    else if(type==='speaking'){ dialogPhase('speaking', '면접관이 말하는 중'); document.getElementById('wave-state').textContent='면접관 발화 중'; stopBtn.disabled = true; if(!stopBtn.classList.contains('typed')) stopBtn.textContent = '면접관이 말하는 중…'; stopWaveAnim(); }
     else if(type==='listening'){ setDialogTypedUI(false); hideSttAlert(); stopBtn.classList.remove('nudge'); dialogPhase('listening', '답변을 듣는 중 · 다 말하면 "답변 완료"'); document.getElementById('wave-state').textContent='답변 인식 중'; updateListeningUI(true); startWaveAnim(); stopBtn.disabled = false; ta.value=''; updateCharCount(); }
     else if(type==='interim'){ ta.value = d.text; ta.scrollTop = ta.scrollHeight; updateCharCount(); }
     else if(type==='listen-typed'){ setDialogTypedUI(true, d.why, d.partial); }
@@ -12370,14 +12486,14 @@ async function runDialogInterview(){
       else if(d.name==='speaking' && !StenoListener._pauseHint && !(StenoListener.opt && StenoListener.opt.manualEnd)) dialogPhase('listening','답변 인식 중…');
     }
     else if(type==='answer'){
-      updateListeningUI(false); stopWaveAnim(); stopBtn.disabled = true; stopBtn.classList.remove('nudge'); hideSttAlert(); setDialogTypedUI(false);
+      updateListeningUI(false); stopWaveAnim(); stopBtn.disabled = true; stopBtn.classList.remove('nudge'); hideSttAlert(); setDialogTypedUI(false); stopBtn.textContent = '답변을 넘기는 중…';
       ta.value = d.text; updateCharCount();
       if(pendingAsk){
         pendingAsk.answer = d.text; pendingAsk.durMs = d.durMs; pendingAsk.timing = d.timing || null; pendingAsk.audioParts = d.audioParts || [];
         pendingAsk.endReason = d.reason || ''; pendingAsk.limitMs = d.limitMs || null; asks.push(pendingAsk); pendingAsk = null;
       }
     }
-    else if(type==='thinking'){ dialogPhase('thinking', '면접관이 답변을 듣고 생각하는 중…'); document.getElementById('wave-state').textContent='꼬리질문 준비 중'; }
+    else if(type==='thinking'){ dialogPhase('thinking', '면접관이 답변을 듣고 생각하는 중…'); document.getElementById('wave-state').textContent='꼬리질문 준비 중'; stopBtn.disabled = true; stopBtn.textContent = '면접관이 생각하는 중…'; }
     else if(type==='followup'){
       pendingAsk = { q: d.followup, ref: null, kind:'followup', followup:true, source:d.source, evaluation:d.evaluation||'', slotName: curSlotName };
       qEl.textContent = d.followup; badge.textContent = d.source==='llm' ? 'AI 꼬리질문' : 'AI 꼬리질문 (템플릿)'; badge.className='qcard-source-badge followup';
@@ -12735,6 +12851,21 @@ function startWaveAnim(){
 }
 function stopWaveAnim(){ if(waveInterval) clearInterval(waveInterval); }
 
+/* 휴대폰 라이브 면접 아래 버튼: 답변 완료·일시정지만 두고 나머지는 "더보기"로 */
+function openMoreSheet(){
+  const sh = document.getElementById('more-sheet'); if(!sh) return;
+  const mt = document.getElementById('ms-mic-t'), ms = document.getElementById('ms-mic-s'), ct = document.getElementById('ms-cam-t');
+  if(mt) mt.textContent = state.micOn ? '마이크 끄기' : '마이크 다시 켜기';
+  if(ms) ms.textContent = state.micOn ? '끄면 답변을 직접 입력해요' : '지금은 꺼져 있어요 · 켜면 다시 말로 답할 수 있어요';
+  if(ct) ct.textContent = state.camOn ? '카메라 끄기' : '카메라 다시 켜기';
+  document.getElementById('ms-mic').classList.toggle('off', !state.micOn);
+  sh.hidden = false; requestAnimationFrame(()=>sh.classList.add('open'));
+}
+function closeMoreSheet(){
+  const sh = document.getElementById('more-sheet'); if(!sh || sh.hidden) return;
+  sh.classList.remove('open'); setTimeout(()=>{ sh.hidden = true; }, 180);
+}
+function syncMoreDot(){ const b = document.getElementById('btn-more'); if(b) b.classList.toggle('alert', !state.micOn); }
 function toggleMic(){
   state.micOn=!state.micOn;
   const btn=document.getElementById('btn-mic');
@@ -12743,6 +12874,7 @@ function toggleMic(){
   btn.classList.toggle('active-off', !state.micOn);
   lbl.textContent = state.micOn ? '마이크 켜짐' : '마이크 꺼짐';
   waveWrap.classList.toggle('muted', !state.micOn);
+  syncMoreDot();
   if(state.interviewMode === 'dialog'){
     // AI 대화 면접: 끄면 답변을 직접 입력, 켜면 이어서 듣기
     StenoLoop.setMic(state.micOn, document.getElementById('steno-input').value);
@@ -12771,6 +12903,7 @@ function toggleCam(){
 function syncCamMicUI(){
   const camBtn=document.getElementById('btn-cam'), camLbl=document.getElementById('cam-label'), prev=document.getElementById('cam-preview');
   const micBtn=document.getElementById('btn-mic'), micLbl=document.getElementById('mic-label'), wave=document.getElementById('wave-bars');
+  try{ syncMoreDot(); }catch(_){}
   if(camBtn) camBtn.classList.toggle('active-off', !state.camOn);
   if(camLbl) camLbl.textContent = state.camOn ? '카메라 켜짐' : '카메라 꺼짐';
   if(prev) prev.classList.toggle('off', !state.camOn);          // .off 는 미리보기를 반투명(어둡게) 만드는 클래스
@@ -12999,6 +13132,7 @@ async function endInterview(){
   }
   renderResultBars();
   renderResultSummary();
+  try{ renderResultFocus(); }catch(e){ console.warn('[결과 요약]', e); }
   // 국회 실전 세트: 면접관 종합 의견 (규칙으로 먼저 보여 주고, AI가 켜져 있으면 저장 뒤 AI 의견으로 바꿈)
   const isSetResult = state.interviewMode==='dialog' && !!state.dialogRealSet;
   SetReview.reset();
@@ -13172,8 +13306,8 @@ function renderResultBars(){
     const typeTxt = rb && !rb.empty ? rb.typeLabel : '';
     const realChip = rb && rb.real ? `<span class="q-real-chip" title="실제 면접 후기에 나온 질문: ${escapeHtml(rb.real.q)}">실제 기출</span>` : '';
     rows += `
-      <div class="q-result-group${i===1?' open':''}" data-qi="${i-1}">
-        <button type="button" class="q-head" onclick="this.parentElement.classList.toggle('open')" aria-expanded="${i===1?'true':'false'}">
+      <div class="q-result-group" data-qi="${i-1}">
+        <button type="button" class="q-head" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'))" aria-expanded="false">
           <span class="q-num">Q${i}</span>
           <span class="q-title">${qLabel}</span>
           <span class="q-head-right">${realChip}${typeTxt?`<span class="q-type-chip">${escapeHtml(typeTxt)}</span>`:''}<span class="q-grade ${gradeCls}">${gradeTxt}</span><span class="q-score">${scoreTxt}</span><svg class="q-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
@@ -13351,9 +13485,60 @@ function realIvCardHtml(){
 }
 function startRecommendedReview(){
   if(!state.recoQuestions || !state.recoQuestions.length) return;
-  state.reviewQuestions = state.recoQuestions.map(q=>Object.assign({}, q));
+  state.reviewOverride = state.recoQuestions.map(q=>Object.assign({}, q)); state.reviewLabel = '추천 질문';
   showScreen('screen-dashboard'); renderDashboard();
   openSetup('review');
+}
+/** 결과 화면 맨 위: 오늘 챙길 것 3가지 + 가장 약한 문항 + 점수 기준 */
+function weakResultItems(){
+  const out = [];
+  const fbs = state.answerFeedback || [], qs = state.interviewQuestions || [];
+  for(let i=0;i<(state.currentQ||0);i++){
+    const rb = fbs[i] && fbs[i].rubric; const item = qs[i];
+    if(!item || !rb || rb.empty) continue;
+    out.push({ i, q:item.q, total:rb.total, grade:rb.grade, ref:item.ref, hint:item.hint, diff:item.diff, followup:!!item.followup });
+  }
+  return out.filter(x=>x.total < 75).sort((a,b)=>a.total-b.total).slice(0,3);
+}
+function startWeakReview(){
+  const w = weakResultItems();
+  if(!w.length){ showToast('다시 연습할 약한 문항이 없어요. 추천 질문으로 연습해 보세요.', 'info'); return; }
+  state.reviewOverride = w.map(x=>({ q:x.q, ref:x.ref, hint:x.hint, diff:x.diff, review:true })); state.reviewLabel = '이번 면접에서 점수가 낮았던 질문';
+  try{ Activity.log('weak_review', { count: w.length }); }catch(_){}
+  showScreen('screen-dashboard'); renderDashboard();
+  openSetup('review');
+}
+function openResultCard(i){
+  const g = document.querySelector(`#result-bars .q-result-group[data-qi="${i}"]`); if(!g) return;
+  g.classList.add('open'); const h = g.querySelector('.q-head'); if(h) h.setAttribute('aria-expanded','true');
+  g.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function renderResultFocus(){
+  const box = document.getElementById('result-focus'); if(!box) return;
+  const sum = state.lastReport;
+  if(!sum || !sum.count){ box.hidden = true; return; }
+  const fixes = (sum.improvements || []).slice(0, 3);
+  const weak = weakResultItems();
+  const li = fixes.length ? fixes.map((x,k)=>`<li><span class="rf-no">${k+1}</span><span>${escapeHtml(x)}</span></li>`).join('')
+    : `<li><span class="rf-no">✓</span><span>크게 보완할 점이 없어요. 같은 질문을 더 짧고 또렷하게 말하는 연습으로 완성도를 올려 보세요.</span></li>`;
+  const wk = weak.length ? `<div class="rf-weak"><b>점수가 낮았던 문항</b>${weak.map(x=>`<button type="button" class="rf-q" onclick="openResultCard(${x.i})"><span class="q-grade ${x.grade.replace('+','p')}">${x.grade}</span><span class="rf-qt">${x.followup?'<em>꼬리질문</em> ':''}${escapeHtml(x.q)}</span><span class="rf-qs">${x.total}점</span></button>`).join('')}</div>` : '';
+  box.innerHTML = `
+    <div class="rf-head"><h2>오늘 이것만 챙기세요</h2></div>
+    <ol class="rf-list">${li}</ol>
+    ${wk}
+    <div class="rf-actions">
+      ${weak.length ? `<button type="button" class="btn btn-solid" onclick="startWeakReview()">약한 문항 ${weak.length}개 다시 답해 보기</button>` : ''}
+      ${(state.recoQuestions && state.recoQuestions.length) ? `<button type="button" class="btn btn-outline" onclick="startRecommendedReview()">추천 새 질문으로 연습</button>` : ''}
+    </div>
+    <details class="rf-guide"><summary>점수는 이렇게 매겨요</summary>
+      <ul>
+        <li><b>문항 점수</b>는 내용·구조·구체성·분량·태도·언어·전달력을 질문 유형(자기소개·지식·상황 대처 등)에 맞춰 합친 점수예요.</li>
+        <li><b>종합 점수</b>는 꼬리질문까지 포함한 모든 답변 점수의 평균이에요. 그래서 잘한 문항(A)이 있어도 짧거나 빠진 답이 있으면 종합은 낮아질 수 있어요.</li>
+        <li><b>등급</b> A+ 90점 이상 · A 80 · B+ 70 · B 60 · C 50 · D 50점 미만</li>
+        <li>음성 인식 받아쓰기라 띄어쓰기·맞춤법은 감점하지 않아요. 논리의 타당성은 강사 검토를 함께 참고하세요.</li>
+      </ul>
+    </details>`;
+  box.hidden = false;
 }
 function renderResultSummary(){
   const el = document.getElementById('result-summary-line');
@@ -14648,7 +14833,7 @@ function coachResetPractice(){
   const bar = document.getElementById('coach-bar'); if(bar){ bar.style.width = '0'; bar.classList.remove('over'); }
   const btn = document.getElementById('coach-practice-btn'); if(btn) btn.textContent = '연습 시작';
   const res = document.getElementById('coach-result'); if(res){ res.hidden = true; res.innerHTML = ''; }
-  const live = document.getElementById('coach-live'); if(live) live.textContent = Coach.script ? '대본을 보며(또는 외워서) 면접관 앞이라고 생각하고 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.' : '시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 말을 마치고 잠시 멈추거나 "끝내기"를 누르면 결과가 나와요.';
+  const live = document.getElementById('coach-live'); if(live) live.textContent = Coach.script ? '대본을 보며(또는 외워서) 면접관 앞이라고 생각하고 말해 보세요. 다 말한 뒤 "다 말했어요 · 결과 보기"를 누르면 결과가 나와요.' : '시작을 누르고 면접관 앞이라고 생각하며 말해 보세요. 다 말한 뒤 "다 말했어요 · 결과 보기"를 누르면 결과가 나와요.';
 }
 function coachTick(){
   const el = Math.max(0, (Date.now() - Coach.t0) / 1000);
@@ -14665,14 +14850,14 @@ async function coachPracticeStart(){
   if(Coach.draftRec){ StenoListener.stop('manual'); }
   coachResetPractice();
   Coach.practicing = true; Coach.t0 = Date.now();
-  document.getElementById('coach-practice-btn').textContent = '끝내기';
-  const live = document.getElementById('coach-live'); live.textContent = '듣고 있어요. 말씀하세요.';
+  document.getElementById('coach-practice-btn').textContent = '다 말했어요 · 결과 보기';
+  const live = document.getElementById('coach-live'); live.textContent = '듣고 있어요. 말씀하세요. 잠깐 멈춰도 끝나지 않아요.';
   Coach.iv = setInterval(coachTick, 250); coachTick();
   await StenoListener.start({
     onInterim: t=>{ live.textContent = t; },
     onError: m=>showToast(m, 'warn'),
     onEnd: r=>coachPracticeEnd(r),
-  }, { silenceMs: 4000, noSpeechMs: 12000, maxMs: 90000 });
+  }, { silenceMs: 4000, noSpeechMs: 12000, maxMs: 120000, manualEnd: true });   // 2026-10-12: 면접과 같이, 말이 멈춰도 끝나지 않고 버튼을 눌러야 결과 (안전장치 2분)
 }
 /** 대본과 실제로 말한 내용이 얼마나 겹치는지 (두 글자 묶음 기준, 0~100) */
 function coachCoverage(script, spoken){
@@ -14739,7 +14924,7 @@ function setReviewMiniHtml(row){
   const rv = row.set_review || {};
   const li = arr=>(arr||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
   const slots = (rv.slots||[]).map(s=>`<span class="srm-slot${s.score!=null && s.score<60?' low':''}">${escapeHtml(s.name)} <b>${s.score==null?'–':s.score}</b></span>`).join('');
-  return `<div class="srm"><div class="srm-head"><b>국회 실전 세트</b>${row.set_overtime?'<span class="srm-over">15분 초과</span>':''}<span class="srm-src">${rv.source==='ai'?'AI 면접관 의견':rv.headline?'점수 기준 의견':''}</span></div>`
+  return `<div class="srm"><div class="srm-head"><b>국회 실전 세트</b>${row.set_overtime?'<span class="srm-over">15분 초과</span>':''}<span class="srm-src">${rv.source==='ai'?'AI 면접관 의견':rv.headline?'채점 결과로 쓴 의견':''}</span></div>`
     + (rv.headline ? `<p class="srm-line">${escapeHtml(rv.headline)}</p>` : '<p class="srm-line">종합 의견이 저장되지 않은 기록이에요.</p>')
     + (slots ? `<div class="srm-slots">${slots}</div>` : '')
     + ((rv.strengths||[]).length || (rv.improvements||[]).length ? `<div class="srm-grid"><div><i>잘한 점</i><ul>${li(rv.strengths)}</ul></div><div><i>보완할 점</i><ul>${li(rv.improvements)}</ul></div></div>` : '')
@@ -14799,7 +14984,7 @@ const SetReview = {
     document.getElementById('sr-headline').textContent = rv.headline || '';
     const src = document.getElementById('sr-src');
     src.className = 'sr-src' + (status === 'loading' ? ' loading' : '');
-    src.textContent = status === 'loading' ? 'AI 면접관이 종합 의견을 쓰는 중…' : rv.source === 'ai' ? 'AI 면접관 의견' : (status === 'failed' ? '점수 기준 의견 (AI 의견을 받지 못했어요)' : '점수 기준 의견');
+    src.textContent = status === 'loading' ? 'AI 면접관이 종합 의견을 쓰는 중…' : rv.source === 'ai' ? 'AI 면접관 의견' : (status === 'failed' ? '채점 결과로 쓴 의견 (AI 의견을 받지 못했어요)' : '채점 결과로 쓴 의견');
     document.getElementById('sr-slots').innerHTML = (rv.slots || []).map(s=>s.score == null
       ? `<div class="sr-slot none"><small>${escapeHtml(s.name)}</small><b>답변 없음</b><i><em style="width:0"></em></i></div>`
       : `<div class="sr-slot${s.score < 60 ? ' low' : ''}"><small title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</small><b>${s.score}</b><i><em style="width:${Math.max(4, Math.min(100, s.score))}%"></em></i></div>`).join('');
