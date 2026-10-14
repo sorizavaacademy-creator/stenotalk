@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14g';
+var APP_VERSION = '2026-10-14h';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -185,7 +185,7 @@ var APP_VERSION = '2026-10-14g';
   .signup-head .brand-logo{width:40px;height:40px;}
   .signup-head h2{margin:0;font-size:17px;}
   .signup-head p{margin:3px 0 0;font-size:12.5px;color:var(--slate-400);line-height:1.5;}
-  .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .signup-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:12px;row-gap:0;}
   @media(max-width:520px){.signup-grid{grid-template-columns:1fr;}}
   .signup-field label{display:block;font-size:12.5px;font-weight:600;color:var(--slate-600);margin-bottom:6px;}
   .signup-field input{width:100%;padding:11px 12px;border:1px solid var(--slate-300);border-radius:var(--radius-s);background:#fff;color:var(--navy-900);font-family:var(--font-ui);font-size:13.5px;transition:border-color .15s, box-shadow .15s;}
@@ -197,9 +197,12 @@ var APP_VERSION = '2026-10-14g';
   .field-error{font-size:11.5px;color:var(--danger);margin-top:5px;min-height:0;}
   .field-error:empty{display:none;}
   .pw-rules{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
-  .signup-pw-eye{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--slate-500,#64748b);cursor:pointer;min-height:42px;}
-  .signup-pw-eye input{width:16px;height:16px;margin:0;}
-  @media(max-width:520px){.signup-pw-eye-wrap>label:first-child{display:none;}.signup-pw-eye{min-height:0;}}
+  .su-pw{position:relative;}
+  .su-pw input{padding-right:42px !important;}
+  .su-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center;color:#8B98AD;cursor:pointer;padding:0;}
+  .su-eye:hover{background:#EEF2F8;color:#3F4B63;} .su-eye.on{color:#1f2937;}
+  .su-match{font-size:11.5px;margin-top:6px;min-height:18px;line-height:18px;color:var(--danger);}
+  .su-match.ok{color:#2f7a4a;} .su-match.ok:before{content:'✓ ';}
   .pw-rules span{font-size:10.5px;padding:2px 6px;white-space:nowrap;border-radius:999px;background:var(--slate-100);color:var(--slate-400);}
   .pw-rules span:before{content:'○';margin-right:2px;}
   .pw-rules span.ok{background:var(--teal-100);color:var(--teal-600);}
@@ -208,7 +211,7 @@ var APP_VERSION = '2026-10-14g';
   .signup-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 16px;}
   .signup-step{background:var(--paper);border:1px solid var(--slate-100);border-radius:var(--radius-s);padding:9px 10px;font-size:11.5px;color:var(--slate-600);line-height:1.45;}
   .signup-step b{display:block;color:var(--blue-600);font-family:var(--font-mono);font-size:10.5px;margin-bottom:3px;}
-  @media(max-width:520px){.signup-steps{grid-template-columns:1fr;}}
+  @media(max-width:520px){.signup-steps{grid-template-columns:1fr;gap:6px;margin-bottom:14px;} .signup-step{display:flex;align-items:baseline;gap:10px;padding:8px 12px;} .signup-step b{display:inline;margin:0;flex:none;} .signup-head{align-items:flex-start;} .signup-head .brand-logo{width:36px;height:36px;flex:none;margin-top:2px;}}
   .signup-login-link{text-align:center;font-size:12.5px;color:var(--slate-400);margin-top:4px;}
   .signup-login-link a{color:var(--blue-600);font-weight:600;text-decoration:none;cursor:pointer;}
 
@@ -3714,6 +3717,75 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   .hq-rank{font-size:18px;}
   .hq-body{padding:12px;}
 }
+
+  /* ===== 2026-10-14h 디테일 점검 ===== */
+  /* 라이브 면접: 휴대폰 전용 [?][종료] 버튼이 PC에서 기본 버튼 모양으로 보이던 문제 */
+  @media(min-width:761px){ #screen-interview.lv3 .lv3-mtop{display:none !important;} }
+  /* 결과 리포트: 위쪽 제목 상자 전체 폭 · 저장 안내 왼쪽 정렬 · 통계 4칸을 등급·그래프 아래로 */
+  #screen-result.v3 .result-hero{grid-template-columns:1fr !important;}
+  #screen-result.v3 .save-banner{margin:14px 0 0;justify-content:flex-start;width:100%;max-width:none;}
+  #screen-result.v3 .r4-top .result-stats{margin:0 !important;}
+  @media(min-width:1001px){ #screen-result.v3 .r4-top{grid-template-rows:auto 1fr;} #screen-result.v3 .r4-top .result-focus{grid-column:3;grid-row:1 / span 2;} #screen-result.v3 .r4-top .result-stats{grid-column:1 / 3;grid-row:2;align-self:start;} }
+  @media(max-width:1000px){ #screen-result.v3 .r4-top .result-stats{grid-column:1 / -1;} }
+  /* 홈 '나의 기록' 카드: 막대그래프가 남는 높이를 채워 가운데 빈 공간이 생기지 않게 */
+  @media(min-width:901px){ #d3-stats .us-chart{flex:1 1 auto;height:auto;min-height:84px;max-height:230px;} }
+  /* 떠 있는 버튼(사용 안내·의견 보내기)이 페이지 맨 아래 내용을 가리지 않게 */
+  #screen-dashboard .d3-page{padding-bottom:112px !important;} #screen-result.v3 .result-wrap{padding-bottom:112px !important;}
+  /* 마이크 확인 문구: 빨간 점이 여러 줄 문구의 첫 줄에 맞게 */
+  .mic-check{align-items:flex-start;} .mic-check-dot{margin-top:5px;}
+  body.v3-ui #modal-setup .mic-check .mic-help-link{align-self:flex-start;}
+  /* 주요 버튼 포커스 테두리: 브라우저 기본 파란 선 대신 서비스 색 */
+  .btn:focus-visible,.rh3-start:focus-visible,button.chip:focus-visible{outline:2px solid rgba(232,83,42,.55) !important;outline-offset:2px;}
+  .btn:focus:not(:focus-visible){outline:none;}
+  /* 답변 칸 오른쪽 아래 크기 조절 손잡이 숨김 */
+  textarea#steno-input{resize:none !important;}
+  /* 마이크 도움말: 한글 단계 이름은 일반 글꼴로 */
+  #modal-mic-help .kbd{font-family:inherit;font-size:12.5px;font-weight:600;word-break:keep-all;}
+  #modal-mic-help .kbd.url{font-family:var(--font-mono);font-weight:500;word-break:break-all;}
+  #modal-mic-help.mobile .pc-only{display:none !important;}
+  .mb-more{margin:6px 0 18px !important;}
+  .mb-pop .mb-ic{display:inline-flex;width:16px;height:16px;vertical-align:-3px;margin-right:6px;color:#66666c;} .mb-pop .mb-ic svg{width:16px;height:16px;}
+  /* 실전 세트 7단계 칩: 일반 면접일 때 확실히 숨김 */
+  .realset-steps[hidden]{display:none !important;}
+  /* 라이브 카메라 꺼짐 칸: 빈 회색 대신 아이콘 + 어두운 바탕 (AI 면접관 칸과 같은 톤) */
+  #screen-interview.lv3 #cam-preview-label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#1f2633 !important;color:#c9cfdb !important;font-size:13.5px;font-weight:600;}
+  #screen-interview.lv3 #cam-preview-label:before{content:'';width:34px;height:34px;opacity:.85;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='13' height='12' rx='2.5'/%3E%3Cpath d='M16 10l5-3v10l-5-3zM3 3l18 18'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='13' height='12' rx='2.5'/%3E%3Cpath d='M16 10l5-3v10l-5-3zM3 3l18 18'/%3E%3C/svg%3E") center/contain no-repeat;}
+  /* 휴대폰 라이브: AI 면접관 칸 모서리를 내 화면 칸과 같게, 진행 막대(남은 시간 상자에 가려짐)는 숨김 — 위 칩에 '기본 질문 i / N'이 보임 */
+  @media(max-width:760px){ #screen-interview.lv3 .live-interviewer{border-bottom:1px solid var(--c-line) !important;border-radius:12px !important;overflow:hidden;} #screen-interview.lv3 .lv3-segs{display:none !important;} }
+  /* 관리자 14일 막대: 날짜 글자와 막대 사이 여백 */
+  .ov-spark-bars{padding-bottom:38px !important;} .ov-spark-bars .bar em{bottom:-34px !important;}
+  #screen-interview.lv3 .live-help{position:static !important;transform:none !important;}
+  /* 한국어 문장이 낱말 중간에서 줄바꿈되지 않게 (긴 주소·영문은 필요하면 끊김) */
+  body.v3-ui, .modal-box, #toast-container{word-break:keep-all;overflow-wrap:break-word;}
+  .ov-spark-kpi span.same{color:var(--c-ink-3,#66738A);font-weight:600;}
+  /* 새 비밀번호 창: 회원가입·로그인과 같은 눈 아이콘 */
+  #modal-newpw .np-eye{width:34px;height:34px;padding:0;display:grid;place-items:center;right:4px;} #modal-newpw .np-eye.on{color:var(--c-ink,#1c1c1e);}
+  #modal-newpw .np-input input{padding-right:42px;}
+
+  /* --- 2026-10-14h 디테일 2차 --- */
+  /* 결과: 전달력 카드가 없으면 문항별 평가를 전체 폭으로 · 휴대폰에서 오른쪽 여백 넘침 방지 · 아래 버튼 세로로 */
+  #screen-result.v3 .r4-mid > .r4-delivery[hidden] + .qa-result-panel{grid-column:1 / -1;}
+  #screen-result.v3 .r4-mid .panel{min-width:0;box-sizing:border-box;}
+  #screen-result [id], #screen-result .panel{scroll-margin-top:84px;}
+  @media(max-width:640px){ #screen-result .result-actions{flex-direction:column;} #screen-result .result-actions .btn{width:100%;} }
+  /* 홈 기록 카드: 휴대폰에서 막대가 폭을 채우게, PC는 남는 높이를 더 채움 */
+  @media(min-width:901px){ #d3-stats .us-chart{max-height:300px;} }
+  @media(max-width:900px){ #d3-stats .us-bar{max-width:none;} }
+  /* 카메라 꺼짐 칸: 아래 글자를 흰색으로, 휴대폰은 아이콘만 */
+  #screen-interview.lv3 .cam-preview.off, #screen-interview.lv3 .cam-preview.nocam{background:#1f2633 !important;}
+  #screen-interview.lv3 .cam-preview.off .lv3-cam-head, #screen-interview.lv3 .cam-preview.nocam .lv3-cam-head{color:#fff !important;}
+  #screen-interview.lv3 .cam-preview.off .lv3-cam-head b{background:rgba(255,255,255,.14) !important;color:#e5e8ee !important;border:0 !important;}
+  @media(max-width:760px){ #screen-interview.lv3 #cam-preview-label{font-size:0 !important;gap:0 !important;padding-bottom:28px;} }
+  /* 휴대폰 라이브: '면접관이 입장했습니다' 한 줄로, 위 [?][종료]는 오른쪽 끝에 고정 */
+  @media(max-width:760px){ .li-connect.joined b{font-size:12.5px;padding:6px 12px;white-space:nowrap;} #screen-interview.lv3 .rh3-bar-title{width:100%;} #screen-interview.lv3 .rh3-setbox{margin-bottom:12px;} }
+  /* 면접 준비 창 아래 버튼 글자 가운데 · 시작 전 점검 닫기 버튼을 다른 창과 같은 모양으로 */
+  body.v3-ui #modal-setup .setup-foot-btns .btn{justify-content:center;}
+  #modal-precheck .setup-close{width:40px;height:40px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:8px;background:#fff;color:var(--c-ink-2,#45454a);display:grid;place-items:center;cursor:pointer;flex:none;padding:0;box-shadow:none;}
+  #modal-precheck .setup-close:hover{background:var(--c-surface,#f6f5f3);}
+
+  /* 결과 문항 줄(휴대폰): 칩·점수는 질문 글 아래 왼쪽부터, 펼치기 화살표는 오른쪽 끝 · 크기 고정 */
+  @media(max-width:860px){ #screen-result .q-head-right{justify-content:flex-start !important;flex-wrap:wrap;row-gap:6px;padding-left:44px;box-sizing:border-box;} #screen-result .q-head{position:relative;padding-right:40px !important;} #screen-result .q-head-right .q-chev{flex:none;position:absolute;right:14px;top:50%;transform:translateY(-50%);} #screen-result .q-result-group.open .q-chev{transform:translateY(-50%) rotate(180deg);} }
+  .q-gs{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex:none;}
 </style>
 </head>
 <body>
@@ -3932,7 +4004,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
             <div class="lg-alert" id="login-alert" role="alert" style="display:none;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div><p class="t" id="login-alert-t"></p><p class="d" id="login-alert-d"></p></div></div>
             <div class="lg-field">
               <label for="login-id">이메일</label>
-              <div class="lg-input"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.4A8 8 0 1 1 21 12z"/><path d="M8 11h8M8 14h5"/></svg><input id="login-id" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="name@example.com" value="" oninput="hideLoginAlert()"></div>
+              <div class="lg-input"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><input id="login-id" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="name@example.com" value="" oninput="hideLoginAlert()"></div>
             </div>
             <div class="lg-field">
               <label for="login-pw">비밀번호</label>
@@ -4750,7 +4822,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
           <span id="cam-preview-label">카메라 연결 대기 중</span>
           <span class="rh3-cam-title rh3-only">카메라 · 장치</span>
           <div class="lv3-cam-head lv3-only"><span>내 화면</span><b id="lv3-cam-state">켜짐</b><button type="button" class="lv3-fold" id="lv3-fold" onclick="toggleLv3Fold()">접기</button></div>
-          <p class="lv3-cam-foot lv3-only">미리보기만 보여줘요. 이 화면은 녹화하지 않아요.</p>
+          <p class="lv3-cam-foot lv3-only">답하는 모습은 이 기기에서만 녹화돼 결과 화면에서 다시 볼 수 있어요. 서버로 보내지 않아요.</p>
           <!-- 리허설 전용: 카메라가 꺼져 있을 때의 안내 -->
           <div class="cam-off-box rh-only" id="cam-off-box">
             <div class="cam-off-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10l5-3v10l-5-3"/><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M4 4l16 16"/></svg></div>
@@ -4836,7 +4908,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
             <span class="type-status" id="type-status"><span class="dot"></span><span id="type-status-label">대기 중</span></span>
           </div>
           <div class="type-area">
-            <textarea id="steno-input" placeholder="마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다." oninput="updateCharCount()"></textarea>
+            <textarea id="steno-input" placeholder="질문이 끝나면 자동으로 듣기 시작해요. 말하면 이곳에 글자로 표시돼요." oninput="updateCharCount()"></textarea>
             <div class="rh-answer-empty rh-only" id="rh-answer-empty">
               <span class="rh-answer-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
               <span id="rh-answer-empty-text">마이크 버튼을 누르고 답변하면<br>음성이 자동으로 텍스트로 변환됩니다.</span>
@@ -4915,19 +4987,19 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <div class="result-hero-grade r4-grade">
         <div><span class="rhg-label">종합 등급</span>
         <div class="rhg-grade" id="rs-grade">–</div>
-        <div class="rhg-score"><b id="rs-content">–</b><span>종합 점수 · 6축 평가</span></div></div>
+        <div class="rhg-score"><b id="rs-content">–</b><span>종합 점수 · 100점 만점</span></div></div>
         <div class="r4-grade-foot" id="r4-grade-foot"></div>
       </div>
       <div class="panel r4-radar" id="r4-radar"></div>
       <div class="panel result-focus" id="result-focus" hidden></div>
+      <div class="result-stats">
+        <div class="rstat"><div class="lbl">총 소요 시간</div><div class="num" id="rs-time">14:32</div></div>
+        <div class="rstat"><div class="lbl">완료한 질문 수</div><div class="num" id="rs-count">5문항</div></div>
+        <div class="rstat"><div class="lbl">전달력 (속도·군말·시간)</div><div class="num" id="rs-pronun">–</div></div>
+        <div class="rstat"><div class="lbl">난이도 · 평가 방식</div><div class="num" id="rs-mode">–</div></div>
+      </div>
     </div>
 
-    <div class="result-stats">
-      <div class="rstat"><div class="lbl">총 소요 시간</div><div class="num" id="rs-time">14:32</div></div>
-      <div class="rstat"><div class="lbl">완료한 질문 수</div><div class="num" id="rs-count">5문항</div></div>
-      <div class="rstat"><div class="lbl">전달력 (속도·군말·시간)</div><div class="num" id="rs-pronun">–</div></div>
-      <div class="rstat"><div class="lbl">난이도 · 평가 방식</div><div class="num" id="rs-mode">–</div></div>
-    </div>
 
     <p class="result-print-foot">StenoTalk AI · 한국AI속기사협회 AI 모의면접 리포트 — 질문 유형별 면접 기준과 모범답안 요점으로 채점한 참고 결과예요. 실제 면접에서는 내 경험과 생각을 진솔하게 전하는 것이 가장 중요해요.</p>
     <div class="panel set-review-panel" id="set-review-panel" hidden>
@@ -5021,8 +5093,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <div class="opt-grid">
           <div id="setup-realset-block" class="opt-pair" style="display:none;">
             <div class="opt" style="grid-column:1/-1;">
-              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 다 말씀하신 뒤 <b>답변 완료</b>를 누르면 다음 질문으로 넘어가요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
-              <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>국회 실전 세트 (15분)</button></div>
+              <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub" id="realset-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 다 말씀하신 뒤 <b>답변 완료</b>를 누르면 다음 질문으로 넘어가요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
+              <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>실전 세트 (15분)</button></div>
               <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li>국회 지식</li><li>국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
             </div>
           </div>
@@ -5043,7 +5115,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
               <div class="chip-row" id="chip-pressure"><button type="button" class="chip" data-val="soft" onclick="selectChip(this,'pressure')"><i class="ck">✓</i>부드럽게</button><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'pressure')"><i class="ck">✓</i>보통</button><button type="button" class="chip" data-val="hard" onclick="selectChip(this,'pressure')"><i class="ck">✓</i>압박</button></div>
             </div>
             <div class="opt">
-              <div class="opt-lbl">꼬리질문</div><div class="opt-sub">면접 전체에서 추가되는 꼬리질문의 최대 개수예요. 답변에 따라 실제 개수는 달라질 수 있어요.</div>
+              <div class="opt-lbl">꼬리질문</div><div class="opt-sub">면접 전체에서 추가되는 꼬리질문의 최대 개수예요.<span hidden>어요.</div>
               <div class="chip-row" id="chip-followups"><button type="button" class="chip" data-val="0" onclick="selectChip(this,'followups')"><i class="ck">✓</i>없음</button><button type="button" class="chip sel" data-val="3" onclick="selectChip(this,'followups')"><i class="ck">✓</i>최대 3개</button><button type="button" class="chip" data-val="5" onclick="selectChip(this,'followups')"><i class="ck">✓</i>최대 5개</button></div>
             </div>
           </div>
@@ -5174,7 +5246,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-body">
       <div class="signup-field">
         <label for="np-pw">새 비밀번호</label>
-        <div class="np-input"><input id="np-pw" type="password" placeholder="영문+숫자 8자 이상" autocomplete="new-password" oninput="validateNewPw()"><button type="button" class="np-eye" onclick="toggleNewPwVisible()" id="np-eye">보기</button></div>
+        <div class="np-input"><input id="np-pw" type="password" placeholder="영문+숫자 8자 이상" autocomplete="new-password" oninput="validateNewPw()"><button type="button" class="np-eye" onclick="toggleNewPwVisible()" id="np-eye" aria-label="비밀번호 표시"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         <div class="pw-rules" id="np-rules"><span data-rule="len">8자 이상</span><span data-rule="alpha">영문 포함</span><span data-rule="digit">숫자 포함</span><span data-rule="diff">임시 비밀번호와 다름</span></div>
       </div>
       <div class="signup-field" style="margin-bottom:0;">
@@ -5345,7 +5417,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   <div class="modal-box">
     <div class="modal-head">
       <h2 id="perm-modal-title">권한 관리</h2>
-      <p id="perm-modal-desc">서류 합격이 확인된 기관에만 체크해 주세요. 체크되지 않은 기관은 지원자에게 잠금 상태로 표시됩니다.</p>
+      <p id="perm-modal-desc">서류 합격이 확인된 기관에만 체크해 주세요. 체크되지 않은 기관은 지원자에게 잠금 상태로 보여요.</p>
     </div>
     <div class="modal-body">
       <div class="bulk-preset" id="perm-bulk-preset" style="display:none;">
@@ -5391,7 +5463,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <div class="diag-box" id="mic-diag">
         <div class="diag-head">
           <b>자동 진단</b>
-          <button class="btn btn-sm" id="mic-diag-btn" onclick="runMicDiagnostic()">진단 실행</button>
+          <button class="btn btn-sm btn-solid" id="mic-diag-btn" onclick="runMicDiagnostic()">진단 실행</button>
           <button class="btn btn-sm btn-outline" id="mic-diag-copy" onclick="copyMicDiagnostic()" style="display:none;">결과 복사</button>
         </div>
         <p class="help-sub" id="mic-diag-hint">버튼을 누르면 브라우저·권한·마이크 장치·음성 인식을 한 번에 검사해서 무엇이 문제인지 알려드려요. (권한을 물어보면 "허용")</p>
@@ -5402,17 +5474,17 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <b>1. 브라우저에서 마이크 허용하기</b>
         <p>주소창 왼쪽의 <span class="kbd">자물쇠</span> 또는 <span class="kbd">사이트 정보</span> 아이콘 클릭 → <b>마이크</b>를 <b>허용</b>으로 변경 → 새로고침(F5).</p>
         <p class="help-sub">한 번 "차단"을 누르면 브라우저가 다시 묻지 않아요. 이 경우 반드시 여기서 직접 허용으로 바꿔야 해요.</p>
-        <p><b>HTML 파일을 더블클릭해서 연 경우(주소가 file:// 로 시작):</b> 브라우저가 허용을 오래 기억하지 않아 매번 물어볼 수 있고, "허용"을 눌러도 <span class="kbd">chrome://settings/content/microphone</span>(엣지는 <span class="kbd">edge://…</span>)의 <b>"허용되지 않은 사이트"</b> 목록에 file:// 항목이 남아 있으면 계속 막혀요 → 그 항목을 삭제(휴지통)하고 새로고침. 크롬은 파일로 연 페이지에서 <b>음성 인식만 따로 막는</b> 경우도 있어서, 그때는 같은 파일을 <b>엣지</b>로 열거나 인터넷 주소로 배포된 버전을 쓰면 돼요.</p>
+        <p class="file-only" hidden><b>HTML 파일을 더블클릭해서 연 경우(주소가 file:// 로 시작):</b> 브라우저가 허용을 오래 기억하지 않아 매번 물어볼 수 있고, "허용"을 눌러도 <span class="kbd url">chrome://settings/content/microphone</span>(엣지는 <span class="kbd url">edge://settings/content/microphone</span>)의 <b>"허용되지 않은 사이트"</b> 목록에 file:// 항목이 남아 있으면 계속 막혀요 → 그 항목을 삭제(휴지통)하고 새로고침. 크롬은 파일로 연 페이지에서 <b>음성 인식만 따로 막는</b> 경우도 있어서, 그때는 같은 파일을 <b>엣지</b>로 열거나 인터넷 주소로 배포된 버전을 쓰면 돼요.</p>
       </div>
-      <div class="help-step">
+      <div class="help-step pc-only">
         <b>2. 윈도우에서 마이크 허용하기 <span class="help-tag">크롬·엣지 둘 다 안 될 때</span></b>
         <p>윈도우 <span class="kbd">설정</span> → <span class="kbd">개인 정보 및 보안</span> → <span class="kbd">마이크</span> → <b>"마이크 액세스"</b>와 <b>"데스크톱 앱에서 마이크에 액세스하도록 허용"</b>을 모두 켬 → 브라우저를 완전히 닫았다가 다시 열기.</p>
         <p class="help-sub">회사 PC는 보안 프로그램이 마이크를 막는 경우도 있어요.</p>
       </div>
-      <div class="help-step">
+      <div class="help-step pc-only">
         <b>3. 브라우저가 쓰는 마이크 장치 바꾸기 <span class="help-tag">한쪽 브라우저만 안 될 때</span></b>
-        <p><b>크롬:</b> 주소창에 <span class="kbd">chrome://settings/content/microphone</span> 입력 → 맨 위 목록에서 실제로 쓰는 마이크(헤드셋, USB 마이크 등) 선택.</p>
-        <p><b>엣지:</b> 주소창에 <span class="kbd">edge://settings/content/microphone</span> 입력 → 같은 방법으로 선택.</p>
+        <p><b>크롬:</b> 주소창에 <span class="kbd url">chrome://settings/content/microphone</span> 입력 → 맨 위 목록에서 실제로 쓰는 마이크(헤드셋, USB 마이크 등) 선택.</p>
+        <p><b>엣지:</b> 주소창에 <span class="kbd url">edge://settings/content/microphone</span> 입력 → 같은 방법으로 선택.</p>
         <p class="help-sub">크롬과 엣지는 마이크 장치를 따로 기억해서, 한쪽은 노트북 내장 마이크·다른 쪽은 헤드셋으로 잡혀 있는 경우가 많아요. 환경 점검 창에 표시되는 "사용 중인 마이크" 이름을 확인해 보세요.</p>
       </div>
       <div class="help-step">
@@ -5425,8 +5497,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeMicHelp(); recheckMic();">다시 확인하기</button>
-      <button class="btn btn-solid" onclick="closeMicHelp()">닫기</button>
+      <button class="btn btn-outline" onclick="closeMicHelp()">닫기</button>
+      <button class="btn btn-solid" onclick="closeMicHelp(); recheckMic();">다시 확인하기</button>
     </div>
   </div>
 </div>
@@ -5468,7 +5540,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <div id="mp-cv-status" class="resume-status" style="display:none;"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-solid" onclick="closeMyPage()">닫기</button>
+      <button class="btn btn-outline" onclick="closeMyPage()">닫기</button>
     </div>
   </div>
 </div>
@@ -5554,7 +5626,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-body modal-scroll" id="record-modal-body"></div>
     <div class="modal-foot">
       <button class="btn btn-outline" id="record-back-btn" onclick="recordGoBack()" style="display:none;">목록으로</button>
-      <button class="btn btn-solid" onclick="closeRecordModal()">닫기</button>
+      <button class="btn btn-outline" onclick="closeRecordModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -5589,30 +5661,24 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       </div>
       <div class="signup-grid">
         <div class="signup-field">
-          <label for="signup-phone">휴대폰 번호 <span class="req">*</span></label>
-          <input id="signup-phone" type="tel" inputmode="numeric" placeholder="010-1234-5678" autocomplete="tel" maxlength="13" oninput="this.value=formatPhone(this.value); validateSignupField('phone')">
-          <div class="field-error" id="signup-phone-err"></div>
-        </div>
-        <div class="signup-field">
           <label for="signup-pw">비밀번호 <span class="req">*</span></label>
-          <input id="signup-pw" type="password" placeholder="영문+숫자 6자 이상" autocomplete="new-password" oninput="validateSignupField('pw')">
+          <div class="su-pw"><input id="signup-pw" type="password" placeholder="영문+숫자 8자 이상" autocomplete="new-password" oninput="validateSignupField('pw')"><button type="button" class="su-eye" onclick="togglePw('signup-pw', this)" aria-label="비밀번호 표시" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <div class="pw-rules" id="signup-pw-rules">
-            <span data-rule="len">6자 이상</span><span data-rule="alpha">영문 포함</span><span data-rule="digit">숫자 포함</span>
+            <span data-rule="len">8자 이상</span><span data-rule="alpha">영문 포함</span><span data-rule="digit">숫자 포함</span>
           </div>
         </div>
-      </div>
-      <div class="signup-grid">
         <div class="signup-field">
           <label for="signup-pw2">비밀번호 확인 <span class="req">*</span></label>
-          <input id="signup-pw2" type="password" placeholder="같은 비밀번호를 한 번 더" autocomplete="new-password" oninput="validateSignupField('pw2')">
-          <div class="field-error" id="signup-pw2-err"></div>
-        </div>
-        <div class="signup-field signup-pw-eye-wrap">
-          <label>&nbsp;</label>
-          <label class="signup-pw-eye"><input type="checkbox" onchange="toggleSignupPwVisible(this.checked)"> 비밀번호 보이기</label>
+          <div class="su-pw"><input id="signup-pw2" type="password" placeholder="한 번 더 입력" autocomplete="new-password" oninput="validateSignupField('pw2')"><button type="button" class="su-eye" onclick="togglePw('signup-pw2', this)" aria-label="비밀번호 표시" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+          <div class="su-match" id="signup-pw2-err" aria-live="polite"></div>
         </div>
       </div>
-      <div class="signup-hint" style="margin:-4px 0 12px;">휴대폰 번호는 관리자가 면접 일정 안내 등 연락할 때만 사용해요.</div>
+      <div class="signup-field">
+        <label for="signup-phone">휴대폰 번호 <span class="req">*</span></label>
+        <input id="signup-phone" type="tel" inputmode="numeric" placeholder="010-1234-5678" autocomplete="tel" maxlength="13" oninput="this.value=formatPhone(this.value); validateSignupField('phone')">
+        <div class="field-error" id="signup-phone-err"></div>
+        <div class="signup-hint">관리자가 면접 일정 안내 등 연락할 때만 사용해요.</div>
+      </div>
       <div class="signup-field" style="margin-bottom:0;">
         <label for="signup-note">지원 기관 <span style="font-weight:400;color:var(--slate-400);">(선택)</span></label>
         <input id="signup-note" type="text" placeholder="예: ○○광역시의회 서류합격, 10월 면접 예정" onkeydown="if(event.key==='Enter') submitSignup()">
@@ -5641,11 +5707,13 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-body privacy-body">
       <p>한국AI속기사협회 StenoTalk AI는 모의면접 연습 서비스 제공을 위해 아래 정보를 수집·이용합니다.</p>
       <table class="privacy-table">
-        <tr><th>수집 항목</th><td>이름, 이메일, 휴대폰 번호, 지원 기관(선택), 자기소개서·이력서 파일 내용(선택), 면접 답변 원문·점수·피드백, 연습 일시</td></tr>
+        <tr><th>수집 항목</th><td>이름, 이메일, 휴대폰 번호, 지원 기관(선택), 자기소개서·이력서 파일 내용(선택), 면접 답변 원문·점수·피드백, 연습 일시, 표정·시선 숫자 요약(카메라 사용 시)</td></tr>
         <tr><th>이용 목적</th><td>회원 식별과 로그인, 면접 연습 기록 저장·결과 제공, 관리자의 연습 현황 확인과 면접 일정 안내 연락, 자기소개서·이력서 기반 맞춤 질문과 AI 꼬리질문 생성</td></tr>
+        <tr><th>보유 기간</th><td>관리자가 부여한 이용 기간이 끝나면 파기해요. 이용 기간 중이라도 본인이 삭제를 요청하면 지체 없이 파기해요.</td></tr>
         <tr><th>동의 거부</th><td>동의하지 않을 권리가 있으나, 필수 항목에 동의하지 않으면 서비스 이용(회원가입)이 불가합니다.</td></tr>
       </table>
-      <p class="privacy-note">카메라 화면은 본인 확인용 미리보기로만 사용되며 저장·전송되지 않습니다.</p>
+      <p class="privacy-note">카메라 영상과 답변 녹음은 서버로 보내거나 저장하지 않아요. "내 모습 다시 보기"·"내 답변 다시 듣기"용 녹화는 이 기기 브라우저에만 잠시 남고 화면을 닫으면 사라져요. 카메라를 켠 경우 표정·시선은 숫자 요약만 면접 기록에 저장돼요.</p>
+      <p class="privacy-note">관리자가 AI 기능을 켠 경우, 꼬리질문·채점·자기소개 대본을 만들기 위해 답변 글과 서류 요약이 AI 서비스(OpenAI)로 전송돼요. 이름·연락처는 보내지 않아요.</p>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closePrivacyNotice()">닫기</button>
@@ -8236,13 +8304,31 @@ function friendlyErr(e){
   const admin = !!(typeof state!=='undefined' && state.currentUser && state.currentUser.isAdmin);
   return admin && raw ? t + ' (' + raw.slice(0, 80) + ')' : t;
 }
+/** 창(모달)이 열리거나 닫히면, 그 전에 떠 있던 안내(0.8초 넘은 것)는 정리 — 새 창의 버튼·내용을 가리지 않게 */
+function clearOldToasts(ms){ try{ const now = Date.now(); document.querySelectorAll('#toast-container .toast').forEach(t=>{ if(now - (+t.dataset.t||0) > (ms||800) && !t.classList.contains('out')){ t.classList.add('out'); setTimeout(()=>t.remove(), 260); } }); }catch(_){} }
+try{ new MutationObserver(muts=>{ if(muts.some(m=>m.target.classList && m.target.classList.contains('modal-overlay') && (m.oldValue||'').includes('active') !== m.target.classList.contains('active'))) clearOldToasts(); })
+  .observe(document.documentElement, { subtree:true, attributes:true, attributeFilter:['class'], attributeOldValue:true }); }catch(_){}
+/** 처음 한 번만 보여 주는 안내 (같은 기기에서 두 번째부터는 화면 안 글로 충분) */
+function tipOnce(key, msg){ try{ const k = 'steno.tip.' + key; if(localStorage.getItem(k)) return; localStorage.setItem(k, '1'); }catch(_){} showToast(msg, 'info'); }
+/** 받침에 맞는 조사 붙이기: josa('내용','을/를') → '내용을', josa('구체성','이/가') → '구체성이' */
+function josa(word, pair){
+  const w = String(word||''); const [a, b] = String(pair||'을/를').split('/'); const ch = w.replace(/["'“”‘’」』)\]\s]+$/, '').slice(-1); const code = ch.charCodeAt(0);
+  let jong = null;
+  if(code >= 0xAC00 && code <= 0xD7A3) jong = (code - 0xAC00) % 28;
+  else if(/[0-9]/.test(ch)) jong = '0136781'.includes(ch) ? 1 : 0;
+  if(jong === null) return w + a + '(' + b + ')';
+  if(a === '으로') return w + ((jong === 0 || jong === 8) ? '로' : '으로');
+  return w + (jong ? a : b);
+}
+/** 저장된 소요 시간('MM:SS')을 읽기 쉬운 말로: '14:20' → '14분 20초', '00:45' → '45초' */
+function durText(v){ const m = /^(\d+):(\d{2})$/.exec(String(v||'').trim()); if(!m) return String(v||''); const mm = +m[1], ss = +m[2]; return mm ? (ss ? `${mm}분 ${ss}초` : `${mm}분`) : `${ss}초`; }
 function showToast(msg, kind){
   if(/실패|오류/.test(msg) && !/보내기 실패|저장 실패|삭제 실패/.test(msg) && typeof Feedback !== 'undefined' && !(state.currentUser && state.currentUser.isAdmin)) Feedback.auto('기능 실패', msg);
   const c=document.getElementById('toast-container');
   if(!c) return;
   // 같은 문구가 이미 떠 있으면 다시 띄우지 않고, 한 번에 최대 3개까지만 보여 줌
   for(const old of c.querySelectorAll('.toast')){ const m0 = old.querySelector('.toast-msg'); if(m0 && m0.textContent === msg && !old.classList.contains('out')) return; }
-  { const live = [...c.querySelectorAll('.toast:not(.out)')]; while(live.length >= 3){ const o = live.shift(); o.classList.add('out'); setTimeout(()=>o.remove(), 260); } }
+  { const live = [...c.querySelectorAll('.toast:not(.out)')]; while(live.length >= 2){ const o = live.shift(); o.classList.add('out'); setTimeout(()=>o.remove(), 260); } }
   const t=document.createElement('div');
   const k = kind || (/실패|오류|못했|않아요|없어요|차단|만료|종료되어|맞지 않아요|불가/.test(msg) ? 'warn' : /완료|저장되었|성공|부여|열렸|되었어요|했어요/.test(msg) ? 'ok' : 'info');
   t.className='toast '+k;
@@ -8316,7 +8402,7 @@ function authErrorMessage(err, ctx){
   if(/already (been )?registered|already exists|user_already_exists|email_exists/.test(t)) return '이미 가입된 이메일이에요. 로그인해 주세요.';
   if(/invalid login credentials|invalid_credentials|invalid grant/.test(t)) return '이메일 또는 비밀번호가 맞지 않아요. 다시 확인해 주세요.';
   if(/email not confirmed|email_not_confirmed/.test(t)) return '이메일 확인이 아직 완료되지 않은 계정이에요. 관리자에게 문의해 주세요.';
-  if(/password should|weak_password|password is too/.test(t)) return '비밀번호는 영문과 숫자를 모두 넣어 6자 이상으로 만들어 주세요.';
+  if(/password should|weak_password|password is too/.test(t)) return '비밀번호는 영문과 숫자를 모두 넣어 8자 이상으로 만들어 주세요.';
   if(/unable to validate email|invalid email|email address .*invalid|validation_failed/.test(t)) return '이메일 주소 형식이 올바르지 않아요. 예: name@example.com';
   if(/rate limit|too many requests|over_.*_rate_limit|429/.test(t)) return '요청이 너무 많아 잠시 막혔어요. 1분 뒤에 다시 시도해 주세요.';
   if(/signups not allowed|signup_disabled/.test(t)) return '지금은 회원가입이 닫혀 있어요. 관리자에게 문의해 주세요.';
@@ -8345,7 +8431,7 @@ function maybeForceNewPassword(profile, typedPw){
   _npTempPw = typedPw || '';
   const m = document.getElementById('modal-newpw'); if(!m) return false;
   ['np-pw','np-pw2'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.type='password'; } });
-  { const e=document.getElementById('np-eye'); if(e) e.textContent='보기'; }
+  { const e=document.getElementById('np-eye'); if(e){ e.classList.remove('on'); e.setAttribute('aria-label','비밀번호 표시'); } }
   validateNewPw();
   m.classList.add('active');
   setTimeout(()=>{ const el=document.getElementById('np-pw'); if(el) el.focus(); }, 60);
@@ -8368,7 +8454,7 @@ function validateNewPw(){
 function toggleNewPwVisible(){
   const show = document.getElementById('np-pw').type === 'password';
   ['np-pw','np-pw2'].forEach(id=>{ document.getElementById(id).type = show ? 'text' : 'password'; });
-  document.getElementById('np-eye').textContent = show ? '숨기기' : '보기';
+  { const e = document.getElementById('np-eye'); e.classList.toggle('on', show); e.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 표시'); }
 }
 async function submitNewPw(){
   if(!validateNewPw()) return;
@@ -8446,10 +8532,11 @@ function browserInfo(){
   const speech = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   let level = 'ok', text = '';
   if(inApp){ level = 'bad'; text = `${inApp} 앱 안에서 열린 창이에요. 마이크와 음성 인식이 막혀 있어요. 오른쪽 위 ⋮(또는 공유 버튼) → "다른 브라우저로 열기"를 눌러 크롬이나 사파리로 열어 주세요.`; }
-  else if(!speech){ level = 'bad'; text = `${name}는 실시간 음성 인식을 지원하지 않아요. 크롬 또는 엣지로 열어 주세요.`; }
+  else if(!speech){ level = 'bad'; text = `${josa(name,'은/는')} 실시간 음성 인식을 지원하지 않아요. 크롬 또는 엣지로 열어 주세요.`; }
+  else if(name==='웨일' || name==='오페라' || (name==='삼성 인터넷')){ level = 'warn'; text = `${name}에서는 말이 글자로 바뀌지 않는 경우가 많아요. 크롬${mobile ? '' : ' 또는 엣지'}로 열어 주세요.`; }
   else if(name==='크롬' || name==='엣지'){ level = 'ok'; text = `${name}${mobile ? ' (휴대폰)' : ''} — 권장 브라우저예요.` + (mobile ? ' 가능하면 PC에서 하시면 더 편해요.' : ''); }
   else if(name==='사파리' && mobile){ level = 'warn'; text = '아이폰 사파리예요. 되기는 하지만 음성 인식이 가끔 끊길 수 있어요. 가능하면 PC 크롬·엣지를 권장해요.'; }
-  else { level = 'warn'; text = `${name}예요. 대체로 동작하지만 크롬이나 엣지에서 가장 안정적이에요.`; }
+  else { level = 'warn'; text = `${josa(name,'이에요/예요')} 대체로 동작하지만 크롬이나 엣지에서 가장 안정적이에요.`; }
   return { name, inApp, mobile, speech, level, text };
 }
 function renderLoginBrowserBanner(){
@@ -9191,7 +9278,7 @@ async function renderDashboard(){
     const hist = document.getElementById('history-list');
     if(history.length){
       hist.innerHTML = `<ul class="d3-rlist">` + history.slice(0,4).map((hh,i)=>`<li><a href="javascript:void(0)" class="d3-rrow" onclick="openRecordDetail('${hh.id}')" title="답변과 피드백을 다시 볼 수 있어요">
-          <span><p class="d3-rfield">${escapeHtml(hh.fieldName)}</p><p class="d3-rmeta"><span>${hh.dateLabel.replace(' · ',' · ')}</span>${hh.durationLabel?`<span class="dot">${escapeHtml(hh.durationLabel)}</span>`:''}${hh.mode==='dialog'?'<span class="dot">AI 대화</span>':''}</p></span>
+          <span><p class="d3-rfield">${escapeHtml(hh.fieldName)}</p><p class="d3-rmeta"><span>${hh.dateLabel.replace(' · ',' · ')}</span>${hh.durationLabel?`<span class="dot">${escapeHtml(durText(hh.durationLabel))}</span>`:''}${hh.mode==='dialog'?'<span class="dot">AI 대화</span>':''}</p></span>
           <span class="d3-rscore${i===0?' latest':''}">${hh.score}<span class="unit">점</span></span>
           <svg class="d3-rchev" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></a></li>`).join('') + `</ul>`;
     }else{
@@ -9467,7 +9554,7 @@ function renderHomeExtras(history, isAdmin, expired){
     repSec.style.display = '';
     rep.innerHTML = history.slice(0,3).map((h,i)=>{
       const g = Rubric.grade(h.score||0);
-      const line = [h.mode === 'dialog' ? 'AI 대화 면접' : '', h.questionCount ? `${h.questionCount}문항` : '', h.durationLabel || ''].filter(Boolean).join(' · ');
+      const line = [h.mode === 'dialog' ? 'AI 대화 면접' : '', h.questionCount ? `${h.questionCount}문항` : '', durText(h.durationLabel)].filter(Boolean).join(' · ');
       return `<button type="button" class="g4-rep" onclick="openRecordDetail('${h.id}')"><div class="rd"><span>${escapeHtml(h.dateShort||'')} · ${escapeHtml(h.fieldName||'')}</span>${i===0?'<i title="가장 최근"></i>':''}</div><div class="rs"><b>${h.score}</b><span class="gr">${g}</span></div><div class="rt">${escapeHtml(line)}</div><div class="rb"><span>리포트 보기</span></div></button>`;
     }).join('');
   }else repSec.style.display = 'none';
@@ -9497,8 +9584,8 @@ function renderHomeExtras(history, isAdmin, expired){
       '분량':['답변 길이 집중', '너무 짧거나 긴 답을 60~90초 안팎으로 맞추는 연습이에요.', ['자기소개','경험','상황 대처']],
       '태도·언어':['말투·표현 집중', '"음·어" 군말을 줄이고 존댓말·정중한 표현을 지키는 연습이에요.', ['자기소개','가치관','마지막 한마디']],
       '전달력':['전달력 집중', '말 속도와 머뭇거림을 줄이는 연습이에요. 질문이 끝나면 바로 "네, 말씀드리겠습니다"로 시작해 보세요.', ['자기소개','지원 동기','경험']] }[weak] || ['기본 세트', '질문 5개 · 난이도 중.', []];
-    reco.innerHTML = base(`${escapeHtml(tip[0])} · 5문항`, `지난 ${list.length}회에서 "${escapeHtml(weak)}"이(가) 평균 ${wv}점으로 가장 낮았어요. ${escapeHtml(tip[1])} 꼬리질문 2개 포함.`, tip[2], 12);
-    if(sub) sub.textContent = `오늘은 "${weak}"을(를) 올려 볼 차례예요.`;
+    reco.innerHTML = base(`${escapeHtml(tip[0])} · 5문항`, `지난 ${list.length}회에서 ${escapeHtml(josa('"'+weak+'"', '이/가'))} 평균 ${wv}점으로 가장 낮았어요. ${escapeHtml(tip[1])} 꼬리질문 2개 포함.`, tip[2], 12);
+    if(sub) sub.textContent = `오늘은 ${josa('"'+weak+'"', '을/를')} 올려 볼 차례예요.`;
   }).catch(()=>{});
 }
 function startRecommendedSet(){
@@ -9848,7 +9935,7 @@ function recordRowHtml(r, withName){
     <span class="admin-sub" style="margin:0;">${formatDateFull(r.created_at)}</span>
     ${withName ? `<span><span class="admin-name">${escapeHtml(nm)}</span>${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span>` : ''}
     <span>${escapeHtml(r.field_name||'')}${modeTag}</span>
-    <span class="admin-sub" style="margin:0;">${r.question_count}문항${r.duration_label ? ' · '+escapeHtml(r.duration_label) : ''}</span>
+    <span class="admin-sub" style="margin:0;">${r.question_count}문항${r.duration_label ? ' · '+escapeHtml(durText(r.duration_label)) : ''}</span>
     <span class="score-pill ${scorePillClass(r.score)}">${r.score}점</span>
   </div>`;
 }
@@ -10121,7 +10208,7 @@ function openAllHistory(){
         <div class="record-list-row" onclick="openRecordDetail('${h.id}', true)">
           <div>
             <div class="history-field">${escapeHtml(h.fieldName)}</div>
-            <div class="history-meta">${escapeHtml(h.dateLabel)}${h.durationLabel ? ' · '+escapeHtml(h.durationLabel) : ''}</div>
+            <div class="history-meta">${escapeHtml(h.dateLabel)}${h.durationLabel ? ' · '+escapeHtml(durText(h.durationLabel)) : ''}</div>
           </div>
           <span class="score-pill ${h.score<75?'mid':''}">${h.score}점</span>
         </div>`).join('')
@@ -10134,7 +10221,7 @@ async function openRecordDetail(recordId, fromList){
   const body = document.getElementById('record-modal-body');
   document.getElementById('record-modal-title').textContent = rec ? `${rec.fieldName} 모의면접` : '면접 기록';
   document.getElementById('record-modal-desc').textContent = rec
-    ? `${rec.dateLabel}${rec.durationLabel ? ' · 소요 '+rec.durationLabel : ''} · 종합 ${rec.score}점`
+    ? `${rec.dateLabel}${rec.durationLabel ? ' · 소요 '+durText(rec.durationLabel) : ''} · 종합 ${rec.score}점`
     : '';
   document.getElementById('record-back-btn').style.display = fromList ? '' : 'none';
   body.innerHTML = '<div class="qa-empty">답변 기록을 불러오는 중…</div>';
@@ -10842,7 +10929,7 @@ async function loadRealSetView(force){
   try{ const r = await sb.from('user_resumes').select('user_id,intro_script_at'); if(r.error) throw r.error; (r.data||[]).forEach(x=>{ if(x.intro_script_at) state.rsScripts[x.user_id] = x.intro_script_at; }); }catch(e){ miss.push('저장된 대본'); }
   const hasCols = (state.adminRecords||[]).some(r=>'set_kind' in r) || !(state.adminRecords||[]).length;
   if(!hasCols) miss.push('실전 세트 기록(step16 SQL 필요)');
-  if(note){ note.style.display = miss.length ? '' : 'none'; if(miss.length) note.textContent = miss.join(' · ') + '을(를) 읽지 못해 그 칸은 비어 있어요.'; }
+  if(note){ note.style.display = miss.length ? '' : 'none'; if(miss.length) note.textContent = josa(miss.join(' · '), '을/를') + ' 읽지 못해 그 칸은 비어 있어요.'; }
   renderRealSetView();
 }
 function realSetRows(){
@@ -10900,7 +10987,7 @@ function renderRealSetView(){
     if(state.rsOpen === r.u.id){
       open = `<div class="rs-open" onclick="event.stopPropagation()">` + (r.sets.length ? r.sets.slice(0,10).map(x=>{
         const v = x.set_review || {};
-        return `<div class="rs-rec"><span>${formatDateFull(x.created_at)}<small>${escapeHtml(x.duration_label||'')}</small></span><span><b>${x.score!=null?x.score+'점':'–'}</b>${x.set_overtime?'<small class="bt-bad">15분 초과</small>':''}</span><span class="rs-headline">${escapeHtml(v.headline || '종합 의견 없음')}${(v.improvements||[]).length ? `<small>보완: ${escapeHtml(v.improvements[0])}</small>` : ''}</span><button type="button" class="btn-manage" onclick="openSetRecordFromAdmin('${x.id}', event)">기록 보기</button></div>`;
+        return `<div class="rs-rec"><span>${formatDateFull(x.created_at)}<small>${escapeHtml(durText(x.duration_label))}</small></span><span><b>${x.score!=null?x.score+'점':'–'}</b>${x.set_overtime?'<small class="bt-bad">15분 초과</small>':''}</span><span class="rs-headline">${escapeHtml(v.headline || '종합 의견 없음')}${(v.improvements||[]).length ? `<small>보완: ${escapeHtml(v.improvements[0])}</small>` : ''}</span><button type="button" class="btn-manage" onclick="openSetRecordFromAdmin('${x.id}', event)">기록 보기</button></div>`;
       }).join('') : '<div class="muted" style="padding:6px 0;">실전 세트 기록이 아직 없어요.</div>') + `<div style="padding-top:8px;"><button type="button" class="btn-manage" onclick="event.stopPropagation(); openAdminUserDetail('${r.u.id}')">면접자 상세 열기</button></div></div>`;
     }
     return `<div class="bt-row rs-row" onclick="toggleRealSetRow('${r.u.id}')" title="누르면 실전 세트 기록이 펼쳐져요">
@@ -11308,7 +11395,7 @@ async function handleMyPageResumeUpload(event){
     }
     const ok = await saveResumeText(file.name, text);
     if(!ok){ s.className='resume-status warn'; s.textContent='저장에 실패했어요. 잠시 후 다시 시도해 주세요.'; return; }
-    s.className='resume-status ok'; s.textContent = `'${file.name}'을(를) 저장했어요. 다음 면접부터 자동으로 사용돼요.`;
+    s.className='resume-status ok'; s.textContent = `'${file.name}' 파일을 저장했어요. 다음 면접부터 자동으로 사용돼요.`;
     state.customQuestions = [];
     await renderMyPageResume();
   }catch(err){
@@ -11395,7 +11482,7 @@ async function handleMyPageCvUpload(event){
   const ok = await saveCvText(f.name, text);
   if(!ok){ st.className='resume-status warn'; st.textContent='저장에 실패했어요. 잠시 후 다시 시도해 주세요.'; return; }
   state.cvText = text.slice(0, 2000); state.cvFileName = f.name;
-  st.className='resume-status ok'; st.textContent = `'${f.name}'을(를) 저장했어요. 다음 면접부터 AI 꼬리질문에 쓰여요.`;
+  st.className='resume-status ok'; st.textContent = `'${f.name}' 파일을 저장했어요. 다음 면접부터 AI 꼬리질문에 쓰여요.`;
   await renderMyPageCv(); syncCvCard();
 }
 async function removeCvFromMyPage(){ if(await deleteSavedCv()) showToast('저장된 이력서를 삭제했어요'); await renderMyPageCv(); syncCvCard(); }
@@ -11501,6 +11588,8 @@ function applyRealSetUI(){
   const on = !!state.realSet && !!(state.selectedField && state.selectedField.id === 'assembly');
   document.querySelectorAll('#chip-realset .chip').forEach(c=>c.classList.toggle('sel', (c.dataset.val==='set') === on));
   const steps = document.getElementById('realset-steps'); if(steps) steps.hidden = !on;
+  { const nb = document.querySelector('#setup-realset-block .opt-new'); if(nb) nb.hidden = !on; }
+  { const rs = document.getElementById('realset-sub'); if(rs){ if(!rs.dataset.setHtml) rs.dataset.setHtml = rs.innerHTML; rs.innerHTML = on ? rs.dataset.setHtml : '일반 면접은 아래에서 고른 질문 수·난이도로 진행해요. <b>국회 실전 세트</b>를 고르면 실제 국회 면접 순서로 7문항을 15분 안에 진행해요.'; } }
   const std = document.getElementById('setup-std-options');
   const isReview = state.selectedField && state.selectedField.id === 'review';
   if(std) std.style.display = (isReview || on) ? 'none' : '';
@@ -11584,7 +11673,7 @@ async function startMicLevelAnim(){
             : r.error==='audio-capture' ? '다른 앱(통화·녹음·카메라 앱)이 마이크를 쓰고 있어 음성 인식을 시작하지 못했어요'
             : r.error==='language-not-supported' ? '이 브라우저가 한국어 음성 인식을 지원하지 않아요'
             : '음성 인식을 시작하지 못했어요';
-          setMicCheck('err', `마이크는 정상이지만 ${why}. 이대로 시작하면 답변을 직접 입력하게 돼요 → "마이크가 안 되나요?"에서 진단 실행`);
+          setMicCheck('err', `마이크는 정상이지만 ${why}. 이대로 시작하면 답변을 직접 입력하게 돼요.`);
           micCheck.srBlocked = true;
         }
       });
@@ -11716,6 +11805,11 @@ async function copyMicDiagnostic(){
 function openMicHelp(reason){
   if(reason && reason.length > 8) document.getElementById('mic-help-reason').textContent = reason;
   try{ MicGuard.state().then(v=>{ if(v === 'denied'){ closeMicHelp(); MicGuard.open('help'); } }); }catch(_){}
+  { const mh = document.getElementById('modal-mic-help'); mh.classList.toggle('mobile', !!MobileAudio.isMobile); mh.querySelectorAll('.file-only').forEach(el=>{ el.hidden = location.protocol !== 'file:'; });
+    // 보이는 단계만 1, 2, 3… 순서로 번호 다시 매김 (휴대폰은 PC 전용 단계가 빠지므로)
+    let no = 0; mh.querySelectorAll('.help-step > b:first-child').forEach(b=>{ const step = b.parentElement; if(!/^\d+\.\s/.test(b.textContent)) return; if(MobileAudio.isMobile && step.classList.contains('pc-only')) return; no++; b.firstChild.textContent = b.firstChild.textContent.replace(/^\d+\./, no + '.'); });
+    const subEl = mh.querySelector('.modal-head p'); if(subEl){ if(!subEl.dataset.orig) subEl.dataset.orig = subEl.textContent; subEl.textContent = MobileAudio.isMobile ? '위에서부터 순서대로 확인해 주세요. 대부분 1번에서 해결돼요.' : subEl.dataset.orig; }
+  }
   document.getElementById('modal-mic-help').classList.add('active');
 }
 function closeMicHelp(){ document.getElementById('modal-mic-help').classList.remove('active'); }
@@ -12166,6 +12260,8 @@ const LF_FIELD_VIEW = {
 /** 답변 상태 판정: 정상 / 너무 짧음 / 잡음 / 모름 / 질문 이해 못 함 / "없습니다" / 면접 밖 말투 / 동떨어진 이야기 */
 const LF_GATE_CAP = { noise:10, nonanswer:12, pass:10, offtone:22, offtopic:25, dontKnow:25, confused:25, deny:28, short:55 };
 const LF_RISKY = /(폐쇄|갇혀|집에 가|잘렸|칼퇴|월급만|하기 싫|귀찮|대충|짜증|이 녀석|몰라이|네가 알|ㅋㅋ|ㅎㅎ)/;
+/* 2026-10-14 팀 테스트: "동료가 있어서 죽였습니다"(51점) 같은 폭력·욕설 표현이 짧은 답으로만 처리돼 점수가 높게 나옴 → 말투 부적절로 */
+const LF_HARM = /(죽였|죽여|죽일|죽이겠|때렸|때려|패버|팼습|박살|꺼져|미친\s*(놈|년|거)|병신|씨발|시발|ㅅㅂ|존나|개같|개새)/;
 const LF_CLICHE = /(성실하게|성실한|성실히|열심히|최선을 다|열정|책임감 있게|완전 중요|많은 부분이 중요)/;
 
 const REAL_IV_QUESTIONS = [["1분 동안 자기소개를 해 주세요.","assembly",1,"2023"],["속기사가 되려고 한 이유는 무엇인가요?","assembly",1,"2023"],["속기사가 갖춰야 할 자질은 무엇이라고 생각하나요?","assembly",1,"2023"],["지방에서 근무하면서 사고(문제)는 없었나요?","assembly",1,"2023"],["자기소개서에 적은 속기 실무 경력에 대해 설명해 주세요.","assembly",2,"2023"],["마지막으로 하고 싶은 말이 있나요?","assembly",1,"2023"],["국회사무처에 지원한 동기는 무엇인가요?","assembly",1,"2017"],["국회사무처는 어떤 업무와 역할을 하는 기관인가요?","assembly",1,"2017"],["입법부의 역할은 무엇이라고 생각하나요?","assembly",1,"2017"],["국정감사와 국정조사는 어떻게 다른가요?","assembly",1,"2017"],["법률과 예산은 어떤 차이가 있나요?","assembly",1,"2017"],["법률유보 원칙이 무엇인지 설명해 보세요.","assembly",1,"2017"],["교섭단체와 비교섭단체는 어떻게 나뉘고, 지금 교섭단체는 몇 개인가요?","assembly",1,"2017"],["'원내'라는 말은 무슨 뜻인가요?","assembly",1,"2017"],["불체포특권과 면책특권은 무엇이며 왜 국회의원에게 주어지나요?","assembly",1,"2017"],["재적의원 3분의 2 이상 찬성이 필요한 사안에는 무엇이 있나요?","assembly",1,"2017"],["국회의원 정수는 몇 명이고, 현재 의장과 부의장은 누구인가요?","assembly",1,"2017"],["현재 원내 정당과 각 당 대표의원은 누구인가요?","assembly",1,"2017"],["행정부가 아닌 국회 공무원에게 특히 필요한 덕목이나 가치는 무엇인가요?","assembly",1,""],["실패했던 경험을 말해 주세요.","assembly",1,""],["헌법이나 법률에 정해진 공무원의 의무에는 무엇이 있나요?","assembly",1,""],["1년 뒤 직장에서 어떤 모습일 것 같나요?","assembly",1,""],["토론 주제였던 저출산·고령화에 본인은 어떻게 대비하겠나요?","assembly",1,""],["법원에서 일할 뜻이 있나요? 최종 목표가 법원인가요?","court",1,"2024"],["이전 경력 가운데 공공기관(방송사) 파견 근무에서는 어떤 일을 했나요?","court",1,"2024"],["오래 해 온 운동(취미·특기)에 대해 이야기해 보세요.","court",1,"2015"],["속기 말고 차 준비 같은 보조업무도 맡을 수 있겠습니까?","court",1,"2009"],["판사가 속기록을 고쳐 달라고 하면 어떻게 하겠습니까?","court",1,"2025"],["원고·피고와 피고인은 어떻게 다른가요?","court",1,"2025"],["법률용어는 어떻게 공부했나요(공부하겠습니까)?","court",1,"2025"],["자기소개를 해 보세요.","court",1,"2025"],["지금은 어떤 일을 하고 있나요?","court",1,"2025"],["봉사활동을 해 본 적이 있나요?","court",1,"2025"],["대학에서 어떤 활동을 했나요?","court",1,"2025"],["본인의 장점과 단점은 무엇인가요?","court",1,"2025"],["스스로 생각하는 본인의 성격은 어떤가요?","court",1,"2025"],["성향이 맞지 않는 동료와는 어떻게 지내겠습니까?","court",1,"2025"],["마지막으로 하고 싶은 말이 있나요?","court",1,"2025"],["악성 민원인을 만나면 어떻게 하겠습니까?","court",1,"2020"],["최근에 남의 부탁을 거절한 경험이 있나요?","court",1,"2020"],["법원에서 송달 업무가 왜 중요하다고 생각하나요?","court",1,"2020"],["주변 사람들은 당신을 어떤 사람이라고 하나요?","court",1,"2020"],["시험 준비 공백기에는 무엇을 했고, 다른 시험도 준비했나요?","court",1,"2012"],["오늘 맨 넥타이 색은 왜 골랐나요?","court",1,"2012"],["대한민국 국민으로서 자랑스럽거나 뿌듯했던 일은 무엇인가요?","court",1,"2012"],["공무원 노조에 대해 어떻게 생각하나요?","court",1,"2012"],["법원 공무원에게 필요한 자세와 역할은 무엇이라고 생각하나요?","court",1,"2018"],["입직 후 이런 상황이 생기면 법원 공무원으로서 어떻게 하겠습니까?","court",1,"2018"],["법원에 들어오면 어떤 일을 하고 싶나요?","court",1,"2018"],["(전공) 이 법률 개념의 정의를 설명해 보세요.","court",1,"2025"],["자기소개를 해 보세요.","council",1,"2021"],["지원 동기와 자기소개를 합쳐서 짧게 말해 보세요.","council",1,"2025"],["지정도서의 저자가 이 책으로 무엇을 말하고 싶었다고 생각하나요?","council",1,"2021"],["속기록을 지워 달라는 요청이 들어오면 어떻게 대처하겠습니까?","council",1,"2021"],["계급제와 직위분류제의 차이를 설명해 보세요.","council",1,"2021"],["사회적 가치란 무엇이라고 생각하나요?","council",1,"2021"],["공무원의 6대 의무를 말해 보세요.","council",1,"2021"],["6대 의무 중 가장 중요하다고 생각하는 것은 무엇인가요?","council",1,"2021"],["게리맨더링이 무엇인지 설명해 보세요.","council",1,"2021"],["국민이 원하는 공무원은 어떤 모습이라고 생각하나요?","council",1,"2021"],["이 일을 하는 데 필요한 직무역량은 무엇이라고 보나요?","council",1,"2021"],["공무원으로서 갖춰야 할 정신자세는 무엇인가요?","council",1,"2022"],["조직에서 상사와 갈등이 생기면 어떻게 풀겠습니까?","council",1,"2022"],["속기사로서 본인의 발전 가능성은 어떻다고 보나요?","council",1,"2022"],["우리 의회에 대해 얼마나 알고 있나요? 의회가 하는 일을 말해 보세요.","council",2,"2022"],["사관이 임금이 적지 말라고 한 말까지 실록에 적은 것을 잘한 일로 보나요, 잘못한 일로 보나요?","council",1,"2022"],["의회에 들어오면서 본 나무 가운데 다섯 가지 이름을 말해 보세요.","council",1,"2015"],["회기 중에는 워라밸이 무너질 수 있는데 어떻게 생각하나요?","council",1,"2025"],["우리 의회의 의석수는 몇 석인가요?","council",1,"2025"],["이번 회기가 언제 시작했는지 알고 있나요?","council",1,"2025"],["도청이나 시·군청이 아니라 의회에 지원한 이유는 무엇인가요?","council",1,"2025"],["내 의견이 옳은데 상사가 무시하면 어떻게 하겠습니까?","council",1,"2025"],["좋은 정책이라도 반대에 부딪히면 어떻게 하겠습니까?","council",1,"2025"],["전공과 연결해서 가장 잘할 수 있는 업무는 무엇인가요?","council",1,"2025"],["현장 실무에 바로 적응할 수 있겠습니까?","council",1,"2026"],["식사는 하고 오셨나요?","council",1,"2025"],["마지막으로 하고 싶은 말이 있나요?","council",1,"2025"],["검찰청에 지원한 동기가 무엇인가요?","prosecution",1,"2018"],["검찰·법률과 관련된 일반 상식을 묻는 질문(준비하지 않은 주제)","prosecution",1,"2018"],["속기 관련 용어를 아는지 묻는 질문","prosecution",1,"2022"],["자기소개, 지원동기, 장단점 같은 기본 인성 질문","prosecution",1,"2022"],["가장 중요하다고 생각하는 공직가치는 무엇인가요?","prosecution",2,"2022"],["검찰의 이미지를 개선하려면 어떻게 해야 할까요?","prosecution",1,"2024"],["국민 참여를 넓힐 수 있는 검찰 업무로는 무엇이 있을까요?","prosecution",1,"2022"],["검찰시민위원회 같은 국민참여 제도의 문제점은 무엇이고, 그래도 운영하는 게 나은가요?","prosecution",1,"2022"],["근무하면서 개선하고 싶은 점이 있다면 무엇인가요?","prosecution",1,"2022"],["상사가 당신의 판단에 반대하면 어떻게 하겠습니까?","prosecution",1,"2022"],["조직이 과도한 헌신을 요구한다면 어떻게 하겠습니까?","prosecution",1,"2024"],["갈등 상황을 해결해 본 경험이 있나요?","prosecution",1,"2024"],["팀워크를 발휘한 경험을 말해 보세요.","prosecution",1,"2024"],["지원한 부서(업무)를 고른 계기는 무엇인가요?","prosecution",2,"2022"],["본인의 어떤 점이 업무에 도움이 될까요?","prosecution",1,"2024"],["준비한 자격증(또는 교육)을 왜 준비했나요?","prosecution",1,"2024"],["민주성·공익성 외에 중요하다고 생각하는 공직가치는?","prosecution",1,"2022"],["마지막으로 하고 싶은 말이 있나요?","prosecution",1,"2024"],["제시문 사례에서 어떤 공직가치를 끌어낼 수 있고, 공직자는 어떤 자세를 가져야 하나요?","public",6,"2022"],["왜 그 부처(부서)에서 일하고 싶은가요?","public",5,"2022"],["맡고 싶은 직무는 무엇이고 그 이유는요?","public",2,"2018"],["조직과 개인(조직 가치와 개인 가치) 중 무엇이 더 중요하다고 보나요?","public",4,"2022"],["부정 청탁을 받거나 목격하면 어떻게 하겠어요?","public",2,"2024"],["상사가 부당한 지시를 하면 어떻게 하겠어요?","public",1,"2024"],["내가 낸 안(홍보안·개선안)을 상사가 반대하면 어떻게 하겠어요?","public",2,"2024"],["상사와 업무상 갈등이 생기면 어떻게 하겠어요?","public",1,"2025"],["동료나 친구와 갈등을 겪은 경험과 해결 방법을 말해 주세요.","public",3,"2022"],["공무원이 되기로 한 계기와 주변 반응은 어땠나요?","public",2,"2024"],["시험을 준비하며 가장 힘들었던 점은 무엇인가요?","public",2,"2024"],["공공성과 효율성(또는 효율성과 형평성)이 부딪히면 무엇을 우선하나요?","public",2,"2024"],["요즘 젊은 공무원의 야근 문제를 어떻게 생각하나요?","public",1,"2024"],["남을 위해 희생했던 경험이 있나요?","public",1,"2022"],["까다로운 민원인을 만나면 어떻게 대응하겠어요?","public",1,"2022"],["전공(경험)을 이 일에 어떻게 살릴 수 있나요?","public",3,"2022"],["창의성을 발휘해 문제를 풀거나 성과를 낸 경험이 있나요?","public",3,"2022"],["스트레스(인간관계 스트레스)는 어떻게 푸나요? 자기계발은 무엇을 하나요?","public",3,"2022"],["내부 고객과 외부 고객 중 누가 더 중요하다고 보나요?","public",1,"2022"],["10년 뒤 어떤 모습이고 싶나요?","public",1,"2022"],["지금까지 가장 힘들었던 경험은 무엇인가요?","public",1,"2022"],["짧게(30초~1분) 자기소개를 해 주세요.","public",3,"2023"],["우리 기관 사업 중 관심 있는 사업은 무엇인가요?","public",1,"2023"],["조직에서 협력·소통이 왜 중요한지, 관련 경험과 함께 말해 주세요.","public",1,"2023"],["일하면서 누군가에게 배운 점이 있나요?","public",1,"2023"],["신규 공무원의 단기 퇴직이 늘어난 이유는 뭐고, 본인은 어떤 자세로 일하겠어요?","public",1,"2023"],["적극행정이란 무엇이고, 어떻게 활성화할 수 있나요?","public",1,"2023"],["모두가 피하는 업무를 다른 부서와 함께 추진해야 한다면 어떻게 하겠어요?","public",1,"2023"],["평정 항목 가운데 어떤 항목으로 가장 평가받고 싶나요?","public",1,"2018"],["자신을 한 단어로 표현한다면요?","public",1,"2018"],["아직 안 받은 질문 중 자신 있게 답할 수 있는 게 있나요?","public",1,"2018"],["민간 회사 경험 전후로 공무원에 대한 생각이 달라졌나요?","public",1,"2018"],["요즘 공무원 청렴도를 어떻게 보나요?","public",1,"2020"],["본인은 기획형인가요, 현장형인가요?","public",1,"2020"],["살면서 받은 오해가 있나요?","public",1,"2020"],["마지막으로 하고 싶은 말이 있나요?","public",3,"2023"],["전 직장을 그만둔 이유와 전공을 살려 일했는지 말해 주세요.","public",1,"2021"],["일과 개인 생활 중 하나를 고른다면 무엇을 택하나요?","public",1,"2021"],["AI를 공공 업무에 어떻게 활용할 수 있고, 문제점은 무엇인가요?","public",3,"2024"],["주민이 반대하는 시설(교도소·복지시설 등)을 짓는 상황이라면 어떻게 하겠어요?","public",2,"2024"],["공익근무요원이 몰래 아르바이트를 하다 걸렸고 생계가 어렵다며 선처를 바란다면 어떻게 하겠어요?","public",2,"2022"],["속기 자격증을 따는 데 얼마나 걸렸나요?","public",1,"2022"],["전문 용어는 어떻게 공부하나요?","public",1,"2022"],["실시간 속기 경력이 있나요?","public",1,"2021"],["이력서에 적은 다른 자격증(비서, 한국사 등)은 왜 땄나요?","public",1,"2021"],["회의록을 쓸 때 가장 중요한 것은 무엇인가요?","public",1,"2025"],["공직자 윤리에 대해 어떻게 생각하나요?","public",1,"2025"],["속기 외 행정 업무 경험에 대해 말해 주세요.","public",1,"2025"]];
@@ -12319,9 +12415,10 @@ const Rubric = {
     if(/((질문이|무슨)\s*(잘\s*)?(뭔지|무슨|말씀인지|말인지|이해가)|뭘 묻는|무슨 말씀|무슨 뜻|다시 (한\s*번\s*)?말씀|못 들었|잘 못 알아|비슷한 상황이 뭔지)/.test(t) && core.length < 45) return 'confused';
     if(/(모르겠|잘 모르|알 수가 없|알 수 없|기억이 (잘\s*)?(안|나지)|생각이 (잘\s*)?안 나|모름|몰라)/.test(t) && core.length < 45) return 'dontKnow';
     if(/^(네|예|아+|음+|어+)?[,.\s]*(없습니다|없어요|없어|아닙니다|아니요|딱히 없|특별히 없|그런 거 없|따로 없|없는 것 같습니다|지금 말한 부분이 다|그게 다|아닙니다\s*없습니다)/.test(t) && core.length < 30) return 'deny';
-    if(/(면접\s*(종료|끝)|테스트|마이크|스피커|화면이|버튼|안 들려|들리진 않|인식(돼|이 안)|에이아이로|프레임)/.test(t) && rel <= 1) return 'offtopic';
+    if(/(면접\s*(종료|끝)|테스트|마이크|스피커|화면이|버튼|안 들려|들리진 않|인식(돼|이 안)|에이아이로|프레임|안\s*잡혀|잡히나|잡혀요\?|들리나요|들려요\?|녹음\s*(돼|되나|되고))/.test(t) && rel <= 1) return 'offtopic';
     if(core.length < 12 && rel === 0 && (/(감사|안녕|수고|^네|^예)/.test(t) || !/(니다|요)$/.test(t.replace(/[.!?\s]+$/,'')))) return 'nonanswer';
     const banmal = ctx.banmal || 0, sentN = Math.max(1, ctx.sentences || 1);
+    if(LF_HARM.test(t)) return 'offtone';
     if(LF_RISKY.test(t) && (rel <= 1 || banmal >= 1)) return 'offtone';
     if(banmal >= 1 && banmal/sentN >= 0.4 && rel <= 1) return 'offtone';
     const relLoose = rel + (/(속기|기록|회의록|자격|지원자|면접|업무)/.test(t) ? 1 : 0);
@@ -12443,7 +12540,7 @@ const Rubric = {
     // --- 태도·언어 ---
     let att = 88; const attNotes = [];
     if(banmalS.length){ att -= Math.min(35, 18 + banmalS.length*6); attNotes.push(`반말로 끝난 문장이 있어요("${LF.plain(endOf(banmalS[0]).slice(-18), 18)}"). 연습이라도 모든 문장을 "~습니다"로 맺어 주세요.`); }
-    const risky = text.match(LF_RISKY);
+    const risky = text.match(LF_RISKY) || text.match(LF_HARM);
     if(risky){ att -= 18; attNotes.push(`"${risky[0]}"처럼 면접에서 오해를 살 수 있는 표현이 있어요. 기관과 업무는 공공성·기록의 의미와 연결해 말해 주세요.`); }
     const avoid = (text.match(/(모르겠|글쎄|딱히|별로 없|없는 것 같|잘 모르|기억이 안)/g)||[]).length;
     if(avoid && g === 'ok'){ att -= 10; attNotes.push('"잘 모르겠다·딱히" 같은 말은 빼고, 아는 범위에서 결론부터 말해 보세요.'); }
@@ -12737,7 +12834,7 @@ function applyInterviewModeUI(){
   if(isDialog) lv3Apply(true); else { lv3Apply(false); rh3Apply(false); }
   if(isDialog){ state.rehearsalPrep = false; const w = document.querySelector('#screen-interview .interview-wrap'); if(w){ w.classList.remove('rehearsal'); w.classList.remove('prep'); w.classList.add('light'); w.classList.add('live'); } document.getElementById('rh-head').style.display='none'; document.getElementById('rh-panel').style.display='none'; stopRehearsalMeter();
     const tt = document.getElementById('rh-top-title'); if(tt) tt.textContent = 'AI 모의면접 라이브';
-    const et = document.getElementById('rh-answer-empty-text'); if(et) et.innerHTML = '면접관의 질문이 끝나면 자동으로 듣기 시작해요.<br>말씀하시면 이곳에 실시간으로 표시됩니다.';
+    const et = document.getElementById('rh-answer-empty-text'); if(et) et.innerHTML = '면접관의 질문이 끝나면 자동으로 듣기 시작해요.<br>말씀하시면 이곳에 실시간으로 표시돼요.';
     const tp = document.getElementById('type-panel'); if(tp){ tp.classList.remove('has-text'); tp.classList.remove('typing'); tp.classList.remove('typed'); }
     const qn = document.getElementById('rh-qnum'); if(qn) qn.textContent = '—';
     const tsl = document.getElementById('type-status-label'); if(tsl) tsl.textContent = '음성 인식 대기 중';
@@ -12883,7 +12980,7 @@ function startRehearsal(){
   state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
   applyInterviewModeUI();
   syncCamMicUI();
-  document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
+  document.getElementById('steno-input').placeholder = '질문이 끝나면 자동으로 듣기 시작해요. 말하면 이곳에 글자로 표시돼요.';
   updateProgressTag();
   // 준비 단계: 점검을 모두 마치기 전에는 질문을 보여주지도, 읽지도 않음
   state.rehearsalPrep = true;
@@ -12918,6 +13015,7 @@ function rh3Apply(on){
   const sec = document.getElementById('screen-interview'); if(sec) sec.classList.toggle('rh3', !!on);
   if(!on){ if(rh3Iv){ clearInterval(rh3Iv); rh3Iv = null; } return; }
   const t = document.getElementById('rh3-title'); if(t && state.selectedField) t.textContent = `${state.selectedField.name} 면접 리허설`;
+  { const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않고 AI 면접 이용 횟수에도 포함되지 않아요.'; }
   if(state.currentUser){ const n = document.getElementById('nav-username-rh3'); if(n) n.textContent = state.currentUser.name || ''; const av = document.getElementById('rh3-avatar'); if(av) av.textContent = (state.currentUser.name||'?').slice(0,1); }
   const panel = document.getElementById('rh-panel'); if(panel) panel.classList.remove('open');
 }
@@ -13029,7 +13127,7 @@ function lv3Sync(){
   // 파형: 제한 시간(기본 90초) 대비 진행을 초록 칸으로
   const bars = document.querySelectorAll('#wave-bars i'); if(bars.length){ const k = cls==='listening' ? Math.min(bars.length, Math.max(1, Math.round(lv3.lastSec/limSec*bars.length))) : 0; bars.forEach((b,idx)=>b.classList.toggle('on', idx < k)); }
   // 버튼·카메라 라벨
-  const ml = document.getElementById('mic-label'); if(ml) ml.textContent = state.micOn ? '마이크' : '마이크 켜기';
+  const ml = document.getElementById('mic-label'); if(ml) ml.textContent = state.micOn ? '마이크 끄기' : '마이크 켜기';
   const ms = document.getElementById('rh3-mic-sub'); if(ms) ms.textContent = (state.micOn && cls==='listening') ? '듣는 중' : '';
   const cl = document.getElementById('cam-label'); if(cl) cl.textContent = state.camOn ? '카메라 끄기' : '카메라 켜기';
   const cs = document.getElementById('lv3-cam-state'); if(cs){ cs.textContent = state.camOn ? '켜짐' : '꺼짐'; cs.className = state.camOn ? 'on' : ''; }
@@ -13150,7 +13248,7 @@ function startInterview(){
   state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
   applyInterviewModeUI();
   syncCamMicUI();
-  document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
+  document.getElementById('steno-input').placeholder = '질문이 끝나면 자동으로 듣기 시작해요. 말하면 이곳에 글자로 표시돼요.';
   updateProgressTag();
   updateExampleQuestion();
   resetControls();
@@ -13671,7 +13769,7 @@ function startDialogInterview(){
   document.getElementById('iv-source-badge').textContent = 'AI 대화 면접'; document.getElementById('iv-source-badge').className = 'qcard-source-badge followup';
   document.getElementById('iv-question-notice').textContent = '질문이 끝나면 자동으로 듣기 시작해요. 다 말씀하신 뒤 "답변 완료"를 누르면 면접관이 이어서 질문합니다.';
   document.getElementById('steno-input').value=''; document.getElementById('steno-input').readOnly = true; updateCharCount();
-  document.getElementById('steno-input').placeholder = '면접관의 질문이 끝나면 자동으로 듣기 시작해요. 말씀하시면 이곳에 실시간으로 표시됩니다.';
+  document.getElementById('steno-input').placeholder = '면접관의 질문이 끝나면 자동으로 듣기 시작해요. 말씀하시면 이곳에 실시간으로 표시돼요.';
   buildWaveBars(); resetControls();
   { const sb0 = document.getElementById('btn-dialog-stop-listen'); sb0.disabled = true; sb0.classList.remove('typed'); sb0.textContent = '면접관 연결 중…'; }
   dialogPhase('', '준비 중');
@@ -13784,9 +13882,9 @@ async function runDialogInterview(){
   state.dialogRealSet = realSet;
   if(realSet){ opt.realSet = true; opt.realMode = false; opt.count = 7; opt.setDurationMs = REAL_SET_MS; opt.maxAnswerMs = 5 * 60 * 1000; opt.silenceMs = 7000; }   // 답변별 시간 제한 없음: 말을 마치고 7초 조용하면 다음으로(생각할 틈), 안전장치로 한 답변 최대 5분
   state.dialogRealMode = opt.realMode;
-  if(realSet) showToast('국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 답변마다 시간 제한은 없고, 다 말씀하신 뒤 "답변 완료"를 누르면 면접관이 이어서 질문해요. 15분이 지나면 마지막 질문으로 넘어가요.', 'info');
-  else if(opt.realMode) showToast('실전 모드예요. 다 말씀하신 뒤 "답변 완료"를 눌러 주세요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말을 시작하지 않으면 다음 질문으로 넘어가요.', 'info');
-  else showToast('다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어가요. 말이 잠깐 멈춰도 넘어가지 않으니 천천히 답해도 돼요.', 'info');
+  if(realSet) tipOnce('realset', '국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 답변마다 시간 제한은 없고, 다 말씀하신 뒤 "답변 완료"를 누르면 면접관이 이어서 질문해요. 15분이 지나면 마지막 질문으로 넘어가요.');
+  else if(opt.realMode) tipOnce('realmode', '실전 모드예요. 다 말씀하신 뒤 "답변 완료"를 눌러 주세요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말을 시작하지 않으면 다음 질문으로 넘어가요.');
+  else tipOnce('dialog', '다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어가요. 말이 잠깐 멈춰도 넘어가지 않으니 천천히 답해도 돼요.');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
   // (실전 세트는 자기소개서 맞춤 질문 1개를 6번 "경험" 자리에 넣음)
   if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
@@ -14142,6 +14240,12 @@ const STT_FIXES = [
   [/온\s*회의에서/g, '본회의에서'],
   [/(상임\s*위원회|상임위원외)/g, '상임위원회'],
   [/회의\s*록/g, '회의록'],
+  [/조끼\s*(외에|말고|이외)/g, '속기 $1'],
+  [/영문\s*야권(은|이|을)?/g, (m, j)=>'영문 약어' + ({은:'는', 이:'가', 을:'를'}[j] || '')],
+  [/품목이나\s*(어깨|손가락|팔)/g, '손목이나 $1'],
+  [/(신속하게|즉시|바로|담당자(?:한테|에게))\s*보호하(여|고|겠)/g, '$1 보고하$2'],
+  [/오\s*회나\s*견해/g, '오해나 견해'],
+  [/축축하거나\s*(수정|생략|바꾸)/g, '축소하거나 $1'],
 ];
 function fixSpeech(text){
   let t = text || '';
@@ -14267,7 +14371,7 @@ function toggleMic(){
   if(state.interviewMode === 'dialog'){
     // AI 대화 면접: 끄면 답변을 직접 입력, 켜면 이어서 듣기
     StenoLoop.setMic(state.micOn, document.getElementById('steno-input').value);
-    if(!state.micOn){ document.getElementById('wave-state').textContent = '마이크 꺼짐'; showToast('마이크를 껐어요. 답변은 직접 입력하고 "답변 제출"을 눌러 주세요.'); }
+    if(!state.micOn){ document.getElementById('wave-state').textContent = '마이크 꺼짐'; showToast('마이크를 껐어요. 답변은 아래 칸에 직접 입력해서 제출해 주세요.'); }
     else if(!StenoLoop.typedWait){ document.getElementById('wave-state').textContent = '마이크 켜짐'; }
     return;
   }
@@ -14497,21 +14601,22 @@ function closeConfirmEnd(){
 
 async function endInterview(){
   document.getElementById('modal-confirm').classList.remove('active');
+  { const key = state.startTime || 0; if(state.endingFor === key && key){ console.warn('[면접 종료] 이미 마무리 중 → 두 번째 호출 무시'); return; } state.endingFor = key; }
   stopRecognition();
   stopSpeaking();
   stopCamera();
   stopWaveAnim();
   const elapsedMs = Math.max(0, Date.now() - (state.startTime||Date.now()) - (state.pausedMs||0));
-  const mins = Math.max(1, Math.floor(elapsedMs/60000));
+  const mins = Math.floor(elapsedMs/60000);
   const secs = Math.floor((elapsedMs%60000)/1000);
   const durationLabel = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-  document.getElementById('rs-time').textContent = durationLabel;
+  document.getElementById('rs-time').textContent = durText(durationLabel);
   document.getElementById('rs-count').textContent = `${state.currentQ}문항`;
   document.getElementById('result-title').textContent = state.selectedField.name + (state.interviewMode==='dialog' ? ' AI 대화 면접 결과' : ' 모의면접 결과');
   try{
     const modeChip = document.getElementById('result-mode-chip'); if(modeChip) modeChip.textContent = (state.demoResult ? '시연용 샘플 · ' : '') + (state.interviewMode==='dialog' ? 'AI 대화 면접' : '모의면접') + (state.interviewMode==='dialog' && state.dialogRealSet && !state.demoResult ? ' · 국회 실전 세트' + (StenoLoop.stats && StenoLoop.stats.setTimeUp ? ' (15분 초과)' : '') : '');
     const modeEl = document.getElementById('rs-mode'); if(modeEl) modeEl.textContent = `${state.difficulty||'중'} · ${(typeof AI_GRADING_ENABLED!=='undefined' && AI_GRADING_ENABLED && AiSwitch.on('ai_grading')) ? 'AI 채점' : '규칙 평가'}`;
-    const meta = document.getElementById('result-meta'); if(meta){ const d=new Date(); meta.textContent = `${(state.currentUser&&state.currentUser.name)||''} · ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} · ${state.currentQ}문항 · ${durationLabel}`; }
+    const meta = document.getElementById('result-meta'); if(meta){ const d=new Date(); meta.textContent = `${(state.currentUser&&state.currentUser.name)||''} · ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} · ${state.currentQ}문항 · ${durText(durationLabel)}`; }
   }catch(e){}
 
   // 아직 끝나지 않은 AI 채점이 있으면 잠시 기다립니다 (최대 AI_GRADING_TIMEOUT_MS, 실패해도 로컬 채점 결과로 진행)
@@ -14812,7 +14917,7 @@ function renderResultBars(){
         <button type="button" class="q-head" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'))" aria-expanded="false">
           <span class="q-num">Q${i}</span>
           <span class="q-title">${qLabel}</span>
-          <span class="q-head-right">${realChip}${typeTxt?`<span class="q-type-chip">${escapeHtml(typeTxt)}</span>`:''}<span class="q-grade ${gradeCls}">${gradeTxt}</span><span class="q-score">${scoreTxt}</span><svg class="q-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+          <span class="q-head-right">${realChip}${typeTxt?`<span class="q-type-chip">${escapeHtml(typeTxt)}</span>`:''}<span class="q-gs"><span class="q-grade ${gradeCls}">${gradeTxt}</span><span class="q-score">${scoreTxt}</span></span><svg class="q-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
         </button>
         <div class="q-body">
         ${timeLimitHtml(i-1)}
@@ -15289,8 +15394,8 @@ async function renderAdmin(){
     const days = []; for(let i=13;i>=0;i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-i); days.push(d); }
     const counts = days.map(d=>{ const s = d.getTime(), e = s + 86400000; return allRecords.filter(r=>{ const t = new Date(r.created_at).getTime(); return t >= s && t < e; }).length; });
     const max = Math.max(1, ...counts), sum = counts.reduce((a,b)=>a+b,0), week = counts.slice(7).reduce((a,b)=>a+b,0), prev = counts.slice(0,7).reduce((a,b)=>a+b,0);
-    const diffTxt = prev ? (week >= prev ? `지난주보다 +${week-prev}회` : `지난주보다 ${week-prev}회`) : (week ? '지난주 기록 없음' : '');
-    sparkEl.innerHTML = `<div class="ov-spark-head"><div><b>최근 14일 면접 횟수</b><small>하루에 몇 번 모의면접이 끝났는지 · 오늘은 초록</small></div><div class="ov-spark-kpi"><span><b>${sum}</b>회 <small>14일 합계</small></span><span><b>${week}</b>회 <small>최근 7일</small></span><span><b>${(sum/14).toFixed(1)}</b>회 <small>하루 평균</small></span>${diffTxt?`<span class="${week>=prev?'up':'down'}">${diffTxt}</span>`:''}</div></div>
+    const diffTxt = prev ? (week > prev ? `지난주보다 +${week-prev}회` : week < prev ? `지난주보다 ${week-prev}회` : '지난주와 같음') : (week ? '지난주 기록 없음' : '');
+    sparkEl.innerHTML = `<div class="ov-spark-head"><div><b>최근 14일 면접 횟수</b><small>하루에 몇 번 모의면접이 끝났는지 · 오늘은 주황색</small></div><div class="ov-spark-kpi"><span><b>${sum}</b>회 <small>14일 합계</small></span><span><b>${week}</b>회 <small>최근 7일</small></span><span><b>${(sum/14).toFixed(1)}</b>회 <small>하루 평균</small></span>${diffTxt?`<span class="${week>prev?'up':week<prev?'down':'same'}">${diffTxt}</span>`:''}</div></div>
       <div class="ov-spark-bars">${counts.map((c,i)=>{ const d = days[i]; const lbl = `${d.getMonth()+1}/${d.getDate()}`; const w = ['일','월','화','수','목','금','토'][d.getDay()];
         return `<div class="bar${c?'':' zero'}${i===13?' today':''}${(d.getDay()===0||d.getDay()===6)?' wk':''}" title="${lbl}(${w}) · ${c}회"><b>${c||''}</b><i style="height:${Math.max(4, Math.round(c/max*78))}%"></i><em>${i===13?'오늘':lbl}<small>${w}</small></em></div>`; }).join('')}</div>`;
   }
@@ -16497,7 +16602,7 @@ function coachPracticeToggle(){ if(Coach.practicing){ StenoListener.stop('manual
 async function coachPracticeStart(){
   if(!StenoListener.supported()){ showToast('이 브라우저는 음성 인식을 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.'); return; }
   if(Coach.draftRec){ StenoListener.stop('manual'); }
-  coachResetPractice();
+  coachResetPractice(); clearOldToasts(0);
   Coach.practicing = true; Coach.t0 = Date.now();
   document.getElementById('coach-practice-btn').textContent = '다 말했어요 · 결과 보기';
   const live = document.getElementById('coach-live'); live.textContent = '듣고 있어요. 말씀하세요. 잠깐 멈춰도 끝나지 않아요.';
@@ -16994,7 +17099,8 @@ const MicGuard = {
       dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>'
     };
     const bar = (hit, right, arrow)=>`<div class="mb-bar"><span class="mb-hit">${hit}</span><span class="mb-url">${escapeHtml(host)}/stenotalk</span><span class="mb-dim">${right||I.reload}</span></div><div class="mb-arrow">↑ ${arrow}</div>`;
-    const pop = (label, ctl)=>`<div class="mb-pop"><span>🎙 ${label}</span>${ctl==='sel' ? '<span class="mb-sel">허용</span>' : '<span class="mb-tg" aria-hidden="true"></span>'}</div>`;
+    const MIC_IC = '<i class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></i>';
+    const pop = (label, ctl)=>`<div class="mb-pop"><span>${MIC_IC}${label}</span>${ctl==='sel' ? '<span class="mb-sel">허용</span>' : '<span class="mb-tg" aria-hidden="true"></span>'}</div>`;
     const steps = arr => '<ol class="mb-steps">' + arr.map((t,i)=>`<li><i>${i+1}</i><span>${t}</span></li>`).join('') + '</ol>';
     const G = {
       pc: { pic: bar(I.tune, I.reload, '주소창 맨 왼쪽 아이콘을 눌러요') + pop('마이크', 'tg'),
@@ -17026,7 +17132,7 @@ const MicGuard = {
     const m = document.getElementById('modal-micblock'); if(!m) return;
     this.kind = kind === 'cam' ? 'cam' : 'mic';
     const pf = this.platform();
-    document.getElementById('mb-guide').innerHTML = this.kind==='cam' ? this.guideHtml(pf).replace(/마이크/g,'카메라').replace(/🎙/g,'📷') : this.guideHtml(pf);
+    document.getElementById('mb-guide').innerHTML = this.kind==='cam' ? this.guideHtml(pf).replace(/마이크/g,'카메라').replace(/<rect x="9" y="3" width="6" height="11" rx="3"\/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"\/>/g,'<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3"/>') : this.guideHtml(pf);
     { const ic = document.querySelector('#modal-micblock .mb-ic'); if(ic) ic.innerHTML = this.kind==='cam' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3zM4 4l16 16"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg>'; }
     { const h = m.querySelector('.modal-head h2'); if(h){ const ic = h.querySelector('.mb-ic'); h.innerHTML = (ic ? ic.outerHTML : '') + (this.kind==='cam' ? '카메라가 막혀 있어요' : '마이크가 막혀 있어요'); } }
     const sub = document.getElementById('mb-sub');
@@ -17225,7 +17331,7 @@ async function recStartWord(){
   const word = document.getElementById('rec-word').value.trim();
   if(!word){ showToast('다시 녹음할 단어를 적어 주세요'); return; }
   const tts = loadTtsSettings();
-  if(!confirm(`"${word}"이(가) 들어간 질문·문장만 지금 설정(${tts.voice} · ${tts.model} · ${tts.speed}배)으로 다시 만들어요. 계속할까요?`)) return;
+  if(!confirm(`${josa('"'+word+'"','이/가')} 들어간 질문·문장만 지금 설정(${tts.voice} · ${tts.model} · ${tts.speed}배)으로 다시 만들어요. 계속할까요?`)) return;
   Rec.running = true; Rec.stopFlag = false;
   document.getElementById('rec-start-btn').style.display='none'; document.getElementById('rec-force-btn').style.display='none'; document.getElementById('rec-stop-btn').style.display='';
   document.getElementById('rec-log').textContent=''; recLog(`"${word}" 포함 문항 다시 녹음 시작 · `+new Date().toLocaleTimeString());
@@ -17244,7 +17350,7 @@ async function recStartWord(){
       if(Rec.stopFlag) break;
     }
     recLog(`완료 · "${word}" 포함 ${done}개 다시 녹음` + (fail ? `, 실패 ${fail}개` : ''));
-    showToast(done ? `${done}개를 다시 녹음했어요` : `"${word}"이(가) 들어간 문항이 없어요`);
+    showToast(done ? `${done}개를 다시 녹음했어요` : `${josa('"'+word+'"','이/가')} 들어간 문항이 없어요`);
     VoiceBank.load();
   }catch(e){ recLog('오류: '+e.message); showToast('녹음 오류: '+e.message); }
   Rec.running = false;
@@ -17643,7 +17749,7 @@ function openAdminUserDetail(userId){
         <div class="record-list-row" onclick="openRecordDetailFromAdmin('${r.id}')">
           <div>
             <div class="history-field">${escapeHtml(r.field_name || '')}</div>
-            <div class="history-meta">${formatDateFull(r.created_at)} · ${r.question_count}문항${r.duration_label ? ' · '+escapeHtml(r.duration_label) : ''}</div>
+            <div class="history-meta">${formatDateFull(r.created_at)} · ${r.question_count}문항${r.duration_label ? ' · '+escapeHtml(durText(r.duration_label)) : ''}</div>
           </div>
           <span class="score-pill ${r.score<75?'mid':''}">${r.score}점</span>
         </div>`).join('')
@@ -17859,7 +17965,7 @@ function openPermissionModal(userId){
   state.bulkPermissionMode = false;
   state.editingUserId = userId;
   document.getElementById('perm-modal-title').textContent = `${user.name} 권한 관리`;
-  document.getElementById('perm-modal-desc').textContent = '서류 합격이 확인된 기관에만 체크해 주세요. 체크되지 않은 기관은 지원자에게 잠금 상태로 표시됩니다.';
+  document.getElementById('perm-modal-desc').textContent = '서류 합격이 확인된 기관에만 체크해 주세요. 체크되지 않은 기관은 지원자에게 잠금 상태로 보여요.';
   buildPermChecklist('perm-checklist', user.allowed_fields || []);
   document.getElementById('perm-until').value = user.access_until ? String(user.access_until).slice(0,10) : '';
   document.getElementById('perm-until-keep-row').style.display = 'none';
@@ -17948,7 +18054,7 @@ function openSignup(){
   document.getElementById('signup-note').value='';
   document.getElementById('modal-signup').classList.add('active');
   ['signup-name','signup-id','signup-phone','signup-pw','signup-pw2','signup-note'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('invalid'); } });
-  { const e2 = document.getElementById('signup-pw2-err'); if(e2) e2.textContent = ''; toggleSignupPwVisible(false); const cb = document.querySelector('.signup-pw-eye input'); if(cb) cb.checked = false; }
+  { const e2 = document.getElementById('signup-pw2-err'); if(e2){ e2.textContent = ''; e2.classList.remove('ok'); } toggleSignupPwVisible(false); }
   const consent=document.getElementById('signup-consent'); if(consent){ consent.checked=false; validateSignupField('consent'); }
   const pe=document.getElementById('signup-phone-err'); if(pe) pe.textContent='';
   document.querySelectorAll('#signup-pw-rules [data-rule]').forEach(el=>el.classList.remove('ok','bad'));
@@ -17968,11 +18074,11 @@ function formatPhone(v){
 function isValidPhone(v){ return /^01[016789]\d{7,8}$/.test(phoneDigits(v)); }
 
 function checkPassword(pw){
-  const r = { len: (pw||'').length >= 6, alpha: /[A-Za-z]/.test(pw||''), digit: /\d/.test(pw||'') };
+  const r = { len: (pw||'').length >= 8, alpha: /[A-Za-z]/.test(pw||''), digit: /\d/.test(pw||'') };
   r.ok = r.len && r.alpha && r.digit;
   return r;
 }
-function toggleSignupPwVisible(on){ ['signup-pw','signup-pw2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.type = on ? 'text' : 'password'; }); }
+function toggleSignupPwVisible(on){ ['signup-pw','signup-pw2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.type = on ? 'text' : 'password'; }); document.querySelectorAll('#modal-signup .su-eye').forEach(b=>{ b.classList.toggle('on', !!on); b.setAttribute('aria-label', on ? '비밀번호 숨기기' : '비밀번호 표시'); }); }
 function validateSignupField(which, force){
   if(which === 'pw2' || which === 'pw'){
     const pw = document.getElementById('signup-pw').value.trim(), pw2 = document.getElementById('signup-pw2').value.trim();
@@ -17980,7 +18086,8 @@ function validateSignupField(which, force){
     let msg = '';
     if(force && !pw2) msg = '비밀번호를 한 번 더 입력해 주세요';
     else if(pw2 && pw !== pw2) msg = '비밀번호가 서로 달라요';
-    if(err) err.textContent = msg; if(in2) in2.classList.toggle('invalid', !!msg);
+    const ok = !msg && !!pw2 && pw === pw2;
+    if(err){ err.textContent = ok ? '비밀번호가 일치해요' : msg; err.classList.toggle('ok', ok); } if(in2) in2.classList.toggle('invalid', !!msg);
     if(which === 'pw2') return;
   }
   if(which === 'pw'){
@@ -18038,7 +18145,7 @@ async function submitSignup(){
   if(!pwCheck.ok){
     validateSignupField('pw', true);
     document.getElementById('signup-pw').focus();
-    showToast('비밀번호는 영문과 숫자를 모두 넣어 6자 이상으로 만들어 주세요');
+    showToast('비밀번호는 영문과 숫자를 모두 넣어 8자 이상으로 만들어 주세요');
     return;
   }
   { const pw2 = document.getElementById('signup-pw2').value.trim();
