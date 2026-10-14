@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14b';
+var APP_VERSION = '2026-10-14c';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3815,7 +3815,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <button class="btn btn-outline" onclick="MicGuard.close()">닫기</button>
       <button class="btn btn-solid" id="mb-recheck" onclick="MicGuard.recheck()">바꿨어요 · 다시 확인</button>
     </div>
-    <a class="mb-more" onclick="MicGuard.close(); openMicHelp()">그래도 안 되면: 자세한 해결 방법 보기</a>
+    <a class="mb-more" id="mb-more" onclick="MicGuard.close(); if(MicGuard.kind!=='cam') openMicHelp()">그래도 안 되면: 자세한 해결 방법 보기</a>
   </div>
 </div>
 
@@ -10528,6 +10528,7 @@ async function startCamPreview(){
   }catch(err){
     console.warn('[카메라 미리보기 실패]', err);
     const name = err && err.name || '';
+    if(name==='NotAllowedError'){ if(msg){ msg.innerHTML = '카메라 권한이 차단되어 있어요 · <a href="javascript:void(0)" onclick="MicGuard.open(\'setup\', \'cam\')" style="text-decoration:underline;color:#fff;font-weight:700;">푸는 방법 보기</a><br><small>면접은 카메라 없이도 진행돼요</small>'; } box.classList.add('off'); setCamPill('차단됨','warn'); try{ if(!MicGuard.camShown){ MicGuard.camShown = true; MicGuard.open('setup', 'cam'); } }catch(_){} return; }
     if(msg) msg.textContent = name==='NotAllowedError' ? '카메라 권한이 차단되어 있어요 · 면접은 카메라 없이도 진행돼요' : name==='NotFoundError' ? '연결된 카메라가 없어요 · 면접은 카메라 없이도 진행돼요' : '카메라를 열지 못했어요 · 면접은 카메라 없이도 진행돼요';
     box.classList.add('off'); setCamPill('확인 필요','warn');
   }
@@ -16787,6 +16788,7 @@ const MicGuard = {
   },
   onChange(v){
     const m = document.getElementById('modal-micblock');
+    if(this.kind === 'cam') return;
     if(v === 'granted' && m && m.classList.contains('active')){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
   },
   /** 면접·코치 시작 전에 호출. 막혀 있으면 안내창을 띄우고 true */
@@ -16843,31 +16845,39 @@ const MicGuard = {
     const g = G[pf] || G.pc;
     return `<div class="mb-pic">${g.pic}</div>${steps(g.steps)}${g.alt ? `<p class="mb-alt">${g.alt}</p>` : ''}`;
   },
-  open(where){
+  open(where, kind){
     const m = document.getElementById('modal-micblock'); if(!m) return;
+    this.kind = kind === 'cam' ? 'cam' : 'mic';
     const pf = this.platform();
-    document.getElementById('mb-guide').innerHTML = this.guideHtml(pf);
+    document.getElementById('mb-guide').innerHTML = this.kind==='cam' ? this.guideHtml(pf).replace(/마이크/g,'카메라').replace(/🎙/g,'📷') : this.guideHtml(pf);
+    { const ic = document.querySelector('#modal-micblock .mb-ic'); if(ic) ic.innerHTML = this.kind==='cam' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3zM4 4l16 16"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg>'; }
+    { const h = m.querySelector('.modal-head h2'); if(h){ const ic = h.querySelector('.mb-ic'); h.innerHTML = (ic ? ic.outerHTML : '') + (this.kind==='cam' ? '카메라가 막혀 있어요' : '마이크가 막혀 있어요'); } }
     const sub = document.getElementById('mb-sub');
-    if(sub) sub.textContent = pf === 'inapp' ? '지금 열린 창에서는 마이크를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.'
+    if(sub) sub.textContent = this.kind === 'cam'
+      ? (pf === 'inapp' ? '지금 열린 창에서는 카메라를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.' : "지금 이 사이트의 카메라가 '차단'으로 되어 있어요. 카메라 없이도 면접은 되지만, 표정·시선 분석과 내 모습 다시 보기를 쓰려면 아래 순서대로 한 번만 바꿔 주세요.")
+      : pf === 'inapp' ? '지금 열린 창에서는 마이크를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.'
       : (where === 'coach' ? '자기소개 연습을 하려면 마이크가 필요해요. ' : '면접 답변을 들으려면 마이크가 필요해요. ') + "지금 이 사이트의 마이크가 '차단'으로 되어 있어요. 아래 순서대로 한 번만 바꿔 주세요.";
     const rb = document.getElementById('mb-recheck'); if(rb) rb.style.display = pf === 'inapp' ? 'none' : '';
+    { const more = document.getElementById('mb-more'); if(more) more.style.display = this.kind === 'cam' ? 'none' : ''; }
     this.setState('', '');
     m.classList.add('active'); this.shownAt = Date.now();
-    try{ Feedback.auto('마이크 차단 안내', '권한 차단 상태에서 시작 시도 (' + pf + ')', { where: where||'' }); }catch(_){}
+    try{ Feedback.auto(this.kind==='cam' ? '카메라 차단 안내' : '마이크 차단 안내', '권한 차단 상태에서 시작 시도 (' + pf + ')', { where: where||'' }); }catch(_){}
   },
   close(){ const m = document.getElementById('modal-micblock'); if(m) m.classList.remove('active'); },
   setState(cls, t){ const el = document.getElementById('mb-state'); if(!el) return; el.className = 'mb-state' + (cls ? ' ' + cls : ''); el.textContent = t; },
   async recheck(){
     const btn = document.getElementById('mb-recheck'); if(btn){ btn.disabled = true; btn.textContent = '확인 중…'; }
     try{
-      let v = await this.state();
+      const cam = this.kind === 'cam';
+      let v = cam ? 'unknown' : await this.state();
+      if(cam){ try{ const st = await navigator.permissions.query({ name:'camera' }); v = st.state; }catch(_){ v = 'unknown'; } }
       if(v !== 'denied'){
-        try{ const st = await navigator.mediaDevices.getUserMedia({ audio:true }); st.getTracks().forEach(t=>t.stop()); v = 'granted'; }
+        try{ const st = await navigator.mediaDevices.getUserMedia(cam ? { video:true } : { audio:true }); st.getTracks().forEach(t=>t.stop()); v = 'granted'; }
         catch(e){ if(e && e.name === 'NotAllowedError') v = 'denied'; }
       }
-      if(v === 'granted'){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
+      if(v === 'granted'){ this.setState('ok', cam ? '✓ 카메라가 허용됐어요. 미리보기를 다시 열게요.' : '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>{ this.close(); if(cam){ try{ const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }catch(_){} } }, 1200); }
       else if(v === 'denied'){ this.setState('bad', '아직 막혀 있어요. 위 순서대로 바꾼 뒤 새로고침하고 다시 눌러 주세요.'); }
-      else { this.setState('ok', '이제 시작할 때 마이크를 물어보면 "허용"을 눌러 주세요.'); setTimeout(()=>this.close(), 1600); }
+      else { this.setState('ok', `이제 시작할 때 ${cam?'카메라':'마이크'}를 물어보면 "허용"을 눌러 주세요.`); setTimeout(()=>this.close(), 1600); }
     }finally{ if(btn){ btn.disabled = false; btn.textContent = '바꿨어요 · 다시 확인'; } }
   }
 };
