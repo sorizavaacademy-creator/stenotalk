@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14i';
+var APP_VERSION = '2026-10-14j';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -8750,7 +8750,7 @@ async function endInterviewForKick(){
 }
 async function handleLogout(){
   try{ MicStream.close(); }catch(_){}
-  state.resumeText = ''; state.cvText = ''; state.cvFileName = '';
+  state.resumeText = ''; state.cvText = ''; state.cvFileName = ''; state.resumeFull = ''; state.cvFull = ''; try{ DocQ.followMap = new Map(); }catch(_){}
   try{ AnswerAudio.clear(); }catch(_){}
   try{ SelfCam.reset(); }catch(_){}
   if(accessWatchTimer){ clearInterval(accessWatchTimer); accessWatchTimer = null; }
@@ -10777,15 +10777,14 @@ async function processResumeFileInner(file){
   }
   try{
     const text = await extractPdfText(file);
-    state.resumeText = (text||'').slice(0, 2000);
-    state.customQuestions = buildCustomQuestionsFromText(text);
-    if(state.customQuestions.length){
+    state.resumeFull = DocQ.clean(text || ''); state.resumeText = state.resumeFull.slice(0, 2000);
+    refreshDocQuestions();
+    if(state.customQuestions.length && state.customQuestions[0].src){
       statusEl.className='resume-status ok';
-      statusEl.textContent = `분석 완료: ${file.name}의 내용을 반영한 맞춤형 질문 ${state.customQuestions.length}개가 면접 중간에 포함됩니다.`;
+      statusEl.textContent = `분석 완료: ${file.name}에 실제로 적힌 문장·경력으로 맞춤형 질문 ${state.customQuestions.length}개가 면접 중간에 포함됩니다.`;
     }else{
       statusEl.className='resume-status warn';
-      statusEl.textContent = '문서에서 참고할 만한 키워드를 찾지 못해 일반 자기소개서 질문 1개를 추가했습니다.';
-      state.customQuestions = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 부분에 대해 조금 더 설명해 주시겠어요?', ref:null, custom:true}];
+      statusEl.textContent = '문서에서 경험·경력 문장을 찾지 못해 일반 자기소개서 질문 1개를 추가했습니다.';
     }
     // 추출한 텍스트를 계정에 저장 → 다음 면접부터 자동으로 불러옵니다
     const saved = await saveResumeText(file.name, text);
@@ -10803,9 +10802,24 @@ async function extractPdfText(file){
   for(let p=1; p<=pdf.numPages; p++){
     const page = await pdf.getPage(p);
     const content = await page.getTextContent();
-    text += content.items.map(it=>it.str).join(' ') + ' ';
+    // 글자 조각 사이 실제 간격을 보고 띄어쓰기·줄바꿈을 정함 (예전엔 조각마다 공백을 넣어 "1   급"처럼 깨졌음)
+    let lastY = null, lastEnd = null, line = '';
+    const lines = [];
+    content.items.forEach(it=>{
+      const str = it.str || ''; const tr = it.transform || [1,0,0,1,0,0];
+      const x = tr[4], y = tr[5], h = Math.abs(tr[3]) || Math.abs(tr[0]) || 10;
+      if(lastY !== null && Math.abs(y - lastY) > h * 0.5){ lines.push(line); line = ''; lastEnd = null; }
+      if(str){
+        if(line && lastEnd !== null){ const gap = x - lastEnd; if(gap > h * 0.18 && !/\s$/.test(line) && !/^\s/.test(str)) line += ' '; }
+        line += str;
+        lastEnd = x + (it.width || 0);
+      }
+      if(it.hasEOL){ lines.push(line); line = ''; lastEnd = null; lastY = null; } else lastY = y;
+    });
+    if(line) lines.push(line);
+    text += lines.join('\n') + '\n';
   }
-  return text;
+  return DocQ.clean(text);
 }
 
 /* ============================================================
@@ -11367,11 +11381,11 @@ async function renderMyPageResume(){
     delBtn.style.display = 'none';
     return;
   }
-  const qCount = buildCustomQuestionsFromText(data.resume_text).length || 1;
+  const cleanR = DocQ.clean(data.resume_text); const qCount = DocQ.fromResume(cleanR).length || 1;
   box.innerHTML = `
     <div class="mp-resume-name">${escapeHtml(data.file_name || '자기소개서')}</div>
-    <div class="mp-resume-meta">${formatDateFull(data.updated_at)} 저장 · 약 ${data.resume_text.length.toLocaleString()}자 · 맞춤형 질문 ${qCount}개 생성 가능</div>
-    <p class="mp-resume-preview">${escapeHtml(data.resume_text.slice(0, 400))}</p>`;
+    <div class="mp-resume-meta">${formatDateFull(data.updated_at)} 저장 · 약 ${cleanR.length.toLocaleString()}자 · 질문 후보 ${qCount}개</div>
+    <p class="mp-resume-preview">${escapeHtml(cleanR.slice(0, 400))}</p>`;
   delBtn.style.display = '';
 }
 
@@ -11396,7 +11410,8 @@ async function handleMyPageResumeUpload(event){
     const ok = await saveResumeText(file.name, text);
     if(!ok){ s.className='resume-status warn'; s.textContent='저장에 실패했어요. 잠시 후 다시 시도해 주세요.'; return; }
     s.className='resume-status ok'; s.textContent = `'${file.name}' 파일을 저장했어요. 다음 면접부터 자동으로 사용돼요.`;
-    state.customQuestions = [];
+    state.resumeFull = DocQ.clean(text); state.resumeText = state.resumeFull.slice(0, 2000); refreshDocQuestions();
+    { const lbl = document.getElementById('resume-drop-label'); if(lbl) lbl.textContent = file.name; }
     await renderMyPageResume();
   }catch(err){
     s.className='resume-status warn'; s.textContent='PDF 내용을 읽는 중 문제가 발생했어요: '+(err.message||err);
@@ -11450,10 +11465,11 @@ async function saveCvText(fileName, text){
 async function processCvFile(file){
   const st = document.getElementById('cv-status');
   const text = await readCvPdf(file, st); if(!text) return;
-  state.cvText = text.slice(0, 2000); state.cvFileName = file.name;
+  state.cvFull = DocQ.clean(text); state.cvText = state.cvFull.slice(0, 2000); state.cvFileName = file.name;
+  refreshDocQuestions();
   const ok = await saveCvText(file.name, text);
   st.style.display=''; st.className = 'resume-status ok';
-  st.textContent = `이력서를 읽었어요 (${file.name}).` + ((typeof AiSwitch !== 'undefined' && AiSwitch.on('ai_followup')) ? ' AI 꼬리질문에서 이력서 내용과 답변을 연결해 물어봐요.' : ' AI 꼬리질문이 켜지면 이력서 내용을 참고해 물어봐요.') + (ok ? ' 계정에 저장돼 다음 면접에도 쓰여요.' : '');
+  st.textContent = `이력서를 읽었어요 (${file.name}). 이력서에 적힌 경력·활동으로 맞춤형 질문을 만들어요.` + ((typeof AiSwitch !== 'undefined' && AiSwitch.on('ai_followup')) ? ' AI 꼬리질문도 이력서 내용과 답변을 연결해 물어봐요.' : '') + (ok ? ' 계정에 저장돼 다음 면접에도 쓰여요.' : '');
   syncCvCard();
 }
 function handleCvUpload(event){ const f = event.target.files && event.target.files[0]; event.target.value = ''; if(f) processCvFile(f); }
@@ -11462,7 +11478,8 @@ async function deleteSavedCv(){
   if(!state.currentUser) return false;
   const { error } = await sb.from('user_resumes').update({ cv_file_name: null, cv_text: null, cv_updated_at: null }).eq('user_id', state.currentUser.id);
   if(error){ showToast('이력서를 삭제하지 못했어요. ' + friendlyErr(error), 'warn'); return false; }
-  state.cvText = ''; state.cvFileName = ''; state.cvUpdatedAt = null;
+  state.cvText = ''; state.cvFull = ''; state.cvFileName = ''; state.cvUpdatedAt = null;
+  refreshDocQuestions();
   return true;
 }
 async function removeCv(){ if(await deleteSavedCv()){ const st = document.getElementById('cv-status'); if(st){ st.style.display='none'; st.textContent=''; } showToast('저장된 이력서를 삭제했어요'); } syncCvCard(); }
@@ -11472,7 +11489,8 @@ async function renderMyPageCv(){
   const { data, error } = await sb.from('user_resumes').select('cv_file_name, cv_text, cv_updated_at').eq('user_id', state.currentUser.id).maybeSingle();
   if(error){ box.innerHTML = `<span style="color:var(--danger);">불러오지 못했습니다: ${escapeHtml(error.message)}</span>`; if(del) del.style.display='none'; return; }
   if(!data || !data.cv_text){ box.innerHTML = '<span style="color:var(--slate-400);">저장된 이력서가 없어요. PDF를 올리면 AI 꼬리질문이 이력서의 경력·자격을 참고해 물어봐요.</span>'; if(del) del.style.display='none'; return; }
-  box.innerHTML = `<div class="mp-resume-name">${escapeHtml(data.cv_file_name || '이력서')}</div><div class="mp-resume-meta">${data.cv_updated_at ? formatDateFull(data.cv_updated_at) + ' 저장 · ' : ''}약 ${data.cv_text.length.toLocaleString()}자</div><p class="mp-resume-preview">${escapeHtml(data.cv_text.slice(0, 300))}</p>`;
+  const cleanC = DocQ.clean(data.cv_text);
+  box.innerHTML = `<div class="mp-resume-name">${escapeHtml(data.cv_file_name || '이력서')}</div><div class="mp-resume-meta">${data.cv_updated_at ? formatDateFull(data.cv_updated_at) + ' 저장 · ' : ''}약 ${cleanC.length.toLocaleString()}자 · 질문 후보 ${DocQ.fromCv(cleanC).length}개</div><p class="mp-resume-preview">${escapeHtml(cleanC.slice(0, 300))}</p>`;
   if(del) del.style.display = '';
 }
 async function handleMyPageCvUpload(event){
@@ -11481,8 +11499,8 @@ async function handleMyPageCvUpload(event){
   const text = await readCvPdf(f, st); if(!text) return;
   const ok = await saveCvText(f.name, text);
   if(!ok){ st.className='resume-status warn'; st.textContent='저장에 실패했어요. 잠시 후 다시 시도해 주세요.'; return; }
-  state.cvText = text.slice(0, 2000); state.cvFileName = f.name;
-  st.className='resume-status ok'; st.textContent = `'${f.name}' 파일을 저장했어요. 다음 면접부터 AI 꼬리질문에 쓰여요.`;
+  state.cvFull = DocQ.clean(text); state.cvText = state.cvFull.slice(0, 2000); state.cvFileName = f.name; refreshDocQuestions();
+  st.className='resume-status ok'; st.textContent = `'${f.name}' 파일을 저장했어요. 다음 면접부터 이력서 맞춤형 질문과 AI 꼬리질문에 쓰여요.`;
   await renderMyPageCv(); syncCvCard();
 }
 async function removeCvFromMyPage(){ if(await deleteSavedCv()) showToast('저장된 이력서를 삭제했어요'); await renderMyPageCv(); syncCvCard(); }
@@ -11511,15 +11529,11 @@ async function loadSavedResumeInner(){
     ({ data, error } = await sb.from('user_resumes').select('file_name, resume_text, updated_at').eq('user_id', state.currentUser.id).maybeSingle());
   }
   if(error){ console.warn('[저장된 자기소개서 조회 실패] '+error.message); return; }
-  if(data && data.cv_text && !state.cvText){ state.cvText = data.cv_text.slice(0, 2000); state.cvFileName = data.cv_file_name || '저장된 이력서'; state.cvUpdatedAt = data.cv_updated_at; syncCvCard(); }
-  if(!data || !data.resume_text) return;
-  if(!state.resumeText) state.resumeText = data.resume_text.slice(0, 2000);
-  // 그 사이 사용자가 새 파일을 올렸으면 덮어쓰지 않음
-  if(state.customQuestions && state.customQuestions.length) return;
-  state.customQuestions = buildCustomQuestionsFromText(data.resume_text);
-  if(!state.customQuestions.length){
-    state.customQuestions = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 부분에 대해 조금 더 설명해 주시겠어요?', ref:null, custom:true}];
-  }
+  if(data && data.cv_text && !state.cvText){ state.cvFull = DocQ.clean(data.cv_text); state.cvText = state.cvFull.slice(0, 2000); state.cvFileName = data.cv_file_name || '저장된 이력서'; state.cvUpdatedAt = data.cv_updated_at; syncCvCard(); }
+  if(!data || !data.resume_text){ refreshDocQuestions(); return; }
+  if(!state.resumeText){ state.resumeFull = DocQ.clean(data.resume_text); state.resumeText = state.resumeFull.slice(0, 2000); }
+  // 저장본·새로 올린 파일 모두 같은 규칙으로 (서류에 실제로 적힌 문장·경력만 사용)
+  refreshDocQuestions();
   document.getElementById('resume-drop-label').textContent = data.file_name || '저장된 자기소개서';
   statusEl.style.display='';
   statusEl.className='resume-status ok';
@@ -11531,7 +11545,7 @@ async function deleteSavedResume(){
   let { error } = await sb.from('user_resumes').update({ file_name: null, resume_text: null }).eq('user_id', state.currentUser.id);
   if(error){ ({ error } = await sb.from('user_resumes').delete().eq('user_id', state.currentUser.id)); }
   if(error){ showToast('자기소개서를 삭제하지 못했어요. '+friendlyErr(error), 'warn'); return; }
-  state.customQuestions = []; state.resumeText = '';
+  state.resumeText = ''; state.resumeFull = ''; refreshDocQuestions();
   document.getElementById('resume-drop-label').textContent = 'PDF 파일을 여기로 끌어다 놓거나 클릭해서 올려주세요';
   const statusEl = document.getElementById('resume-status');
   statusEl.style.display='none'; statusEl.className='resume-status'; statusEl.textContent='';
@@ -11539,21 +11553,311 @@ async function deleteSavedResume(){
   syncResumeCard();
 }
 
-function buildCustomQuestionsFromText(text){
-  const found = [];
-  RESUME_KEYWORDS.forEach(kw=>{
-    if(text.includes(kw) && !found.includes(kw)) found.push(kw);
-  });
-  const durationMatch = text.match(/(?<!\d)(\d{1,2})\s*(년|개월)(?!\d)/);
-  const qs = [];
-  if(durationMatch){
-    qs.push({q:`자기소개서에 언급하신 ${durationMatch[0]} 정도의 경험이 있으신데, 그 경험에서 가장 어려웠던 점은 무엇이었나요?`, ref:null, custom:true});
-  }
-  found.slice(0, 2).forEach(kw=>{
-    qs.push({q:`자기소개서에서 언급하신 '${kw}' 관련 경험에 대해 조금 더 구체적으로 설명해 주시겠어요?`, ref:null, custom:true});
-  });
-  return qs.slice(0,2);
+/* ---------------- 서류 기반 질문 (DocQ, 2026-10-14j) ----------------
+ * 자기소개서·이력서에 "실제로 적힌 문장·경력"에서만 질문을 만듭니다(지어내지 않음).
+ *  - clean(): PDF에서 뽑은 글자의 띄어쓰기 깨짐 정리 ("자 기 소 개 서", "1   급", "합니다   ." 등)
+ *  - fromResume(): 자기소개서를 항목(1. 지원 동기 …)·문장으로 나눠 경험·결과·갈등·동기·포부 문장을 골라 그 문장을 짧게 인용해 질문
+ *  - fromCv(): 이력서의 경력·활동·수상·교육 줄(기간 + 내용)을 골라 질문. 학력·인적 사항·연락처는 쓰지 않음
+ *  - 각 질문에는 같은 서류에서 뽑은 꼬리질문(follow)과 근거 문장(src)을 함께 붙임 → AI가 꺼져 있어도 서류에 있는 내용으로만 되물음 */
+const DocQ = {
+  clean(raw){
+    let t = String(raw || '').replace(/\r/g, '').replace(/[ 　\t]+/g, ' ');
+    t = t.split('\n').map(line=>{
+      let s = line.replace(/ {2,}/g, ' ').trim();
+      // 한 글자씩 띄워 쓴 제목 (자 기 소 개 서 / 이 력 서)
+      s = s.replace(/(^|[^가-힣])((?:[가-힣] ){2,}[가-힣])(?![가-힣])/g, (m, a, b)=> a + b.replace(/ /g, ''));
+      // 문장부호 앞 공백, 괄호 안쪽 공백
+      s = s.replace(/ +([.,!?:;)\]%])/g, '$1').replace(/([(\[]) +/g, '$1');
+      // 숫자 + 단위 (1 급 → 1급, 320 자 → 320자)
+      s = s.replace(/(\d) +(년간|개월간|주간|일간|시간|개월|과목|학기|학년|급|년|개|건|회|자|명|분|초|월|주|일|차|위|점|배|권|곳|기|등|세)(?![가-힣])/g, '$1$2');
+      s = s.replace(/([가-힣]) · ([가-힣])/g, '$1·$2');
+      s = s.replace(/(\d) +(급|년|개월|건|회|자|명|시간|분|월|위|점)(?=[을를이가은는의로와과에도만])/g, '$1$2');
+      // 숫자·%·괄호 뒤 조사 (98% 를 → 98%를)
+      s = s.replace(/([\d%)]) +(을|를|이|가|은|는|의|로|으로|와|과|에|에서|부터|까지|도|만)(?=[ ,.]|$)/g, '$1$2');
+      // 약어 뒤 조사 (AI 음성 X, AI 를 → AI를)
+      s = s.replace(/([A-Za-z]) +(을|를|이|가|은|는|의|로|와|과|에)(?=[ ,.]|$)/g, '$1$2');
+      // 마침표 뒤 띄어쓰기
+      s = s.replace(/([가-힣])\.(?=[가-힣A-Za-z])/g, '$1. ');
+      return s.replace(/ {2,}/g, ' ').trim();
+    }).filter(Boolean).join('\n');
+    return t;
+  },
+  // 사람 정보·샘플 안내 등 질문 재료로 쓰면 안 되는 문장
+  _skip(s){
+    return /(시연용|가상 샘플|실존 인물|성명|연락처|이메일|e-?mail|생년|주소|휴대폰|전화|010-|@|주민등록|\d{6}-\d)/i.test(s);
+  },
+  _j(word, pair){
+    const w = String(word||'').replace(/['"’”)\]]+$/, '');
+    const ch = w.charCodeAt(w.length - 1);
+    let bat;
+    if(ch >= 0xAC00 && ch <= 0xD7A3) bat = (ch - 0xAC00) % 28;
+    else if(/[0-9]$/.test(w)) bat = /[013678]$/.test(w) ? 1 : 0;
+    else if(/[A-Za-z]$/.test(w)) bat = /[lmnr]$/i.test(w) ? 1 : 0;
+    else bat = 0;
+    const [a, b] = pair.split('/');
+    if(pair === '으로/로') return word + ((bat && bat !== 8) ? '으로' : '로');
+    if(pair === '이라고/라고') return word + (bat ? '이라고' : '라고');
+    return word + (bat ? a : b);
+  },
+  _plain(clause){
+    // 문장 끝을 인용하기 좋게 평서형으로 (들였습니다 → 들였다, 생각합니다 → 생각한다)
+    let s = clause.replace(/[.!?]+$/, '').trim();
+    const rules = [[/있습니다$/, '있다'], [/없습니다$/, '없다'], [/([았었였했겠됐])습니다$/, '$1다'], [/합니다$/, '한다'], [/됩니다$/, '된다'], [/입니다$/, '이다'], [/습니다$/, '다'], [/니다$/, '다']];
+    for(const [re, rep] of rules){ if(re.test(s)) return s.replace(re, rep); }
+    return null;
+  },
+  _trimLead(s){
+    return s.replace(/^(특히|또한|그리고|그래서|그 결과|결과적으로|이후|이후에는|당시|당시에|이를 통해|이 경험을 통해|그 과정에서|저는|제가|저도|먼저|무엇보다|이처럼|그러나|하지만|다만)\s*,?\s*/g, '').replace(/^(특히|또한|저는|제가|먼저)\s+/, '').trim();
+  },
+  _sections(text){
+    // "1. 지원 동기" 같은 항목 머리말로 나눔. 줄바꿈이 없던 옛 저장본도 처리
+    { // [지원 동기] 【성장 과정】 <입사 후 포부> ■ 직무 역량 같은 머리말
+      const BR = /(?:^|\n|\s)(?:[\[【〈<]\s*([가-힣A-Za-z ·/&]{2,20}?)\s*[\]】〉>]|[■◆●▶□◇]\s*([가-힣A-Za-z ·/&]{2,20}?)(?=\n|$))/g;
+      const hs = []; let b;
+      while((b = BR.exec(text))){ const title = (b[1] || b[2] || '').trim(); if(title && !/(시연|샘플)/.test(title)) hs.push({ title, start: b.index, bodyStart: BR.lastIndex }); }
+      if(hs.length >= 2) return hs.map((h, i)=>({ title: h.title, kind: this._kindOf(h.title), body: text.slice(h.bodyStart, i + 1 < hs.length ? hs[i+1].start : text.length).trim() }));
+    }
+    const HEAD = /(?:^|\n|\s)([1-9])\s*[.)]\s*((?:[가-힣A-Za-z·/&]+\s?){1,4}?)(?=\s|\n|$)/g;
+    const ENDW = /(동기|역량|경험|포부|과정|장단점|해결|계획|가치관|목표|강점|약점|소개|이유|사례|자세|태도|노력|성격|생활|활동|각오|비전|관|점)$/;
+    const heads = [];
+    let m;
+    while((m = HEAD.exec(text))){
+      const words = m[2].trim().split(/\s+/);
+      let title = '';
+      for(let k = 1; k <= words.length; k++){ const cand = words.slice(0, k).join(' '); if(ENDW.test(cand)) { title = cand; } }
+      if(!title) continue;
+      const start = m.index + m[0].indexOf(m[1]);
+      const bodyStart = text.indexOf(title, start) + title.length;
+      heads.push({ n: m[1], title, start, bodyStart });
+    }
+    if(!heads.length) return [{ title:'', kind:'general', body: text }];
+    const out = [];
+    heads.forEach((h, i)=>{
+      const end = i + 1 < heads.length ? heads[i+1].start : text.length;
+      out.push({ title: h.title, kind: this._kindOf(h.title), body: text.slice(h.bodyStart, end).trim() });
+    });
+    return out;
+  },
+  _kindOf(title){
+    if(/동기|이유/.test(title)) return 'motive';
+    if(/포부|계획|목표|각오|비전/.test(title)) return 'plan';
+    if(/갈등|협업|협력|소통|팀/.test(title)) return 'conflict';
+    if(/장단점|성격|강점|약점|가치관|태도|자세/.test(title)) return 'personality';
+    if(/역량|경험|경력|사례|노력|활동|과정|생활/.test(title)) return 'competency';
+    return 'general';
+  },
+  _sentences(body){
+    return body.replace(/\n/g, ' ').split(/(?<=[다요])\.\s+|(?<=[.!?])\s+(?=[가-힣A-Z"'‘“])/).map(s=>s.trim()).filter(s=>s.length >= 12);
+  },
+  _feat(s){
+    return {
+      action: /(했|하였|들였|줄였|높였|늘렸|만들|제안|맡|작성|담당|겪|경험|취득|유지|활용|정리|대조|확인|수행|참여|기록|일하|근무|봉사|통역|준비|극복|해결|개선|배웠|익혔)/.test(s),
+      num: /\d/.test(s),
+      result: /(결과|줄였|높였|늘렸|개선|절반|자리\s?잡|활용되었|향상|달성|성공|인정|수상|합격|칭찬)/.test(s),
+      conflict: /(의견이 달|갈등|설득|입장|조율|다투|충돌|이견|양보|타협)/.test(s),
+      motive: /(지원했|지원하게|일하고 싶|하고 싶어|계기)/.test(s),
+      plan: /(되겠|하겠|싶습니다|기여|노력하겠|성장)/.test(s),
+      belief: /(생각합니다|생각했습니다|믿습니다|라고 봅니다)$/.test(s.replace(/[.!?]+$/, '')),
+    };
+  },
+  // 문장에서 인용할 절 하나 고르기 (너무 길면 쉼표·연결어미로 자른 뒤 동작이 있는 마지막 절)
+  _quote(s){
+    const plainAll = this._plain(this._trimLead(s));
+    if(plainAll && plainAll.length <= 66) return plainAll;
+    const parts = s.split(/,\s*/).map(x=>this._trimLead(x)).filter(Boolean);
+    for(let i = parts.length - 1; i >= 0; i--){
+      const p = parts[i];
+      const pl = this._plain(p);
+      if(pl && pl.length >= 10 && pl.length <= 58 && !/^(그|이|저|그것|이것)\s/.test(pl)) return pl;
+      if(!pl && i < parts.length - 1 && p.length >= 10 && p.length <= 50 && /(며|고|서|여|면서)$/.test(p)) continue;
+    }
+    // 마지막 수단: "~경험" 명사구
+    const np = s.match(/([가-힣A-Za-z0-9·\s]{4,34}?경험)(?=을|이|과|에서|을 바탕|으로)/);
+    if(np) return { np: np[1].trim().replace(/^(또한|특히|그리고)\s+/, '') };
+    return null;
+  },
+  _q(sec, kind, quote){
+    const where = sec && sec.title ? `자기소개서 '${sec.title}' 부분에` : '자기소개서에';
+    if(quote && typeof quote === 'object'){
+      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 그 경험이 구체적으로 무엇이었는지, 그리고 그 경험을 속기 업무에 어떻게 살리실 수 있을지 말씀해 주시겠어요?`;
+    }
+    const said = `${where} '${quote}'고 쓰셨는데요,`;
+    switch(kind){
+      case 'result': return `${said} 그런 결과를 얻기까지 본인이 구체적으로 무엇을 바꾸었는지, 그리고 그 결과는 어떻게 확인하셨는지 말씀해 주시겠어요?`;
+      case 'conflict': return `${said} 그 의견 차이를 어떤 과정으로 좁히셨는지, 그때 본인이 한 말과 행동을 중심으로 말씀해 주시겠어요?`;
+      case 'conflictAct': return `${said} 상대방이 처음에는 다르게 생각했을 텐데, 그 방법을 받아들이게 하려고 어떻게 설명하고 설득하셨는지 말씀해 주시겠어요?`;
+      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨고, 실제 회의를 속기할 때는 그 실력이 어떻게 드러나는지 말씀해 주시겠어요?`;
+      case 'motive': return `${said} 그렇게 느끼게 된 구체적인 장면을 하나 들어서 말씀해 주시겠어요?`;
+      case 'plan': return `${said} 그 다짐을 지키기 위해 입사 후 첫 1년 동안 구체적으로 무엇을 하실 계획인지 말씀해 주시겠어요?`;
+      case 'belief': return `${said} 그렇게 생각하게 된 계기가 된 경험이 있다면 말씀해 주시겠어요?`;
+      case 'learn': return `${said} 그렇게 느끼게 된 구체적인 계기나 장면을 하나 말씀해 주시겠어요?`;
+      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기와, 그 뒤로 준비해 온 과정을 말씀해 주시겠어요?`;
+      case 'trait': return `${said} 그런 성향이 잘 드러났던 구체적인 일을 하나 들어서 말씀해 주시겠어요?`;
+      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지, 순서대로 구체적으로 말씀해 주시겠어요?`;
+    }
+  },
+  _follow(kind, quote){
+    // 같은 문장에 대해 한 번 더 들어가는 꼬리질문 (서류 내용 범위 안에서)
+    const q = typeof quote === 'object' ? quote.np : quote;
+    switch(kind){
+      case 'result': return '그 과정에서 가장 어려웠던 점은 무엇이었고, 그 경험을 앞으로 맡게 될 속기 업무에는 어떻게 적용하시겠습니까?';
+      case 'conflict': case 'conflictAct': return '지금 다시 그 상황이 온다면, 처음부터 다르게 하실 부분이 있을까요?';
+      case 'skill': return '속도와 정확성 중 하나를 포기해야 하는 순간이 온다면, 무엇을 먼저 지키시겠습니까?';
+      case 'motive': return '그 경험이 지금 지원하신 속기 직무를 선택하는 데 어떤 영향을 주었는지 조금 더 말씀해 주시겠어요?';
+      case 'plan': return '그 계획을 이루는 데 지금의 본인에게 가장 부족한 점은 무엇이라고 보십니까?';
+      case 'belief': return '그 생각이 실제로 일하는 태도에서는 어떻게 드러난다고 보십니까?';
+      case 'learn': return '그 깨달음이 지금 공부하거나 일하는 방식에는 어떻게 이어지고 있습니까?';
+      case 'decide': return '준비하면서 가장 힘들었던 순간은 언제였고, 그때 어떻게 버티셨나요?';
+      case 'trait': return '그 성향이 속기 업무에서는 어떤 장점이 되고, 반대로 조심해야 할 점은 무엇이라고 보십니까?';
+      default: return q ? '그렇게 했을 때 실제로 달라진 점은 무엇이었나요? 숫자나 구체적인 예로 말씀해 주시면 좋겠습니다.' : '';
+    }
+  },
+  fromResume(raw){
+    const text = this.clean(raw);
+    if(!text) return [];
+    const out = [];
+    this._sections(text).forEach(sec=>{
+      const sents = this._sentences(sec.body).filter(s=>!this._skip(s));
+      sents.forEach((s, i)=>{
+        const f = this._feat(s);
+        let kind = null, score = 0;
+        const skill = /(취득|유지하고 있|합격했|자격을|급을|타수|정확도)/.test(s);
+        if(f.belief){ if(sec.kind === 'motive' || sec.kind === 'general'){ kind = 'belief'; score = 2; } }
+        else if(f.result && f.action){ kind = 'result'; score = f.num ? 9 : 6; }
+        else if((sec.kind === 'conflict' || f.conflict) && /(제안|설득|듣고|조율|대화|양보|맞춰|절충)/.test(s)){ kind = 'conflictAct'; score = 8; }
+        else if(f.conflict || (sec.kind === 'conflict' && f.action)){ kind = 'conflict'; score = 5; }
+        else if(sec.kind === 'motive' && /경험/.test(s)){ kind = 'motive'; score = 7; }
+        else if(skill){ kind = 'skill'; score = 5; }
+        else if(/(알게 되었|알게 됐|깨달|배웠|느꼈|결심|다짐|마음먹)/.test(s)){ kind = /(결심|다짐|마음먹)/.test(s) ? 'decide' : 'learn'; score = sec.kind === 'motive' ? 6 : 5; }
+        else if(/(좋아했|즐겼|관심이 많|관심을 가|흥미를)/.test(s)){ kind = 'trait'; score = 3; }
+        else if(f.action && !f.plan){ kind = 'action'; score = 5 + (f.num ? 1 : 0) + (sec.kind === 'competency' ? 1 : 0); }
+        else if(sec.kind === 'plan' && f.plan){ kind = 'plan'; score = 3 + (/경험/.test(s) ? 1 : 0); }
+        else if(sec.kind === 'conflict' && f.result){ kind = 'result'; score = 5; }
+        if(!kind) return;
+        const quote = this._quote(s);
+        if(!quote) return;
+        const q = this._q(sec, kind, quote);
+        if(q.length > 190) return;
+        out.push({ q, ref:null, custom:true, doc:'resume', section: sec.title || '', src: s, kind, score,
+                   follow: [this._follow(kind, quote)].filter(Boolean),
+                   hint: '자기소개서에 쓴 내용과 같은 사실(언제·어디서·내가 한 일·결과)로 답해 보세요.' });
+      });
+    });
+    return out.sort((a,b)=>b.score-a.score);
+  },
+  _cvLabel: /(학력|자격증|자격 사항|자격사항|자격|면허|어학|속기 속도|경력 및 실무 경험|경력사항|경력 사항|경력|실무 경험|대외활동|활동 사항|활동|봉사활동|봉사|교육 및 수상|교육 사항|교육|수상 경력|수상|기타|인적 사항|인적사항|병역|컴퓨터 활용)/,
+  fromCv(raw){
+    const text = this.clean(raw).replace(/\n/g, ' ');
+    if(!text) return [];
+    // 2024.03 / 2024-03 / 2024/03 / 2024년 3월 (+ ~ 현재 / ~ 2025.02)
+    const D = String.raw`(\d{4})\s*(?:[.\-/]\s*|년\s*)(\d{1,2})(?:\s*월)?\.?`;
+    const re = new RegExp(D + String.raw`(?:\s*[~∼～–—-]\s*(현재|재직\s*중|진행\s*중|` + String.raw`\d{4}\s*(?:[.\-/]\s*|년\s*)\d{1,2}(?:\s*월)?\.?` + `))?\\s+`, 'g');
+    const marks = [];
+    let m;
+    while((m = re.exec(text))){ marks.push({ at: m.index, end: re.lastIndex, y: +m[1], mo: +m[2], until: (m[3] || '').trim() }); }
+    const LABEL = /\s(학력(?:\s?사항)?|자격증|자격\s?사항|어학|속기 속도|경력 및 실무 경험|경력\s?사항|실무 경험|교육 및 수상|교육\s?사항|교육\s?이수|수상\s?(?:경력|내역)?|대외\s?활동|활동\s?사항|봉사\s?활동|기타\s?사항|인적\s?사항|병역\s?사항|자기\s?소개)(?=\s|$)/;
+    const ROLE = /(봉사|보조|계약직|정규직|인턴|아르바이트|근무|담당|사원|주임|대리|강사|운영|속기사|정리|작성|통역사|기록원|조교|위원)(?=\s|$|,)/g;
+    const out = [];
+    marks.forEach((mk, i)=>{
+      let body = text.slice(mk.end, i + 1 < marks.length ? marks[i+1].at : text.length).trim();
+      const lab = body.search(LABEL);
+      if(lab > 0) body = body.slice(0, lab).trim();
+      if(/(졸업|입학|재학|대학교|대학원|고등학교|중학교|학점|휴학|편입|전공)/.test(body) || this._skip(body)) return;
+      body = body.replace(/[○◯●]+\s*/g, '').replace(/\((주|유|사|재|株)\)\s*/g, '').replace(/\s{2,}/g, ' ').trim();
+      if(body.length < 4) return;
+      let kind = 'career';
+      if(/(\d급|자격|기능사|기사\b|능력검정|면허|TOEIC|토익|토스|OPIc|JLPT|HSK)/i.test(body) && body.length < 40) kind = 'cert';
+      if(/(수상|장려상|우수상|최우수상|대상|금상|은상|동상|입상|표창|감사장)/.test(body)) kind = 'award';
+      else if(/(수료|과정|교육|연수|강좌|이수)/.test(body) && kind === 'career') kind = 'training';
+      else if(/봉사/.test(body) && kind === 'career') kind = 'volunteer';
+      // 한 줄에 여러 일이 붙은 경우: ") " 뒤는 따로 / 너무 길면 역할 이름(…보조, …봉사)에서 끊고 나머지는 세부 내용으로
+      const pieces = body.split(/(?<=\))\s+/).map(x=>x.trim()).filter(x=>x.length >= 4);
+      let main = pieces[0], extra = pieces.slice(1);
+      let paren = ((main.match(/\(([^)]*)\)/) || [])[1] || '').trim();
+      main = main.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      if(main.length > 30){
+        let cut = -1; ROLE.lastIndex = 0; let r;
+        while((r = ROLE.exec(main))){ const e = r.index + r[0].length; if(e >= 8 && e <= 46) cut = e; }
+        if(cut > 0 && cut < main.length - 3){ const rest = main.slice(cut).replace(/^[\s,]+/, '').trim(); main = main.slice(0, cut).trim(); if(!paren) paren = rest; else extra.unshift(rest); }
+        else if(main.length > 46){ main = main.slice(0, 46).replace(/\s\S*$/, ''); }
+      }
+      if(kind === 'training') main = main.replace(/\s*(수료|이수)$/, '');
+      const until = mk.until ? (/현재|재직|진행/.test(mk.until) ? '부터 지금까지' : (()=>{ const u = mk.until.match(/(\d{4})\D+(\d{1,2})/); return u ? `부터 ${+u[1]}년 ${+u[2]}월까지` : ''; })()) : '';
+      const when = `${mk.y}년 ${mk.mo}월${until}`;
+      out.push({ kind, when, main, paren, extra, raw: body, y: mk.y });
+    });
+    const rel = x=>(/(속기|회의록|녹취|문자통역|자막|기록|의회|국회|법원|공청회|통역|검찰|재판)/.test(x.raw) ? 5 : 0);
+    const kindScore = { career: 6, volunteer: 4, award: 4, training: 3, cert: 1 };
+    out.forEach(x=>{ x.score = (kindScore[x.kind]||0) + rel(x) + (x.extra.length || x.paren ? 1 : 0) + Math.max(0, Math.min(8, x.y - 2018)) * 0.2; });
+    out.sort((a,b)=>b.score-a.score);
+    const J = (w, p)=>this._j(w, p);
+    return out.filter(x=>x.kind !== 'cert' || out.length < 3).map(x=>{
+      const item = `'${x.main}'`;
+      let q, follow = [];
+      if(x.kind === 'award'){
+        q = /(대회|경진|경연|공모전|올림피아드)/.test(x.main)
+          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회를 준비하면서 실력을 어떻게 끌어올리셨는지 말씀해 주시겠어요?`
+          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨고 그때 본인이 특히 신경 쓴 점은 무엇이었는지 말씀해 주시겠어요?`;
+        follow.push('그 경험에서 얻은 것이 실제 속기 업무에서는 어떻게 도움이 된다고 보십니까?');
+      }else if(x.kind === 'training'){
+        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것은 무엇이고, 실제 업무에 어떻게 쓰고 계신지 말씀해 주시겠어요?`;
+        follow.push('배운 내용 중에 실무에서 생각처럼 잘 되지 않았던 부분도 있었나요?');
+      }else if(x.kind === 'cert'){
+        q = `이력서에 ${item} 자격을 적으셨는데요, 그 자격을 준비하며 가장 힘들었던 점과 그것을 어떻게 넘기셨는지 말씀해 주시겠어요?`;
+      }else{
+        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할과 가장 기억에 남는 상황을 하나 말씀해 주시겠어요?`;
+        if(x.paren) follow.push(`이력서에 ${J("'" + x.paren.slice(0, 40) + "'", '이라고/라고')} 적으셨는데, 그만큼의 일을 하면서 정확성은 어떻게 지키셨나요?`);
+        if(x.extra.length) follow.push(`같은 기간에 '${x.extra[0].replace(/\s*\([^)]*\)\s*/g,' ').trim().slice(0, 40)}'도 하셨다고 적으셨는데요, 그 일은 앞의 일과 무엇이 달랐나요?`);
+      }
+      return { q: q.replace(/\s{2,}/g, ' '), ref:null, custom:true, doc:'cv', section: x.kind, src: x.raw, kind: x.kind, score: x.score, follow: follow.filter(Boolean).slice(0, 2),
+               hint: '이력서에 적은 기간·역할·숫자와 맞게, 내가 직접 한 일을 중심으로 답해 보세요.' };
+    });
+  },
+  /** 면접에 넣을 서류 질문 고르기: 자기소개서 1 + 이력서 1 (한쪽만 있으면 그쪽에서 2). 상위 후보 안에서 매번 조금씩 바꿈 */
+  build(resumeRaw, cvRaw, max){
+    max = max || 2;
+    const r = this.fromResume(resumeRaw || ''), c = this.fromCv(cvRaw || '');
+    const pick = (list, n, used)=>{
+      const top = list.filter(x=>!used.has(x.q)).slice(0, Math.max(n, 3));
+      const res = [];
+      while(res.length < n && top.length){ const i = Math.floor(Math.random() * Math.min(top.length, 3)); res.push(top.splice(i, 1)[0]); }
+      res.forEach(x=>used.add(x.q));
+      return res;
+    };
+    const used = new Set();
+    let out = [];
+    if(r.length && c.length){ out = pick(r, 1, used).concat(pick(c, 1, used)); }
+    else if(r.length){ // 같은 문장 두 번 X, 가능하면 다른 항목에서
+      const first = pick(r, 1, used);
+      const other = r.filter(x=>!first.length || x.section !== first[0].section || x.kind !== first[0].kind);
+      out = first.concat(pick(other.length ? other : r, 1, used));
+    }
+    else if(c.length){ out = pick(c, Math.min(2, c.length), used); }
+    out = out.slice(0, max);
+    out.forEach(x=>this.followMap.set(x.q, (x.follow || []).slice()));
+    return out;
+  },
+  followMap: new Map(),
+  /** 규칙 꼬리질문(AI 꺼짐)에서: 이 서류 질문에 붙여 둔 꼬리질문을 먼저 사용 */
+  nextFollow(root, used){
+    const list = this.followMap.get(root);
+    if(!list || !list.length) return null;
+    return list.find(x=>!(used && used.has(x))) || null;
+  },
+  /** 서류 질문의 근거 문장 (AI 꼬리질문에 함께 보냄) */
+  srcOf(q){ const it = (state.customQuestions || []).find(x=>x.q === q); return it && it.src ? { doc: it.doc, section: it.section || '', src: String(it.src).slice(0, 300) } : null; },
+};
+/** 자기소개서·이력서가 바뀔 때마다 서류 질문을 다시 만듦 (state.resumeFull·cvFull 원문 기준) */
+function refreshDocQuestions(){
+  const r = state.resumeFull || state.resumeText || '', c = state.cvFull || state.cvText || '';
+  let qs = [];
+  try{ qs = DocQ.build(r, c, 2); }catch(e){ console.warn('[서류 질문 만들기 실패]', e); }
+  if(!qs.length && r.trim()) qs = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 경험 하나를, 언제·어디서·무엇을 했는지 중심으로 말씀해 주시겠어요?', ref:null, custom:true, doc:'resume'}];
+  state.customQuestions = qs;
+  try{ syncRealSetDocStep(); }catch(_){}
+  return qs;
 }
+function buildCustomQuestionsFromText(text){ return DocQ.build(text, state.cvFull || state.cvText || '', 2); }
 function toggleSwitch(el,type){
   el.classList.toggle('on');
   const on = el.classList.contains('on');
@@ -13904,7 +14208,7 @@ async function runDialogInterview(){
       pendingAsk = { q: d.q.q, ref: d.q.ref, hint: d.q.hint || '', qid: (d.q.id != null ? d.q.id : d.q.dbId), kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q), slot: d.q.slot || null, slotName: d.q.slotName || '' };
       curSlotName = d.q.slotName || '';
       qEl.textContent = d.q.q; { const qn=document.getElementById('rh-qnum'); if(qn) qn.textContent = String(d.index).padStart(2,'0'); }
-      if(d.q.custom){ badge.textContent = d.q.slotName ? '실전 세트 · 자기소개서 기반' : '자기소개서 · 이력서 기반'; badge.className='qcard-source-badge resume'; }
+      if(d.q.custom){ const dn = d.q.doc === 'cv' ? '이력서' : '자기소개서'; badge.textContent = d.q.slotName ? `실전 세트 · ${dn} 기반` : `${dn} 기반`; badge.className='qcard-source-badge resume'; }
       else { badge.textContent = d.q.slotName ? `실전 세트 · ${d.q.slotName}` : state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
       ta.value=''; updateCharCount();
     }
@@ -14333,7 +14637,7 @@ function updateExampleQuestion(){
     badge.className = 'qcard-source-badge followup';
     if(notice) notice.textContent = '방금 답변을 바탕으로 AI가 즉석에서 만든 후속 질문입니다. (지금은 미리 정해둔 예시 문장을 보여주는 데모용 기능입니다.)';
   }else if(item && item.custom){
-    badge.textContent = '자기소개서 · 이력서 기반';
+    badge.textContent = item.doc === 'cv' ? '이력서 기반' : '자기소개서 기반';
     badge.className = 'qcard-source-badge resume';
     if(notice) notice.textContent = '업로드하신 자기소개서·이력서 내용을 바탕으로 만들어진 맞춤형 질문입니다. 마이크 버튼을 켜고 실제로 답변해 보세요.';
   }else{
@@ -15805,8 +16109,9 @@ const StenoDialog = {
         const invoke = sb.functions.invoke('followup-question', {
           body: { field_id: fieldId, question, answer, reference: reference || null, history, pressure: pressure || 'normal',
                   root_question: root, qtype: qtype || undefined, followups_done: (typeof followupsDone === 'number') ? followupsDone : undefined,
-                  resume_summary: state.resumeText ? state.resumeText.slice(0, 1200) : null,
-                  cv_summary: state.cvText ? state.cvText.slice(0, 1200) : null,
+                  resume_summary: state.resumeText ? state.resumeText.slice(0, 2000) : null,
+                  cv_summary: state.cvText ? state.cvText.slice(0, 1500) : null,
+                  doc_focus: (typeof DocQ !== 'undefined') ? DocQ.srcOf(root) : null,
                   interview_id: state.demoResult ? null : String(state.startTime || '') },
         });
         const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과 ('+(STEP1.followupTimeoutMs/1000)+'초)')), STEP1.followupTimeoutMs));
@@ -15842,6 +16147,9 @@ const StenoDialog = {
     try{ rb = Rubric.evaluate({ q: isFuAnswer ? opt.question : root, ref: isFuAnswer ? null : opt.reference, followup: isFuAnswer, root, rootRef: opt.reference, fieldId: opt.fieldId, qid: isFuAnswer ? undefined : opt.qid }, answer, null); }catch(e){ console.warn('[규칙 꼬리질문] 평가 실패', e); }
     if(rb && !/^(ok|short)$/.test(rb.gate)) return null;
     this._used = this._used || new Set();
+    // 자기소개서·이력서 질문이면: 같은 서류 문장에서 미리 만들어 둔 꼬리질문을 먼저 (서류에 없는 내용을 묻지 않도록)
+    { const df = (typeof DocQ !== 'undefined') ? DocQ.nextFollow(root, this._used) : null;
+      if(df){ this._used.add(df); return { followup: df, evaluation:'서류 내용 확인', intent:'probe', model:'', rule:'doc' }; } }
     if(this._root !== root){ this._root = root; this._usedTags = new Set(); }
     const c = rb ? rb.ctx : {};
     const t = rb ? (isFuAnswer ? rb.rootType : rb.type) : 'general';
