@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14e';
+var APP_VERSION = '2026-10-14f';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -8283,6 +8283,7 @@ function showScreen(id){
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
+  try{ if(typeof MicStream !== 'undefined') MicStream.setHold(id === 'screen-interview'); }catch(_){}
   try{ if(id !== 'screen-interview') closeMoreSheet(); }catch(_){}
   try{ if(typeof ScreenKeep !== 'undefined'){ if(id === 'screen-interview') ScreenKeep.on(); else ScreenKeep.off(); } }catch(_){}
   if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
@@ -10446,11 +10447,13 @@ const MobileAudio = {
   track(stream){ if(stream) this.streams.add(stream); return stream; },
   /** 말하기 직전: 듣는 중이 아닌 마이크를 모두 닫아 통화 모드에서 빠져나옴 */
   beforeSpeak(){
-    const keep = (typeof StenoListener !== 'undefined' && StenoListener.active) ? StenoListener.stream : null;
-    this.streams.forEach(st=>{ if(st === keep) return;
-      try{ if(typeof rhMeter !== 'undefined' && rhMeter.stream === st){ stopRehearsalMeter(); this.streams.delete(st); return; } }catch(_){}
-      try{ st.getTracks().forEach(t=>{ if(t.readyState !== 'ended') t.stop(); }); }catch(_){} this.streams.delete(st); });
     this.session('playback');
+    if(!this.isMobile) return;   // PC는 마이크를 계속 열어 둠 (한 번 받은 권한을 화면이 바뀌어도 유지) — 2026-10-14
+    const keep = (typeof StenoListener !== 'undefined' && StenoListener.active) ? StenoListener.stream : null;
+    try{ if(typeof rhMeter !== 'undefined' && rhMeter.stream && rhMeter.stream !== keep) stopRehearsalMeter(); }catch(_){}
+    try{ if(typeof MicStream !== 'undefined' && MicStream.stream && MicStream.stream !== keep) MicStream.close(); }catch(_){}
+    this.streams.forEach(st=>{ if(st === keep) return;
+      try{ st.getTracks().forEach(t=>{ if(t.readyState !== 'ended') t.stop(); }); }catch(_){} this.streams.delete(st); });
   },
   /** 휴대폰은 에코 제거·잡음 제거를 끈 채로 마이크를 엶 (통화 모드 방지) */
   constraints(base){
@@ -10483,6 +10486,53 @@ const DevicePref = {
     return await navigator.mediaDevices.getUserMedia({ video:b, audio:false });
   },
 };
+/* ---- 공용 마이크 스트림 (2026-10-14 마이크 버그 수정) ----
+   문제: 준비창·리허설·라이브가 각각 마이크를 열고 닫아, "이번만 허용"을 고른 크롬에서는 다음 화면에서 권한이 풀리고,
+         음성 인식(SpeechRecognition)은 별도로 마이크를 또 열어 휴대폰·일부 PC에서 "듣는 중"만 뜨고 글자가 안 나옴.
+   해결: 면접 화면에 있는 동안 스트림 하나를 계속 열어 두고(PC), 음량 측정·녹음·음성 인식이 모두 이 스트림을 같이 씀.
+         크롬 138+는 음성 인식을 이 스트림의 트랙으로 시작(start(track)) → 권한을 다시 묻지 않고, 고른 마이크 그대로 들음. */
+const SR_TRACK_OK = (()=>{ try{ const SR = window.SpeechRecognition || window.webkitSpeechRecognition; return !!SR && ('processLocally' in SR.prototype); }catch(_){ return false; } })();
+const MicStream = {
+  stream:null, _p:null, users:new Set(), hold:false, _closeT:null, _warned:false,
+  live(){ return !!(this.stream && this.stream.getAudioTracks().some(t=>t.readyState === 'live')); },
+  track(){ return (this.stream && this.stream.getAudioTracks().find(t=>t.readyState === 'live')) || null; },
+  async get(who){
+    if(this._closeT){ clearTimeout(this._closeT); this._closeT = null; }
+    if(this.live()){ this.users.add(who); return this.stream; }
+    if(!this._p){
+      this._p = DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true}).then(st=>{
+        this._p = null; this.stream = st; this._warned = false;
+        st.getAudioTracks().forEach(t=>{ t.addEventListener('ended', ()=>this._onEnded(st)); });
+        return st;
+      }, e=>{ this._p = null; throw e; });
+    }
+    const st = await this._p; this.users.add(who); return st;
+  },
+  release(who){
+    this.users.delete(who);
+    if(this.users.size || this.hold) return;
+    if(this._closeT) clearTimeout(this._closeT);
+    this._closeT = setTimeout(()=>{ this._closeT = null; if(!this.users.size && !this.hold) this.close(); }, 1500);   // 화면 전환 사이 잠깐은 열어 둠
+  },
+  setHold(v){ this.hold = !!v; if(!this.hold && !this.users.size) this.close(); },
+  close(){
+    if(this._closeT){ clearTimeout(this._closeT); this._closeT = null; }
+    const st = this.stream; this.stream = null; this.users.clear();
+    if(st){ try{ st.getTracks().forEach(t=>{ if(t.readyState !== 'ended') t.stop(); }); }catch(_){} try{ MobileAudio.streams.delete(st); }catch(_){} }
+  },
+  /** 권한이 중간에 풀리거나(이번만 허용) 장치가 빠지면 트랙이 끝남 → 다음 get()에서 다시 엶 */
+  _onEnded(st){
+    if(this.stream !== st) return;
+    if(!this.stream.getAudioTracks().some(t=>t.readyState === 'live')){
+      this.stream = null; try{ MobileAudio.streams.delete(st); }catch(_){}
+      if(this.hold && !this._warned){
+        this._warned = true;
+        try{ Feedback.auto('마이크', '면접 도중 마이크 스트림이 끊김 (권한 만료 또는 장치 분리)'); }catch(_){}
+        try{ showToast('마이크 연결이 끊겼어요. 권한을 "이번만 허용"으로 골랐다면 화면이 바뀔 때 풀릴 수 있어요. 다시 물어보면 "사이트 방문 시 허용"을 눌러 주세요.', 'warn'); }catch(_){}
+      }
+    }
+  },
+};
 async function refreshDeviceSelects(activeMicId, activeCamId){
   if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
   let list = []; try{ list = await navigator.mediaDevices.enumerateDevices(); }catch(_){ return; }
@@ -10503,9 +10553,9 @@ async function refreshDeviceSelects(activeMicId, activeCamId){
   };
   fill('setup-mic-select', 'audioinput', activeMicId, DevicePref.mic, '마이크를 찾지 못했어요');
   fill('setup-cam-select', 'videoinput', activeCamId, DevicePref.cam, '카메라를 찾지 못했어요');
-  const note = document.getElementById('setup-mic-note'); if(note) note.hidden = !DevicePref.mic;
+  const note = document.getElementById('setup-mic-note'); if(note){ note.hidden = !DevicePref.mic; if(SR_TRACK_OK) note.textContent = '기본이 아닌 마이크를 골랐어요. 음성 인식도 이 마이크로 들어요.'; }
 }
-function onMicDeviceChange(id){ DevicePref.set('mic', id); const note = document.getElementById('setup-mic-note'); if(note) note.hidden = !DevicePref.mic; startMicLevelAnim(); }
+function onMicDeviceChange(id){ DevicePref.set('mic', id); const note = document.getElementById('setup-mic-note'); if(note) note.hidden = !DevicePref.mic; try{ MicStream.close(); }catch(_){} startMicLevelAnim(); }
 function onCamDeviceChange(id){ DevicePref.set('cam', id); const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }
 if(navigator.mediaDevices && navigator.mediaDevices.addEventListener){
   navigator.mediaDevices.addEventListener('devicechange', ()=>{ const m = document.getElementById('modal-setup'); if(m && m.classList.contains('active')) refreshDeviceSelects(); });
@@ -11477,11 +11527,12 @@ async function startMicLevelAnim(){
     setMicCheck('err', '이 브라우저는 마이크를 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.');
     return;
   }
-  setMicCheck('', '마이크 확인 중… (권한을 물어보면 "허용"을 눌러주세요)');
+  { let perm = 'unknown'; try{ if(navigator.permissions && navigator.permissions.query) perm = (await navigator.permissions.query({ name:'microphone' })).state; }catch(_){}
+    setMicCheck('', perm === 'prompt' ? '마이크 확인 중… 권한을 물어보면 "사이트 방문 시 허용"(또는 "항상 허용")을 눌러 주세요. "이번만 허용"은 다음 화면에서 다시 막힐 수 있어요.' : '마이크 확인 중… (권한을 물어보면 "허용"을 눌러주세요)'); }
   try{
     const gen = (startMicLevelAnim._g = (startMicLevelAnim._g||0) + 1);
-    const stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
-    if(gen !== startMicLevelAnim._g){ stream.getTracks().forEach(t=>t.stop()); return; }   // 그 사이 다른 마이크를 골랐으면 이건 버림
+    const stream = await MicStream.get('setup');
+    if(gen !== startMicLevelAnim._g){ return; }   // 그 사이 다른 마이크를 골랐으면 이건 버림 (공용 스트림은 새 요청이 다시 씀)
     micCheck.stream = stream;
     const track = stream.getAudioTracks()[0];
     const devName = (track && track.label) ? track.label : '기본 마이크';
@@ -11499,8 +11550,10 @@ async function startMicLevelAnim(){
     // 마이크는 열렸어도 음성 인식(말→글자)이 따로 막혀 있을 수 있어 한 번만 짧게 검사 (크롬 file:// 제한, 서버 연결 실패 등)
     if(!micCheck.srTested && (window.SpeechRecognition || window.webkitSpeechRecognition)){
       micCheck.srTested = true; micCheck.srResult = null;
-      quickSpeechTest(6000).then(r=>{
+      quickSpeechTest(6000, MicStream.track()).then(r=>{
         micCheck.srResult = r;
+        // 트랙 시작을 지원하지 않는 휴대폰은 측정용 마이크와 겹쳐 audio-capture가 날 수 있음 → 실제 면접에서는 측정을 닫고 들으므로 막힌 걸로 보지 않음
+        if(r.error === 'audio-capture' && MobileAudio.isMobile && !SR_TRACK_OK) return;
         if(!r.ok && r.error!=='timeout' && r.error!=='ended' && r.error!=='no-speech' && r.error!=='aborted'){
           const why = (r.error==='not-allowed'||r.error==='service-not-allowed') ? (location.protocol==='file:' ? '파일을 직접 연 페이지라 브라우저가 음성 인식을 막았어요' : '음성 인식 권한이 차단되어 있어요')
             : r.error==='network' ? '음성 인식 서버에 연결하지 못했어요(인터넷 연결 확인)'
@@ -11540,7 +11593,7 @@ async function startMicLevelAnim(){
 function stopMicLevelAnim(){
   if(micLevelInterval) clearInterval(micLevelInterval);
   if(micCheck.raf) cancelAnimationFrame(micCheck.raf);
-  if(micCheck.stream){ micCheck.stream.getTracks().forEach(t=>t.stop()); }
+  if(micCheck.stream){ try{ MicStream.release('setup'); }catch(_){} }
   if(micCheck.ctx){ try{ micCheck.ctx.close(); }catch(_){} }
   micCheck = { stream:null, ctx:null, raf:null, heard:false, startedAt:0, srTested: micCheck.srTested, srResult: micCheck.srResult, srBlocked:false };
   const fill = document.getElementById('mic-level');
@@ -11564,17 +11617,18 @@ function browserName(){
   return '기타';
 }
 /** 음성 인식(SpeechRecognition)이 실제로 시작되는지 짧게 검사 (onstart면 성공, onerror면 코드 반환) */
-function quickSpeechTest(timeoutMs){
+function quickSpeechTest(timeoutMs, track){
   return new Promise(res=>{
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SR) return res({ok:false, error:'unsupported'});
+    const useTrack = !!(track && SR_TRACK_OK && track.readyState === 'live');
     let done=false; const rec = new SR(); rec.lang='ko-KR'; rec.continuous=false; rec.interimResults=false;
     const finish=(r)=>{ if(done) return; done=true; clearTimeout(t); try{ rec.onend=null; rec.abort(); }catch(_){} res(r); };
     const t=setTimeout(()=>finish({ok:false, error:'timeout'}), timeoutMs||5000);
     rec.onstart=()=>setTimeout(()=>finish({ok:true}), 400);   // 시작 직후 오류가 오는 경우를 잠깐 기다림
     rec.onerror=(e)=>finish({ok:false, error:e.error||'unknown'});
     rec.onend=()=>finish({ok:false, error:'ended'});
-    try{ rec.start(); }catch(e){ finish({ok:false, error:'start-failed: '+(e.message||e)}); }
+    try{ useTrack ? rec.start(track) : rec.start(); }catch(e){ finish({ok:false, error:'start-failed: '+(e.message||e)}); }
   });
 }
 let micDiagReport = '';
@@ -12717,8 +12771,8 @@ async function startRehearsalMeter(){
   const fill = document.getElementById('rh-meter-fill'); const note = document.getElementById('rh-meter-note'); const box = document.querySelector('.rh-meter');
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ if(note) note.textContent='이 브라우저는 마이크 측정을 지원하지 않아요'; return; }
   try{
-    const stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
-    if(state.interviewMode !== 'rehearsal'){ stream.getTracks().forEach(t=>t.stop()); return; }
+    const stream = await MicStream.get('rh');
+    if(state.interviewMode !== 'rehearsal'){ MicStream.release('rh'); return; }
     rhMeter.stream = stream;
     const AC = window.AudioContext || window.webkitAudioContext; rhMeter.ctx = new AC();
     const an = rhMeter.ctx.createAnalyser(); an.fftSize = 1024; rhMeter.ctx.createMediaStreamSource(stream).connect(an);
@@ -12727,6 +12781,7 @@ async function startRehearsalMeter(){
       an.getByteTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++){ const v=(buf[i]-128)/128; sum+=v*v; }
       const rms = Math.sqrt(sum/buf.length); const pct = Math.min(100, Math.round(rms*420));
       peakHold = Math.max(pct, peakHold*0.9);
+      if(pct >= 20) rhMeter.lastVoiceAt = Date.now();   // 음성 인식 감시용 (소리는 들리는데 글자가 안 나오는지)
       if(fill) fill.style.width = Math.max(3, Math.round(peakHold))+'%';
       const badge = document.getElementById('rh-meter-badge');
       if(pct >= 35 && pct <= 75 && !rhMeter.heard){ rhMeter.heard = true; if(note) note.textContent = '좋아요, 이 정도 크기면 잘 들려요'; if(box) box.classList.add('ok'); if(badge){ badge.textContent='좋음'; badge.className='rh-meter-badge ok'; } }
@@ -12738,9 +12793,9 @@ async function startRehearsalMeter(){
 }
 function stopRehearsalMeter(){
   if(rhMeter.raf) cancelAnimationFrame(rhMeter.raf);
-  if(rhMeter.stream){ rhMeter.stream.getTracks().forEach(t=>t.stop()); }
+  if(rhMeter.stream){ try{ MicStream.release('rh'); }catch(_){} }
   if(rhMeter.ctx){ try{ rhMeter.ctx.close(); }catch(_){} }
-  rhMeter.stream=null; rhMeter.ctx=null; rhMeter.raf=null; rhMeter.heard=false;
+  rhMeter.stream=null; rhMeter.ctx=null; rhMeter.raf=null; rhMeter.heard=false; rhMeter.lastVoiceAt=0;
   const fill = document.getElementById('rh-meter-fill'); if(fill) fill.style.width='3%';
   const box = document.querySelector('.rh-meter'); if(box) box.classList.remove('ok');
   const note = document.getElementById('rh-meter-note'); if(note) note.textContent = '"안녕하세요" 하고 말해 보세요';
@@ -13226,8 +13281,12 @@ function presentCurrentQuestion(){
     // 질문 낭독이 끝난 순간부터 "머뭇거림" 시간을 잽니다
     if(state.qTiming && !state.qTiming.listenStart) state.qTiming.listenStart = Date.now();
     // 휴대폰: 질문을 읽기 전에 닫은 리허설 마이크 측정기를 다시 켬
-    if(MobileAudio.isMobile && state.interviewMode === 'rehearsal' && typeof rhMeter !== 'undefined' && !rhMeter.stream){ try{ startRehearsalMeter(); }catch(_){} }
-    if(state.micOn){ startRecognition(); }
+    const go = ()=>{ if(state.micOn) startRecognition(); };
+    if(state.interviewMode === 'rehearsal' && typeof rhMeter !== 'undefined' && !rhMeter.stream && !(MobileAudio.isMobile && !SR_TRACK_OK)){
+      // 마이크(공용 스트림)를 먼저 연 뒤 음성 인식을 그 트랙으로 시작 (휴대폰에서 마이크를 두 번 여는 일 방지)
+      let p = null; try{ p = startRehearsalMeter(); }catch(_){}
+      if(p && p.then) p.then(go, go); else go();
+    } else go();
   }, (item && item.audio_url) ? { url: item.audio_url } : undefined);
   if(!('speechSynthesis' in window)){
     showToast('이 브라우저는 음성 안내(TTS)를 지원하지 않아 질문이 텍스트로만 제공됩니다.');
@@ -13623,6 +13682,7 @@ function setDialogTypedUI(on, why, partial){
     const msg = why==='mic-off' ? '마이크가 꺼져 있어요. 답변을 직접 입력하고 "답변 제출"을 누르거나, 마이크를 다시 켜면 이어서 들어요.'
       : why==='no-speech' ? '말이 두 번 인식되지 않았어요. 마이크를 확인하거나 답변을 직접 입력해 주세요. (비워 두고 제출하면 이 질문은 건너뜁니다)'
       : why==='unsupported' ? '이 브라우저는 음성 인식을 지원하지 않아 답변을 직접 입력해 주세요.'
+      : why==='nosr' ? '마이크 소리는 들어오는데 글자로 바뀌지 않아요. 이번 답변은 직접 입력하고 "답변 제출"을 눌러 주세요. (크롬을 최신 버전으로 업데이트하거나 엣지 브라우저를 써 보세요)'
       : '마이크나 음성 인식을 사용할 수 없어 이번 면접은 답변을 직접 입력해 주세요.';
     showSttAlert(msg);
     ta.placeholder = '여기에 답변을 입력하고 "답변 제출"을 누르세요.'; if(partial) ta.value = partial; updateCharCount();
@@ -13890,7 +13950,7 @@ function initSpeechRecognition(){
         interim = joinSpeech(interim, transcript);
       }
     }
-    state.sttGotResult = true;
+    state.sttGotResult = true; state.sttLastResultAt = Date.now();
     markSpeech(true);
     hideSttAlert();
     const ta = document.getElementById('steno-input');
@@ -13902,10 +13962,12 @@ function initSpeechRecognition(){
     console.warn('[음성 인식 오류]', e.error, e.message || '');
     if(e.error === 'no-speech' || e.error === 'aborted') return;   // 조용했을 뿐 → 자동 재시작
     if(e.error === 'phrases-not-supported'){ try{ rec.phrases = []; }catch(_){} return; }
+    // 트랙으로 시작했다가 실패하면 기본 마이크(브라우저가 직접 엶)로 한 번 더
+    if(state.sttViaTrack && ['audio-capture','not-allowed','service-not-allowed','network'].includes(e.error) && !state.sttTrackFailed){ state.sttTrackFailed = true; console.warn('[음성 인식] 트랙 시작 실패 → 기본 마이크로 재시도', e.error); return; }
     const fatal = ['not-allowed','service-not-allowed','audio-capture'].includes(e.error);
     if(e.error === 'network'){
       state.sttNetworkErrors = (state.sttNetworkErrors||0) + 1;
-      if(state.sttNetworkErrors < 3) return;  // 일시적인 끊김은 몇 번 재시도
+      if(state.sttNetworkErrors < 3) return;  // 일시적인 끊김은 몇 번 재시도 (간격을 늘려 가며)
     }
     const m = micErrorMessage(e);
     showSttAlert(m.text);
@@ -13930,12 +13992,41 @@ function initSpeechRecognition(){
         showSttAlert('음성 인식이 계속 끊겨요. 마이크 설정을 확인하거나 엣지 브라우저를 사용해 주세요. 답변은 직접 입력할 수도 있어요.');
         return;
       }
-      setTimeout(()=>{ if(state.recognitionShouldRun){ try{ rec.start(); }catch(err){} } }, quick ? 400 : 0);
+      const delay = state.sttNetworkErrors ? 800 * state.sttNetworkErrors : (quick ? 400 : 0);
+      setTimeout(()=>{ if(state.recognitionShouldRun){ try{ srStart(rec); }catch(err){} } }, delay);
     }else{
       updateListeningUI(false);
     }
   };
   state.recognition = rec;
+}
+/** 음성 인식 시작: 공용 마이크 트랙이 있고 브라우저가 지원하면 그 트랙으로(권한 재요청 없음, 고른 마이크 그대로), 아니면 기본 방식 */
+function srStart(rec){
+  const tr = (SR_TRACK_OK && !state.sttTrackFailed && typeof MicStream !== 'undefined') ? MicStream.track() : null;
+  if(tr){ try{ rec.start(tr); state.sttViaTrack = true; return; }catch(e){ console.warn('[음성 인식] 트랙으로 시작 실패 → 기본 마이크', e); } }
+  state.sttViaTrack = false;
+  rec.start();
+}
+/** "소리는 들리는데 글자가 안 나옴" 감시: 8초 넘게 목소리가 들리는데 결과가 없으면 한 번 다시 시작, 그래도 없으면 직접 입력 안내 */
+function sttWatchTick(){
+  if(!state.recognitionShouldRun){ clearInterval(state.sttWatch); state.sttWatch = null; return; }
+  const lv = (typeof rhMeter !== 'undefined' && rhMeter.lastVoiceAt) || 0;
+  if(lv < state.sttStartAt) return;                       // 이번 듣기 중 목소리가 아직 없음
+  if((state.sttLastResultAt||0) >= state.sttStartAt){ state.sttVoiceSince = 0; return; }   // 글자가 오고 있음
+  if(!state.sttVoiceSince) state.sttVoiceSince = Date.now();
+  if(Date.now() - state.sttVoiceSince < 8000 || Date.now() - lv > 2500) return;   // 8초 넘게, 그리고 지금도 목소리가 들릴 때만
+  state.sttVoiceSince = 0;
+  if(!state.sttWatchRestarts){
+    state.sttWatchRestarts = 1; state.sttStartAt = Date.now();
+    console.warn('[음성 인식] 목소리는 들리는데 결과 없음 → 다시 시작');
+    try{ state.recognition.stop(); }catch(_){}            // onend에서 자동 재시작
+    return;
+  }
+  clearInterval(state.sttWatch); state.sttWatch = null;
+  Feedback.auto('음성 인식', 'nosr: 마이크 음량은 들어오는데 음성 인식 결과 없음 (track=' + (state.sttViaTrack?'y':'n') + ')');
+  showSttAlert('마이크 소리는 들어오는데 글자로 바뀌지 않아요. 답변을 직접 입력할 수 있어요. (크롬을 최신 버전으로 업데이트하거나 엣지 브라우저를 써 보세요)');
+  const ta = document.getElementById('steno-input'); if(ta) ta.readOnly = false;
+  const ws = document.getElementById('wave-state'); if(ws) ws.textContent = '음성 인식 안 됨 · 직접 입력 가능';
 }
 /* ---------------- 전달력 측정 (말하기 속도 · 군말 · 답변 시간 · 머뭇거림) ----------------
  * 브라우저에서 실제로 잴 수 있는 값만 사용합니다. (발음 정확도는 유료 발음 평가 API가 필요해 제외)
@@ -14035,13 +14126,19 @@ function hideSttAlert(){ const el = document.getElementById('stt-alert'); if(el)
 function startRecognition(){
   if(!state.speechSupported || !state.recognition) return;
   state.finalTranscript = document.getElementById('steno-input').value.trim();
-  state.sttNetworkErrors = 0; state.sttQuickEnds = 0;
+  state.sttNetworkErrors = 0; state.sttQuickEnds = 0; state.sttTrackFailed = false;
   state.recognitionShouldRun = true;
+  // 트랙 시작을 지원하지 않는 휴대폰(아이폰·구형 크롬·삼성 인터넷)은 음성 인식이 마이크를 따로 열어야 하므로 측정용 마이크를 먼저 닫음 (이중 캡처 → 인식 안 됨 방지)
+  if(MobileAudio.isMobile && !SR_TRACK_OK){ try{ stopRehearsalMeter(); }catch(_){} try{ MicStream.close(); }catch(_){} const note = document.getElementById('rh-meter-note'); if(note) note.textContent = '듣는 중 · 이 기기는 듣는 동안 음량 표시가 쉬어요'; }
   updateListeningUI(true);
-  try{ state.recognition.start(); }catch(err){ /* 이미 시작된 경우 무시 */ }
+  state.sttStartAt = Date.now(); state.sttLastResultAt = 0; state.sttVoiceSince = 0; state.sttWatchRestarts = 0;
+  if(state.sttWatch) clearInterval(state.sttWatch);
+  state.sttWatch = setInterval(sttWatchTick, 1000);
+  try{ srStart(state.recognition); }catch(err){ /* 이미 시작된 경우 무시 */ }
 }
 function stopRecognition(){
   state.recognitionShouldRun = false;
+  if(state.sttWatch){ clearInterval(state.sttWatch); state.sttWatch = null; }
   updateListeningUI(false);
   if(state.recognition){ try{ state.recognition.stop(); }catch(err){} }
 }
@@ -15674,13 +15771,16 @@ const StenoListener = {
     if(this.active) this.stop('restart');
     this.cb = cb || {}; this.opt = Object.assign({}, this.defaults, opt || {});
     this.transcript=''; this.interim=''; this.spokeAt=0; this.firstSpeechAt=0; this.level=0; this.lastVoiceAt=0; this.silenceSince=0;
-    this._pauseHint = false; this._waitHint = false;
+    this._pauseHint = false; this._waitHint = false; this._voiceAt = 0; this._srRestarted = false; this._nosrFired = false; this.failKind = '';
     this.startedAt = Date.now(); this.active = true;
     if(!this.supported()){ this._fail('이 브라우저는 음성 인식을 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.'); return false; }
 
-    // 1) 실제 음량 측정 (실패해도 음성 인식만으로 진행)
+    // 1) 실제 음량 측정 (실패해도 음성 인식만으로 진행) — 공용 마이크 스트림을 같이 씀 (2026-10-14)
+    //    트랙 시작을 지원하지 않는 휴대폰은 음성 인식이 마이크를 따로 열어야 하므로 측정·녹음 없이 진행 (이중 캡처 → 인식 안 됨 방지)
     try{
-      this.stream = await DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true});
+      if(MobileAudio.isMobile && !SR_TRACK_OK){ try{ stopRehearsalMeter(); }catch(_){} try{ MicStream.close(); }catch(_){} throw new Error('mobile-no-track'); }
+      this.stream = await MicStream.get('live');
+      if(!this.active){ MicStream.release('live'); this.stream = null; return false; }
       const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC();
       const src = this.ctx.createMediaStreamSource(this.stream); const an = this.ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
       const buf = new Uint8Array(an.fftSize);
@@ -15691,7 +15791,7 @@ const StenoListener = {
         this.level = Math.sqrt(sum/buf.length);
         if(this.cb.onLevel) this.cb.onLevel(Math.min(1, this.level*4));
         const now = Date.now();
-        if(this.level > this.opt.levelThreshold){ this.lastVoiceAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; this._state('speaking'); }
+        if(this.level > this.opt.levelThreshold){ this.lastVoiceAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; if(!this._voiceAt) this._voiceAt = now; this._state('speaking'); }
         this._checkEnd(now);
         this.raf = requestAnimationFrame(loop);
       };
@@ -15718,13 +15818,15 @@ const StenoListener = {
     };
     rec.onerror = (e)=>{
       if(e.error==='no-speech' || e.error==='aborted') return;
-      if(this._srTrack){ console.warn('[StenoListener] 고른 마이크로 음성 인식 실패 → 기본 마이크로 다시 시도', e.error); this._srTrack = null; return; }   // onend가 기본 마이크로 다시 시작
+      if(this._srTrack && e.error !== 'network'){ console.warn('[StenoListener] 트랙으로 음성 인식 실패 → 기본 마이크로 다시 시도', e.error); this._srTrack = null; return; }   // onend가 기본 마이크로 다시 시작
       if(e.error==='network'){ this.timers.netErr = (this.timers.netErr||0)+1; if(this.timers.netErr<3) return; }
+      this.failKind = e.error || 'error';
       this._fail(micErrorMessage(e).text);
     };
-    rec.onend = ()=>{ if(this.active){ setTimeout(()=>{ if(this.active){ try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }catch(_){} } }, 300); } };
+    rec.onend = ()=>{ if(this.active){ const d = this.timers.netErr ? 800 * this.timers.netErr : 300; setTimeout(()=>{ if(this.active){ try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }catch(_){} } }, d); } };
     this.rec = rec;
-    this._srTrack = (DevicePref.mic && this.stream && this.stream.getAudioTracks()[0]) || null;
+    // 크롬 138+: 공용 스트림의 트랙으로 시작 → 권한을 다시 묻지 않고, 준비창에서 고른 마이크 그대로 들음
+    this._srTrack = (SR_TRACK_OK && this.stream && this.stream.getAudioTracks().find(t=>t.readyState === 'live')) || null;
     try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }
     catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); }catch(e2){ console.warn('[음성 인식] start 실패', e2); this._fail('음성 인식을 시작하지 못했어요. 잠시 뒤 마이크 버튼을 다시 누르거나 답변을 직접 입력해 주세요.'); return false; } } else { console.warn('[음성 인식] start 실패', e); this._fail('음성 인식을 시작하지 못했어요. 잠시 뒤 마이크 버튼을 다시 누르거나 답변을 직접 입력해 주세요.'); return false; } }
     this._state('listening');
@@ -15733,6 +15835,11 @@ const StenoListener = {
 
   _checkEnd(now){
     const o = this.opt;
+    // 목소리(음량)는 들리는데 8초 넘게 글자가 안 오면: 음성 인식을 한 번 다시 시작, 그래도 없으면 직접 입력으로 (2026-10-14)
+    if(this._voiceAt && !this.spokeAt && now - this._voiceAt > 8000 && now - this.lastVoiceAt < 2500){
+      if(!this._srRestarted){ this._srRestarted = true; this._voiceAt = now; console.warn('[StenoListener] 목소리는 들리는데 결과 없음 → 다시 시작'); try{ if(this.rec) this.rec.stop(); }catch(_){} }
+      else if(!this._nosrFired){ this._nosrFired = true; this.failKind = 'nosr'; try{ Feedback.auto('음성 인식(라이브)', 'nosr: 음량은 들어오는데 결과 없음 (track=' + (this._srTrack?'y':'n') + ')'); }catch(_){} if(this.cb.onError) this.cb.onError('마이크 소리는 들어오는데 글자로 바뀌지 않아요. 이번 답변은 직접 입력해 주세요.'); return this.stop('error'); }
+    }
     if(!this.firstSpeechAt){
       // 버튼으로 끝내는 방식(manualEnd): 생각할 시간을 주고 자동으로 넘기지 않음 (실전 모드만 noSpeechHard로 10초 규칙 유지)
       if(o.manualEnd && !o.noSpeechHard){ if(!this._waitHint && now - this.startedAt > 15000){ this._waitHint = true; this._state('waiting'); } if(now - this.startedAt > o.maxMs) return this.stop('max'); return; }
@@ -15787,7 +15894,7 @@ const StenoListener = {
     if(this.timers.poll) clearInterval(this.timers.poll); this.timers={};
     let audio = null;
     if(this._mr){ try{ if(this._mr.state !== 'inactive') this._mr.stop(); audio = this._recPromise; }catch(_){ audio = null; } this._mr = null; this._recPromise = null; }
-    if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); MobileAudio.streams.delete(this.stream); this.stream=null; }
+    if(this.stream){ try{ MicStream.release('live'); }catch(_){} this.stream=null; }
     if(this.ctx){ try{ this.ctx.close(); }catch(_){} this.ctx=null; }
     MobileAudio.session('playback');
     const text = joinSpeech(this.transcript, this.interim);
@@ -16562,7 +16669,7 @@ const StenoLoop = {
           // 면접자가 마이크를 끔 → 이 답변은 직접 입력으로 (다시 켜면 setMic(true)가 이어서 듣기 시작)
           if(r.reason==='mic-off' && !this.aborted){ this._lastPartial = null; waitTyped('mic-off', r.text||''); return; }
           // 마이크 권한 거부·장치 없음·네트워크 오류 등 → 이번 면접은 직접 입력으로 계속 (인식된 부분은 입력창에 미리 채움)
-          if(r.reason==='error' && !this.aborted){ this.typedMode = true; this._lastPartial = null; waitTyped('error', r.text||''); return; }
+          if(r.reason==='error' && !this.aborted){ const nosr = StenoListener.failKind === 'nosr'; this._nosrCount = (this._nosrCount||0) + (nosr ? 1 : 0); if(!nosr || this._nosrCount >= 2) this.typedMode = true; this._lastPartial = null; waitTyped(nosr ? 'nosr' : 'error', r.text||''); return; }
           // 확인창 전에 인식됐던 부분 답변이 있으면 앞에 이어 붙임 (취소 후 다시 들은 내용과 합쳐 하나의 답변으로)
           const p = this._lastPartial; this._lastPartial = null;
           if(p && p.text){ r.text = (p.text + ' ' + (r.text||'')).trim(); if(p.timing && p.timing.firstSpeech && r.timing) r.timing.firstSpeech = p.timing.firstSpeech; }
@@ -16804,7 +16911,7 @@ const MicGuard = {
     try{
       if(!navigator.permissions || !navigator.permissions.query) return 'unknown';
       const st = await navigator.permissions.query({ name:'microphone' });
-      if(!this.watching){ this.watching = true; this.st = st; try{ st.onchange = ()=>this.onChange(st.state); }catch(_){} }
+      if(!this.watching){ this.watching = true; this.st = st; this._last = st.state; try{ st.onchange = ()=>this.onChange(st.state); }catch(_){} }
       return st.state;
     }catch(_){ return 'unknown'; }
   },
@@ -16812,6 +16919,9 @@ const MicGuard = {
     const m = document.getElementById('modal-micblock');
     if(this.kind === 'cam') return;
     if(v === 'granted' && m && m.classList.contains('active')){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
+    // 면접 도중 권한이 '허용'에서 빠지면(이번만 허용 만료 등) 바로 알려 줌
+    if(v !== 'granted' && this._last === 'granted'){ try{ if(interviewInProgress()) showToast('마이크 권한이 풀렸어요. 다시 물어보면 "사이트 방문 시 허용"을 눌러 주세요. ("이번만 허용"은 화면이 바뀌면 풀릴 수 있어요)', 'warn'); Feedback.auto('마이크', '면접 중 권한 상태 변경: granted → ' + v); }catch(_){} }
+    this._last = v;
   },
   /** 면접·코치 시작 전에 호출. 막혀 있으면 안내창을 띄우고 true */
   async precheck(where){
@@ -16899,7 +17009,7 @@ const MicGuard = {
       }
       if(v === 'granted'){ this.setState('ok', cam ? '✓ 카메라가 허용됐어요. 미리보기를 다시 열게요.' : '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>{ this.close(); if(cam){ try{ const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }catch(_){} } }, 1200); }
       else if(v === 'denied'){ this.setState('bad', '아직 막혀 있어요. 위 순서대로 바꾼 뒤 새로고침하고 다시 눌러 주세요.'); }
-      else { this.setState('ok', `이제 시작할 때 ${cam?'카메라':'마이크'}를 물어보면 "허용"을 눌러 주세요.`); setTimeout(()=>this.close(), 1600); }
+      else { this.setState('ok', `이제 시작할 때 ${cam?'카메라':'마이크'}를 물어보면 "사이트 방문 시 허용"(또는 "허용")을 눌러 주세요. "이번만 허용"은 다음 화면에서 다시 막힐 수 있어요.`); setTimeout(()=>this.close(), 2600); }
     }finally{ if(btn){ btn.disabled = false; btn.textContent = '바꿨어요 · 다시 확인'; } }
   }
 };
@@ -16953,6 +17063,7 @@ window.addEventListener('pagehide', ()=>{
   try{ stopRehearsalMeter(); }catch(_){}
   try{ stopRecognition(); }catch(_){}
   try{ stopCamera(); }catch(_){}
+  try{ MicStream.close(); }catch(_){}
   try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
 });
 
