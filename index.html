@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14f';
+var APP_VERSION = '2026-10-14g';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -197,6 +197,9 @@ var APP_VERSION = '2026-10-14f';
   .field-error{font-size:11.5px;color:var(--danger);margin-top:5px;min-height:0;}
   .field-error:empty{display:none;}
   .pw-rules{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+  .signup-pw-eye{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--slate-500,#64748b);cursor:pointer;min-height:42px;}
+  .signup-pw-eye input{width:16px;height:16px;margin:0;}
+  @media(max-width:520px){.signup-pw-eye-wrap>label:first-child{display:none;}.signup-pw-eye{min-height:0;}}
   .pw-rules span{font-size:10.5px;padding:2px 6px;white-space:nowrap;border-radius:999px;background:var(--slate-100);color:var(--slate-400);}
   .pw-rules span:before{content:'○';margin-right:2px;}
   .pw-rules span.ok{background:var(--teal-100);color:var(--teal-600);}
@@ -917,6 +920,7 @@ var APP_VERSION = '2026-10-14f';
   .rh-meter-badge{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:#EEF2F7;color:var(--rh-muted);}
   .rh-meter-badge.ok{background:var(--rh-green-soft);color:var(--rh-green);}
   .rh-meter-badge.loud{background:#FFF1E6;color:#C2410C;}
+  .rh-meter-badge.quiet{background:#FEF3C7;color:#92400E;}
   .interview-wrap.light .rh-meter-note{font-size:12px;color:var(--rh-muted);margin-bottom:10px;line-height:1.4;word-break:keep-all;}
   .interview-wrap.light .rh-meter.ok .rh-meter-note{color:var(--rh-green);}
   .interview-wrap.light .rh-meter-bar{height:9px;background:#E9EFF6;border:0;}
@@ -5597,6 +5601,17 @@ body.hs-mobile #pc-qr-card{display:none !important;}
           </div>
         </div>
       </div>
+      <div class="signup-grid">
+        <div class="signup-field">
+          <label for="signup-pw2">비밀번호 확인 <span class="req">*</span></label>
+          <input id="signup-pw2" type="password" placeholder="같은 비밀번호를 한 번 더" autocomplete="new-password" oninput="validateSignupField('pw2')">
+          <div class="field-error" id="signup-pw2-err"></div>
+        </div>
+        <div class="signup-field signup-pw-eye-wrap">
+          <label>&nbsp;</label>
+          <label class="signup-pw-eye"><input type="checkbox" onchange="toggleSignupPwVisible(this.checked)"> 비밀번호 보이기</label>
+        </div>
+      </div>
       <div class="signup-hint" style="margin:-4px 0 12px;">휴대폰 번호는 관리자가 면접 일정 안내 등 연락할 때만 사용해요.</div>
       <div class="signup-field" style="margin-bottom:0;">
         <label for="signup-note">지원 기관 <span style="font-weight:400;color:var(--slate-400);">(선택)</span></label>
@@ -8283,7 +8298,7 @@ function showScreen(id){
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
   document.body.classList.toggle('fab-compact', id === 'screen-interview');
-  try{ if(typeof MicStream !== 'undefined') MicStream.setHold(id === 'screen-interview'); }catch(_){}
+  try{ if(typeof MicStream !== 'undefined'){ if(id === 'screen-login') MicStream.close(); else MicStream.setHold(id === 'screen-interview'); } }catch(_){}
   try{ if(id !== 'screen-interview') closeMoreSheet(); }catch(_){}
   try{ if(typeof ScreenKeep !== 'undefined'){ if(id === 'screen-interview') ScreenKeep.on(); else ScreenKeep.off(); } }catch(_){}
   if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
@@ -8647,6 +8662,7 @@ async function endInterviewForKick(){
   return false;
 }
 async function handleLogout(){
+  try{ MicStream.close(); }catch(_){}
   state.resumeText = ''; state.cvText = ''; state.cvFileName = '';
   try{ AnswerAudio.clear(); }catch(_){}
   try{ SelfCam.reset(); }catch(_){}
@@ -10458,7 +10474,7 @@ const MobileAudio = {
   /** 휴대폰은 에코 제거·잡음 제거를 끈 채로 마이크를 엶 (통화 모드 방지) */
   constraints(base){
     const b = Object.assign({}, base || {});
-    if(this.isMobile){ b.echoCancellation = false; b.noiseSuppression = false; b.autoGainControl = false; }
+    if(this.isMobile){ b.echoCancellation = false; b.noiseSuppression = false; b.autoGainControl = true; }   // 2026-10-14: 멀리서 말해도 음량이 보정되도록 AGC는 켬
     return b;
   },
 };
@@ -10494,29 +10510,34 @@ const DevicePref = {
 const SR_TRACK_OK = (()=>{ try{ const SR = window.SpeechRecognition || window.webkitSpeechRecognition; return !!SR && ('processLocally' in SR.prototype); }catch(_){ return false; } })();
 const MicStream = {
   stream:null, _p:null, users:new Set(), hold:false, _closeT:null, _warned:false,
+  /** PC는 한 번 허용된 마이크를 로그아웃·탭 닫기까지 계속 열어 둠 ("이번만 허용"을 골라도 화면이 바뀌거나 다른 탭을 봐도 풀리지 않음). 휴대폰은 소리 재생 문제로 말하기 전마다 닫음 */
+  get persistent(){ return !MobileAudio.isMobile && typeof state !== 'undefined' && !!(state && state.currentUser); },
   live(){ return !!(this.stream && this.stream.getAudioTracks().some(t=>t.readyState === 'live')); },
   track(){ return (this.stream && this.stream.getAudioTracks().find(t=>t.readyState === 'live')) || null; },
   async get(who){
     if(this._closeT){ clearTimeout(this._closeT); this._closeT = null; }
     if(this.live()){ this.users.add(who); return this.stream; }
     if(!this._p){
+      const gen = (this._gen = (this._gen||0) + 1);
       this._p = DevicePref.audio({echoCancellation:true, noiseSuppression:true, autoGainControl:true}).then(st=>{
+        if(gen !== this._gen){ try{ st.getTracks().forEach(t=>t.stop()); MobileAudio.streams.delete(st); }catch(_){} throw new Error('closed'); }   // 기다리는 사이 close()됨
         this._p = null; this.stream = st; this._warned = false;
         st.getAudioTracks().forEach(t=>{ t.addEventListener('ended', ()=>this._onEnded(st)); });
         return st;
-      }, e=>{ this._p = null; throw e; });
+      }, e=>{ if(gen === this._gen) this._p = null; throw e; });
     }
     const st = await this._p; this.users.add(who); return st;
   },
   release(who){
     this.users.delete(who);
-    if(this.users.size || this.hold) return;
+    if(this.users.size || this.hold || this.persistent) return;
     if(this._closeT) clearTimeout(this._closeT);
     this._closeT = setTimeout(()=>{ this._closeT = null; if(!this.users.size && !this.hold) this.close(); }, 1500);   // 화면 전환 사이 잠깐은 열어 둠
   },
-  setHold(v){ this.hold = !!v; if(!this.hold && !this.users.size) this.close(); },
+  setHold(v){ this.hold = !!v; if(!this.hold && !this.users.size && !this.persistent) this.close(); },
   close(){
     if(this._closeT){ clearTimeout(this._closeT); this._closeT = null; }
+    this._gen = (this._gen||0) + 1; this._p = null;   // 진행 중인 get()은 결과를 버림
     const st = this.stream; this.stream = null; this.users.clear();
     if(st){ try{ st.getTracks().forEach(t=>{ if(t.readyState !== 'ended') t.stop(); }); }catch(_){} try{ MobileAudio.streams.delete(st); }catch(_){} }
   },
@@ -10525,6 +10546,8 @@ const MicStream = {
     if(this.stream !== st) return;
     if(!this.stream.getAudioTracks().some(t=>t.readyState === 'live')){
       this.stream = null; try{ MobileAudio.streams.delete(st); }catch(_){}
+      try{ if(typeof rhMeter !== 'undefined' && rhMeter.stream === st) stopRehearsalMeter(); }catch(_){}
+      try{ if(typeof micCheck !== 'undefined' && micCheck.stream === st && document.getElementById('modal-setup').classList.contains('active')) setTimeout(()=>startMicLevelAnim(), 300); }catch(_){}
       if(this.hold && !this._warned){
         this._warned = true;
         try{ Feedback.auto('마이크', '면접 도중 마이크 스트림이 끊김 (권한 만료 또는 장치 분리)'); }catch(_){}
@@ -11528,11 +11551,12 @@ async function startMicLevelAnim(){
     return;
   }
   { let perm = 'unknown'; try{ if(navigator.permissions && navigator.permissions.query) perm = (await navigator.permissions.query({ name:'microphone' })).state; }catch(_){}
-    setMicCheck('', perm === 'prompt' ? '마이크 확인 중… 권한을 물어보면 "사이트 방문 시 허용"(또는 "항상 허용")을 눌러 주세요. "이번만 허용"은 다음 화면에서 다시 막힐 수 있어요.' : '마이크 확인 중… (권한을 물어보면 "허용"을 눌러주세요)'); }
+    setMicCheck('', perm === 'prompt' ? '마이크 확인 중… 권한을 물어보면 "항상 허용"("사이트 방문 시 허용")을 눌러 주세요.' : '마이크 확인 중… (권한을 물어보면 "허용"을 눌러주세요)'); }
   try{
     const gen = (startMicLevelAnim._g = (startMicLevelAnim._g||0) + 1);
     const stream = await MicStream.get('setup');
     if(gen !== startMicLevelAnim._g){ return; }   // 그 사이 다른 마이크를 골랐으면 이건 버림 (공용 스트림은 새 요청이 다시 씀)
+    if(!document.getElementById('modal-setup').classList.contains('active')){ MicStream.release('setup'); return; }   // 기다리는 사이 창을 닫음
     micCheck.stream = stream;
     const track = stream.getAudioTracks()[0];
     const devName = (track && track.label) ? track.label : '기본 마이크';
@@ -12772,7 +12796,8 @@ async function startRehearsalMeter(){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ if(note) note.textContent='이 브라우저는 마이크 측정을 지원하지 않아요'; return; }
   try{
     const stream = await MicStream.get('rh');
-    if(state.interviewMode !== 'rehearsal'){ MicStream.release('rh'); return; }
+    if(rhMeter.stream) return;   // 기다리는 사이 다른 호출이 먼저 켬 (같은 'rh' 사용자이므로 해제하지 않음)
+    if(state.interviewMode !== 'rehearsal' || !document.getElementById('screen-interview').classList.contains('active')){ MicStream.release('rh'); return; }
     rhMeter.stream = stream;
     const AC = window.AudioContext || window.webkitAudioContext; rhMeter.ctx = new AC();
     const an = rhMeter.ctx.createAnalyser(); an.fftSize = 1024; rhMeter.ctx.createMediaStreamSource(stream).connect(an);
@@ -12781,9 +12806,11 @@ async function startRehearsalMeter(){
       an.getByteTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++){ const v=(buf[i]-128)/128; sum+=v*v; }
       const rms = Math.sqrt(sum/buf.length); const pct = Math.min(100, Math.round(rms*420));
       peakHold = Math.max(pct, peakHold*0.9);
-      if(pct >= 20) rhMeter.lastVoiceAt = Date.now();   // 음성 인식 감시용 (소리는 들리는데 글자가 안 나오는지)
+      if(pct >= 28) rhMeter.lastVoiceAt = Date.now();   // 음성 인식 감시용 (소리는 들리는데 글자가 안 나오는지) — 잔잔한 생활 소음은 제외
       if(fill) fill.style.width = Math.max(3, Math.round(peakHold))+'%';
       const badge = document.getElementById('rh-meter-badge');
+      // 목소리가 작게만 들리면(막대가 6~20% 사이로만 움직임) 마이크에 가까이 말하라고 한 번 안내
+      if(pct >= 6 && pct < 20 && !rhMeter.heard){ rhMeter.quietMs = (rhMeter.quietMs||0) + 16; if(rhMeter.quietMs > 2500 && !rhMeter.quietHint){ rhMeter.quietHint = true; if(note) note.textContent = '목소리가 작게 들려요 · 마이크에 20~30cm 정도로 조금 더 가까이'; if(badge){ badge.textContent='작음'; badge.className='rh-meter-badge quiet'; } } }
       if(pct >= 35 && pct <= 75 && !rhMeter.heard){ rhMeter.heard = true; if(note) note.textContent = '좋아요, 이 정도 크기면 잘 들려요'; if(box) box.classList.add('ok'); if(badge){ badge.textContent='좋음'; badge.className='rh-meter-badge ok'; } }
       else if(pct > 75 && note && !rhMeter.loudWarned){ rhMeter.loudWarned = true; note.textContent = '조금 커요 · 마이크에서 조금 떨어져 보세요'; if(badge){ badge.textContent='조금 큼'; badge.className='rh-meter-badge loud'; } setTimeout(()=>{ rhMeter.loudWarned=false; if(badge && rhMeter.heard){ badge.textContent='좋음'; badge.className='rh-meter-badge ok'; } }, 4000); }
       rhMeter.raf = requestAnimationFrame(loop);
@@ -12795,7 +12822,7 @@ function stopRehearsalMeter(){
   if(rhMeter.raf) cancelAnimationFrame(rhMeter.raf);
   if(rhMeter.stream){ try{ MicStream.release('rh'); }catch(_){} }
   if(rhMeter.ctx){ try{ rhMeter.ctx.close(); }catch(_){} }
-  rhMeter.stream=null; rhMeter.ctx=null; rhMeter.raf=null; rhMeter.heard=false; rhMeter.lastVoiceAt=0;
+  rhMeter.stream=null; rhMeter.ctx=null; rhMeter.raf=null; rhMeter.heard=false; rhMeter.lastVoiceAt=0; rhMeter.quietMs=0; rhMeter.quietHint=false;
   const fill = document.getElementById('rh-meter-fill'); if(fill) fill.style.width='3%';
   const box = document.querySelector('.rh-meter'); if(box) box.classList.remove('ok');
   const note = document.getElementById('rh-meter-note'); if(note) note.textContent = '"안녕하세요" 하고 말해 보세요';
@@ -12853,7 +12880,7 @@ function startRehearsal(){
     }).catch(()=>{});
   }
 
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
   applyInterviewModeUI();
   syncCamMicUI();
   document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
@@ -13120,7 +13147,7 @@ function startInterview(){
 
   state.interviewQuestions = buildQuestionSet(state.questionCount);
 
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
   applyInterviewModeUI();
   syncCamMicUI();
   document.getElementById('steno-input').placeholder = '마이크 버튼을 켜고 답변하면 음성이 자동으로 이곳에 텍스트로 변환됩니다.';
@@ -13633,7 +13660,7 @@ function startDialogInterview(){
   state.startTime = Date.now();
   state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[]; state.pendingGrades=[]; state.followupInserted=true;
   state.interviewQuestions = []; state.dialogTranscript = [];
-  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null);
+  state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
   state.dialogRealSet = !!state.realSet && state.selectedField.id === 'assembly';
   Activity.log('interview_start', Object.assign({ field: state.selectedField.name, mode:'dialog' }, state.dialogRealSet ? { set:'real' } : {}));
   Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:0 });
@@ -13798,6 +13825,7 @@ async function runDialogInterview(){
       if(d.name==='pause'){ dialogPhase('listening', '잠시 멈췄어요 · 이어서 말하거나 "답변 완료"'); stopBtn.classList.add('nudge'); }
       else if(d.name==='resume'){ dialogPhase('listening', '답변 인식 중…'); stopBtn.classList.remove('nudge'); }
       else if(d.name==='waiting'){ dialogPhase('listening', '생각을 정리한 뒤 말씀하세요 · 넘어가려면 "답변 완료"'); }
+      else if(d.name==='quiet'){ if(!state.quietHintShown){ state.quietHintShown = true; showToast('목소리가 작게 들려요. 마이크에 20~30cm 정도로 가까이 말하면 더 정확하게 알아들어요.', 'info'); } }
       else if(d.name==='silence') dialogPhase('listening', `말이 멈췄어요 · ${d.extra!=null?d.extra.toFixed(1):''}초 후 다음으로`);
       else if(d.name==='speaking' && !StenoListener._pauseHint && !(StenoListener.opt && StenoListener.opt.manualEnd)) dialogPhase('listening','답변 인식 중…');
     }
@@ -14003,7 +14031,7 @@ function initSpeechRecognition(){
 /** 음성 인식 시작: 공용 마이크 트랙이 있고 브라우저가 지원하면 그 트랙으로(권한 재요청 없음, 고른 마이크 그대로), 아니면 기본 방식 */
 function srStart(rec){
   const tr = (SR_TRACK_OK && !state.sttTrackFailed && typeof MicStream !== 'undefined') ? MicStream.track() : null;
-  if(tr){ try{ rec.start(tr); state.sttViaTrack = true; return; }catch(e){ console.warn('[음성 인식] 트랙으로 시작 실패 → 기본 마이크', e); } }
+  if(tr){ try{ rec.start(tr); state.sttViaTrack = true; return; }catch(e){ if(e && e.name === 'InvalidStateError') throw e; console.warn('[음성 인식] 트랙으로 시작 실패 → 기본 마이크', e); } }
   state.sttViaTrack = false;
   rec.start();
 }
@@ -14012,10 +14040,11 @@ function sttWatchTick(){
   if(!state.recognitionShouldRun){ clearInterval(state.sttWatch); state.sttWatch = null; return; }
   const lv = (typeof rhMeter !== 'undefined' && rhMeter.lastVoiceAt) || 0;
   if(lv < state.sttStartAt) return;                       // 이번 듣기 중 목소리가 아직 없음
-  if((state.sttLastResultAt||0) >= state.sttStartAt){ state.sttVoiceSince = 0; return; }   // 글자가 오고 있음
-  if(!state.sttVoiceSince) state.sttVoiceSince = Date.now();
-  if(Date.now() - state.sttVoiceSince < 8000 || Date.now() - lv > 2500) return;   // 8초 넘게, 그리고 지금도 목소리가 들릴 때만
-  state.sttVoiceSince = 0;
+  if((state.sttLastResultAt||0) >= state.sttStartAt){ state.sttVoiceTicks = 0; return; }   // 글자가 오고 있음
+  if(Date.now() - lv > 1500){ state.sttVoiceTicks = 0; return; }   // 지금 조용하면(생각 중) 처음부터
+  state.sttVoiceTicks = (state.sttVoiceTicks||0) + 1;
+  if(state.sttVoiceTicks < 8) return;                     // 8초 연속으로 목소리가 들리는데 글자가 없을 때만
+  state.sttVoiceTicks = 0;
   if(!state.sttWatchRestarts){
     state.sttWatchRestarts = 1; state.sttStartAt = Date.now();
     console.warn('[음성 인식] 목소리는 들리는데 결과 없음 → 다시 시작');
@@ -14104,6 +14133,15 @@ const STT_FIXES = [
   [/(쏘리자바|소리 자바|소리잡아)/g, '소리자바'],
   [/(에이아이|a\.?i)(?=\s*속기)/gi, 'AI'],
   [/(국외|국회의)\s*(속기)/g, '국회 $2'],
+  // 2026-10-14 팀 테스트에서 확인된 오인식
+  [/(존리사|종리사|촉기사|속이사)/g, '속기사'],
+  [/속기\s*력/g, '속기록'],
+  [/소비로\s*(기록|남기)/g, '속기로 $1'],
+  [/공개\s*시안/g, '공개 시한'],
+  [/악습하고/g, '학습하고'],
+  [/온\s*회의에서/g, '본회의에서'],
+  [/(상임\s*위원회|상임위원외)/g, '상임위원회'],
+  [/회의\s*록/g, '회의록'],
 ];
 function fixSpeech(text){
   let t = text || '';
@@ -14131,7 +14169,7 @@ function startRecognition(){
   // 트랙 시작을 지원하지 않는 휴대폰(아이폰·구형 크롬·삼성 인터넷)은 음성 인식이 마이크를 따로 열어야 하므로 측정용 마이크를 먼저 닫음 (이중 캡처 → 인식 안 됨 방지)
   if(MobileAudio.isMobile && !SR_TRACK_OK){ try{ stopRehearsalMeter(); }catch(_){} try{ MicStream.close(); }catch(_){} const note = document.getElementById('rh-meter-note'); if(note) note.textContent = '듣는 중 · 이 기기는 듣는 동안 음량 표시가 쉬어요'; }
   updateListeningUI(true);
-  state.sttStartAt = Date.now(); state.sttLastResultAt = 0; state.sttVoiceSince = 0; state.sttWatchRestarts = 0;
+  state.sttStartAt = Date.now(); state.sttLastResultAt = 0; state.sttVoiceTicks = 0; state.sttWatchRestarts = 0;
   if(state.sttWatch) clearInterval(state.sttWatch);
   state.sttWatch = setInterval(sttWatchTick, 1000);
   try{ srStart(state.recognition); }catch(err){ /* 이미 시작된 경우 무시 */ }
@@ -14960,7 +14998,7 @@ function weakResultItems(){
   const fbs = state.answerFeedback || [], qs = state.interviewQuestions || [];
   for(let i=0;i<(state.currentQ||0);i++){
     const rb = fbs[i] && fbs[i].rubric; const item = qs[i];
-    if(!item || !rb || rb.empty) continue;
+    if(!item || !rb || rb.empty || item.followup) continue;   // 꼬리질문은 앞 답변에 묶인 질문이라 복습 문항으로 다시 내지 않음 (2026-10-14)
     out.push({ i, q:item.q, total:rb.total, grade:rb.grade, ref:item.ref, hint:item.hint, diff:item.diff, followup:!!item.followup });
   }
   return out.filter(x=>x.total < 75).sort((a,b)=>a.total-b.total).slice(0,3);
@@ -15771,7 +15809,7 @@ const StenoListener = {
     if(this.active) this.stop('restart');
     this.cb = cb || {}; this.opt = Object.assign({}, this.defaults, opt || {});
     this.transcript=''; this.interim=''; this.spokeAt=0; this.firstSpeechAt=0; this.level=0; this.lastVoiceAt=0; this.silenceSince=0;
-    this._pauseHint = false; this._waitHint = false; this._voiceAt = 0; this._srRestarted = false; this._nosrFired = false; this.failKind = '';
+    this._pauseHint = false; this._waitHint = false; this._voiceAt = 0; this._srRestarted = false; this._nosrFired = false; this.failKind = ''; this._peak = 0; this._spk = 0; this._quietHint = false; this._loudMs = 0;
     this.startedAt = Date.now(); this.active = true;
     if(!this.supported()){ this._fail('이 브라우저는 음성 인식을 지원하지 않아요. 크롬 또는 엣지를 사용해 주세요.'); return false; }
 
@@ -15779,8 +15817,9 @@ const StenoListener = {
     //    트랙 시작을 지원하지 않는 휴대폰은 음성 인식이 마이크를 따로 열어야 하므로 측정·녹음 없이 진행 (이중 캡처 → 인식 안 됨 방지)
     try{
       if(MobileAudio.isMobile && !SR_TRACK_OK){ try{ stopRehearsalMeter(); }catch(_){} try{ MicStream.close(); }catch(_){} throw new Error('mobile-no-track'); }
+      const gen = (this._gen = (this._gen||0) + 1);
       this.stream = await MicStream.get('live');
-      if(!this.active){ MicStream.release('live'); this.stream = null; return false; }
+      if(!this.active || gen !== this._gen){ if(gen === this._gen) MicStream.release('live'); if(gen === this._gen) this.stream = null; return false; }
       const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC();
       const src = this.ctx.createMediaStreamSource(this.stream); const an = this.ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
       const buf = new Uint8Array(an.fftSize);
@@ -15792,6 +15831,9 @@ const StenoListener = {
         if(this.cb.onLevel) this.cb.onLevel(Math.min(1, this.level*4));
         const now = Date.now();
         if(this.level > this.opt.levelThreshold){ this.lastVoiceAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; if(!this._voiceAt) this._voiceAt = now; this._state('speaking'); }
+        if(this.level > this.opt.levelThreshold * 2 && !this.spokeAt) this._loudMs = (this._loudMs||0) + 16;   // 글자 없이 또렷한 소리만 쌓이는 시간 (nosr 감시용)
+        // 글자는 들어오는데(말하는 중) 음량이 계속 작으면 → 마이크에 가까이 말하라고 한 번 안내
+        if(this.spokeAt && now - this.spokeAt < 1500){ this._peak = Math.max(this._peak||0, this.level); this._spk = (this._spk||0) + 16; if(this._spk > 4000 && !this._quietHint){ this._quietHint = true; if(this._peak < 0.03) this._state('quiet'); } }
         this._checkEnd(now);
         this.raf = requestAnimationFrame(loop);
       };
@@ -15823,7 +15865,10 @@ const StenoListener = {
       this.failKind = e.error || 'error';
       this._fail(micErrorMessage(e).text);
     };
-    rec.onend = ()=>{ if(this.active){ const d = this.timers.netErr ? 800 * this.timers.netErr : 300; setTimeout(()=>{ if(this.active){ try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }catch(_){} } }, d); } };
+    rec.onend = ()=>{ if(this.active){ const d = this.timers.netErr ? 800 * this.timers.netErr : 300; setTimeout(()=>{ if(!this.active) return;
+      if(this._srTrack && this._srTrack.readyState !== 'live') this._srTrack = null;   // 트랙이 끝났으면(권한 만료·장치 분리) 기본 마이크로
+      try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }
+      catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); return; }catch(_){} } this.timers.restartFail = (this.timers.restartFail||0) + 1; if(this.timers.restartFail >= 2){ this.failKind = 'restart'; this._fail('음성 인식을 다시 시작하지 못했어요. 답변을 직접 입력해 주세요.'); } } }, d); } };
     this.rec = rec;
     // 크롬 138+: 공용 스트림의 트랙으로 시작 → 권한을 다시 묻지 않고, 준비창에서 고른 마이크 그대로 들음
     this._srTrack = (SR_TRACK_OK && this.stream && this.stream.getAudioTracks().find(t=>t.readyState === 'live')) || null;
@@ -15836,8 +15881,8 @@ const StenoListener = {
   _checkEnd(now){
     const o = this.opt;
     // 목소리(음량)는 들리는데 8초 넘게 글자가 안 오면: 음성 인식을 한 번 다시 시작, 그래도 없으면 직접 입력으로 (2026-10-14)
-    if(this._voiceAt && !this.spokeAt && now - this._voiceAt > 8000 && now - this.lastVoiceAt < 2500){
-      if(!this._srRestarted){ this._srRestarted = true; this._voiceAt = now; console.warn('[StenoListener] 목소리는 들리는데 결과 없음 → 다시 시작'); try{ if(this.rec) this.rec.stop(); }catch(_){} }
+    if(this._voiceAt && !this.spokeAt && (this._loudMs||0) > 5000 && now - this._voiceAt > 8000 && now - this.lastVoiceAt < 2500){
+      if(!this._srRestarted){ this._srRestarted = true; this._voiceAt = now; this._loudMs = 0; console.warn('[StenoListener] 목소리는 들리는데 결과 없음 → 다시 시작'); try{ if(this.rec) this.rec.stop(); }catch(_){} }
       else if(!this._nosrFired){ this._nosrFired = true; this.failKind = 'nosr'; try{ Feedback.auto('음성 인식(라이브)', 'nosr: 음량은 들어오는데 결과 없음 (track=' + (this._srTrack?'y':'n') + ')'); }catch(_){} if(this.cb.onError) this.cb.onError('마이크 소리는 들어오는데 글자로 바뀌지 않아요. 이번 답변은 직접 입력해 주세요.'); return this.stop('error'); }
     }
     if(!this.firstSpeechAt){
@@ -17902,7 +17947,8 @@ function openSignup(){
   document.getElementById('signup-pw').value='';
   document.getElementById('signup-note').value='';
   document.getElementById('modal-signup').classList.add('active');
-  ['signup-name','signup-id','signup-phone','signup-pw','signup-note'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('invalid'); } });
+  ['signup-name','signup-id','signup-phone','signup-pw','signup-pw2','signup-note'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('invalid'); } });
+  { const e2 = document.getElementById('signup-pw2-err'); if(e2) e2.textContent = ''; toggleSignupPwVisible(false); const cb = document.querySelector('.signup-pw-eye input'); if(cb) cb.checked = false; }
   const consent=document.getElementById('signup-consent'); if(consent){ consent.checked=false; validateSignupField('consent'); }
   const pe=document.getElementById('signup-phone-err'); if(pe) pe.textContent='';
   document.querySelectorAll('#signup-pw-rules [data-rule]').forEach(el=>el.classList.remove('ok','bad'));
@@ -17926,7 +17972,17 @@ function checkPassword(pw){
   r.ok = r.len && r.alpha && r.digit;
   return r;
 }
+function toggleSignupPwVisible(on){ ['signup-pw','signup-pw2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.type = on ? 'text' : 'password'; }); }
 function validateSignupField(which, force){
+  if(which === 'pw2' || which === 'pw'){
+    const pw = document.getElementById('signup-pw').value.trim(), pw2 = document.getElementById('signup-pw2').value.trim();
+    const err = document.getElementById('signup-pw2-err'), in2 = document.getElementById('signup-pw2');
+    let msg = '';
+    if(force && !pw2) msg = '비밀번호를 한 번 더 입력해 주세요';
+    else if(pw2 && pw !== pw2) msg = '비밀번호가 서로 달라요';
+    if(err) err.textContent = msg; if(in2) in2.classList.toggle('invalid', !!msg);
+    if(which === 'pw2') return;
+  }
   if(which === 'pw'){
     const pw = document.getElementById('signup-pw').value;
     const r = checkPassword(pw);
@@ -17985,6 +18041,8 @@ async function submitSignup(){
     showToast('비밀번호는 영문과 숫자를 모두 넣어 6자 이상으로 만들어 주세요');
     return;
   }
+  { const pw2 = document.getElementById('signup-pw2').value.trim();
+    if(pw2 !== pw){ validateSignupField('pw2', true); document.getElementById('signup-pw2').focus(); showToast(pw2 ? '비밀번호 확인이 서로 달라요. 같은 비밀번호를 두 번 입력해 주세요' : '비밀번호를 한 번 더 입력해 주세요'); return; } }
   if(!document.getElementById('signup-consent').checked){
     validateSignupField('consent', true);
     showToast('개인정보 수집·이용에 동의해야 가입할 수 있어요');
