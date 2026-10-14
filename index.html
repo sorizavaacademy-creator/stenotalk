@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-14j';
+var APP_VERSION = '2026-10-14k';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3786,6 +3786,11 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   /* 결과 문항 줄(휴대폰): 칩·점수는 질문 글 아래 왼쪽부터, 펼치기 화살표는 오른쪽 끝 · 크기 고정 */
   @media(max-width:860px){ #screen-result .q-head-right{justify-content:flex-start !important;flex-wrap:wrap;row-gap:6px;padding-left:44px;box-sizing:border-box;} #screen-result .q-head{position:relative;padding-right:40px !important;} #screen-result .q-head-right .q-chev{flex:none;position:absolute;right:14px;top:50%;transform:translateY(-50%);} #screen-result .q-result-group.open .q-chev{transform:translateY(-50%) rotate(180deg);} }
   .q-gs{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex:none;}
+/* 2026-10-14k 서류와 맞춰 보세요 */
+.q-docnote{ margin-top:6px; padding:8px 10px; border-radius:10px; background:var(--amber-50, #fffbeb); color:var(--slate-700, #334155); font-size:13px; line-height:1.55; }
+.q-docnote strong{ color:var(--amber-700, #b45309); margin-right:2px; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .q-docnote{ background:rgba(245,158,11,.12); color:inherit; } }
+:root[data-theme="dark"] .q-docnote{ background:rgba(245,158,11,.12); color:inherit; }
 </style>
 </head>
 <body>
@@ -11738,7 +11743,8 @@ const DocQ = {
         if(!quote) return;
         const q = this._q(sec, kind, quote);
         if(q.length > 190) return;
-        out.push({ q, ref:null, custom:true, doc:'resume', section: sec.title || '', src: s, kind, score,
+        const quoteCore = typeof quote === 'object' ? quote.np : quote.slice(0, Math.max(6, Math.min(16, quote.length - 3)));
+        out.push({ q, ref:null, custom:true, doc:'resume', section: sec.title || '', src: s, kind, score, quoteCore,
                    follow: [this._follow(kind, quote)].filter(Boolean),
                    hint: '자기소개서에 쓴 내용과 같은 사실(언제·어디서·내가 한 일·결과)로 답해 보세요.' });
       });
@@ -11809,7 +11815,7 @@ const DocQ = {
         if(x.paren) follow.push(`이력서에 ${J("'" + x.paren.slice(0, 40) + "'", '이라고/라고')} 적으셨는데, 그만큼의 일을 하면서 정확성은 어떻게 지키셨나요?`);
         if(x.extra.length) follow.push(`같은 기간에 '${x.extra[0].replace(/\s*\([^)]*\)\s*/g,' ').trim().slice(0, 40)}'도 하셨다고 적으셨는데요, 그 일은 앞의 일과 무엇이 달랐나요?`);
       }
-      return { q: q.replace(/\s{2,}/g, ' '), ref:null, custom:true, doc:'cv', section: x.kind, src: x.raw, kind: x.kind, score: x.score, follow: follow.filter(Boolean).slice(0, 2),
+      return { q: q.replace(/\s{2,}/g, ' '), ref:null, custom:true, doc:'cv', section: x.kind, src: x.raw, kind: x.kind, score: x.score, quoteCore: x.main, follow: follow.filter(Boolean).slice(0, 2),
                hint: '이력서에 적은 기간·역할·숫자와 맞게, 내가 직접 한 일을 중심으로 답해 보세요.' };
     });
   },
@@ -11817,25 +11823,23 @@ const DocQ = {
   build(resumeRaw, cvRaw, max){
     max = max || 2;
     const r = this.fromResume(resumeRaw || ''), c = this.fromCv(cvRaw || '');
-    const pick = (list, n, used)=>{
-      const top = list.filter(x=>!used.has(x.q)).slice(0, Math.max(n, 3));
-      const res = [];
-      while(res.length < n && top.length){ const i = Math.floor(Math.random() * Math.min(top.length, 3)); res.push(top.splice(i, 1)[0]); }
-      res.forEach(x=>used.add(x.q));
-      return res;
+    // 각 서류에서: 상위 3개 중 하나를 무작위로 먼저, 나머지는 점수 순 (같은 항목·같은 유형은 뒤로)
+    const order = list=>{
+      if(!list.length) return [];
+      const top = list.slice(0, 3), first = top[Math.floor(Math.random() * top.length)];
+      const rest = list.filter(x=>x !== first);
+      const diverse = rest.filter(x=>!(x.section === first.section && x.kind === first.kind));
+      const same = rest.filter(x=>x.section === first.section && x.kind === first.kind);
+      return [first].concat(diverse, same);
     };
-    const used = new Set();
-    let out = [];
-    if(r.length && c.length){ out = pick(r, 1, used).concat(pick(c, 1, used)); }
-    else if(r.length){ // 같은 문장 두 번 X, 가능하면 다른 항목에서
-      const first = pick(r, 1, used);
-      const other = r.filter(x=>!first.length || x.section !== first[0].section || x.kind !== first[0].kind);
-      out = first.concat(pick(other.length ? other : r, 1, used));
+    const R = order(r), C = order(c);
+    const out = [];
+    for(let i = 0; out.length < max && (i < R.length || i < C.length); i++){
+      if(i < R.length) out.push(R[i]);
+      if(out.length < max && i < C.length) out.push(C[i]);
     }
-    else if(c.length){ out = pick(c, Math.min(2, c.length), used); }
-    out = out.slice(0, max);
     out.forEach(x=>this.followMap.set(x.q, (x.follow || []).slice()));
-    return out;
+    return out.slice(0, max);
   },
   followMap: new Map(),
   /** 규칙 꼬리질문(AI 꺼짐)에서: 이 서류 질문에 붙여 둔 꼬리질문을 먼저 사용 */
@@ -11851,13 +11855,188 @@ const DocQ = {
 function refreshDocQuestions(){
   const r = state.resumeFull || state.resumeText || '', c = state.cvFull || state.cvText || '';
   let qs = [];
-  try{ qs = DocQ.build(r, c, 2); }catch(e){ console.warn('[서류 질문 만들기 실패]', e); }
+  try{
+    // 자체 검사: 인용한 부분이 서류에 실제로 있는 질문만 사용 (없으면 버리고 기록)
+    const okQ = x=>{ if(!x.quoteCore || DocGuard.inDocs(x.quoteCore)) return true; DocGuard.log('doc_guard', { reason:'q_quote_missing', q: String(x.q).slice(0, 80) }); return false; };
+    const all = DocQ.build(r, c, 4).filter(okQ);
+    qs = all.slice(0, 2).map(x=>Object.assign(x, { spoken: DocGuard.forSpeech(x.q), follow: (x.follow || []).map(f=>DocGuard.forSpeech(f)) }));
+    qs.forEach(x=>DocQ.followMap.set(x.q, x.follow.slice()));
+  }catch(e){ console.warn('[서류 질문 만들기 실패]', e); }
   if(!qs.length && r.trim()) qs = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 경험 하나를, 언제·어디서·무엇을 했는지 중심으로 말씀해 주시겠어요?', ref:null, custom:true, doc:'resume'}];
   state.customQuestions = qs;
   try{ syncRealSetDocStep(); }catch(_){}
   return qs;
 }
 function buildCustomQuestionsFromText(text){ return DocQ.build(text, state.cvFull || state.cvText || '', 2); }
+/* ---------------- 서류 안전장치 (DocGuard, 2026-10-14k) ----------------
+ * 여러 수강생이 서로 다른 자기소개서·이력서를 올려도 같은 기준으로 지키는 규칙:
+ *  ① 발음: 서류 질문을 읽을 때 기호·괄호·특수문자를 소리 내기 좋게 정리 (forSpeech)
+ *  ② 음성 인식: 서류에 있는 낱말(주무관·문자통역·공청회 …)을 인식 힌트로 쓰고, 한 글자 틀린 말은 서류 표기로 바로잡음 (fixSpeech)
+ *  ③ AI 꼬리질문 검사: 서류를 언급하면서 서류에 없는 인용·숫자·기관 경력을 말하거나, 개인정보·잘못 들린 말을 인용하면 버리고 규칙 꼬리질문으로 (checkFollowup)
+ *  ④ 답변 대조: 서류 질문에 답할 때 서류와 다른 숫자, 서류에 없는 기관 경력을 말하면 결과 화면에 "서류와 맞춰 보세요"로 알려 줌 (consistency)
+ *  ⑤ 학습 기록: 위에서 걸러지거나 고친 내용을 activity_log(doc_guard·doc_stt_fix·doc_mismatch)에 남겨 매주 규칙을 보강 */
+const DocGuard = {
+  docs(){ return ((state.resumeFull || state.resumeText || '') + '\n' + (state.cvFull || state.cvText || '')).trim(); },
+  has(){ return this.docs().length > 20; },
+  _ns(s){ return String(s || '').replace(/[\s'"‘’“”·,.()\[\]]/g, ''); },
+  inDocs(span){ const d = this._ns(this.docs()); const s = this._ns(span); return !!s && d.includes(s); },
+  _logged: new Set(),
+  log(event, detail){
+    try{
+      const key = event + ':' + JSON.stringify(detail || {}).slice(0, 120);
+      if(this._logged.has(key)) return; this._logged.add(key);
+      if(typeof Activity !== 'undefined') Activity.log(event, Object.assign({ ver: typeof APP_VERSION !== 'undefined' ? APP_VERSION : '' }, detail || {}));
+    }catch(_){}
+  },
+
+  /* ① 읽기 좋게 */
+  forSpeech(t){
+    const circ = '①②③④⑤⑥⑦⑧⑨⑩';
+    return String(t || '')
+      .replace(/[①-⑩]/g, c=>(circ.indexOf(c) + 1) + '번 ')
+      .replace(/[※★☆●○◎◆◇■□▶▷►•▪︎❖✔✓→⇒]+/g, ' ')
+      .replace(/[\[\]【】〈〉<>{}]/g, '')
+      .replace(/\s*&\s*/g, ' 그리고 ')
+      .replace(/\s*\+\s*/g, ' 플러스 ')
+      .replace(/#/g, '')
+      .replace(/\bAI\b/g, '에이아이')
+      .replace(/\(([^)]{1,30})\)/g, ', $1,')
+      .replace(/\s*,\s*,/g, ',').replace(/,\s*(?=[’'])/g, '')
+      .replace(/\s{2,}/g, ' ').trim();
+  },
+
+  /* ② 서류 낱말 (음성 인식 힌트·교정용) */
+  _vocabCache: { key: '', list: [] },
+  vocab(){
+    const docs = this.docs(); if(!docs) return [];
+    if(this._vocabCache.key === docs) return this._vocabCache.list;
+    const PART = /(으로부터|에서부터|에게서|으로서|으로써|이라고|이라는|에서는|에서도|에서의|까지는|부터는|에서|에게|으로|이며|이고|이나|하며|하고|과의|와의|와는|과는|에는|에도|의|을|를|이|가|은|는|에|로|와|과|도|만|께서|께|란|라는|처럼|보다)$/;
+    const VERB = /(다|고|며|서|면|게|지|요|니|음|함|됨|된|던|한|할|해|했|였|었|겠|기|든|라|야|하|받|자|거나|라는|질|적|인|운|른|될|일|는|은|를|을|가|의|에|로)$/;
+    const nm = state.currentUser && state.currentUser.name ? String(state.currentUser.name).trim() : '';
+    const seen = new Map();
+    docs.replace(/[○◯]+/g, ' ').split(/[^가-힣A-Za-z0-9]+/).forEach(tok=>{
+      let w = tok;
+      if(!/^[가-힣]+$/.test(w)) return;
+      { const m = w.match(PART); if(m && w.length - m[0].length >= 2) w = w.slice(0, -m[0].length); }
+      if(w.length < 3 || w.length > 9 || VERB.test(w)) return;
+      if((nm && w.includes(nm)) || /(시연용|샘플|연락처|이메일|성명|생년|주소|휴대폰|전화|인적)/.test(w)) return;   // 개인정보·안내 문구는 낱말 목록에서 뺌
+      if(/^(그리고|그래서|하지만|그러나|저는|제가|특히|또한|이후|당시|처음|먼저|최대한|가장|함께|모두|같은|다시|자주|빠르게|정확한|새로운)$/.test(w)) return;
+      seen.set(w, (seen.get(w) || 0) + 1);
+    });
+    const list = [...seen.keys()].sort((a,b)=>(seen.get(b) - seen.get(a)) || (b.length - a.length));
+    this._vocabCache = { key: docs, list };
+    return list;
+  },
+  sttTerms(){ return this.has() ? this.vocab().slice(0, 40) : []; },
+  _jamo(ch){ const c = ch.charCodeAt(0) - 0xAC00; if(c < 0 || c > 11171) return null; return [Math.floor(c / 588), Math.floor((c % 588) / 28), c % 28]; },
+  _close(a, b){ const x = this._jamo(a), y = this._jamo(b); if(!x || !y) return 0; return (x[0]===y[0]) + (x[1]===y[1]) + (x[2]===y[2]); },
+  fixSpeech(text){
+    if(!text || !this.has()) return text;
+    const terms = this.vocab().filter(w=>w.length >= 3);
+    if(!terms.length) return text;
+    const docNs = this._ns(this.docs());
+    const PARTICLE_SYL = /^[로를을이가은는의에와과도만고며서면게지다요]$/;
+    return text.replace(/[가-힣]{3,}/g, tok=>{
+      if(docNs.includes(tok)) return tok;   // 서류에 그대로 있는 말은 건드리지 않음
+      for(const term of terms){
+        const L = term.length; if(tok.length < L) continue;
+        const span = tok.slice(0, L); if(span === term) return tok;
+        let diff = -1, n = 0;
+        for(let i = 0; i < L; i++){ if(span[i] !== term[i]){ n++; diff = i; } }
+        if(n !== 1) continue;
+        const sim = this._close(span[diff], term[diff]);
+        if(sim < (L >= 4 ? 1 : 2)) continue;
+        if(diff === L - 1 && tok.length === L && PARTICLE_SYL.test(span[diff])) continue;   // "회의로"(회의+로)를 "회의록"으로 바꾸지 않도록
+        if(diff === 0) continue;   // 첫 글자가 다르면 다른 낱말일 가능성이 큼
+        if(tok.length > L && !/^(님|씨)?(께서|에게|에서|으로|이랑|하고|이며|이고|과의|과|와|을|를|이|가|은|는|의|에|로|도|만|께)?$/.test(tok.slice(L))) continue;   // "주문관리"처럼 뒤에 다른 말이 붙으면 다른 낱말
+        const fixed = term + tok.slice(L);
+        this.log('doc_stt_fix', { from: tok, to: fixed });
+        return fixed;
+      }
+      return tok;
+    });
+  },
+
+  /* 서류에서 "실제로 일한 곳"으로 적힌 기관인지 (지원 분야·희망으로만 적힌 기관은 제외: 예 "국회에서 일하고 싶어 지원") */
+  expHas(org){
+    if(!org) return false;
+    try{
+      const cv = DocQ.fromCv(state.cvFull || state.cvText || '');
+      if(cv.some(x=>x.kind !== 'cert' && String(x.src).includes(org))) return true;
+    }catch(_){}
+    const sents = String(state.resumeFull || state.resumeText || '').replace(/\n/g, ' ').split(/(?<=[다요])\.\s+/);
+    return sents.some(sn=>{
+      const i = sn.indexOf(org); if(i < 0) return false;
+      if(/(싶|지원했|지원하게|되겠|되고자|꿈|목표|희망|포부)/.test(sn)) return false;
+      return /(근무|일하|일했|보조|담당|맡|작성|통역|봉사|실습|인턴|참여|활동)/.test(sn.slice(i, i + 40));
+    });
+  },
+  /* ③ AI 꼬리질문 검사 */
+  ORG: /(국회사무처|국회|법원|검찰청|검찰|지방의회|시의회|도의회|구의회|군의회|의회|시청|구청|군청|도청|해바라기센터|방송국|방송사|속기사무소|속기 사무소|법무법인|경찰서|교육청|학교|대학교|센터|공단|공사)/,
+  checkFollowup(f, answer, question){
+    f = String(f || '');
+    const ans = String(answer || '');
+    // 개인정보는 서류 유무와 상관없이 금지
+    const nm = state.currentUser && state.currentUser.name ? String(state.currentUser.name).trim() : '';
+    if(/\d{2,3}-\d{3,4}-\d{4}|@[a-z0-9.-]+\.[a-z]{2,}|생년월일|주민등록/i.test(f) || (nm.length >= 2 && f.includes(nm))) return { ok:false, reason:'personal' };
+    if(!this.has()) return { ok:true };
+    const refersDoc = /(자기소개서|이력서|서류|적으셨|쓰셨|기재하|작성하신 내용)/.test(f);
+    const quotes = [...f.matchAll(/['‘“"]([^'’”"]{2,60})['’”"]/g)].map(m=>m[1].trim());
+    const pool = this._ns(this.docs() + ans + (question || ''));
+    for(const q of quotes){
+      const qs = this._ns(q);
+      if(!pool.includes(qs)){ if(refersDoc) return { ok:false, reason:'quote_not_in_doc', detail:q }; continue; }
+      // 답변에서만 나온 인용인데 서류 표기와 한 글자 다른 말(잘못 들린 말)이면 인용 금지
+      if(!this.inDocs(q) && this.fixSpeech(q) !== q) return { ok:false, reason:'quotes_stt_error', detail:q };
+    }
+    if(refersDoc){
+      const nums = [...f.matchAll(/(\d+(?:\.\d+)?)\s*(년간|개월|년|건|회|시간|자|명|급|%|퍼센트|주)/g)];
+      const src = this._ns(this.docs() + ans + (question || ''));
+      const raw = this.docs() + ' ' + ans + ' ' + (question || '');
+      for(const m of nums){ if(!src.includes(m[1] + m[2]) && !new RegExp('(?<![\\d.])' + m[1].replace('.', '\\.') + '(?![\\d.])').test(raw)) return { ok:false, reason:'number_not_in_doc', detail:m[0] }; }
+    }
+    // "○○에서 근무하신/일하신 경험" 처럼 경력을 전제하는데, 그 기관이 서류·답변 어디에도 없으면
+    const claim = f.match(new RegExp(this.ORG.source + '[^.?!]{0,10}?(근무하신|근무하셨|일하신|일하셨|근무 경험|근무 경력|에서의 경험|에서 경험하신|에서 하신 일|경력)'));
+    if(claim && !this.expHas(claim[1]) && !this._ns(ans).includes(claim[1])) return { ok:false, reason:'org_not_in_doc', detail:claim[0] };
+    return { ok:true };
+  },
+
+  /* ④ 답변과 서류 대조 → 결과 화면 메모 */
+  consistency(answer, src){
+    const out = []; this.lastFix = [];
+    if(!this.has()) return out;
+    const a = String(answer || ''); if(a.replace(/\s/g, '').length < 10) return out;
+    const docs = this.docs();
+    const unitRe = /(\d+(?:\.\d+)?)\s*(년간|개월|건|회|시간|자|명|급|%)/g;
+    const docNums = {}; let m;
+    while((m = unitRe.exec(docs))){ (docNums[m[2]] = docNums[m[2]] || new Set()).add(m[1]); }
+    const srcText = String(src || '');
+    const seenU = new Set();
+    unitRe.lastIndex = 0;
+    while((m = unitRe.exec(a))){
+      const [all, n, u] = m;
+      if(!docNums[u] || docNums[u].has(n) || seenU.has(u)) continue;
+      const sm = srcText ? srcText.match(new RegExp('([^,.]{0,12})(\\d+(?:\\.\\d+)?)\\s*' + u.replace('%','\\%'))) : null;
+      if(!sm) continue;   // 이 질문의 근거 문장에 같은 단위가 있을 때만 (다른 이야기의 숫자는 건드리지 않음)
+      seenU.add(u);
+      const lead = sm[1].replace(/[()\[\]]/g, ' ').trim().split(/\s+/).slice(-2).join(' ');
+      const docPhrase = `'${(lead ? lead + ' ' : '') + sm[2] + u}'`;
+      out.push(`서류에는 ${DocQ._j(docPhrase, '으로/로')} 적혀 있는데 답변에서는 ${DocQ._j("'" + all.replace(/\s+/g, '') + "'", '이라고/라고')} 했어요. 같은 일을 말한 거라면 서류와 숫자를 맞춰 주세요.`);
+      this.lastFix.push({ said: all, doc: sm[2] + u });
+      this.log('doc_mismatch', { kind:'number', doc: (sm[2] + u), said: all });
+    }
+    const claimRe = new RegExp(this.ORG.source + '[^.?!]{0,8}?(에서|의)\\s?[^.?!]{0,6}?(근무했|일했|근무하던|일하던|근무할 당시|일할 당시|근무한 경험|일한 경험|인턴을 했|실습을 했|경력이 있)', 'g');
+    let c;
+    while((c = claimRe.exec(a))){
+      const org = c[1];
+      if(this.expHas(org)) continue;
+      out.push(`답변에서 '${org}' 근무 경험을 말했는데 자기소개서·이력서에는 그 경력이 없어요. 실제 면접에서는 서류와 다른 경력을 말하면 신뢰를 잃을 수 있어요.`);
+      this.log('doc_mismatch', { kind:'org', org });
+      break;
+    }
+    return out.slice(0, 2);
+  },
+};
 function toggleSwitch(el,type){
   el.classList.toggle('on');
   const on = el.classList.contains('on');
@@ -14205,7 +14384,7 @@ async function runDialogInterview(){
       curQIndex = d.index;
       state.currentQ = d.index; document.getElementById('iv-progress').textContent = `질문 ${d.index} / ${d.total}`;
       Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:d.index });
-      pendingAsk = { q: d.q.q, ref: d.q.ref, hint: d.q.hint || '', qid: (d.q.id != null ? d.q.id : d.q.dbId), kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q), slot: d.q.slot || null, slotName: d.q.slotName || '' };
+      pendingAsk = { q: d.q.q, ref: d.q.ref, hint: d.q.hint || '', qid: (d.q.id != null ? d.q.id : d.q.dbId), kind:'question', custom: !!d.q.custom, spoken: spokenOf(d.q), slot: d.q.slot || null, slotName: d.q.slotName || '', doc: d.q.doc || '', src: d.q.src || '' };
       curSlotName = d.q.slotName || '';
       qEl.textContent = d.q.q; { const qn=document.getElementById('rh-qnum'); if(qn) qn.textContent = String(d.index).padStart(2,'0'); }
       if(d.q.custom){ const dn = d.q.doc === 'cv' ? '이력서' : '자기소개서'; badge.textContent = d.q.slotName ? `실전 세트 · ${dn} 기반` : `${dn} 기반`; badge.className='qcard-source-badge resume'; }
@@ -14312,7 +14491,7 @@ function maybeOpenDemoFromUrl(){
 async function finishDialogInterview(asks, transcript){
   // 결과 화면·저장 코드가 기대하는 형태로 옮겨 담기 (기존 채점·전달력 측정 재사용)
   state.dialogTranscript = transcript || [];
-  state.interviewQuestions = asks.map(a=>({ q: a.q, ref: a.ref, hint: a.hint || '', qid: a.qid, followup: !!a.followup, custom: !!a.custom, evaluation: a.evaluation||'', slotName: a.slotName||'' }));
+  state.interviewQuestions = asks.map(a=>({ q: a.q, ref: a.ref, hint: a.hint || '', qid: a.qid, followup: !!a.followup, custom: !!a.custom, evaluation: a.evaluation||'', slotName: a.slotName||'', doc: a.doc||'', src: a.src||'' }));
   state.setOvertime = !!(state.dialogRealSet && StenoLoop.stats && StenoLoop.stats.setTimeUp);
   state.answerTexts = asks.map(a=>a.answer || '');
   state.answerScores = []; state.answerFeedback = []; state.answerDelivery = [];
@@ -14529,7 +14708,10 @@ const STT_PHRASES = ['속기사','속기록','속기','국회','의회','법원'
   '공청회','청문회','수정동의','표결','가결','부결','의사정족수','의결정족수','재적의원','교섭단체','원내대표','간사','국정감사','국정조사','피감기관',
   '대정부질문','5분 자유발언','신상발언','의사진행발언','무제한토론','종결동의','신속처리안건','자구 정정','불게재','비공개회의록','소위원회','계류','본회의','상임위원회'];
 function applySttPhrases(rec){
-  try{ if(typeof SpeechRecognitionPhrase !== 'undefined' && 'phrases' in rec) rec.phrases = STT_PHRASES.map(w=>new SpeechRecognitionPhrase(w, 5.0)); }catch(_){ /* 미지원 브라우저 */ }
+  try{ if(typeof SpeechRecognitionPhrase !== 'undefined' && 'phrases' in rec){
+    const docTerms = (typeof DocGuard !== 'undefined') ? DocGuard.sttTerms().filter(w=>!STT_PHRASES.includes(w)) : [];   // 내 서류의 낱말(기관·직함·업무명)도 잘 알아듣게
+    rec.phrases = STT_PHRASES.map(w=>new SpeechRecognitionPhrase(w, 5.0)).concat(docTerms.map(w=>new SpeechRecognitionPhrase(w, 4.0)));
+  } }catch(_){ /* 미지원 브라우저 */ }
 }
 const STT_FIXES = [
   [/(스키사|속끼사|속기싸|속깃사|소기사|손기사|속기 사|쏙기사|수기사)/g, '속기사'],
@@ -14546,7 +14728,11 @@ const STT_FIXES = [
   [/공개\s*시안/g, '공개 시한'],
   [/악습하고/g, '학습하고'],
   [/온\s*회의에서/g, '본회의에서'],
-  [/(상임\s*위원회|상임위원외)/g, '상임위원회'],
+  [/(상임\s*위원회|상임위원외|상해\s*위원회|상위\s*위원회)/g, '상임위원회'],
+  [/문자\s*통령/g, '문자통역'],
+  [/주문관(?=님|께|이|과|와|에게|\s|$)/g, '주무관'],
+  [/보네이아/g, '본회의와'],
+  [/국회\s*속\s+기사/g, '국회 속기사'],
   [/회의\s*록/g, '회의록'],
   [/조끼\s*(외에|말고|이외)/g, '속기 $1'],
   [/영문\s*야권(은|이|을)?/g, (m, j)=>'영문 약어' + ({은:'는', 이:'가', 을:'를'}[j] || '')],
@@ -14570,6 +14756,7 @@ const STT_FIXES = [
 function fixSpeech(text){
   let t = text || '';
   STT_FIXES.forEach(([re, to])=>{ t = t.replace(re, to); });
+  try{ if(typeof DocGuard !== 'undefined') t = DocGuard.fixSpeech(t); }catch(_){}   // 내 서류에 있는 낱말로 한 글자 틀린 말 바로잡기 (2026-10-14k)
   return t;
 }
 function joinSpeech(a, b){
@@ -15172,6 +15359,16 @@ function ensureRubrics(){
     const rb = Rubric.evaluate(ctxItem, state.answerTexts[i]||'', d, analysis.ai ? analysis.score : undefined);
     analysis.rubric = rb;
     if(!analysis.ai && rb.local){ analysis.strengths = rb.local.strengths; analysis.improvements = rb.local.improvements; analysis.rewrite = rb.local.rewrite; analysis.localFb = true; }
+    // 서류 질문(과 그 꼬리질문) 답변은 자기소개서·이력서와 대조 (2026-10-14k)
+    try{
+      const docItem = item.custom && item.src ? item : (item.followup && root && root.custom && root.src ? root : null);
+      if(docItem && DocGuard.has()){
+        const notes = DocGuard.consistency(state.answerTexts[i] || '', docItem.src);
+        analysis.docNotes = notes;
+        // "이렇게 말해 보세요" 예시도 서류 숫자로 맞춤
+        (DocGuard.lastFix || []).forEach(f=>{ if(analysis.rewrite) analysis.rewrite = analysis.rewrite.split(f.said).join(f.doc); });
+      }
+    }catch(e){ console.warn('[서류 대조 실패]', e); }
     state.answerScores[i] = rb.total;
   }
 }
@@ -15210,6 +15407,7 @@ function renderResultBars(){
       if(im.length) extraHtml += `<p style="margin-top:4px;"><strong style="color:var(--amber-600);">보완할 점</strong> · ${im.join(' · ')}</p>`;
       if(analysis.rewrite) extraHtml += `<p class="q-rewrite"><strong>이렇게 말해 보세요</strong>${escapeHtml(analysis.rewrite)}</p>`;
     }
+    if(analysis && analysis.docNotes && analysis.docNotes.length) extraHtml += `<p class="q-docnote"><strong>서류와 맞춰 보세요</strong> · ${analysis.docNotes.map(escapeHtml).join(' ')}</p>`;
     const item = state.interviewQuestions[i-1];
     const qLabel = item ? ((item.followup ? '<span class="qcard-source-badge followup" style="margin-right:6px;">꼬리질문</span>' : '') + escapeHtml(item.q)) : `질문 ${i}`;
     const answerText = texts[i-1] ? escapeHtml(texts[i-1]) : '<span style="color:var(--slate-400);">기록된 답변이 없습니다.</span>';
@@ -16123,6 +16321,9 @@ const StenoDialog = {
           throw new Error(detail);
         }
         if(!data || !data.followup) throw new Error('응답 형식 오류: '+JSON.stringify(data).slice(0,150));
+        // 서류 안전장치: 서류에 없는 인용·숫자·경력, 개인정보, 잘못 들린 말 인용이 있으면 버리고 규칙 꼬리질문으로 (2026-10-14k)
+        { const chk = DocGuard.checkFollowup(data.followup, answer, question);
+          if(!chk.ok){ DocGuard.log('doc_guard', { reason: chk.reason, detail: String(chk.detail || '').slice(0, 60), text: String(data.followup).slice(0, 140) }); throw new Error('서류 확인에서 걸러짐: ' + chk.reason); } }
         if(data.limit && typeof data.limit.daily_left === 'number') AiQuota.status = Object.assign({}, AiQuota.status||{}, data.limit);
         return { followup: data.followup, evaluation: data.evaluation || '', intent: data.intent || 'probe', model: data.model || '', source:'llm' };
       }catch(e){
