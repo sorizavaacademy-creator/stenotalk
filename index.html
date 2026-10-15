@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-16a';
+var APP_VERSION = '2026-10-16b';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3881,6 +3881,19 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .rr-note{ margin:16px 0 0; font-size:13px; line-height:1.6; color:var(--rr-ink3); }
 .rr-err{ margin:8px 0 0; font-size:13.5px; font-weight:600; color:#b42318; min-height:1em; }
 .rr-nudge-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+/* 2026-10-16b 다시 요청 팝업 */
+.rr-nudge-box{ max-width:440px !important; }
+.rr-nudge-box .rrn-head{ text-align:center; padding-top:28px; border-bottom:0; }
+.rrn-ic{ display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:16px; background:var(--rr-acc-soft); color:var(--rr-acc-ink); margin-bottom:12px; }
+.rrn-kicker{ margin:0 0 4px !important; font-size:13.5px !important; font-weight:700; color:var(--rr-acc-ink) !important; }
+.rr-nudge-box .rrn-head h2{ font-size:22px !important; line-height:1.35; margin:0 0 8px; color:var(--rr-ink); }
+.rr-nudge-box .rrn-head p#rrn-desc{ font-size:15px; line-height:1.65; color:var(--rr-ink2); margin:0; }
+.rr-nudge-box #rrn-body:empty{ display:none; }
+.rrn-points{ list-style:none; margin:0; padding:14px 16px; border-radius:12px; background:var(--rr-surface); display:flex; flex-direction:column; gap:8px; font-size:14.5px; line-height:1.55; color:var(--rr-ink); }
+.rrn-points li{ position:relative; padding-left:22px; } .rrn-points li::before{ content:''; position:absolute; left:2px; top:.35em; width:12px; height:7px; border-left:2px solid var(--rr-acc); border-bottom:2px solid var(--rr-acc); transform:rotate(-45deg); }
+.rrn-count{ margin:12px 0 0; font-size:14px; color:var(--rr-ink2); text-align:center; } .rrn-count b{ color:var(--rr-acc-ink); }
+.rrn-plan{ width:100%; margin-top:12px; }
+.rr-nudge-box .modal-foot .btn-solid{ flex:1.4; } .rr-nudge-box .modal-foot .btn{ flex:1; min-height:46px; }
 /* 승인 대기: 증빙 올리기 */
 #screen-pending .pd-apply{ margin:4px 0 16px; padding:18px 16px 16px; border-radius:14px; background:#fff; border:2px solid var(--rr-acc); }
 #screen-pending .pd-lbl{ display:block; font-size:13.5px; font-weight:700; color:var(--rr-ink); margin:12px 0 6px; }
@@ -4032,7 +4045,7 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 </div>
 <div class="modal-overlay" id="modal-rr-nudge" role="dialog" aria-modal="true" aria-labelledby="rrn-title">
   <div class="modal-box rr-nudge-box">
-    <div class="modal-head"><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
+    <div class="modal-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span><p class="rrn-kicker" id="rrn-kicker">합격하면 꼭 남겨 주세요</p><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
     <div class="modal-body" id="rrn-body"></div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="RealReport.closeNudge()">나중에</button>
@@ -9308,32 +9321,55 @@ const RealReport = {
     await this.load();
     box.innerHTML = this.cardHtml('closed');
   },
-  /* ---- 다시 요청 (2일에 한 번) ---- */
-  nudgeKey(){ return 'stenotalk_rr_nudge_' + ((state.currentUser||{}).id || ''); },
-  maybeNudge(){
+  /* ---- 팝업으로 다시 요청 (2026-10-16b: 하루 한 번) ----
+   *  · 아직 아무것도 안 남김 → "합격하면 꼭 남겨 주세요" 팝업 (면접 날짜를 알려 주면 면접일 전까지는 안 뜸)
+   *  · 면접일이 지남 → "면접 어떠셨어요?" / 결과 기다린 지 3일 넘음 → "결과 나왔나요?"
+   *  · 투어·다른 창이 떠 있으면 닫힐 때까지 기다렸다가(최대 약 1분) 띄움 */
+  nudgeKey(){ return 'stenotalk_rr_popup_' + ((state.currentUser||{}).id || ''); },
+  nudgeKind(){
+    const ph = this.phase();
+    if(ph === 'none') return 'none';
+    if(ph === 'after' || ph === 'ask') return ph;
+    return null;
+  },
+  maybeNudge(tries){
+    tries = tries || 0;
     if(!this.isUser()) return;
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
-    if(document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on)) return;
-    const ph = this.phase(); const r = this.latest();
-    let kind = null;
-    if(ph === 'after') kind = 'after';
-    else if(ph === 'ask') kind = 'ask';
-    else if(ph === 'none'){ const a = accessInfo((state.currentUser||{}).accessUntil); if(a.until && a.daysLeft != null && a.daysLeft <= 1) kind = 'none'; }
-    if(!kind) return;
-    try{ const last = +localStorage.getItem(this.nudgeKey()) || 0; if(Date.now() - last < 2*86400000) return; localStorage.setItem(this.nudgeKey(), String(Date.now())); }catch(_){}
-    const t = document.getElementById('rrn-title'), d = document.getElementById('rrn-desc'), b = document.getElementById('rrn-body'), go = document.getElementById('rrn-go');
+    const kind = this.nudgeKind(); if(!kind) return;
+    const today = formatYmd(new Date());
+    try{ if(localStorage.getItem(this.nudgeKey()) === today) return; }catch(_){}
+    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open');
+    if(busy){ if(tries < 15) clearTimeout(this._nt), this._nt = setTimeout(()=>this.maybeNudge(tries+1), 4000); return; }
+    try{ localStorage.setItem(this.nudgeKey(), today); }catch(_){}
+    this.showNudge(kind);
+  },
+  showNudge(kind){
+    const r = this.latest();
+    const t = document.getElementById('rrn-title'), d = document.getElementById('rrn-desc'), b = document.getElementById('rrn-body'), go = document.getElementById('rrn-go'), k = document.getElementById('rrn-kicker');
     if(!t) return;
-    b.innerHTML = '';
+    b.innerHTML = ''; go.style.display = ''; go.textContent = '질문 남기기';
+    go.onclick = ()=>{ this.closeNudge(); this.open('self'); };
     if(kind === 'ask'){
+      k.textContent = '결과를 알려 주세요';
       t.textContent = '면접 결과 나왔나요?';
       d.textContent = `${rrMD(r.interview_date) ? rrMD(r.interview_date)+' ' : ''}${rrFieldName(r.field_id)} 면접 결과를 알려 주시면 다음 지원자 안내에 도움이 돼요.`;
       b.innerHTML = `<div class="rr-nudge-chips"><button type="button" class="rr-btn primary" onclick="RealReport.closeNudge(); RealReport.setResult(${r.id},'pass')">합격했어요</button><button type="button" class="rr-btn" onclick="RealReport.closeNudge(); RealReport.setResult(${r.id},'fail')">불합격이에요</button><button type="button" class="rr-btn" onclick="RealReport.closeNudge()">아직 몰라요</button></div>`;
       go.style.display = 'none';
+    }else if(kind === 'after'){
+      k.textContent = '합격하면 꼭 남겨 주세요';
+      t.textContent = '면접 어떠셨어요?';
+      d.textContent = '잊기 전에 받은 질문을 남겨 주세요. 한두 개만 적어도 다음 지원자에게 큰 도움이 돼요.';
+      b.innerHTML = `<ul class="rrn-points"><li>남긴 질문은 <b>바로</b> 같은 분야 연습 문항이 돼요</li><li>이름은 다른 사람에게 보이지 않아요</li></ul>`;
     }else{
-      t.textContent = kind === 'after' ? '면접 어떠셨어요?' : '면접 보셨나요?';
-      d.textContent = '기억날 때 받은 질문을 남겨 주세요. 남긴 질문은 바로 다음 지원자의 연습 문항이 돼요. 합격하면 꼭 남겨 주세요!';
-      go.style.display = ''; go.textContent = '질문 남기기';
-      go.onclick = ()=>{ this.closeNudge(); this.open('self'); };
+      const fid = state.dashField || ((state.currentUser||{}).allowed||[])[0] || 'assembly';
+      const n = this.fieldCount(fid);
+      k.textContent = '면접을 보셨다면';
+      t.textContent = '합격하면 꼭 남겨 주세요!';
+      d.textContent = '면접에서 받은 질문을 남겨 주시면 다음 지원자들이 그 질문으로 연습해요.';
+      b.innerHTML = `<ul class="rrn-points"><li>남긴 질문은 <b>바로</b> 같은 분야 연습 문항이 돼요</li><li>이름은 다른 사람에게 보이지 않아요</li><li>아직 면접 전이라면 <b>날짜만</b> 알려 주세요. 면접이 끝나면 다시 알려 드릴게요</li></ul>
+        ${n ? `<p class="rrn-count">지금까지 합격자들이 남긴 ${escapeHtml(rrFieldName(fid))} 질문 <b>${n}개</b></p>` : ''}
+        <button type="button" class="rr-btn rrn-plan" onclick="RealReport.closeNudge(); RealReport.open('plan')">아직 면접 전이에요 · 날짜 알려 주기</button>`;
     }
     document.getElementById('modal-rr-nudge').classList.add('active');
     try{ Activity.log('real_report_nudge', { kind }); }catch(_){}
@@ -10028,6 +10064,7 @@ function endTour(done){
   try{ localStorage.setItem(tourKey(), new Date().toISOString()); }catch(_){}
   if(done) showToast('준비됐어요. 분야를 고르고 면접을 시작해 보세요.');
   try{ setTimeout(()=>HomeApp.maybeOffer(), 600); }catch(_){}
+  try{ setTimeout(()=>RealReport.maybeNudge(), 1800); }catch(_){}   // 2026-10-16b 투어가 끝나면 '합격하면 꼭 남겨 주세요' 팝업
 }
 window.addEventListener('resize', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); });
 window.addEventListener('scroll', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); }, { passive:true });
