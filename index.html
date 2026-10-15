@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-15b';
+var APP_VERSION = '2026-10-16a';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3834,6 +3834,114 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 #screen-pending .pd-guide li{ margin-bottom:4px; }
 @media (max-width:520px){ #screen-pending .pd-kakao{ width:100%; } #screen-pending .pd-req{ padding:14px 14px 12px; } }
 </style>
+<style id="rr-style">
+/* ===== 2026-10-16a 실제 면접 질문 남기기 · 승인 증빙 · 베타 평가 ===== */
+.rr-card, .rr-box, .rr-nudge-box, #screen-pending, #admin-view-reports, #admin-view-approvals, .beta-rate{ --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-line2:#d3d0ca; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-ok:#2f7a4a; --rr-ok-bg:#e7f3ec; --rr-surface:#f6f5f3; }
+.rr-btn{ display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 16px; border-radius:8px; border:1px solid var(--rr-line2,#d3d0ca); background:#fff; color:var(--rr-ink,#1c1c1e); font:inherit; font-size:14.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.rr-btn:hover{ background:var(--rr-surface,#f6f5f3); }
+.rr-btn.primary{ background:var(--rr-acc,#e8532a); border-color:var(--rr-acc,#e8532a); color:#fff; } .rr-btn.primary:hover{ background:#d6461f; }
+.rr-btn:focus-visible, .rr-link:focus-visible, .br-chip:focus-visible{ outline:2px solid var(--rr-ink,#1c1c1e); outline-offset:2px; }
+.rr-link{ background:none; border:0; padding:6px 0; font:inherit; font-size:13.5px; font-weight:600; color:var(--rr-acc-ink,#c2401b); cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+/* 홈 카드 */
+.rr-card{ display:flex; gap:16px; align-items:flex-start; margin-top:20px; background:#fff; border:1px solid var(--rr-line); border-left:4px solid var(--rr-acc); }
+.rr-ic{ flex:none; width:44px; height:44px; border-radius:12px; background:var(--rr-acc-soft); color:var(--rr-acc-ink); display:flex; align-items:center; justify-content:center; }
+.rr-main{ min-width:0; flex:1; }
+.rr-kicker{ margin:0; font-size:13px; font-weight:700; color:var(--rr-acc-ink); }
+.rr-title{ margin:4px 0 6px; font-size:19px; line-height:1.35; color:var(--rr-ink); letter-spacing:-.01em; }
+.rr-desc{ margin:0 0 14px; font-size:14.5px; line-height:1.65; color:var(--rr-ink2); }
+.rr-acts{ display:flex; flex-wrap:wrap; gap:8px; }
+@media (max-width:640px){ .rr-card{ flex-direction:column; gap:10px; } .rr-acts .rr-btn{ flex:1 1 auto; } }
+#rr-closed{ margin:6px 0 18px; padding:18px; border-radius:14px; background:#fff; border:1px solid var(--rr-line); border-left:4px solid var(--rr-acc); display:flex; gap:14px; }
+@media (max-width:520px){ #rr-closed{ flex-direction:column; } }
+/* 남기기 창 */
+.rr-box{ max-width:640px !important; }
+.rr-box .modal-head p{ line-height:1.6; }
+.rr-lbl{ display:block; font-size:13.5px; font-weight:700; color:var(--rr-ink); margin:14px 0 6px; }
+.rr-lbl small{ font-weight:500; color:var(--rr-ink3); margin-left:4px; }
+.rr-in{ width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid var(--rr-line2); border-radius:8px; font:inherit; font-size:15px; line-height:1.5; color:var(--rr-ink); background:#fff; resize:vertical; }
+.rr-in:focus{ outline:2px solid var(--rr-acc); outline-offset:-1px; border-color:transparent; }
+.rr-grid{ display:grid; grid-template-columns:1fr 1.4fr 1fr; gap:0 10px; }
+.rr-grid > div{ min-width:0; }
+@media (max-width:560px){ .rr-grid{ grid-template-columns:1fr; } }
+.rr-chips{ flex-wrap:wrap; }
+.rr-qs{ list-style:none; margin:0; padding:0; counter-reset:rrq; display:flex; flex-direction:column; gap:10px; }
+.rr-q{ counter-increment:rrq; position:relative; padding:10px 10px 6px 38px; border:1px solid var(--rr-line); border-radius:10px; background:var(--rr-surface); }
+.rr-q::before{ content:counter(rrq); position:absolute; left:10px; top:12px; width:20px; height:20px; border-radius:50%; background:#fff; border:1px solid var(--rr-line2); font-size:12px; font-weight:700; color:var(--rr-ink2); display:flex; align-items:center; justify-content:center; }
+.rr-q-line{ display:flex; gap:6px; align-items:flex-start; }
+.rr-q .rr-ft{ margin-top:6px; font-size:14px; }
+.rr-x{ flex:none; width:36px; height:36px; border:0; border-radius:8px; background:none; color:var(--rr-ink3); font-size:22px; line-height:1; cursor:pointer; }
+.rr-x:hover{ background:#fff; color:var(--rr-ink); }
+.rr-qacts{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:10px; }
+.rr-paste{ margin-top:10px; padding:12px; border:1px dashed var(--rr-line2); border-radius:10px; display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
+.rr-more{ margin-top:14px; border-top:1px solid var(--rr-line); padding-top:10px; }
+.rr-more summary{ cursor:pointer; font-size:14px; font-weight:600; color:var(--rr-ink2); min-height:32px; display:flex; align-items:center; }
+.rr-more summary small{ font-weight:500; color:var(--rr-ink3); margin-left:6px; }
+.rr-person{ padding:12px; border-radius:10px; background:#fffbe6; border:1px solid #f3e3a1; display:flex; flex-direction:column; gap:8px; }
+.rr-person .rr-lbl{ margin:0; }
+.rr-note{ margin:16px 0 0; font-size:13px; line-height:1.6; color:var(--rr-ink3); }
+.rr-err{ margin:8px 0 0; font-size:13.5px; font-weight:600; color:#b42318; min-height:1em; }
+.rr-nudge-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+/* 승인 대기: 증빙 올리기 */
+#screen-pending .pd-apply{ margin:4px 0 16px; padding:18px 16px 16px; border-radius:14px; background:#fff; border:2px solid var(--rr-acc); }
+#screen-pending .pd-lbl{ display:block; font-size:13.5px; font-weight:700; color:var(--rr-ink); margin:12px 0 6px; }
+#screen-pending .pd-lbl small{ font-weight:500; color:var(--rr-ink3); margin-left:4px; }
+#screen-pending .pd-in{ width:100%; box-sizing:border-box; min-height:44px; padding:10px 12px; border:1px solid var(--rr-line2); border-radius:8px; font:inherit; font-size:15px; background:#fff; color:var(--rr-ink); }
+#screen-pending .pd-in:focus{ outline:2px solid var(--rr-acc); outline-offset:-1px; }
+#screen-pending .pd-file{ position:relative; display:flex; align-items:center; justify-content:center; min-height:52px; border:1.5px dashed var(--rr-line2); border-radius:10px; background:var(--rr-surface); font-size:14.5px; font-weight:600; color:var(--rr-ink2); cursor:pointer; text-align:center; padding:0 12px; }
+#screen-pending .pd-file:hover{ border-color:var(--rr-acc); color:var(--rr-acc-ink); }
+#screen-pending .pd-file input{ position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+#screen-pending .pd-file:focus-within{ outline:2px solid var(--rr-ink); outline-offset:2px; }
+#screen-pending .pd-prev{ margin-top:8px; } #screen-pending .pd-prev img{ max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--rr-line); display:block; }
+#screen-pending .pd-privacy{ font-size:12.5px; line-height:1.6; color:var(--rr-ink3); margin:12px 0; }
+#screen-pending .pd-send{ width:100%; min-height:48px; }
+#screen-pending .pd-sent-t{ display:flex; align-items:center; gap:6px; margin:0 0 4px; font-size:16px; font-weight:700; color:var(--rr-ok); }
+#screen-pending .pd-sent-t.warn{ color:#b42318; }
+#screen-pending .pd-sent-d{ margin:0 0 8px; font-size:14.5px; line-height:1.6; color:var(--rr-ink); } #screen-pending .pd-sent-d small{ color:var(--rr-ink3); }
+#screen-pending .pd-sent-n{ margin:0 0 4px; font-size:13.5px; line-height:1.6; color:var(--rr-ink2); }
+#screen-pending .pd-sent{ margin-bottom:10px; }
+#screen-pending .pd-chip.done{ color:var(--rr-ink2); background:var(--rr-surface); } #screen-pending .pd-chip.done i{ background:var(--rr-ink3); animation:none; }
+#screen-pending .pd-or{ font-size:13px; color:var(--rr-ink3); margin:0 0 8px; }
+/* 관리자: 승인 요청 */
+.ap-card{ display:grid; grid-template-columns:120px 1fr auto; gap:16px; align-items:start; background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:16px; margin-bottom:10px; }
+.ap-thumb{ display:flex; align-items:center; justify-content:center; width:120px; height:120px; border-radius:10px; overflow:hidden; background:var(--rr-surface); border:1px solid var(--rr-line); font-size:12.5px; color:var(--rr-ink3); text-decoration:none; }
+.ap-thumb img{ width:100%; height:100%; object-fit:cover; } .ap-thumb.pdf{ font-weight:700; color:var(--rr-acc-ink); }
+.ap-name{ font-size:15px; display:flex; flex-wrap:wrap; align-items:center; gap:6px; } .ap-name small{ color:var(--rr-ink3); }
+.ap-dl{ display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:8px 0 0; font-size:13.5px; } .ap-dl dt{ color:var(--rr-ink3); } .ap-dl dd{ margin:0; color:var(--rr-ink); min-width:0; overflow-wrap:anywhere; }
+.ap-acts{ display:flex; flex-direction:column; gap:6px; }
+@media (max-width:720px){ .ap-card{ grid-template-columns:88px 1fr; } .ap-thumb{ width:88px; height:88px; } .ap-acts{ grid-column:1 / -1; flex-direction:row; flex-wrap:wrap; } }
+/* 관리자: 면접 후기 */
+.ra-call-box{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:12px 16px; margin:12px 0; }
+.ra-call-box summary{ cursor:pointer; min-height:36px; display:flex; align-items:center; gap:8px; } .ra-call-box summary small{ color:var(--rr-ink3); }
+.ra-call-bar{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0; } .ra-call-bar .voice-select{ width:auto; }
+.ra-call-tip{ font-size:13px; color:var(--rr-ink2); }
+.ra-call-list{ display:flex; flex-direction:column; border-top:1px solid var(--rr-line); }
+.ra-call-row{ display:grid; grid-template-columns:minmax(80px,1fr) minmax(110px,1fr) minmax(120px,1.2fr) auto; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid var(--rr-line); font-size:14px; }
+.ra-call-row .ra-res{ justify-self:start; } .ra-call-row .nm{ font-weight:700; } .ra-call-row .ph{ color:var(--rr-ink2); font-variant-numeric:tabular-nums; }
+@media (max-width:640px){ .ra-call-row{ grid-template-columns:1fr auto; } .ra-call-row .ph{ grid-column:1; } .ra-call-row .ra-res{ grid-column:1; justify-self:start; } .ra-call-row .btn-manage{ grid-row:1 / span 3; grid-column:2; } }
+.ra-res{ display:inline-flex; align-items:center; font-size:12px; font-weight:700; border-radius:999px; padding:2px 9px; background:var(--rr-surface); color:var(--rr-ink2); white-space:nowrap; }
+.ra-res.pass{ background:var(--rr-ok-bg); color:var(--rr-ok); } .ra-res.fail{ background:#fdecea; color:#b42318; } .ra-res.none{ background:#fff4d6; color:#8a5a00; } .ra-res.plan, .ra-res.planned{ background:#eaf1f8; color:#2f5d8a; }
+.ra-src{ font-size:11.5px; font-weight:700; border:1px solid var(--rr-line2); border-radius:6px; padding:1px 6px; color:var(--rr-ink2); } .ra-src.phone{ border-color:#f3e3a1; background:#fffbe6; color:#8a5a00; }
+.ra-card{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:16px 18px; margin-bottom:10px; } .ra-card.hidden-r{ opacity:.6; }
+.ra-head{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+.ra-who{ font-size:15.5px; } .ra-meta{ font-size:13px; color:var(--rr-ink2); margin-top:4px; } .ra-meta small{ color:var(--rr-ink3); }
+.ra-acts{ display:flex; gap:6px; flex-wrap:wrap; }
+.ra-qs{ margin:12px 0 0; padding-left:22px; font-size:14.5px; line-height:1.65; color:var(--rr-ink); } .ra-qs > li{ margin-bottom:4px; }
+.ra-qs ul{ margin:2px 0 4px; padding-left:16px; list-style:none; color:var(--rr-ink2); font-size:13.5px; } .ra-qs ul li::before{ content:'ㄴ '; color:var(--rr-ink3); }
+.ra-none{ margin:10px 0 0; font-size:13.5px; color:var(--rr-ink3); }
+.ra-notes{ margin-top:10px; padding:10px 12px; border-radius:10px; background:var(--rr-surface); font-size:13.5px; line-height:1.6; } .ra-notes p{ margin:0; } .ra-notes p + p{ margin-top:4px; } .ra-notes b{ margin-right:6px; }
+/* 연습 문항: 합격자 제보 표시 */
+.rr-badge{ display:inline-flex; align-items:center; font-size:11.5px; font-weight:700; color:#8a5a00; background:#fff4d6; border-radius:6px; padding:1px 7px; margin-right:6px; vertical-align:2px; }
+/* 결과 화면: 베타 한 줄 평가 */
+.beta-rate{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin:16px 0 0; padding:16px 18px; background:#fff; border:1px solid var(--rr-line); border-radius:12px; }
+.beta-rate[hidden]{ display:none; }
+.br-q{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 240px; } .br-q b{ font-size:15px; color:var(--rr-ink); } .br-q small{ font-size:12.5px; color:var(--rr-ink3); }
+.br-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.br-chip{ min-height:40px; padding:0 14px; border-radius:999px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:14px; font-weight:600; color:var(--rr-ink2); cursor:pointer; }
+.br-chip.on{ background:var(--rr-ink); border-color:var(--rr-ink); color:#fff; }
+.br-more{ display:flex; gap:8px; flex:1 1 100%; } .br-more[hidden]{ display:none; }
+.br-more input{ flex:1; min-width:0; min-height:42px; padding:0 12px; border:1px solid var(--rr-line2); border-radius:8px; font:inherit; font-size:14.5px; }
+@media print{ .beta-rate, .rr-card{ display:none !important; } }
+</style>
 </head>
 <body>
 
@@ -3863,6 +3971,72 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeFeedback()">닫기</button>
       <button class="btn btn-solid" id="fb-send" onclick="sendFeedback()">보내기</button>
+    </div>
+  </div>
+</div>
+<!-- ============ 실제 면접 질문 남기기 (2026-10-16a) ============ -->
+<div class="modal-overlay" id="modal-rr" role="dialog" aria-modal="true" aria-labelledby="rr-title">
+  <div class="modal-box modal-wide rr-box">
+    <div class="modal-head">
+      <h2 id="rr-title">실제 면접 질문 남기기</h2>
+      <p id="rr-desc"></p>
+    </div>
+    <div class="modal-body">
+      <div class="rr-person" id="rr-person-row" hidden>
+        <label class="rr-lbl" for="rr-user">누구의 후기인가요?</label>
+        <select id="rr-user" class="rr-in" onchange="RealReport.pickUser()"></select>
+        <input id="rr-pname" class="rr-in" maxlength="40" placeholder="가입하지 않은 사람이면 이름을 적어 주세요" aria-label="이름">
+      </div>
+      <div class="rr-grid">
+        <div><label class="rr-lbl" for="rr-field">분야</label><select id="rr-field" class="rr-in"></select></div>
+        <div><label class="rr-lbl" for="rr-org">기관</label><input id="rr-org" class="rr-in" maxlength="60" placeholder="예: 국회사무처, ○○시의회"></div>
+        <div><label class="rr-lbl" for="rr-date">면접 날짜 <small id="rr-date-hint">선택</small></label><input type="date" id="rr-date" class="rr-in"></div>
+      </div>
+      <div id="rr-result-wrap">
+        <div class="rr-lbl">결과</div>
+        <div class="chip-row rr-chips" id="rr-result">
+          <button type="button" class="chip" data-val="waiting" onclick="RealReport.pickResult('waiting')">결과 기다리는 중</button>
+          <button type="button" class="chip" data-val="pass" onclick="RealReport.pickResult('pass')">합격</button>
+          <button type="button" class="chip" data-val="fail" onclick="RealReport.pickResult('fail')">불합격</button>
+          <button type="button" class="chip" data-val="unknown" onclick="RealReport.pickResult('unknown')">밝히고 싶지 않아요</button>
+        </div>
+      </div>
+      <div id="rr-q-wrap">
+        <div class="rr-lbl">받은 질문 <small>면접관이 물어본 그대로, 기억나는 만큼만</small></div>
+        <ol class="rr-qs" id="rr-qs"></ol>
+        <div class="rr-qacts">
+          <button type="button" class="rr-btn" onclick="RealReport.addRow()">+ 질문 추가</button>
+          <button type="button" class="rr-link" onclick="RealReport.togglePaste()">여러 줄 한 번에 붙여넣기</button>
+        </div>
+        <div class="rr-paste" id="rr-paste" hidden>
+          <label class="rr-lbl" for="rr-paste-text" style="margin:0;">한 줄에 질문 하나 · 꼬리질문은 줄 앞에 ㄴ</label>
+          <textarea id="rr-paste-text" class="rr-in" rows="6" placeholder="예)&#10;1분 자기소개 해 보세요&#10;국회 속기사가 하는 일을 말해 보세요&#10;ㄴ 그중 가장 어려울 것 같은 일은요?&#10;회의록에 의원이 발언을 빼 달라고 하면 어떻게 하겠어요?"></textarea>
+          <button type="button" class="rr-btn primary" onclick="RealReport.applyPaste()">질문 목록에 넣기</button>
+        </div>
+        <details class="rr-more">
+          <summary>면접 형식·분위기도 남기기 <small>선택</small></summary>
+          <label class="rr-lbl" for="rr-format">면접 형식</label>
+          <input id="rr-format" class="rr-in" maxlength="500" placeholder="예: 면접관 3명 · 15분 · 개별 면접 · 자기소개 1분">
+          <label class="rr-lbl" for="rr-tips">분위기 · 다음 지원자에게 한마디</label>
+          <textarea id="rr-tips" class="rr-in" rows="3" maxlength="1000" placeholder="예: 꼬리질문이 많았어요. 경험을 아주 구체적으로 물어봤어요."></textarea>
+        </details>
+      </div>
+      <p class="rr-note">남긴 질문은 바로 같은 분야 연습 문항('합격자 제보')에 들어가요. 이름은 보이지 않아요. 다른 사람의 이름·연락처는 적지 말아 주세요.</p>
+      <p class="rr-err" id="rr-err" role="alert"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="RealReport.close()">닫기</button>
+      <button class="btn btn-solid" id="rr-send" onclick="RealReport.submit()">남기기</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-rr-nudge" role="dialog" aria-modal="true" aria-labelledby="rrn-title">
+  <div class="modal-box rr-nudge-box">
+    <div class="modal-head"><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
+    <div class="modal-body" id="rrn-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="RealReport.closeNudge()">나중에</button>
+      <button class="btn btn-solid" id="rrn-go">질문 남기기</button>
     </div>
   </div>
 </div>
@@ -4087,22 +4261,36 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   <div class="pd">
     <header class="pd-top"><span class="d3-logo"><i class="d3-dot"></i>StenoTalk</span><span class="d3-org">한국AI속기사협회</span></header>
     <main class="pd-card">
+     <div id="pd-wait">
       <span class="pd-chip"><i></i>승인 대기 중</span>
       <h1 class="pd-h" id="pd-title">가입이 완료됐어요</h1>
       <p class="pd-lead"><b id="pd-name">회원</b>님, 이 서비스는 <b>서류 합격자 전용</b>이에요. 소리자바 아카데미 교육팀이 서류 합격을 확인한 뒤 연습할 분야를 열어 드려요.</p>
       <ol class="pd-steps">
         <li class="done"><b>회원가입</b><span>완료</span></li>
-        <li class="now"><b>서류 합격 확인</b><span>카카오톡으로 요청</span></li>
+        <li class="now"><b>서류 합격 확인</b><span id="pd-step2">합격 증빙 보내기</span></li>
         <li><b>면접 연습 시작</b><span>승인 후</span></li>
       </ol>
+      <section class="pd-apply" id="pd-apply" aria-labelledby="pd-apply-t">
+        <h2 class="pd-sub" id="pd-apply-t">여기서 바로 승인 요청하기</h2>
+        <div class="pd-sent" id="pd-ap-sent" hidden></div>
+        <div id="pd-apply-form">
+          <p class="pd-req-lead">서류 합격을 확인할 수 있는 화면(합격 문자, 합격자 발표 화면 등)을 올려 주시면 교육팀이 보고 바로 열어 드려요.</p>
+          <label class="pd-lbl" for="pd-ap-field">서류에 합격한 분야</label>
+          <select id="pd-ap-field" class="pd-in"></select>
+          <label class="pd-lbl" for="pd-ap-org">기관·직렬</label>
+          <input id="pd-ap-org" class="pd-in" maxlength="80" autocomplete="off" placeholder="예: 국회사무처 속기직 9급, ○○시의회 속기 임기제">
+          <span class="pd-lbl" id="pd-ap-file-lbl">합격 확인 캡처 <small>사진이나 PDF · 6MB까지</small></span>
+          <label class="pd-file"><input type="file" id="pd-ap-file" accept="image/*,application/pdf,.heic,.heif" onchange="Approval.pick(this)" aria-labelledby="pd-ap-file-lbl"><span id="pd-ap-file-name">파일 고르기</span></label>
+          <div class="pd-prev" id="pd-ap-prev" hidden></div>
+          <label class="pd-lbl" for="pd-ap-memo">하고 싶은 말 <small>선택</small></label>
+          <textarea id="pd-ap-memo" class="pd-in" rows="2" maxlength="500" placeholder="예: 면접일은 10월 30일이에요"></textarea>
+          <p class="pd-privacy">수험번호·생년월일처럼 확인에 필요 없는 정보는 가리고 올려 주세요. 올린 캡처는 교육팀만 볼 수 있고, 확인이 끝나면 지울 수 있어요.</p>
+          <button type="button" class="d3-btn d3-btn-primary pd-send" id="pd-ap-send" onclick="Approval.submit()">승인 요청 보내기</button>
+        </div>
+      </section>
       <section class="pd-req" aria-labelledby="pd-req-t">
-        <h2 class="pd-sub" id="pd-req-t">승인을 받으려면</h2>
-        <p class="pd-req-lead">소리자바 아카데미 카카오톡 채널로 아래 내용을 보내 주세요. 확인되면 바로 열어 드려요.</p>
-        <ul class="pd-list">
-          <li>가입한 <b>이름</b>과 <b>이메일</b></li>
-          <li>서류에 합격한 <b>기관·직렬</b> (예: 국회사무처 속기직, ○○시의회 속기)</li>
-          <li>합격을 확인할 수 있는 자료 (합격자 발표 화면·문자 캡처 등)</li>
-        </ul>
+        <h2 class="pd-sub" id="pd-req-t">카카오톡으로 보내도 돼요</h2>
+        <p class="pd-req-lead">캡처를 올리기 어렵거나 급하면 소리자바 아카데미 카카오톡 채널로 이름·이메일·합격 기관과 합격 화면 캡처를 보내 주세요.</p>
         <div class="pd-acts">
           <button type="button" class="pd-kakao" id="pd-kakao" onclick="pendingKakao()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡으로 승인 요청하기</button>
           <button type="button" class="d3-btn d3-btn-ghost" id="pd-copy" onclick="copyPendingRequest()">보낼 내용 복사하기</button>
@@ -4118,13 +4306,24 @@ body.hs-mobile #pc-qr-card{display:none !important;}
         <summary>이용 안내</summary>
         <ul>
           <li><b>서류 합격자만 이용할 수 있어요.</b> 가입만으로는 열리지 않고, 교육팀이 지원 기관의 서류 합격을 확인한 분께만 연습 분야를 열어 드려요.</li>
+          <li><b>합격 확인은 비대면으로 해요.</b> 위에서 합격 문자나 합격자 발표 화면 캡처를 올리거나 카카오톡으로 보내 주세요. 확인이 끝난 캡처는 교육팀이 지워요.</li>
           <li><b>합격이 확인된 기관(분야)만 열려요.</b> 다른 기관에도 합격했다면 함께 알려 주세요.</li>
           <li>합격 여부를 확인할 수 없으면 승인되지 않을 수 있어요.</li>
-          <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 로그인과 연습이 막히고, 연습 기록은 지워지지 않아요.</li>
+          <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 연습이 막히고, 연습 기록은 지워지지 않아요.</li>
+          <li><b>면접을 보고 나면 받은 질문을 남겨 주세요.</b> 다음 지원자들의 연습 문항이 돼요. 합격하면 꼭 남겨 주세요!</li>
           <li>한 계정은 한 기기에서만 쓸 수 있어요. 다른 기기에서 로그인하면 이전 기기는 로그아웃돼요.</li>
           <li>계정을 다른 사람과 함께 쓰지 말아 주세요.</li>
         </ul>
       </details>
+     </div>
+     <div id="pd-closed" hidden>
+      <span class="pd-chip done"><i></i>이용 기간 종료</span>
+      <h1 class="pd-h">면접은 어떠셨어요?</h1>
+      <p class="pd-lead"><b id="pd-c-name">회원</b>님, 이용 기간이 끝나 면접 연습은 더 할 수 없어요. 연습 기록은 지워지지 않아요.</p>
+      <section id="rr-closed" aria-label="실제 면접 질문 남기기"></section>
+      <p class="pd-or">연습 기간을 늘리고 싶으면 카카오톡으로 문의해 주세요.</p>
+      <div class="pd-acts"><button type="button" class="pd-kakao" onclick="openKakaoChannel()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡 문의</button></div>
+     </div>
       <button class="pd-logout" onclick="handleLogout()">로그아웃</button>
     </main>
   </div>
@@ -4178,6 +4377,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       </section>
       <section class="d3-card d3-stats" id="d3-stats"></section>
     </div>
+
+    <section class="d3-card rr-card" id="rr-card" style="display:none;" aria-label="실제 면접 질문 남기기"></section>
 
     <!-- 2026-10-08 PC에서 어느 정도 익힌 뒤: 휴대폰으로 옮겨 오는 QR 카드 (PC에서만, 첫 연습을 마친 뒤 보임) -->
     <section class="d3-card pcq" id="pc-qr-card" style="display:none;" aria-label="휴대폰으로 연습하기">
@@ -4387,7 +4588,34 @@ body.hs-mobile #pc-qr-card{display:none !important;}
           </div>
           <div id="admin-list"></div>
         </div>
-        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>로그인 차단</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. "권한 대기" 칩을 누른 뒤 맨 위 체크박스를 누르면 대기 중인 사람만 모두 골라져요.</span></div>
+        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. "권한 대기" 칩을 누른 뒤 맨 위 체크박스를 누르면 대기 중인 사람만 모두 골라져요.</span></div>
+      </div>
+
+      <!-- 승인 요청 (2026-10-16a) -->
+      <div class="admin-view" id="admin-view-approvals">
+        <div class="admin-view-head">
+          <div><h2>승인 요청</h2>
+          <p>승인 대기 화면에서 면접자가 올린 서류 합격 증빙이에요. 캡처를 확인하고 <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요. 확인이 끝난 캡처는 <b>캡처 지우기</b>로 지워 주세요.</p></div>
+          <button class="btn-manage" onclick="ApprovalAdmin.load(true)">새로 고침</button>
+        </div>
+        <div class="uf-chips" id="ap-chips"></div>
+        <div id="ap-list"></div>
+      </div>
+
+      <!-- 면접 후기 · 실제 질문 (2026-10-16a) -->
+      <div class="admin-view" id="admin-view-reports">
+        <div class="admin-view-head">
+          <div><h2>면접 후기 · 실제 질문</h2>
+          <p>면접자가 직접 남긴 후기와 교육팀이 전화로 받은 후기를 모아 봐요. 남긴 질문은 그 분야 연습 문항(<b>실전 기출 · 합격자 제보</b>)에 바로 들어가요. 이상한 질문이 있으면 <b>문항 숨기기</b>로 연습에서 빼고, 모범답안은 문항 관리에서 채울 수 있어요.</p></div>
+          <div class="beta-head-btns"><button class="btn-manage primary" onclick="RealReport.openPhone()">전화 후기 입력</button><button class="btn-manage" onclick="ReportAdmin.load(true)">새로 고침</button></div>
+        </div>
+        <div class="admin-stats" id="ra-stats"></div>
+        <div id="ra-call"></div>
+        <div class="admin-toolbar">
+          <div class="uf-chips" id="ra-chips"></div>
+          <select id="ra-field" class="voice-select admin-filter" onchange="ReportAdmin.render()"><option value="">모든 분야</option></select>
+        </div>
+        <div id="ra-list"></div>
       </div>
 
       <!-- 면접 기록 -->
@@ -5122,6 +5350,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <div id="result-report"></div>
     </div>
 
+    <div class="beta-rate" id="beta-rate" hidden></div>
+
     <div class="result-actions">
       <button class="btn btn-outline" onclick="goDashboard()">메인으로 이동</button>
       <button class="btn btn-outline" onclick="printReport()">리포트 인쇄 · PDF 저장</button>
@@ -5801,9 +6031,9 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-body privacy-body">
       <p>한국AI속기사협회 StenoTalk AI는 모의면접 연습 서비스 제공을 위해 아래 정보를 수집·이용합니다.</p>
       <table class="privacy-table">
-        <tr><th>수집 항목</th><td>이름, 이메일, 휴대폰 번호, 지원 기관(선택), 자기소개서·이력서 파일 내용(선택), 면접 답변 원문·점수·피드백, 연습 일시, 표정·시선 숫자 요약(카메라 사용 시)</td></tr>
-        <tr><th>이용 목적</th><td>회원 식별과 로그인, 면접 연습 기록 저장·결과 제공, 관리자의 연습 현황 확인과 면접 일정 안내 연락, 자기소개서·이력서 기반 맞춤 질문과 AI 꼬리질문 생성</td></tr>
-        <tr><th>보유 기간</th><td>회원 탈퇴(계정 삭제) 또는 본인의 삭제 요청 시까지 보관해요. 이용 기간이 끝나면 로그인과 연습만 막히고 기록은 지워지지 않아요. 삭제를 요청하면 지체 없이 파기해요.</td></tr>
+        <tr><th>수집 항목</th><td>이름, 이메일, 휴대폰 번호, 지원 기관(선택), 자기소개서·이력서 파일 내용(선택), 면접 답변 원문·점수·피드백, 연습 일시, 표정·시선 숫자 요약(카메라 사용 시), 서류 합격 확인 캡처(승인 요청 시 · 확인 뒤 교육팀이 삭제), 실제 면접 후기·받은 질문(남긴 경우)</td></tr>
+        <tr><th>이용 목적</th><td>회원 식별과 로그인, 면접 연습 기록 저장·결과 제공, 관리자의 연습 현황 확인과 면접 일정 안내 연락, 자기소개서·이력서 기반 맞춤 질문과 AI 꼬리질문 생성, 서류 합격 확인(승인), 남긴 면접 질문을 다른 지원자의 연습 문항으로 활용(이름 없이)</td></tr>
+        <tr><th>보유 기간</th><td>회원 탈퇴(계정 삭제) 또는 본인의 삭제 요청 시까지 보관해요. 이용 기간이 끝나면 면접 연습이 막히고(면접 후기 남기기만 가능) 기록은 지워지지 않아요. 삭제를 요청하면 지체 없이 파기해요.</td></tr>
         <tr><th>동의 거부</th><td>동의하지 않을 권리가 있으나, 필수 항목에 동의하지 않으면 서비스 이용(회원가입)이 불가합니다.</td></tr>
       </table>
       <p class="privacy-note">카메라 영상과 답변 녹음은 서버로 보내거나 저장하지 않아요. "내 모습 다시 보기"·"내 답변 다시 듣기"용 녹화는 이 기기 브라우저에만 잠시 남고 화면을 닫으면 사라져요. 카메라를 켠 경우 표정·시선은 숫자 요약만 면접 기록에 저장돼요.</p>
@@ -8467,7 +8697,8 @@ const ScrollLock = {
 };
 function showScreen(id){
   // 승인 대기 계정은 로그인 화면과 승인 대기 화면만 (2026-10-15)
-  if(id !== 'screen-login' && id !== 'screen-pending' && typeof isPendingUser === 'function' && isPendingUser()){ id = 'screen-pending'; try{ renderPendingScreen(); }catch(_){} }
+  // 2026-10-16a: 이용 기간이 끝난 계정도 같은 화면(기간 종료 모드: 실제 면접 질문 남기기·결과 알려 주기만)
+  if(id !== 'screen-login' && typeof isPendingUser === 'function' && (isPendingUser() || isClosedExpired())){ id = 'screen-pending'; try{ renderPendingScreen(); }catch(_){} }
   if(typeof ScrollLock !== 'undefined' && ScrollLock.locked){ ScrollLock._jumped = true; ScrollLock.y = 0; }
   // 화면이 바뀌면 이전 화면에서 띄운 안내(1초 넘게 지난 것)는 정리 — 새 화면 내용을 가리지 않게
   try{ const now = Date.now(); document.querySelectorAll('#toast-container .toast').forEach(t=>{ if(now - (+t.dataset.t||0) > 1000 && !t.classList.contains('out')){ t.classList.add('out'); setTimeout(()=>t.remove(), 260); } }); }catch(_){}
@@ -8509,8 +8740,17 @@ function authErrorMessage(err, ctx){
 }
 const ACCESS_EXPIRED_MSG = '이용 기간이 끝나 로그인할 수 없어요. 면접 준비가 다시 필요하면 관리자에게 문의해 주세요.';
 /** 로그인·세션 복원 시 이용 기간이 지난 수강생은 바로 로그아웃 (관리자는 예외) */
-async function rejectIfExpired(profile){
+async function rejectIfExpired(profile, authUser){
   if(profile.is_admin || !accessInfo(profile.access_until).expired) return false;
+  // 2026-10-16a: 분야를 받았던 사람은 '기간 종료' 화면으로 (연습은 막고, 실제 면접 질문 남기기·결과 알려 주기만)
+  if(authUser && (profile.allowed_fields || []).filter(Boolean).length){
+    state.currentUser = { id: authUser.id, email: authUser.email, name: profile.name, note: profile.note, isAdmin:false, allowed: profile.allowed_fields || [],
+      status: profile.status || '', phone: profile.phone || '', accessUntil: profile.access_until || null, aiOverride: null };
+    state.username = profile.name;
+    showScreen('screen-pending');
+    try{ Activity.log('expired_enter'); }catch(_){}
+    return true;
+  }
   try{ await sb.auth.signOut(); }catch(e){}
   state.currentUser = null;
   showScreen('screen-login');
@@ -8593,9 +8833,16 @@ let accessWatchTimer = null;
  * 홈·면접·자기소개 코치·내 성장·사용 안내는 막고, 할 수 있는 것은 승인 확인 / 서류 미리 올리기 / 의견 보내기 / 로그아웃.
  * AI 기능 서버(followup-question·grade-answer·set-review·intro-coach·speak-text)도 같은 기준으로 요청을 거절함. */
 function isPendingUser(u){ u = u || state.currentUser; return !!(u && !u.isAdmin && !((u.allowed || []).filter(Boolean).length)); }
+function isClosedExpired(u){ u = u || state.currentUser; return !!(u && !u.isAdmin && (u.allowed || []).filter(Boolean).length && isAccessExpired(u)); }
 function renderPendingScreen(){
   const u = state.currentUser || {};
+  const closed = isClosedExpired(u);
+  const w = document.getElementById('pd-wait'), c = document.getElementById('pd-closed');
+  if(w) w.hidden = closed; if(c) c.hidden = !closed;
   const n = document.getElementById('pd-name'); if(n) n.textContent = u.name || '회원';
+  const cn = document.getElementById('pd-c-name'); if(cn) cn.textContent = u.name || '회원';
+  if(closed){ try{ RealReport.renderClosed(); }catch(_){} }
+  else { try{ Approval.load().then(()=>Approval.render()); }catch(_){} }
   if(!KAKAO_CHANNEL_URL){ const k = document.getElementById('pd-kakao'); if(k) k.lastChild.textContent = '교육팀에 승인 요청하기'; }
 }
 /** 카카오톡 채널로 승인 요청 (주소가 없으면 의견 보내기 창) */
@@ -8627,7 +8874,7 @@ async function checkPendingApproval(manual){
     const { data: p, error } = await sb.from('profiles').select('allowed_fields, access_until, status, is_admin, note').eq('id', state.currentUser.id).single();
     if(error || !p) throw error || new Error('no profile');
     Object.assign(state.currentUser, { allowed: p.allowed_fields || [], accessUntil: p.access_until || null, status: p.status || state.currentUser.status, isAdmin: !!p.is_admin });
-    if(isAccessExpired(state.currentUser)){ await handleLogout(); showToast(ACCESS_EXPIRED_MSG); return false; }
+    if(isAccessExpired(state.currentUser)){ if(isClosedExpired()){ showScreen('screen-pending'); return false; } await handleLogout(); showToast(ACCESS_EXPIRED_MSG); return false; }
     if(!isPendingUser()){
       showToast('연습이 열렸어요. 이제 면접 연습을 시작할 수 있어요.');
       try{ Activity.log('approved_enter'); }catch(_){}
@@ -8653,6 +8900,7 @@ function startAccessWatch(){
     if(!state.currentUser || !isAccessExpired(state.currentUser)) return;
     if(typeof interviewInProgress === 'function' && interviewInProgress()) return;   // 진행 중인 면접은 끝까지
     clearInterval(accessWatchTimer); accessWatchTimer = null;
+    if(isClosedExpired()){ document.querySelectorAll('.modal-overlay.active').forEach(m=>m.classList.remove('active')); showScreen('screen-pending'); showToast('이용 기간이 끝나 면접 연습이 닫혔어요.'); return; }
     await handleLogout();
     showToast(ACCESS_EXPIRED_MSG);
   }, 60000);
@@ -8779,7 +9027,7 @@ async function handleLogin(){
     else showToast('프로필 조회 실패 (id: '+data.user.id.slice(0,8)+'…): '+profErr.code+' '+profErr.message);
     return;
   }
-  if(await rejectIfExpired(profile)) return;
+  if(await rejectIfExpired(profile, data.user)){ saveRememberedEmail(email); return; }
   saveRememberedEmail(email);
   state.currentUser = {
     id: data.user.id,
@@ -8923,7 +9171,7 @@ async function tryRestoreSession(){
   const userId = data.session.user.id;
   const { data: profile, error } = await sb.from('profiles').select('*').eq('id', userId).single();
   if(error || !profile) return;
-  if(await rejectIfExpired(profile)) return;
+  if(await rejectIfExpired(profile, data.session.user)) return;
   // 한 계정 한 기기: 그사이 다른 기기에서 로그인했다면 이 기기는 들어오지 않고 안내
   if(!profile.is_admin){ const cur = await SessionGuard.peek(); if(cur && cur.ok === false && cur.reason === 'replaced'){ SessionGuard.showKicked(cur, { restore:true }); return; } }
   state.currentUser = {
@@ -8954,6 +9202,563 @@ async function tryRestoreSession(){
   setTimeout(()=>{ try{ InterviewDraft.offer(); }catch(_){} }, 900);
 }
 
+/* ================= 2026-10-15 회의 반영 (2026-10-16a) =================
+ * 1) 실제 면접 질문 남기기 (RealReport) — 면접자가 직접 · 관리자가 전화로 받은 후기 입력
+ *    남긴 질문은 서버(submit_interview_report)가 바로 그 분야 '실전 기출 · 합격자 제보' 문항으로 넣음 (같은 질문은 건너뜀)
+ *    홈에 "합격하면 꼭 남겨 주세요" 카드 상시 노출 + 면접 날짜가 지났거나 결과를 기다리는 사람에게 다시 요청(2일에 한 번)
+ * 2) 비대면 승인 (Approval) — 승인 대기 화면에서 서류 합격 캡처를 올려 요청 → 관리자 '승인 요청' 화면에서 보고 승인·반려·캡처 지우기
+ * 3) 베타 한 줄 평가 (BetaRate) — 결과 화면 아래 "도움이 됐나요?" 한 번 누르기 (feedback 표, kind '베타 평가') */
+const RR_RESULT = { planned:'면접 예정', waiting:'결과 기다리는 중', pass:'합격', fail:'불합격', unknown:'밝히지 않음' };
+const RR_FIELD_IDS = ['assembly','council','court','prosecution','sunflower','education','corporate','freelance'];
+function rrFieldName(id){ const f = FIELDS.find(x=>x.id===id); return f ? f.name : (id || ''); }
+function rrToday(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function rrDate(v){ if(!v) return null; const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2]-1, +m[3]) : null; }
+function rrMD(v){ const d = rrDate(v); return d ? `${d.getMonth()+1}월 ${d.getDate()}일` : ''; }
+function rrErrMsg(e){
+  const m = String((e && (e.message || e.error_description)) || e || '');
+  if(/로그인|승인|하루에|분야를|질문을|고칠 수|결과 값/.test(m)) return m.replace(/^.*?(로그인|교육팀|하루에|분야를|질문을|고칠 수|결과 값)/, '$1');
+  if(/failed to fetch|network/i.test(m)) return '인터넷 연결을 확인한 뒤 다시 시도해 주세요.';
+  if(/submit_interview_report|interview_reports|does not exist|schema cache/i.test(m)) return '서버 준비가 아직 안 됐어요. 교육팀에 알려 주세요.';
+  return '저장하지 못했어요. 잠시 후 다시 시도해 주세요.';
+}
+/** 붙여넣은 글 → 질문 목록. 한 줄에 질문 하나, 줄 앞에 ㄴ └ ↳ → -> 가 있으면 바로 위 질문의 꼬리질문 */
+function rrParseLines(text){
+  const out = [];
+  String(text||'').split(/\r?\n/).forEach(line=>{
+    let t = line.trim(); if(!t) return;
+    const isF = /^(ㄴ|└|↳|→|->|=>)/.test(t) && out.length;
+    t = t.replace(/^(ㄴ|└|↳|→|->|=>|[-–•*·+]|\d{1,2}\s*[.)]|[Qq]\d*\s*[.:)])\s*/, '').trim();
+    if(t.length < 2) return;
+    if(isF) out[out.length-1].follow.push(t); else out.push({ q:t, follow:[] });
+  });
+  return out;
+}
+
+const RealReport = {
+  mine:[], loaded:false, mode:'self', editId:null, editRow:null, result:'waiting', nudged:false,
+  isUser(){ const u = state.currentUser; return !!(u && !u.isAdmin && (u.allowed||[]).filter(Boolean).length); },
+  async load(){
+    if(!this.isUser()){ this.mine = []; return this.mine; }
+    try{
+      const { data, error } = await sb.from('interview_reports').select('*').order('created_at', { ascending:false }).limit(50);
+      if(error) throw error;
+      this.mine = (data || []).filter(r=>!r.hidden || r.created_by === state.currentUser.id); this.loaded = true;
+    }catch(e){ console.warn('[면접 후기 불러오기]', (e && e.message) || e); this.mine = []; }
+    return this.mine;
+  },
+  latest(){ return this.mine[0] || null; },
+  qCount(r){ return Array.isArray(r && r.questions) ? r.questions.length : 0; },
+  /** 지금 상태: none · planned · after(면접일 지남) · waiting · ask(결과 물어볼 때) · pass · fail · unknown */
+  phase(){
+    const r = this.latest(); if(!r) return 'none';
+    const d = rrDate(r.interview_date), today = rrToday();
+    if(r.result === 'planned') return (d && d < today) ? 'after' : 'planned';
+    if(r.result === 'waiting'){
+      const base = d || rrDate(r.created_at); const days = base ? Math.round((today - base)/86400000) : 0;
+      return days >= 3 ? 'ask' : 'waiting';
+    }
+    return r.result;
+  },
+  fieldCount(fid){ return (EXAM_QA[fid] || []).filter(it=>it.cat === '합격자 제보').length; },
+  cardHtml(where){
+    const r = this.latest(), ph = this.phase();
+    const fid = (r && r.field_id) || state.dashField || ((state.currentUser||{}).allowed||[])[0] || 'assembly';
+    const n = this.fieldCount(fid), fname = rrFieldName(fid);
+    const added = this.mine.reduce((s,x)=>s+(x.added_count||0), 0);
+    const btn = (label, js, primary)=>`<button type="button" class="rr-btn${primary?' primary':''}" onclick="${js}">${label}</button>`;
+    let kicker = '합격하면 꼭 남겨 주세요', title = '', desc = '', acts = '';
+    if(ph === 'none'){
+      title = '면접에서 받은 질문을 남겨 주세요';
+      desc = `실제 면접 질문은 다음 지원자에게 가장 좋은 연습 문제예요. 남기면 바로 같은 분야 연습 문항으로 들어가요.${n ? ` 지금까지 합격자들이 남긴 ${escapeHtml(fname)} 질문은 <b>${n}개</b>예요.` : ''}`;
+      acts = btn('면접 질문 남기기', "RealReport.open('self')", true) + btn('면접 날짜 알려 주기', "RealReport.open('plan')");
+    }else if(ph === 'planned'){
+      title = `${rrMD(r.interview_date) || '면접'} 면접을 응원해요`;
+      desc = '면접이 끝나면 기억날 때 받은 질문을 남겨 주세요. 면접일이 지나면 여기서 다시 알려 드릴게요.';
+      acts = btn('질문 남기기', "RealReport.open('self')", true) + btn('날짜 바꾸기', "RealReport.open('plan')");
+    }else if(ph === 'after'){
+      title = '면접 어떠셨어요?';
+      desc = '잊기 전에 받은 질문을 남겨 주세요. 한두 개만 적어도 다음 지원자에게 큰 도움이 돼요.';
+      acts = btn('지금 남기기', "RealReport.open('self')", true);
+    }else if(ph === 'waiting' || ph === 'ask'){
+      title = ph === 'ask' ? '결과 나왔나요?' : '남겨 주셔서 고마워요';
+      desc = `${added ? `남겨 주신 질문 중 <b>${added}개</b>가 연습 문항이 됐어요. ` : ''}결과가 나오면 알려 주세요.`;
+      acts = btn('합격했어요', `RealReport.setResult(${r.id},'pass')`, ph === 'ask') + btn('불합격이에요', `RealReport.setResult(${r.id},'fail')`) + btn('질문 더 남기기', "RealReport.open('self')");
+    }else if(ph === 'pass'){
+      kicker = '합격을 축하해요';
+      title = '다음 지원자에게 힘이 돼 주셔서 고마워요';
+      desc = `${added ? `남겨 주신 질문 <b>${added}개</b>로 다음 지원자들이 연습하고 있어요. ` : ''}더 생각나는 질문이나 분위기가 있으면 언제든 더 남겨 주세요.`;
+      acts = btn('질문 더 남기기', "RealReport.open('self')", true);
+    }else{
+      title = '남겨 주셔서 고마워요';
+      desc = `${added ? `남겨 주신 질문 <b>${added}개</b>가 연습 문항이 됐어요. ` : ''}다른 기관 면접을 보면 그 질문도 남겨 주세요.`;
+      acts = btn('질문 더 남기기', "RealReport.open('self')", true);
+    }
+    return `<div class="rr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></div>
+      <div class="rr-main"><p class="rr-kicker">${kicker}</p><h3 class="rr-title">${title}</h3><p class="rr-desc">${desc}</p><div class="rr-acts">${acts}</div></div>`;
+  },
+  async refreshHome(){
+    const card = document.getElementById('rr-card'); if(!card) return;
+    if(!this.isUser()){ card.style.display = 'none'; return; }
+    await this.load();
+    card.innerHTML = this.cardHtml('home'); card.style.display = '';
+    if(!this.nudged){ this.nudged = true; setTimeout(()=>{ try{ this.maybeNudge(); }catch(_){} }, 1600); }
+  },
+  async renderClosed(){
+    const box = document.getElementById('rr-closed'); if(!box) return;
+    await this.load();
+    box.innerHTML = this.cardHtml('closed');
+  },
+  /* ---- 다시 요청 (2일에 한 번) ---- */
+  nudgeKey(){ return 'stenotalk_rr_nudge_' + ((state.currentUser||{}).id || ''); },
+  maybeNudge(){
+    if(!this.isUser()) return;
+    const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
+    if(document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on)) return;
+    const ph = this.phase(); const r = this.latest();
+    let kind = null;
+    if(ph === 'after') kind = 'after';
+    else if(ph === 'ask') kind = 'ask';
+    else if(ph === 'none'){ const a = accessInfo((state.currentUser||{}).accessUntil); if(a.until && a.daysLeft != null && a.daysLeft <= 1) kind = 'none'; }
+    if(!kind) return;
+    try{ const last = +localStorage.getItem(this.nudgeKey()) || 0; if(Date.now() - last < 2*86400000) return; localStorage.setItem(this.nudgeKey(), String(Date.now())); }catch(_){}
+    const t = document.getElementById('rrn-title'), d = document.getElementById('rrn-desc'), b = document.getElementById('rrn-body'), go = document.getElementById('rrn-go');
+    if(!t) return;
+    b.innerHTML = '';
+    if(kind === 'ask'){
+      t.textContent = '면접 결과 나왔나요?';
+      d.textContent = `${rrMD(r.interview_date) ? rrMD(r.interview_date)+' ' : ''}${rrFieldName(r.field_id)} 면접 결과를 알려 주시면 다음 지원자 안내에 도움이 돼요.`;
+      b.innerHTML = `<div class="rr-nudge-chips"><button type="button" class="rr-btn primary" onclick="RealReport.closeNudge(); RealReport.setResult(${r.id},'pass')">합격했어요</button><button type="button" class="rr-btn" onclick="RealReport.closeNudge(); RealReport.setResult(${r.id},'fail')">불합격이에요</button><button type="button" class="rr-btn" onclick="RealReport.closeNudge()">아직 몰라요</button></div>`;
+      go.style.display = 'none';
+    }else{
+      t.textContent = kind === 'after' ? '면접 어떠셨어요?' : '면접 보셨나요?';
+      d.textContent = '기억날 때 받은 질문을 남겨 주세요. 남긴 질문은 바로 다음 지원자의 연습 문항이 돼요. 합격하면 꼭 남겨 주세요!';
+      go.style.display = ''; go.textContent = '질문 남기기';
+      go.onclick = ()=>{ this.closeNudge(); this.open('self'); };
+    }
+    document.getElementById('modal-rr-nudge').classList.add('active');
+    try{ Activity.log('real_report_nudge', { kind }); }catch(_){}
+  },
+  closeNudge(){ const m = document.getElementById('modal-rr-nudge'); if(m) m.classList.remove('active'); },
+  async setResult(id, result){
+    try{
+      const { error } = await sb.rpc('set_report_result', { p_id: id, p_result: result });
+      if(error) throw error;
+      try{ Activity.log('real_report_result', { result }); }catch(_){}
+      showToast(result === 'pass' ? '합격을 축하해요! 생각나는 질문이 있으면 더 남겨 주세요.' : '알려 주셔서 고마워요.', 'ok');
+      await this.load(); this.rerender();
+    }catch(e){ showToast(rrErrMsg(e), 'warn'); }
+  },
+  rerender(){
+    const card = document.getElementById('rr-card'); if(card && card.style.display !== 'none') card.innerHTML = this.cardHtml('home');
+    const cl = document.getElementById('rr-closed'); if(cl && cl.offsetParent) cl.innerHTML = this.cardHtml('closed');
+  },
+  /* ---- 남기기 창 ---- */
+  open(mode, opt){
+    opt = opt || {};
+    this.mode = mode; this.editId = null; this.editRow = null;
+    const isPhone = mode === 'phone', isPlan = mode === 'plan';
+    let r = null;
+    if(isPhone) r = opt.report || null;
+    else { const l = this.latest(); if(l && (isPlan ? l.result === 'planned' : true) && !(isPlan && this.qCount(l))) r = l; }
+    if(r){ this.editId = r.id; this.editRow = r; }
+    const $ = id=>document.getElementById(id);
+    $('rr-title').textContent = isPhone ? (r ? '면접 후기 고치기' : '전화로 받은 면접 후기 입력') : isPlan ? '면접 날짜 알려 주기' : (r && this.qCount(r) ? '면접 질문 더 남기기' : '실제 면접 질문 남기기');
+    $('rr-desc').textContent = isPhone ? '전화로 들은 질문을 한 줄에 하나씩 적어 주세요. 저장하면 그 분야 연습 문항(합격자 제보)에 바로 들어가요.'
+      : isPlan ? '면접 날짜를 알려 주시면 면접이 끝난 뒤 질문을 남겨 달라고 다시 알려 드려요.'
+      : '기억나는 만큼만 적어도 돼요. 남긴 질문은 바로 같은 분야 연습 문항(합격자 제보)으로 들어가 다음 지원자들이 연습해요. 이름은 보이지 않아요.';
+    // 분야
+    const allowed = ((state.currentUser||{}).allowed || []).filter(Boolean);
+    const ids = isPhone || (state.currentUser||{}).isAdmin ? RR_FIELD_IDS : RR_FIELD_IDS.slice().sort((a,b)=>(allowed.includes(b)?1:0)-(allowed.includes(a)?1:0));
+    const defField = (r && r.field_id) || opt.field || (allowed.includes(state.dashField) ? state.dashField : allowed[0]) || 'assembly';
+    $('rr-field').innerHTML = ids.map(id=>`<option value="${id}"${id===defField?' selected':''}>${escapeHtml(rrFieldName(id))}</option>`).join('');
+    $('rr-org').value = (r && r.org) || '';
+    $('rr-date').value = (r && r.interview_date) ? String(r.interview_date).slice(0,10) : '';
+    $('rr-format').value = (r && r.format_note) || '';
+    $('rr-tips').value = (r && r.tips) || '';
+    this.result = r ? (r.result === 'planned' && !isPlan ? 'waiting' : r.result) : (isPhone ? 'pass' : 'waiting');
+    this.paintResult();
+    // 사람 (관리자 전화 입력)
+    $('rr-person-row').hidden = !isPhone;
+    if(isPhone){
+      const users = (state.adminUsers||[]).filter(u=>!u.is_admin).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ko'));
+      const sel = r ? (r.user_id || '') : (opt.userId || '');
+      $('rr-user').innerHTML = `<option value="">가입하지 않은 사람 (이름만 적기)</option>` + users.map(u=>`<option value="${u.id}"${u.id===sel?' selected':''}>${escapeHtml(u.name||'')}${u.phone?' · '+escapeHtml(u.phone):''}</option>`).join('');
+      $('rr-pname').value = (r && r.person_name) || '';
+      this.pickUser();
+    }
+    $('rr-result-wrap').hidden = isPlan;
+    $('rr-q-wrap').hidden = isPlan;
+    $('rr-date-hint').textContent = isPlan ? '필수' : '선택';
+    // 질문 줄
+    $('rr-qs').innerHTML = '';
+    const qs = r && Array.isArray(r.questions) ? r.questions : [];
+    qs.forEach(q=>this.addRow(q.q, (q.follow||[]).join('\n')));
+    if(!isPlan) for(let i = qs.length; i < (isPhone ? 1 : 3); i++) this.addRow();
+    $('rr-paste').hidden = !isPhone; $('rr-paste-text').value = '';
+    $('rr-err').textContent = '';
+    $('rr-send').textContent = isPlan ? '날짜 저장' : (isPhone ? '저장' : '남기기');
+    $('rr-send').disabled = false;
+    $('modal-rr').classList.add('active');
+    setTimeout(()=>{ try{ (isPlan ? $('rr-date') : (isPhone ? $('rr-paste-text') : $('rr-qs').querySelector('textarea'))).focus(); }catch(_){} }, 60);
+    try{ if(!isPhone) Activity.log('real_report_open', { mode }); }catch(_){}
+  },
+  openPhone(opt){ if(!state.currentUser || !state.currentUser.isAdmin) return; this.open('phone', opt); },
+  pickUser(){
+    const sel = document.getElementById('rr-user'), nm = document.getElementById('rr-pname');
+    if(!sel || !nm) return;
+    nm.hidden = !!sel.value;
+    if(sel.value){ const u = (state.adminUsers||[]).find(x=>x.id===sel.value); if(u && u.allowed_fields && u.allowed_fields[0] && !this.editId){ const f = document.getElementById('rr-field'); if(f && !u.allowed_fields.includes(f.value)) f.value = u.allowed_fields[0]; } }
+  },
+  close(){ document.getElementById('modal-rr').classList.remove('active'); },
+  pickResult(v){ this.result = v; this.paintResult(); },
+  paintResult(){ document.querySelectorAll('#rr-result .chip').forEach(c=>c.classList.toggle('sel', c.dataset.val === this.result)); },
+  addRow(q, follow){
+    const ol = document.getElementById('rr-qs'); if(!ol) return;
+    if(ol.children.length >= 30){ showToast('질문은 30개까지 남길 수 있어요'); return; }
+    const li = document.createElement('li'); li.className = 'rr-q';
+    li.innerHTML = `<div class="rr-q-line"><textarea class="rr-in rr-qt" rows="2" maxlength="300" placeholder="예: 국회 속기사가 되려는 이유는 무엇인가요?"></textarea><button type="button" class="rr-x" onclick="RealReport.removeRow(this)" aria-label="이 질문 지우기" title="이 질문 지우기">×</button></div>
+      <textarea class="rr-in rr-ft" rows="2" maxlength="900" placeholder="이어서 받은 꼬리질문 (한 줄에 하나)"${follow ? '' : ' hidden'}></textarea>
+      <button type="button" class="rr-link rr-fbtn" onclick="RealReport.showFollow(this)"${follow ? ' hidden' : ''}>+ 꼬리질문도 있었어요</button>`;
+    li.querySelector('.rr-qt').value = q || '';
+    li.querySelector('.rr-ft').value = follow || '';
+    ol.appendChild(li);
+    return li;
+  },
+  removeRow(btn){ const li = btn.closest('li'); if(!li) return; const ol = li.parentNode; li.remove(); if(ol && !ol.children.length) this.addRow(); },
+  showFollow(btn){ const li = btn.closest('li'); if(!li) return; const ft = li.querySelector('.rr-ft'); ft.hidden = false; btn.hidden = true; ft.focus(); },
+  togglePaste(){ const p = document.getElementById('rr-paste'); p.hidden = !p.hidden; if(!p.hidden) document.getElementById('rr-paste-text').focus(); },
+  applyPaste(){
+    const ta = document.getElementById('rr-paste-text'); const list = rrParseLines(ta.value);
+    if(!list.length){ showToast('붙여 넣은 질문이 없어요'); return; }
+    const ol = document.getElementById('rr-qs');
+    [...ol.children].forEach(li=>{ if(!li.querySelector('.rr-qt').value.trim() && !li.querySelector('.rr-ft').value.trim()) li.remove(); });
+    list.forEach(it=>this.addRow(it.q, it.follow.join('\n')));
+    ta.value = ''; if(this.mode !== 'phone') document.getElementById('rr-paste').hidden = true;
+    showToast(`질문 ${list.length}개를 넣었어요. 아래에서 확인해 주세요.`, 'ok');
+  },
+  collect(){
+    const out = [];
+    document.querySelectorAll('#rr-qs .rr-q').forEach(li=>{
+      const q = li.querySelector('.rr-qt').value.replace(/\s+/g,' ').trim();
+      const follow = li.querySelector('.rr-ft').value.split(/\r?\n/).map(s=>s.replace(/^(ㄴ|└|↳|→|->|[-•*·])\s*/,'').replace(/\s+/g,' ').trim()).filter(s=>s.length >= 3).slice(0,5);
+      if(q) out.push({ q, follow });
+    });
+    return out;
+  },
+  async submit(){
+    const $ = id=>document.getElementById(id); const err = $('rr-err'); err.textContent = '';
+    const isPlan = this.mode === 'plan', isPhone = this.mode === 'phone';
+    // 붙여넣기 칸에 남은 글이 있으면 먼저 목록에 넣기
+    if(!isPlan && $('rr-paste-text').value.trim()) this.applyPaste();
+    const qs = isPlan ? [] : this.collect();
+    const date = $('rr-date').value;
+    if(isPlan && !date){ err.textContent = '면접 날짜를 골라 주세요.'; $('rr-date').focus(); return; }
+    if(!isPlan){
+      const bad = qs.find(x=>x.q.length < 5 || !/[가-힣]/.test(x.q));
+      if(!qs.length){ err.textContent = '받은 질문을 하나 이상 적어 주세요.'; const t = $('rr-qs').querySelector('.rr-qt'); if(t) t.focus(); return; }
+      if(bad){ err.textContent = `"${bad.q.slice(0,20)}" — 질문을 조금 더 자세히 적어 주세요 (5자 이상).`; return; }
+    }
+    if(isPhone && !$('rr-user').value && !$('rr-pname').value.trim()){ err.textContent = '누구의 후기인지 골라 주세요 (가입하지 않았으면 이름).'; $('rr-pname').focus(); return; }
+    const p = { field_id: $('rr-field').value, org: $('rr-org').value.trim(), interview_date: date || null,
+      result: isPlan ? 'planned' : this.result, format_note: $('rr-format').value.trim(), tips: $('rr-tips').value.trim(), questions: qs };
+    if(this.editId) p.id = this.editId;
+    if(isPhone){ p.source = 'phone'; p.person_name = $('rr-pname').value.trim(); if(!this.editRow || this.editRow.source === 'phone') p.user_id = $('rr-user').value || null; }
+    const btn = $('rr-send'); btn.disabled = true; const old = btn.textContent; btn.textContent = '저장하는 중…';
+    try{
+      const { data, error } = await sb.rpc('submit_interview_report', { p });
+      if(error) throw error;
+      const added = (data && data.added) || 0, dup = (data && data.duplicate) || 0;
+      try{ Activity.log('real_report', { mode:this.mode, field:p.field_id, n:qs.length, added, dup, result:p.result }); }catch(_){}
+      this.close();
+      showToast(isPlan ? `${rrMD(date)} 면접을 기억해 둘게요. 면접이 끝나면 질문을 남겨 주세요.`
+        : `${isPhone ? '저장했어요.' : '남겨 주셔서 고마워요!'} 새 질문 ${added}개가 연습 문항에 들어갔어요${dup ? ` (이미 있던 질문 ${dup}개는 건너뜀)` : ''}.`, 'ok');
+      if(added){ try{ QuestionBank.load(true); }catch(_){} }
+      if(isPhone){ try{ ReportAdmin.load(true); }catch(_){} }
+      else { await this.load(); this.rerender(); }
+    }catch(e){ err.textContent = rrErrMsg(e); }
+    finally{ btn.disabled = false; btn.textContent = old; }
+  },
+};
+
+/* ---------------- 승인 대기: 서류 합격 증빙 올리기 ---------------- */
+const Approval = {
+  file:null, last:null, showForm:false,
+  async load(){
+    if(!state.currentUser) return null;
+    try{ const { data, error } = await sb.from('approval_requests').select('*').eq('user_id', state.currentUser.id).order('created_at', { ascending:false }).limit(1); if(error) throw error; this.last = (data && data[0]) || null; }
+    catch(e){ console.warn('[승인 요청 불러오기]', (e && e.message) || e); this.last = null; }
+    return this.last;
+  },
+  render(){
+    const $ = id=>document.getElementById(id);
+    const sel = $('pd-ap-field'); if(!sel) return;
+    if(!sel.options.length) sel.innerHTML = `<option value="">분야를 골라 주세요</option>` + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
+    const r = this.last, sent = $('pd-ap-sent'), form = $('pd-apply-form'), step = $('pd-step2');
+    const pending = r && r.status === 'submitted' && !this.showForm;
+    if(step) step.textContent = pending ? '교육팀 확인 중' : '합격 증빙 보내기';
+    if(pending){
+      sent.hidden = false; form.hidden = true;
+      const at = new Date(r.created_at);
+      sent.innerHTML = `<p class="pd-sent-t"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10.5l3.2 3L15 6.5"/></svg>승인 요청을 보냈어요</p>
+        <p class="pd-sent-d">${escapeHtml(rrFieldName(r.field_id))} · ${escapeHtml(r.org||'')}<br><small>${at.getMonth()+1}월 ${at.getDate()}일 ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}에 보냄${r.proof_path ? ' · 캡처 1개' : ''}</small></p>
+        <p class="pd-sent-n">교육팀이 확인하면 이 화면이 저절로 바뀌어요. 급하면 아래 카카오톡으로 알려 주세요.</p>
+        <button type="button" class="rr-link" onclick="Approval.again()">잘못 보냈어요 · 다시 보내기</button>`;
+    }else{
+      sent.hidden = !(r && r.status === 'rejected' && r.admin_note);
+      if(!sent.hidden) sent.innerHTML = `<p class="pd-sent-t warn">다시 보내 주세요</p><p class="pd-sent-n">${escapeHtml(r.admin_note)}</p>`;
+      form.hidden = false;
+      if(r && !sel.value){ sel.value = r.field_id || ''; const o = $('pd-ap-org'); if(o && !o.value) o.value = r.org || ''; }
+    }
+  },
+  again(){ this.showForm = true; this.render(); },
+  pick(input){
+    const f = input.files && input.files[0]; const name = document.getElementById('pd-ap-file-name'), prev = document.getElementById('pd-ap-prev');
+    this.file = null; prev.hidden = true; prev.innerHTML = '';
+    if(!f){ name.textContent = '파일 고르기'; return; }
+    const okType = /^image\//.test(f.type) || f.type === 'application/pdf' || /\.(heic|heif|pdf|jpe?g|png|webp)$/i.test(f.name);
+    if(!okType){ showToast('사진(캡처)이나 PDF만 올릴 수 있어요', 'warn'); input.value = ''; name.textContent = '파일 고르기'; return; }
+    if(f.size > 20*1024*1024){ showToast('파일이 너무 커요 (20MB 넘음). 캡처로 다시 찍어 주세요', 'warn'); input.value = ''; name.textContent = '파일 고르기'; return; }
+    this.file = f; name.textContent = f.name.length > 28 ? f.name.slice(0,25)+'…' : f.name;
+    if(/^image\/(jpeg|png|webp|gif)$/.test(f.type)){ const u = URL.createObjectURL(f); prev.innerHTML = `<img src="${u}" alt="올릴 캡처 미리보기">`; prev.hidden = false; }
+  },
+  /** 큰 사진은 줄여서 올림 (긴 변 2000px, JPEG) — HEIC·PDF는 그대로 */
+  async shrink(f){
+    if(!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size <= 2.5*1024*1024) return f;
+    try{
+      const bmp = await createImageBitmap(f); const k = Math.min(1, 2000/Math.max(bmp.width, bmp.height));
+      const c = document.createElement('canvas'); c.width = Math.round(bmp.width*k); c.height = Math.round(bmp.height*k);
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      const blob = await new Promise(res=>c.toBlob(res, 'image/jpeg', 0.85));
+      return blob && blob.size < f.size ? new File([blob], f.name.replace(/\.\w+$/, '')+'.jpg', { type:'image/jpeg' }) : f;
+    }catch(_){ return f; }
+  },
+  async submit(){
+    const $ = id=>document.getElementById(id);
+    const field = $('pd-ap-field').value, org = $('pd-ap-org').value.trim(), memo = $('pd-ap-memo').value.trim();
+    if(!field){ showToast('서류에 합격한 분야를 골라 주세요', 'warn'); $('pd-ap-field').focus(); return; }
+    if(org.length < 2){ showToast('기관·직렬을 적어 주세요 (예: 국회사무처 속기직)', 'warn'); $('pd-ap-org').focus(); return; }
+    if(!this.file){ showToast('합격을 확인할 수 있는 캡처를 올려 주세요', 'warn'); return; }
+    const btn = $('pd-ap-send'); btn.disabled = true; btn.textContent = '보내는 중…';
+    try{
+      const f = await this.shrink(this.file);
+      if(f.size > 6*1024*1024) throw new Error('too_big');
+      const ext = (f.name.match(/\.(\w+)$/) || [,'jpg'])[1].toLowerCase().replace('jpeg','jpg');
+      const path = `${state.currentUser.id}/${Date.now()}.${ext}`;
+      const up = await sb.storage.from('approval-proof').upload(path, f, { contentType: f.type || (ext === 'pdf' ? 'application/pdf' : 'image/'+ext), upsert:false });
+      if(up.error) throw up.error;
+      const { error } = await sb.from('approval_requests').insert({ user_id: state.currentUser.id, field_id: field, org, memo: memo || null, proof_path: path });
+      if(error) throw error;
+      try{ Activity.log('approval_request', { field }); }catch(_){}
+      this.file = null; this.showForm = false; $('pd-ap-file').value = ''; $('pd-ap-file-name').textContent = '파일 고르기'; $('pd-ap-prev').hidden = true;
+      await this.load(); this.render();
+      showToast('승인 요청을 보냈어요. 확인되면 화면이 저절로 바뀌어요.', 'ok');
+    }catch(e){
+      const m = String((e && e.message) || e);
+      showToast(m === 'too_big' ? '파일이 6MB를 넘어요. 화면 캡처로 다시 올려 주세요.' : /하루에/.test(m) ? m.replace(/^.*?하루에/, '하루에') : /mime|type/i.test(m) ? '사진(JPG·PNG)이나 PDF로 올려 주세요.' : /fetch|network/i.test(m) ? '인터넷 연결을 확인한 뒤 다시 시도해 주세요.' : '보내지 못했어요. 카카오톡으로 보내 주세요.', 'warn');
+      console.warn('[승인 요청]', m);
+    }finally{ btn.disabled = false; btn.textContent = '승인 요청 보내기'; }
+  },
+};
+
+/* ---------------- 관리자: 승인 요청 ---------------- */
+const ApprovalAdmin = {
+  rows:null, filter:'submitted', urls:{}, approvingId:null,
+  async load(force){
+    const list = document.getElementById('ap-list'); if(!list) return;
+    if(!this.rows || force){
+      list.innerHTML = '<div class="qa-empty">불러오는 중…</div>';
+      try{ const { data, error } = await sb.from('approval_requests').select('*').order('created_at', { ascending:false }).limit(300); if(error) throw error; this.rows = data || []; }
+      catch(e){ list.innerHTML = `<div class="qa-empty">승인 요청을 불러오지 못했어요. (${escapeHtml(String(e.message||e))})</div>`; return; }
+      const need = this.rows.filter(r=>r.proof_path && !r.proof_deleted_at && !this.urls[r.proof_path]).map(r=>r.proof_path);
+      if(need.length){ try{ const { data } = await sb.storage.from('approval-proof').createSignedUrls(need, 3600); (data||[]).forEach(x=>{ if(x.signedUrl) this.urls[x.path] = x.signedUrl; }); }catch(_){} }
+    }
+    this.render();
+  },
+  setFilter(v){ this.filter = v; this.render(); },
+  render(){
+    const list = document.getElementById('ap-list'), chips = document.getElementById('ap-chips'); if(!list) return;
+    const rows = this.rows || []; const users = {}; (state.adminUsers||[]).forEach(u=>{ users[u.id] = u; });
+    const cnt = k=>rows.filter(r=>k==='all' || r.status===k).length;
+    if(chips) chips.innerHTML = [['submitted','확인 대기'],['approved','승인'],['rejected','반려'],['all','전체']].map(([k,l])=>`<button type="button" class="uf-chip${this.filter===k?' on':''}" onclick="ApprovalAdmin.setFilter('${k}')">${l} <b>${cnt(k)}</b></button>`).join('');
+    const shown = rows.filter(r=>this.filter==='all' || r.status===this.filter);
+    if(!shown.length){ list.innerHTML = `<div class="qa-empty">${this.filter==='submitted' ? '확인할 승인 요청이 없어요.' : '해당하는 요청이 없어요.'}</div>`; return; }
+    list.innerHTML = shown.map(r=>{
+      const u = users[r.user_id] || {}; const url = r.proof_path ? this.urls[r.proof_path] : null;
+      const isPdf = /\.pdf$/i.test(r.proof_path||'');
+      const thumb = r.proof_deleted_at ? '<div class="ap-thumb none">캡처 지움</div>'
+        : !r.proof_path ? '<div class="ap-thumb none">캡처 없음</div>'
+        : !url ? '<div class="ap-thumb none">캡처를 열 수 없음</div>'
+        : isPdf ? `<a class="ap-thumb pdf" href="${url}" target="_blank" rel="noopener">PDF 열기</a>`
+        : `<a class="ap-thumb" href="${url}" target="_blank" rel="noopener" title="크게 보기"><img src="${url}" alt="${escapeHtml(u.name||'')} 합격 증빙" loading="lazy"></a>`;
+      const st = r.status === 'submitted' ? '<span class="tag tag-warn">확인 대기</span>' : r.status === 'approved' ? '<span class="tag tag-ok">승인</span>' : '<span class="tag tag-danger">반려</span>';
+      const at = new Date(r.created_at); const when = `${at.getMonth()+1}/${at.getDate()} ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}`;
+      const open = (u.allowed_fields||[]).length ? fieldBadgesHtml(u.allowed_fields) : '<span class="up-none">아직 열린 분야 없음</span>';
+      return `<div class="ap-card">${thumb}
+        <div class="ap-main">
+          <div class="ap-name">${u.id ? `<a href="javascript:void(0)" class="admin-name-link" onclick="openAdminUserDetail('${u.id}')">${escapeHtml(u.name||'(이름 없음)')}</a>` : '<b>(삭제된 계정)</b>'} ${st} <small>${when}</small></div>
+          ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : ''}
+          <dl class="ap-dl"><dt>요청 분야</dt><dd>${escapeHtml(rrFieldName(r.field_id))}</dd><dt>기관·직렬</dt><dd>${escapeHtml(r.org||'')}</dd>${r.memo ? `<dt>남긴 말</dt><dd>${escapeHtml(r.memo)}</dd>` : ''}${r.admin_note ? `<dt>반려 사유</dt><dd>${escapeHtml(r.admin_note)}</dd>` : ''}<dt>지금 열린 분야</dt><dd>${open}</dd></dl>
+        </div>
+        <div class="ap-acts">
+          ${r.status !== 'approved' && u.id ? `<button class="btn-manage primary" onclick="ApprovalAdmin.approve(${r.id})">승인 · 분야 열기</button>` : ''}
+          ${r.status === 'submitted' ? `<button class="btn-manage" onclick="ApprovalAdmin.reject(${r.id})">반려</button>` : ''}
+          ${r.proof_path && !r.proof_deleted_at ? `<button class="btn-manage" onclick="ApprovalAdmin.delProof(${r.id})">캡처 지우기</button>` : ''}
+        </div></div>`;
+    }).join('');
+  },
+  approve(id){
+    const r = (this.rows||[]).find(x=>x.id===id); if(!r) return;
+    this.approvingId = id;
+    openPermissionModal(r.user_id);
+    const cb = document.getElementById('perm-checklist-'+r.field_id); if(cb) cb.checked = true;
+    const d = document.getElementById('perm-modal-desc'); if(d) d.textContent = `승인 요청: ${rrFieldName(r.field_id)} · ${r.org||''}. 요청한 분야를 체크해 두었어요. 이용 기간(보통 면접일)을 정하고 저장하면 승인돼요.`;
+  },
+  /** 권한 저장 뒤: 그 사람의 '확인 대기' 요청을 승인으로 */
+  async markApproved(userId, allowed){
+    if(!allowed || !allowed.length) return;
+    const ids = (this.rows||[]).filter(r=>r.user_id===userId && r.status==='submitted').map(r=>r.id);
+    try{
+      let q = sb.from('approval_requests').update({ status:'approved', reviewed_at: new Date().toISOString(), reviewed_by: state.currentUser.id }).eq('user_id', userId).eq('status', 'submitted');
+      const { error } = await q; if(error) throw error;
+      (this.rows||[]).forEach(r=>{ if(ids.includes(r.id)) r.status = 'approved'; });
+    }catch(e){ console.warn('[승인 요청 상태 바꾸기]', (e && e.message) || e); }
+    this.approvingId = null;
+    if(state.adminView === 'approvals') this.render();
+  },
+  async reject(id){
+    const r = (this.rows||[]).find(x=>x.id===id); if(!r) return;
+    const why = prompt('반려 사유를 적어 주세요. 면접자의 승인 대기 화면에 그대로 보여요.', '합격 여부를 확인할 수 있는 화면이 잘 보이지 않아요. 합격자 명단이나 합격 문자가 보이게 다시 올려 주세요.');
+    if(why == null) return;
+    const { error } = await sb.from('approval_requests').update({ status:'rejected', admin_note: why.trim().slice(0,300) || '다시 올려 주세요.', reviewed_at: new Date().toISOString(), reviewed_by: state.currentUser.id }).eq('id', id);
+    if(error){ showToast('반려하지 못했어요: '+error.message, 'warn'); return; }
+    showToast('반려했어요. 면접자 화면에 사유가 보여요.'); this.load(true);
+  },
+  async delProof(id){
+    const r = (this.rows||[]).find(x=>x.id===id); if(!r || !r.proof_path) return;
+    if(!confirm('이 캡처를 지울까요? 지운 뒤에는 다시 볼 수 없어요.')) return;
+    const rm = await sb.storage.from('approval-proof').remove([r.proof_path]);
+    if(rm.error){ showToast('캡처를 지우지 못했어요: '+rm.error.message, 'warn'); return; }
+    await sb.from('approval_requests').update({ proof_deleted_at: new Date().toISOString() }).eq('id', id);
+    delete this.urls[r.proof_path];
+    showToast('캡처를 지웠어요.'); this.load(true);
+  },
+};
+
+/* ---------------- 관리자: 면접 후기 · 실제 질문 ---------------- */
+const ReportAdmin = {
+  rows:null, src:'all', callField:'assembly',
+  async load(force){
+    const list = document.getElementById('ra-list'); if(!list) return;
+    if(!this.rows || force){
+      list.innerHTML = '<div class="qa-empty">불러오는 중…</div>';
+      try{ const { data, error } = await sb.from('interview_reports').select('*').order('created_at', { ascending:false }).limit(500); if(error) throw error; this.rows = data || []; }
+      catch(e){ list.innerHTML = `<div class="qa-empty">면접 후기를 불러오지 못했어요. (${escapeHtml(String(e.message||e))})</div>`; return; }
+    }
+    const fs = document.getElementById('ra-field');
+    if(fs && fs.options.length <= 1) fs.innerHTML = '<option value="">모든 분야</option>' + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
+    this.render();
+  },
+  setSrc(v){ this.src = v; this.render(); },
+  setCallField(v){ this.callField = v; this.renderCall(); },
+  who(r){ const u = (state.adminUsers||[]).find(x=>x.id===r.user_id); return u ? (u.name||'') : (r.person_name || '(이름 없음)'); },
+  render(){
+    const rows = this.rows || [];
+    const st = document.getElementById('ra-stats');
+    if(st){
+      const self = rows.filter(r=>r.source==='self').length, phone = rows.length - self;
+      const added = rows.reduce((s,r)=>s+(r.hidden?0:(r.added_count||0)),0), pass = rows.filter(r=>r.result==='pass').length, plan = rows.filter(r=>r.result==='planned').length;
+      st.innerHTML = statTile(rows.length+'<i>건</i>', '면접 후기', { foot:`직접 ${self} · 전화 ${phone}` })
+        + statTile(added+'<i>개</i>', '연습 문항이 된 질문', { foot:'실전 기출 · 합격자 제보' })
+        + statTile(pass+'<i>명</i>', '합격 알려 줌', { foot:'결과를 알려 준 후기 기준' })
+        + statTile(plan+'<i>명</i>', '면접 예정', { foot:'날짜만 알려 준 사람' });
+    }
+    this.renderCall();
+    const chips = document.getElementById('ra-chips');
+    if(chips) chips.innerHTML = [['all','전체'],['self','면접자가 직접'],['phone','전화 후기'],['hidden','숨김']].map(([k,l])=>`<button type="button" class="uf-chip${this.src===k?' on':''}" onclick="ReportAdmin.setSrc('${k}')">${l} <b>${rows.filter(r=>k==='all'?true:k==='hidden'?r.hidden:r.source===k).length}</b></button>`).join('');
+    const fsel = (document.getElementById('ra-field')||{}).value || '';
+    const shown = rows.filter(r=>(this.src==='all' || (this.src==='hidden' ? r.hidden : r.source===this.src)) && (!fsel || r.field_id===fsel));
+    const list = document.getElementById('ra-list'); if(!list) return;
+    if(!shown.length){ list.innerHTML = '<div class="qa-empty">아직 남긴 면접 후기가 없어요. 면접자 홈에 "합격하면 꼭 남겨 주세요" 카드가 보이고, 전화로 받은 후기는 위의 <b>전화 후기 입력</b>으로 넣을 수 있어요.</div>'; return; }
+    list.innerHTML = shown.map(r=>{
+      const qs = Array.isArray(r.questions) ? r.questions : [];
+      const res = `<span class="ra-res ${r.result}">${RR_RESULT[r.result]||r.result}</span>`;
+      const src = r.source === 'phone' ? '<span class="ra-src phone">전화</span>' : '<span class="ra-src">직접</span>';
+      const meta = [rrFieldName(r.field_id), r.org, r.interview_date ? String(r.interview_date).slice(0,10).replace(/-/g,'.') : ''].filter(Boolean).map(escapeHtml).join(' · ');
+      return `<article class="ra-card${r.hidden?' hidden-r':''}">
+        <header class="ra-head"><div><b class="ra-who">${escapeHtml(this.who(r))}</b> ${src} ${res}${r.hidden?' <span class="ra-res fail">숨김</span>':''}<div class="ra-meta">${meta}<small> · ${formatDateFull(r.created_at)} 등록${r.added_count?` · 연습 문항 ${r.added_count}개`:''}</small></div></div>
+          <div class="ra-acts"><button class="btn-manage" onclick="ReportAdmin.edit(${r.id})">고치기</button>${qs.length ? `<button class="btn-manage" onclick="ReportAdmin.toggleHidden(${r.id})">${r.hidden?'다시 보이기':'문항 숨기기'}</button>` : ''}</div></header>
+        ${qs.length ? `<ol class="ra-qs">${qs.map(q=>`<li>${escapeHtml(q.q||'')}${(q.follow||[]).length ? `<ul>${q.follow.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ol>` : '<p class="ra-none">아직 질문이 없어요 (면접 날짜만 알려 줌)</p>'}
+        ${r.format_note || r.tips ? `<div class="ra-notes">${r.format_note ? `<p><b>면접 형식</b> ${escapeHtml(r.format_note)}</p>` : ''}${r.tips ? `<p><b>분위기·팁</b> ${escapeHtml(r.tips)}</p>` : ''}</div>` : ''}
+      </article>`;
+    }).join('');
+  },
+  /** 연락할 사람: 이 분야가 열린 면접자 + 후기 상태 (국회는 전화로 직접 받기) */
+  renderCall(){
+    const box = document.getElementById('ra-call'); if(!box) return;
+    const f = this.callField; const rows = this.rows || [];
+    const users = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).includes(f));
+    const stOf = u=>{ const mine = rows.filter(r=>r.user_id===u.id); const r = mine[0]; if(!r) return { k:0, t:'후기 없음', c:'none' }; if(r.result==='planned') return { k:1, t:`면접 예정 ${r.interview_date ? String(r.interview_date).slice(5,10).replace('-','/') : ''}`, c:'plan' }; return { k:2, t:(RR_RESULT[r.result]||'') + (mine.some(x=>(x.questions||[]).length) ? ' · 질문 있음' : ''), c:r.result }; };
+    const list = users.map(u=>({ u, s:stOf(u) })).sort((a,b)=>a.s.k-b.s.k || String(a.u.name||'').localeCompare(String(b.u.name||''),'ko'));
+    const none = list.filter(x=>x.s.k===0);
+    box.innerHTML = `<details class="ra-call-box"${f==='assembly' ? ' open' : ''}><summary><b>연락할 사람</b> <small>${escapeHtml(rrFieldName(f))} 면접자 ${users.length}명 · 후기 없음 ${none.length}명</small></summary>
+      <div class="ra-call-bar"><select class="voice-select" onchange="ReportAdmin.setCallField(this.value)">${RR_FIELD_IDS.map(id=>`<option value="${id}"${id===f?' selected':''}>${escapeHtml(rrFieldName(id))}</option>`).join('')}</select>
+        <button class="btn-manage" onclick="ReportAdmin.copyPhones()"${none.length?'':' disabled'}>후기 없는 사람 연락처 복사</button>
+        <span class="ra-call-tip">${f==='assembly' ? '국회는 전화로 직접 묻고, 들은 내용은 <b>후기 입력</b>으로 넣어 주세요.' : '이 분야는 면접자가 홈에서 직접 남겨요. 전화로 받았다면 후기 입력으로 넣어 주세요.'}</span></div>
+      ${list.length ? `<div class="ra-call-list">${list.map(({u,s})=>`<div class="ra-call-row"><span class="nm">${escapeHtml(u.name||'')}</span><span class="ph">${escapeHtml(u.phone||'번호 없음')}</span><span class="ra-res ${s.c}">${escapeHtml(s.t)}</span><button class="btn-manage" onclick="RealReport.openPhone({ userId:'${u.id}', field:'${f}' })">후기 입력</button></div>`).join('')}</div>` : '<div class="qa-empty">이 분야가 열린 면접자가 없어요.</div>'}
+    </details>`;
+  },
+  async copyPhones(){
+    const rows = this.rows || []; const f = this.callField;
+    const list = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).includes(f) && !rows.some(r=>r.user_id===u.id));
+    const text = list.map(u=>`${u.name||''}\t${u.phone||''}`).join('\n');
+    try{ await navigator.clipboard.writeText(text); showToast(`${list.length}명의 이름·연락처를 복사했어요`, 'ok'); }catch(_){ showToast('복사하지 못했어요', 'warn'); }
+  },
+  edit(id){ const r = (this.rows||[]).find(x=>x.id===id); if(r) RealReport.openPhone({ report:r }); },
+  async toggleHidden(id){
+    const r = (this.rows||[]).find(x=>x.id===id); if(!r) return;
+    const hide = !r.hidden;
+    if(hide && !confirm('이 후기에서 들어간 질문을 연습 문항에서 뺄까요? (지우지 않고 숨기기만 해요)')) return;
+    const a = await sb.from('interview_reports').update({ hidden: hide, updated_at: new Date().toISOString() }).eq('id', id);
+    if(a.error){ showToast('바꾸지 못했어요: '+a.error.message, 'warn'); return; }
+    const b = await sb.from('questions').update({ is_active: !hide }).eq('source_report_id', id);
+    if(b.error) showToast('후기는 숨겼지만 문항은 못 바꿨어요: '+b.error.message, 'warn');
+    else showToast(hide ? '이 후기의 질문을 연습에서 뺐어요' : '이 후기의 질문을 다시 연습에 넣었어요');
+    try{ QuestionBank.load(true); }catch(_){}
+    this.load(true);
+  },
+};
+
+/* ---------------- 베타 한 줄 평가 (결과 화면) ---------------- */
+const BetaRate = {
+  done:new Set(), pick:null,
+  key(){ return String(state.lastResultKey || 0); },
+  render(){
+    const box = document.getElementById('beta-rate'); if(!box) return;
+    const u = state.currentUser;
+    if(!u || u.isAdmin || state.demoResult){ box.hidden = true; return; }
+    const k = this.key();
+    if(this.done.has(k)){ box.hidden = true; return; }
+    this.pick = null; box.hidden = false;
+    box.innerHTML = `<div class="br-q"><b>이번 연습, 실제 면접 준비에 도움이 됐나요?</b><small>베타 기간 의견은 바로 고치는 데 써요</small></div>
+      <div class="br-chips">${[['good','많이 됐어요'],['mid','조금 됐어요'],['bad','별로예요']].map(([v,l])=>`<button type="button" class="br-chip" data-v="${v}" onclick="BetaRate.choose('${v}')">${l}</button>`).join('')}</div>
+      <div class="br-more" id="br-more" hidden><input type="text" id="br-text" maxlength="300" placeholder="어떤 점이 그랬나요? (선택) 예: 꼬리질문이 실제랑 비슷했어요"><button type="button" class="rr-btn primary" onclick="BetaRate.send()">보내기</button></div>`;
+  },
+  choose(v){ this.pick = v; document.querySelectorAll('#beta-rate .br-chip').forEach(b=>b.classList.toggle('on', b.dataset.v===v)); const m = document.getElementById('br-more'); if(m){ m.hidden = false; const t = document.getElementById('br-text'); if(t) t.focus(); } },
+  async send(){
+    if(!this.pick || !state.currentUser) return;
+    const label = { good:'많이 됐어요', mid:'조금 됐어요', bad:'별로예요' }[this.pick];
+    const text = ((document.getElementById('br-text')||{}).value || '').trim();
+    const k = this.key(); this.done.add(k);
+    const box = document.getElementById('beta-rate'); if(box) box.innerHTML = '<div class="br-q"><b>고마워요! 의견은 교육팀이 확인해요.</b></div>';
+    try{
+      const { error } = await sb.from('feedback').insert({ user_id: state.currentUser.id, kind:'베타 평가', message: `[도움 정도: ${label}] ${text || '(한 줄 의견 없음)'}`, screen:'result',
+        detail: Object.assign(Feedback.context(), { rating:this.pick, record_id: state.savedRecordId || null, field: state.selectedField ? state.selectedField.id : null }) });
+      if(error) throw error;
+    }catch(e){ console.warn('[베타 평가]', (e && e.message) || e); }
+    setTimeout(()=>{ if(box) box.hidden = true; }, 2500);
+  },
+};
+
 /* ---------------- dashboard render ---------------- */
 /* ---------- 문항 DB → 질문 준비 화면·리허설 문제은행 (2026-10-07) ----------
    예전에는 질문 준비 화면·리허설이 HTML 안의 문항(COMMON_QA·PUBLIC_COMMON_QA·EXAM_QA)을, 라이브는 DB(pick_questions)를 썼음.
@@ -8978,7 +9783,7 @@ const QuestionBank = {
     const common = {}, exam = {}, pub = [];
     const catOf = (arr, name)=>{ let c = arr.find(x=>x.category===name); if(!c){ c = { category:name, diff:'중', items:[] }; arr.push(c); } return c; };
     rows.filter(r=>r.is_active !== false).forEach(r=>{
-      const it = { dbId:r.id, q:r.q, hint:r.hint || '', ref:r.ref || '', diff:r.diff || '중' };
+      const it = { dbId:r.id, q:r.q, hint:r.hint || '', ref:r.ref || '', diff:r.diff || '중', cat:r.category || '' };
       if(r.bank === 'exam'){ (exam[r.field_id] = exam[r.field_id] || []).push(it); }
       else if(r.bank === 'public' || r.field_id === 'public'){ catOf(pub, r.category || '공통').items.push(it); }
       else { const arr = (common[r.field_id] = common[r.field_id] || []); catOf(arr, r.category || '공통 질문').items.push(it); }
@@ -9322,7 +10127,8 @@ async function renderDashboard(){
   }
 
   renderTodayStrip(history, isAdmin || expired);
-  try{ renderHomeExtras(history, false, expired); }catch(e){ console.warn('[홈 추가 요소]', e); }   // 2026-10-15b: 관리자도 로그인 직후 추천 세트·주간 목표가 바로 보이게 (분야 클릭 후와 같은 화면)
+  try{ renderHomeExtras(history, false, expired); }catch(e){ console.warn('[홈 추가 요소]', e); }
+  try{ if(isAdmin){ const rc = document.getElementById('rr-card'); if(rc) rc.style.display = 'none'; } else RealReport.refreshHome(); }catch(e){ console.warn('[면접 질문 남기기 카드]', e); }   // 2026-10-15b: 관리자도 로그인 직후 추천 세트·주간 목표가 바로 보이게 (분야 클릭 후와 같은 화면)
   if(isAdmin) setDashView('home');
   if(!isAdmin) setTimeout(()=>{ try{ PendingSave.flush(); }catch(_){} }, 800);
   // 기록 카드 (검정)
@@ -10010,7 +10816,7 @@ async function hardQOpenQm(fieldId, q){
 /* 관리자 메뉴 5개 묶음 (2026-10-14): 화면(view) → 묶음(group) · 묶음 안 탭 */
 const ADMIN_GROUPS = {
   status:   { label:'현황', views:[['overview','현황 요약'],['beta','베타 현황'],['live','접속 현황'],['feedback','의견 · 문제']] },
-  users:    { label:'면접자', views:[['users','면접자 관리']] },
+  users:    { label:'면접자', views:[['users','면접자 관리'],['approvals','승인 요청'],['reports','면접 후기']] },
   questions:{ label:'문항', views:[['questions','문항 관리'],['hardq','어려운 문항'],['realset','실전 세트 · 코치']] },
   records:  { label:'기록', views:[['records','면접 기록'],['export','데이터 내보내기']] },
   settings: { label:'설정', views:[['pipeline','AI · 음성 설정']] },
@@ -10047,6 +10853,8 @@ function showAdminView(view){
   if(view === 'questions') qmLoad();
   if(view === 'realset') loadRealSetView();
   if(view === 'hardq') loadHardQ();
+  if(view === 'approvals') ApprovalAdmin.load(true);
+  if(view === 'reports') ReportAdmin.load(true);
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
   try{ renderAdminSubtabs(view); }catch(e){ console.warn('[관리자 탭]', e); }
   window.scrollTo({top:0});
@@ -10555,16 +11363,16 @@ function groupByDifficulty(items){
 function renderQAList(list, prefix){
   return list.map((item,i)=>{
     const id = prefix+i;
-    const diffBadge = item.diff ? `<span class="diff-badge diff-${item.diff}">${item.diff}</span>` : '';
+    const diffBadge = (item.cat === '합격자 제보' ? '<span class="rr-badge">합격자 제보</span>' : '') + (item.diff ? `<span class="diff-badge diff-${escapeHtml(item.diff)}">${escapeHtml(item.diff)}</span>` : '');
     const ref = item.ref ? `<button type="button" class="qa-ref-toggle" onclick="toggleQARef(this)"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg><span>참고 문장 접기</span></button>
-        <div class="qa-ref"><b>참고 문장</b><p>${item.ref}</p><small>참고용 예시예요. 그대로 외우기보다 내 경험과 상황에 맞게 바꿔 말해보세요.</small></div>` : '';
+        <div class="qa-ref"><b>참고 문장</b><p>${escapeHtml(item.ref)}</p><small>참고용 예시예요. 그대로 외우기보다 내 경험과 상황에 맞게 바꿔 말해보세요.</small></div>` : '';
     return `<div class="qa-item" id="qa-${id}" data-q="${escapeHtml(item.q)}">
       <button type="button" class="qa-question" onclick="toggleQA('${id}')">
-        <span class="qa-q-text">${diffBadge}${item.q}</span>
+        <span class="qa-q-text">${diffBadge}${escapeHtml(item.q)}</span>
         <span class="qa-seen-mark"><svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l3.5 3.5L15 7"/></svg>열람함</span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="qa-answer"><div class="qa-answer-inner"><span class="qa-label">질문 의도</span><p>${item.hint||''}</p>${ref}</div></div>
+      <div class="qa-answer"><div class="qa-answer-inner"><span class="qa-label">${item.cat === '합격자 제보' ? '어디서 나온 질문인가요' : '질문 의도'}</span><p>${escapeHtml(item.hint||'')}</p>${ref}</div></div>
     </div>`;
   }).join('');
 }
@@ -10575,7 +11383,7 @@ function renderQACategoryList(categories, prefix){
     return `<div class="qa-cat-block" id="${catId}-block">
       <button type="button" class="qa-cat-header" onclick="toggleCat('${catId}')">
         <span class="qa-cat-no">${String(ci+1).padStart(2,'0')}</span>
-        <span class="qa-cat-title">${cat.category}</span>
+        <span class="qa-cat-title">${escapeHtml(cat.category)}</span>
         <span class="qa-cat-meta"><span class="qa-cat-seen">열람 0 / ${cat.items.length}</span><span class="qa-cat-count">${cat.items.length}문항</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </span>
@@ -15293,6 +16101,7 @@ async function endInterview(){
   SetReview.reset();
   if(isSetResult){ state.setReview = SetReview.local(); SetReview.render(state.setReview, SetReview.aiWanted() ? 'loading' : ''); }
   showScreen('screen-result');
+  try{ state.lastResultKey = Date.now(); BetaRate.render(); }catch(e){ console.warn('[베타 평가]', e); }
   if(!state.demoResult){
     Activity.log('interview_end', { field: state.selectedField.name, mode: state.interviewMode==='dialog'?'dialog':'classic', count: state.currentQ, score: state.lastAverageScore||0, duration: durationLabel });
     Activity.setPresence('result', { field: state.selectedField.name });
@@ -15984,6 +16793,9 @@ async function renderAdmin(){
     await AiSwitch.load();
   }catch(e){ console.warn('[AI 사용량 조회 실패 — step7_ai_usage_limit.sql 실행 여부 확인]', e.message||e); }
   try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].message !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; } } }catch(_){}
+  // 2026-10-16a: 서류 합격 증빙(승인 요청) — 확인 대기 건수와 사람별 표시
+  state.apSubmitted = {};
+  try{ const { data: apr } = await sb.from('approval_requests').select('id,user_id,status,field_id,created_at').eq('status','submitted').order('created_at',{ascending:false}).limit(300); (apr||[]).forEach(r=>{ if(!state.apSubmitted[r.user_id]) state.apSubmitted[r.user_id] = r; }); }catch(_){}
   // 2026-10-12: 한 계정 한 기기 — 지금 쓰는 기기와 최근 기기 전환 (active_sessions + activity_log)
   state.adminSessions = {}; state.adminDevices = {};
   try{ const { data: ss, error: sErr } = await sb.from('active_sessions').select('*'); if(sErr) throw sErr; (ss||[]).forEach(r=>{ state.adminSessions[r.user_id] = r; }); }catch(e){ console.warn('[기기 정보 읽기 실패]', e.message||e); }
@@ -16034,15 +16846,16 @@ async function renderAdmin(){
     + tile((aiTotalUsed*AI_COST.interview('basic').total).toLocaleString()+'<i>원</i>', '예상 비용', {scope:'누적 · 추정', foot:'기본 설정 1회 기준 · 실제 청구액 아님', go:"adminGo('pipeline')"});
   const elA = document.getElementById('ov-stats-ai');
   if(elA) elA.innerHTML = expiredCount || soonCount
-    ? tile(expiredCount+'<i>명</i>', '이용 기간 만료', {scope:'현재', cls:'warn', foot: soonCount ? `3일 안에 끝나는 사람 ${soonCount}명` : '기간이 지나면 로그인 불가', go:"adminGo('users','__expired')"})
+    ? tile(expiredCount+'<i>명</i>', '이용 기간 만료', {scope:'현재', cls:'warn', foot: soonCount ? `3일 안에 끝나는 사람 ${soonCount}명` : '기간이 지나면 연습 불가', go:"adminGo('users','__expired')"})
     : '';
 
   // 확인이 필요한 것
   const todoEl = document.getElementById('ov-todo');
   if(todoEl){
     const items = [];
+    { const apN = Object.keys(state.apSubmitted||{}).length; if(apN) items.push({ cls:'warn', txt:`<b>${apN}명</b>이 서류 합격 증빙을 올리고 승인을 기다려요`, go:"adminGo('approvals')", btn:'증빙 보기' }); }
     if(pendingCount) items.push({ cls:'warn', txt:`<b>${pendingCount}명</b>이 분야 권한을 기다리고 있어요`, go:"adminGo('users','__pending')", btn:'권한 주기' });
-    if(expiredCount) items.push({ cls:'warn', txt:`<b>${expiredCount}명</b>의 이용 기간이 끝났어요 <small>(기간이 지나면 로그인할 수 없어요)</small>`, go:"adminGo('users','__expired')", btn:'확인' });
+    if(expiredCount) items.push({ cls:'warn', txt:`<b>${expiredCount}명</b>의 이용 기간이 끝났어요 <small>(연습은 막히고, 로그인하면 면접 질문 남기기만 보여요)</small>`, go:"adminGo('users','__expired')", btn:'확인' });
     if(soonCount) items.push({ cls:'warn', txt:`<b>${soonCount}명</b>의 이용 기간이 3일 안에 끝나요`, go:"adminGo('users','__expired')", btn:'기간 늘리기' });
     const activeStudents = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired);
     const idle = activeStudents.filter(u=>{ const recs = byUser[u.id]||[]; return !recs.length || (now - new Date(recs[0].created_at).getTime()) > 3*86400000; });
@@ -16131,7 +16944,7 @@ async function renderAdmin(){
           ${u.is_admin ? ' <span class="perm-chip">관리자</span>' : ` <span class="status-chip ${statusChipClass(status)}">${escapeHtml(status)}</span>`}${isSelf ? ' <span class="status-chip">나</span>' : ''}${u.is_admin ? '' : ' '+accessChipHtml(u.access_until)}${u.ai_override==='on' ? ' <span class="status-chip until" title="이 사람만 AI 즉석 꼬리질문·채점 켬">AI 켬</span>' : u.ai_override==='off' ? ' <span class="status-chip" title="이 사람만 AI 끔">AI 끔</span>' : ''}
         </div>
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
-        ${u.is_admin ? '' : `<div class="up-state">${acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
+        ${u.is_admin ? '' : `<div class="up-state">${acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
       <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
@@ -18715,6 +19528,7 @@ async function savePermissions(){
     showToast('권한 저장에 실패했습니다: '+error.message);
     return;
   }
+  try{ if(allowed.length && ((state.apSubmitted||{})[user.id] || ApprovalAdmin.approvingId)) await ApprovalAdmin.markApproved(user.id, allowed); }catch(_){}
   closePermissionModal();
   await renderAdmin();
   showToast(`${user.name}님의 권한이 저장되었습니다`);
