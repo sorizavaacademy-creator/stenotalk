@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-16c';
+var APP_VERSION = '2026-10-16d';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3953,7 +3953,42 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .br-chip.on{ background:var(--rr-ink); border-color:var(--rr-ink); color:#fff; }
 .br-more{ display:flex; gap:8px; flex:1 1 100%; } .br-more[hidden]{ display:none; }
 .br-more input{ flex:1; min-width:0; min-height:42px; padding:0 12px; border:1px solid var(--rr-line2); border-radius:8px; font:inherit; font-size:14.5px; }
-@media print{ .beta-rate, .rr-card{ display:none !important; } }
+@media print{ .beta-rate, .rr-card, .rr-drawer{ display:none !important; } }
+/* 2026-10-16d 사이드바 · 오늘 하루 보지 않기 */
+.rrn-hide{ margin-right:auto; background:none; border:0; padding:8px 4px; font:inherit; font-size:13.5px; color:#66666c; text-decoration:underline; text-underline-offset:3px; cursor:pointer; white-space:nowrap; }
+.rr-nudge-box .modal-foot{ align-items:center; flex-wrap:wrap; }
+.rr-nudge-box .modal-foot .btn{ flex:0 1 auto !important; padding-left:18px; padding-right:18px; }
+@media (max-width:520px){ .rrn-hide{ flex:1 1 100%; text-align:center; margin:0 0 4px; } .rr-nudge-box .modal-foot .btn{ flex:1 1 0 !important; } }
+.rr-menu-item{ position:relative; }
+.rr-menu-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:#e8532a; margin-left:8px; vertical-align:2px; }
+.rr-menu-dot[hidden], .rr-av-dot[hidden]{ display:none; }
+.d3-user-btn{ position:relative; }
+.rr-av-dot{ position:absolute; left:26px; top:2px; width:10px; height:10px; border-radius:50%; background:#e8532a; border:2px solid #fff; }
+.rr-drawer{ position:fixed; inset:0; z-index:950; visibility:hidden; pointer-events:none; --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-line2:#d3d0ca; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-ok:#2f7a4a; --rr-ok-bg:#e7f3ec; --rr-surface:#f6f5f3; }
+.rr-drawer.on{ visibility:visible; pointer-events:auto; }
+.rr-dr-back{ position:absolute; inset:0; background:rgba(10,15,28,.45); opacity:0; transition:opacity .18s ease; }
+.rr-drawer.on .rr-dr-back{ opacity:1; }
+.rr-dr-panel{ position:absolute; top:0; right:0; bottom:0; width:min(440px, 100vw); background:#fff; box-shadow:-8px 0 30px rgba(0,0,0,.14); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s cubic-bezier(.2,.7,.2,1); }
+.rr-drawer.on .rr-dr-panel{ transform:none; }
+@media (prefers-reduced-motion: reduce){ .rr-dr-panel, .rr-dr-back{ transition:none; } }
+.rr-dr-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 16px 12px 20px; border-bottom:1px solid var(--rr-line); }
+.rr-dr-head h2{ margin:0; font-size:18px; color:var(--rr-ink); }
+.rr-dr-x{ width:44px; height:44px; border:0; border-radius:10px; background:none; font-size:26px; line-height:1; color:var(--rr-ink2); cursor:pointer; } .rr-dr-x:hover{ background:var(--rr-surface); }
+.rr-dr-x:focus-visible{ outline:2px solid var(--rr-ink); outline-offset:2px; }
+.rr-dr-body{ flex:1; overflow-y:auto; padding:18px 20px 28px; -webkit-overflow-scrolling:touch; }
+.rr-dr-card{ display:flex; flex-direction:column; gap:10px; padding:18px; border-radius:14px; border:1px solid var(--rr-line); border-left:4px solid var(--rr-acc); }
+.rr-dr-card .rr-acts .rr-btn{ flex:1 1 auto; }
+.rr-dr-sub{ margin:24px 0 10px; font-size:15px; color:var(--rr-ink); }
+.rr-dr-item{ border:1px solid var(--rr-line); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+.rr-dr-meta{ display:flex; justify-content:space-between; gap:8px; align-items:center; font-size:13px; color:var(--rr-ink2); }
+.rr-dr-item ol{ margin:8px 0 0; padding-left:20px; font-size:14px; line-height:1.6; color:var(--rr-ink); }
+.rr-dr-item ul{ margin:2px 0 4px; padding-left:14px; list-style:none; font-size:13px; color:var(--rr-ink2); } .rr-dr-item ul li::before{ content:'ㄴ '; color:var(--rr-ink3); }
+.rr-dr-added{ margin:6px 0 0; font-size:12.5px; color:var(--rr-ok); font-weight:600; }
+.rr-dr-empty{ margin:0; font-size:14px; line-height:1.6; color:var(--rr-ink3); }
+body.rr-drawer-open{ overflow:hidden; }
+#modal-rr{ z-index:1000; }
+body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !important; }
+
 </style>
 </head>
 <body>
@@ -3987,6 +4022,18 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     </div>
   </div>
 </div>
+<!-- ============ 면접 질문 남기기 사이드바 (2026-10-16d) ============ -->
+<aside class="rr-drawer" id="rr-drawer" aria-hidden="true">
+  <div class="rr-dr-back" onclick="RealReport.closeDrawer()"></div>
+  <div class="rr-dr-panel" role="dialog" aria-modal="true" aria-labelledby="rr-dr-title">
+    <header class="rr-dr-head"><h2 id="rr-dr-title">면접 질문 남기기</h2><button type="button" class="rr-dr-x" id="rr-dr-x" onclick="RealReport.closeDrawer()" aria-label="닫기">×</button></header>
+    <div class="rr-dr-body">
+      <section class="rr-dr-card" id="rr-dr-card"></section>
+      <h3 class="rr-dr-sub">내가 남긴 면접 질문</h3>
+      <div id="rr-dr-list"></div>
+    </div>
+  </div>
+</aside>
 <!-- ============ 실제 면접 질문 남기기 (2026-10-16a) ============ -->
 <div class="modal-overlay" id="modal-rr" role="dialog" aria-modal="true" aria-labelledby="rr-title">
   <div class="modal-box modal-wide rr-box">
@@ -4048,7 +4095,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
     <div class="modal-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span><p class="rrn-kicker" id="rrn-kicker">합격하면 꼭 남겨 주세요</p><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
     <div class="modal-body" id="rrn-body"></div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="RealReport.closeNudge()">나중에</button>
+      <button type="button" class="rrn-hide" onclick="RealReport.hideToday()">오늘 하루 보지 않기</button>
+      <button class="btn btn-outline" onclick="RealReport.closeNudge()">닫기</button>
       <button class="btn btn-solid" id="rrn-go">질문 남기기</button>
     </div>
   </div>
@@ -4355,9 +4403,10 @@ body.hs-mobile #pc-qr-card{display:none !important;}
       <nav style="display:none !important;"><a href="javascript:void(0)" class="kk-link kakao-show" onclick="openKakaoChannel()" style="display:none;"><svg class="kk-ic" viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg><span class="kk-full">카카오톡 문의</span><span class="kk-short">카톡 문의</span></a>
       </nav>
       <div class="d3-user">
-        <button class="d3-user-btn" id="d3-user-btn" onclick="toggleUserMenu(event)" aria-expanded="false"><span class="d3-avatar" id="d3-avatar">김</span><span class="d3-user-name" id="nav-username">김속기 님</span><svg class="d3-caret" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg></button>
+        <button class="d3-user-btn" id="d3-user-btn" onclick="toggleUserMenu(event)" aria-expanded="false"><span class="d3-avatar" id="d3-avatar">김</span><i class="rr-av-dot" id="rr-av-dot" hidden aria-hidden="true"></i><span class="d3-user-name" id="nav-username">김속기 님</span><svg class="d3-caret" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg></button>
         <div class="d3-menu" id="d3-user-menu" style="display:none;">
           <button onclick="closeUserMenu(); openMyPage()">마이페이지</button>
+          <button id="rr-menu-item" class="rr-menu-item" onclick="closeUserMenu(); RealReport.openDrawer()" style="display:none;">면접 질문 남기기<span class="rr-menu-dot" id="rr-menu-dot" hidden></span></button>
           <button onclick="closeUserMenu(); openAllHistory()">리포트 전체</button>
           <button onclick="closeUserMenu(); openFeedback()">의견 · 문제 보내기</button>
           <button class="kakao-show" onclick="closeUserMenu(); openKakaoChannel()" style="display:none;">카카오톡 문의</button>
@@ -9311,9 +9360,10 @@ const RealReport = {
   },
   async refreshHome(){
     const card = document.getElementById('rr-card'); if(!card) return;
-    if(!this.isUser()){ card.style.display = 'none'; return; }
+    if(!this.isUser()){ card.style.display = 'none'; this.paintMenu(); return; }
     await this.load();
-    card.innerHTML = this.cardHtml('home'); card.style.display = '';
+    card.innerHTML = ''; card.style.display = 'none';   // 2026-10-16d: 홈에는 두지 않고 내 메뉴 → 사이드바로
+    this.paintMenu(); if(document.getElementById('rr-drawer').classList.contains('on')) this.renderDrawer();
     if(!this.nudged){ this.nudged = true; setTimeout(()=>{ try{ this.maybeNudge(); }catch(_){} }, 1600); }
   },
   async renderClosed(){
@@ -9338,10 +9388,9 @@ const RealReport = {
     if(!this.isUser()) return;
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
     const kind = this.nudgeKind(); if(!kind) return;
-    try{ if(sessionStorage.getItem(this.nudgeKey())) return; }catch(_){}
-    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open');
+    try{ if(localStorage.getItem(this.nudgeKey()) === formatYmd(new Date())) return; }catch(_){}   // '오늘 하루 보지 않기'를 누른 날만 안 뜸
+    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open');
     if(busy){ if(tries < 60) clearTimeout(this._nt), this._nt = setTimeout(()=>this.maybeNudge(tries+1), 3000); return; }
-    try{ sessionStorage.setItem(this.nudgeKey(), '1'); }catch(_){}
     this.showNudge(kind);
   },
   showNudge(kind){
@@ -9371,6 +9420,36 @@ const RealReport = {
     try{ Activity.log('real_report_nudge', { kind }); }catch(_){}
   },
   closeNudge(){ const m = document.getElementById('modal-rr-nudge'); if(m) m.classList.remove('active'); },
+  hideToday(){ try{ localStorage.setItem(this.nudgeKey(), formatYmd(new Date())); }catch(_){} this.closeNudge(); try{ Activity.log('real_report_hide_today'); }catch(_){} showToast('오늘은 다시 띄우지 않을게요. 내 메뉴의 "면접 질문 남기기"에서 언제든 남길 수 있어요.'); },
+  /* ---- 2026-10-16d: 홈 카드 대신 오른쪽 사이드바 (내 메뉴 → 면접 질문 남기기) ---- */
+  needsAttention(){ const ph = this.phase(); return ph === 'none' || ph === 'after' || ph === 'ask'; },
+  paintMenu(){
+    const show = this.isUser();
+    const item = document.getElementById('rr-menu-item'); if(item) item.style.display = show ? '' : 'none';
+    const att = show && this.needsAttention();
+    const d1 = document.getElementById('rr-menu-dot'); if(d1) d1.hidden = !att;
+    const d2 = document.getElementById('rr-av-dot'); if(d2) d2.hidden = !att;
+  },
+  async openDrawer(){
+    const dr = document.getElementById('rr-drawer'); if(!dr) return;
+    dr.classList.add('on'); dr.setAttribute('aria-hidden', 'false'); document.body.classList.add('rr-drawer-open');
+    this.renderDrawer();
+    await this.load(); this.renderDrawer(); this.paintMenu();
+    setTimeout(()=>{ try{ document.getElementById('rr-dr-x').focus(); }catch(_){} }, 50);
+    try{ Activity.log('real_report_drawer'); }catch(_){}
+  },
+  closeDrawer(){ const dr = document.getElementById('rr-drawer'); if(!dr) return; dr.classList.remove('on'); dr.setAttribute('aria-hidden', 'true'); document.body.classList.remove('rr-drawer-open'); },
+  renderDrawer(){
+    const c = document.getElementById('rr-dr-card'), l = document.getElementById('rr-dr-list'); if(!c || !l) return;
+    c.innerHTML = this.cardHtml('drawer');
+    const rows = this.mine.filter(r=>this.qCount(r));
+    l.innerHTML = rows.length ? rows.map(r=>{
+      const meta = [rrFieldName(r.field_id), r.org, r.interview_date ? String(r.interview_date).slice(0,10).replace(/-/g,'.') : ''].filter(Boolean).map(escapeHtml).join(' · ');
+      return `<article class="rr-dr-item"><div class="rr-dr-meta"><span>${meta}</span><span class="ra-res ${r.result}">${RR_RESULT[r.result]||''}</span></div>
+        <ol>${(r.questions||[]).map(q=>`<li>${escapeHtml(q.q||'')}${(q.follow||[]).length ? `<ul>${q.follow.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ol>
+        ${r.added_count ? `<p class="rr-dr-added">연습 문항이 된 질문 ${r.added_count}개</p>` : ''}</article>`;
+    }).join('') : '<p class="rr-dr-empty">아직 남긴 질문이 없어요. 면접을 보고 나면 기억나는 질문을 남겨 주세요.</p>';
+  },
   async setResult(id, result){
     try{
       const { error } = await sb.rpc('set_report_result', { p_id: id, p_result: result });
@@ -9381,7 +9460,7 @@ const RealReport = {
     }catch(e){ showToast(rrErrMsg(e), 'warn'); }
   },
   rerender(){
-    const card = document.getElementById('rr-card'); if(card && card.style.display !== 'none') card.innerHTML = this.cardHtml('home');
+    this.paintMenu(); const dr = document.getElementById('rr-drawer'); if(dr && dr.classList.contains('on')) this.renderDrawer();
     const cl = document.getElementById('rr-closed'); if(cl && cl.offsetParent) cl.innerHTML = this.cardHtml('closed');
   },
   /* ---- 남기기 창 ---- */
@@ -10064,6 +10143,7 @@ function endTour(done){
 }
 window.addEventListener('resize', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); });
 window.addEventListener('scroll', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); }, { passive:true });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && document.body.classList.contains('rr-drawer-open')){ RealReport.closeDrawer(); return; } });
 document.addEventListener('keydown', (e)=>{ if(!Tour.on) return; if(e.key==='Escape') endTour(); else if(e.key==='ArrowRight' || e.key==='Enter') tourGo(1); else if(e.key==='ArrowLeft') tourGo(-1); });
 /* ---------- 매일 연습 유도 (2026-10-07): 오늘 연습 여부 · 연속 일수 · 최근 7일 ---------- */
 function practiceStreak(history){
