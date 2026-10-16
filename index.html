@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-16f';
+var APP_VERSION = '2026-10-16j';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3987,6 +3987,159 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .rr-dr-empty{ margin:0; font-size:14px; line-height:1.6; color:var(--rr-ink3); }
 body.rr-drawer-open{ overflow:hidden; }
 #modal-rr{ z-index:1000; }
+/* 2026-10-16i 면접 후기: 한눈에 보기(C) + 거르기/목록/상세(B) */
+.ra-back{ display:inline-flex; align-items:center; gap:4px; min-height:36px; padding:0 10px 0 6px; margin:0 0 6px -6px; border:0; border-radius:8px; background:none; font:inherit; font-size:14px; font-weight:700; color:var(--rr-acc-ink); cursor:pointer; } .ra-back:hover{ background:var(--rr-acc-soft); }
+.ra-period{ display:flex; gap:2px; padding:3px; border:1px solid var(--rr-line2); border-radius:10px; background:#fff; }
+.ra-pbtn{ min-height:36px; padding:0 12px; border:0; border-radius:8px; background:none; font:inherit; font-size:13.5px; font-weight:700; color:var(--rr-ink2); cursor:pointer; } .ra-pbtn.on{ background:var(--rr-ink); color:#fff; }
+.ra-search-row{ margin-bottom:14px; } .ra-search-row .ra-searchbox{ max-width:520px; min-height:46px; }
+.ra-top5{ background:#1f1f21; color:#fff; border-radius:16px; padding:20px 22px; display:flex; flex-direction:column; gap:4px; margin-bottom:14px; }
+.ra-top5-h{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:6px; } .ra-top5-h h3{ margin:0; font-size:18px; } .ra-top5-h span{ font-size:13px; color:#c9c8c4; }
+.ra-top5-row{ display:grid; grid-template-columns:28px minmax(0,1fr) 160px 56px; gap:12px; align-items:center; min-height:48px; padding:6px 8px; margin:0 -8px; border:0; border-radius:10px; background:none; color:#fff; font:inherit; text-align:left; cursor:pointer; }
+.ra-top5-row:hover{ background:#2c2c2f; } .ra-top5-row:focus-visible{ outline:2px solid #fff; outline-offset:1px; }
+.ra-top5-row .rk{ font-size:18px; color:#c9c8c4; } .ra-top5-row .rk.hi{ color:#ff8a63; }
+.ra-top5-row .tq{ display:flex; flex-direction:column; min-width:0; } .ra-top5-row .tq span{ font-size:15px; font-weight:700; line-height:1.45; } .ra-top5-row .tq small{ font-size:12px; color:#c9c8c4; }
+.ra-top5-row .bar{ height:8px; border-radius:999px; background:#3a3a3d; overflow:hidden; } .ra-top5-row .bar i{ display:block; height:8px; background:#e8532a; border-radius:999px; }
+.ra-top5-row .tn{ text-align:right; font-weight:700; font-size:14px; }
+@media (max-width:640px){ .ra-top5-row{ grid-template-columns:24px minmax(0,1fr) 48px; } .ra-top5-row .bar{ display:none; } }
+.ra-fcards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:14px; margin-bottom:14px; }
+.ra-fcard{ background:#fff; border:1px solid var(--rr-line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+.ra-fcard-h{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; } .ra-fcard-h h3{ margin:0; font-size:18px; color:var(--rr-ink); } .ra-fcard-h span{ font-size:13px; color:var(--rr-ink3); } .ra-fcard-h b{ color:var(--rr-ink); }
+.ra-rbar{ display:flex; height:10px; border-radius:999px; overflow:hidden; background:var(--rr-surface); } .ra-rbar i{ display:block; height:10px; }
+.ra-rbar .p, .ra-rleg .p{ background:#2f7a4a; } .ra-rbar .w, .ra-rleg .w{ background:#8f8e89; } .ra-rbar .f, .ra-rleg .f{ background:#c8441c; }
+.ra-rleg{ display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--rr-ink2); margin-top:-4px; } .ra-rleg i{ display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; vertical-align:0; }
+.ra-ftop{ display:flex; flex-direction:column; gap:8px; } .ra-ftop .lbl{ font-size:12px; font-weight:700; color:var(--rr-ink3); }
+.ra-ftop p{ margin:0; display:flex; gap:8px; align-items:flex-start; font-size:14px; line-height:1.5; color:var(--rr-ink); } .ra-ftop p i{ flex:none; font-style:normal; font-size:11.5px; font-weight:700; color:var(--rr-acc-ink); background:var(--rr-acc-soft); border-radius:999px; padding:1px 7px; margin-top:2px; }
+.ra-tychips{ display:flex; gap:6px; flex-wrap:wrap; } .ra-tychip{ font-size:12px; border:1px solid var(--rr-line); border-radius:999px; padding:3px 9px; color:var(--rr-ink2); background:#fff; }
+.ra-fgo{ margin-top:auto; min-height:44px; border:0; border-radius:10px; background:var(--rr-ink); color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer; } .ra-fgo:hover{ background:#000; } .ra-fgo:focus-visible{ outline:2px solid var(--rr-acc); outline-offset:2px; }
+.ra-recent{ background:#fff; border:1px solid var(--rr-line); border-radius:16px; padding:16px 20px; }
+.ra-recent-h{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:4px; } .ra-recent-h h3{ margin:0; font-size:17px; color:var(--rr-ink); }
+.ra-link{ border:0; background:none; font:inherit; font-size:13.5px; font-weight:700; color:var(--rr-acc-ink); cursor:pointer; min-height:36px; }
+.ra-rrow{ width:100%; display:grid; grid-template-columns:80px minmax(90px,140px) minmax(0,1fr) auto; gap:12px; align-items:center; padding:11px 4px; border:0; border-top:1px solid var(--rr-line); background:none; font:inherit; font-size:14px; text-align:left; cursor:pointer; color:var(--rr-ink); }
+.ra-rrow:hover{ background:var(--rr-surface); } .ra-rrow .w{ font-size:13px; color:var(--rr-ink3); } .ra-rrow .q{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--rr-ink2); } .ra-rrow i{ font-style:normal; }
+@media (max-width:640px){ .ra-rrow{ grid-template-columns:1fr auto; } .ra-rrow .w{ grid-column:1 / -1; } .ra-rrow .q{ grid-column:1 / -1; white-space:normal; } }
+.ra-split{ display:flex; flex-wrap:wrap; gap:14px; align-items:flex-start; }
+.ra-side{ flex:1 1 210px; max-width:230px; background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:14px; }
+.ra-side-sec h4{ margin:0 0 4px; font-size:12.5px; color:var(--rr-ink3); }
+.ra-side-btn{ width:100%; min-height:40px; display:flex; justify-content:space-between; align-items:center; gap:6px; padding:0 10px; border:0; border-radius:8px; background:none; font:inherit; font-size:14px; color:var(--rr-ink); text-align:left; cursor:pointer; }
+.ra-side-btn b{ font-size:12.5px; font-weight:600; color:var(--rr-ink3); } .ra-side-btn:hover{ background:var(--rr-surface); }
+.ra-side-btn.on{ background:var(--rr-ink); color:#fff; font-weight:700; } .ra-side-btn.on b{ color:#d7d6d2; }
+.ra-side-btn.t.on{ background:var(--rr-acc-soft); color:var(--rr-acc-ink); } .ra-side-btn.t.on b{ color:var(--rr-acc-ink); }
+.ra-ck{ display:flex; align-items:center; gap:8px; min-height:34px; font-size:13.5px; color:var(--rr-ink); cursor:pointer; } .ra-ck b{ margin-left:auto; font-size:12.5px; font-weight:600; color:var(--rr-ink3); }
+.ra-mid{ flex:2 1 320px; min-width:0; background:#fff; border:1px solid var(--rr-line); border-radius:14px; overflow:hidden; }
+.ra-mid-h{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--rr-line); font-size:14px; } .ra-mid-h small{ color:var(--rr-ink3); font-size:12.5px; margin-left:4px; }
+.ra-seg{ display:flex; gap:2px; padding:3px; border-radius:8px; background:var(--rr-surface); } .ra-seg button{ min-height:30px; padding:0 12px; border:0; border-radius:6px; background:none; font:inherit; font-size:12.5px; font-weight:700; color:var(--rr-ink2); cursor:pointer; } .ra-seg button.on{ background:#fff; color:var(--rr-ink); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.ra-mid-list{ max-height:760px; overflow-y:auto; }
+.ra-li{ width:100%; display:flex; flex-direction:column; gap:4px; padding:12px 14px 12px 12px; border:0; border-left:3px solid transparent; border-bottom:1px solid var(--rr-line); background:#fff; font:inherit; text-align:left; cursor:pointer; color:var(--rr-ink); }
+.ra-li:hover{ background:#fbfaf8; } .ra-li.on{ background:var(--rr-acc-soft); border-left-color:var(--rr-acc); }
+.ra-li:focus-visible, .ra-side-btn:focus-visible, .ra-seg button:focus-visible, .ra-rrow:focus-visible, .ra-det-person:focus-visible, .ra-abtn:focus-visible, .ra-pbtn:focus-visible, .ra-back:focus-visible, .ra-link:focus-visible{ outline:2px solid var(--rr-acc); outline-offset:-2px; }
+.ra-li .t{ font-size:14.5px; font-weight:700; line-height:1.5; } .ra-li .m{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--rr-ink3); } .ra-li i{ font-style:normal; }
+.ra-li.p{ flex-direction:row; align-items:center; gap:10px; } .ra-li .pm{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; } .ra-li .pv{ font-size:12.5px; color:var(--rr-ink3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ra-li .av, .ra-det-person .av, .ra-det-who .av{ flex:none; width:32px; height:32px; border-radius:50%; background:var(--rr-surface); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:var(--rr-ink2); } .ra-det-who .av.big{ width:44px; height:44px; font-size:16px; }
+.ra-det{ flex:2 1 340px; min-width:0; background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:16px; }
+.ra-det-chip{ align-self:flex-start; font-size:12px; font-weight:700; color:var(--rr-acc-ink); background:var(--rr-acc-soft); border-radius:999px; padding:3px 10px; }
+.ra-det-q{ margin:-6px 0 0; font-size:20px; line-height:1.5; color:var(--rr-ink); }
+.ra-det-stats{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; } .ra-det-stats > div{ background:var(--rr-surface); border-radius:10px; padding:10px 12px; } .ra-det-stats span{ display:block; font-size:12px; font-weight:700; color:var(--rr-ink3); } .ra-det-stats b{ font-size:22px; font-weight:800; color:var(--rr-ink); } .ra-det-stats b.sm{ font-size:16px; } .ra-det-stats .ok{ background:var(--rr-ok-bg); } .ra-det-stats .ok span, .ra-det-stats .ok b{ color:var(--rr-ok); }
+.ra-det-sec h4{ margin:0 0 6px; font-size:14px; color:var(--rr-ink); }
+.ra-det-fu{ margin:0; padding-left:18px; font-size:14px; line-height:1.8; color:var(--rr-ink2); }
+.ra-det-person{ width:100%; display:flex; align-items:center; gap:10px; padding:8px 4px; border:0; border-top:1px solid var(--rr-line); background:none; font:inherit; font-size:14px; text-align:left; cursor:pointer; color:var(--rr-ink); } .ra-det-person:hover{ background:var(--rr-surface); } .ra-det-person small{ color:var(--rr-ink3); font-size:12.5px; } .ra-det-person i{ margin-left:auto; font-style:normal; }
+.ra-det-acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; padding-top:4px; }
+.ra-abtn{ min-height:44px; padding:0 16px; border-radius:10px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:14px; font-weight:700; color:var(--rr-ink); cursor:pointer; } .ra-abtn:hover{ background:var(--rr-surface); } .ra-abtn.dark{ background:var(--rr-ink); border-color:var(--rr-ink); color:#fff; } .ra-abtn.soft{ color:var(--rr-ink2); }
+.ra-det-who{ display:flex; align-items:center; gap:12px; } .ra-det-who > div{ flex:1; min-width:0; } .ra-det-who h3{ margin:0; font-size:19px; color:var(--rr-ink); display:flex; align-items:center; gap:6px; flex-wrap:wrap; } .ra-det-who p{ margin:2px 0 0; font-size:13px; color:var(--rr-ink2); line-height:1.5; } .ra-det-who i{ font-style:normal; }
+.ra-det-qs{ margin:0; padding-left:20px; font-size:14.5px; line-height:1.7; color:var(--rr-ink); } .ra-det-qs ul{ margin:2px 0 4px; padding-left:14px; list-style:none; font-size:13.5px; color:var(--rr-ink2); } .ra-det-qs ul li::before{ content:'ㄴ '; color:var(--rr-ink3); }
+.ra-det-p{ margin:0; font-size:14px; line-height:1.65; color:var(--rr-ink2); }
+.ra-det-added{ margin:0; font-size:13px; font-weight:600; color:var(--rr-ok); }
+.ra-empty.sm{ padding:24px 16px; border:0; }
+@media (max-width:1000px){ .ra-side{ max-width:none; flex-basis:100%; flex-direction:row; flex-wrap:wrap; } .ra-side-sec{ flex:1 1 180px; } .ra-mid-list{ max-height:420px; } }
+
+/* 2026-10-16h 관리자 면접 후기: 쓰기 쉬운 화면 */
+#admin-view-reports .ra-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+#admin-view-reports .ra-head h2{ margin:0; font-size:26px; letter-spacing:-.01em; color:var(--rr-ink); } #admin-view-reports .ra-head p{ margin:4px 0 0; font-size:14.5px; color:var(--rr-ink2); }
+.ra-head-acts{ display:flex; gap:8px; flex-wrap:wrap; }
+.ra-hbtn{ display:inline-flex; align-items:center; gap:6px; min-height:42px; padding:0 16px; border-radius:10px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:14px; font-weight:700; color:var(--rr-ink); cursor:pointer; }
+.ra-hbtn:hover{ background:var(--rr-surface); } .ra-hbtn.primary{ background:var(--rr-acc); border-color:var(--rr-acc); color:#fff; } .ra-hbtn.primary:hover{ background:#d6461f; }
+.ra-hbtn.icon{ width:42px; padding:0; justify-content:center; }
+.ra-hbtn:focus-visible, .ra-kc:focus-visible, .ra-vbtn:focus-visible, .ra-chip:focus-visible, .ra-prow:focus-visible, .ra-copy:focus-visible, .ra-clear:focus-visible{ outline:2px solid var(--rr-acc); outline-offset:2px; }
+.ra-kpi{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-bottom:16px; }
+.ra-kc{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:14px 16px; border-radius:14px; border:1px solid var(--rr-line); background:#fff; font:inherit; text-align:left; cursor:pointer; transition:border-color .12s, box-shadow .12s; }
+.ra-kc:hover{ border-color:var(--rr-line2); box-shadow:0 2px 8px rgba(0,0,0,.05); }
+.ra-kc.on{ border-color:var(--rr-acc); box-shadow:0 0 0 2px var(--rr-acc-soft); }
+.ra-kc .l{ font-size:13px; font-weight:700; color:var(--rr-ink2); } .ra-kc .n{ font-size:28px; font-weight:800; color:var(--rr-ink); letter-spacing:-.02em; line-height:1.15; } .ra-kc .n i{ font-style:normal; font-size:14px; font-weight:600; margin-left:2px; } .ra-kc .s{ font-size:12px; color:var(--rr-ink3); }
+@media (max-width:820px){ .ra-kpi{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
+.ra-cat.zero{ opacity:.55; }
+.ra-panel{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:12px; }
+.ra-top{ display:flex; gap:10px; flex-wrap:wrap; align-items:stretch; }
+.ra-view{ display:flex; gap:6px; flex:0 0 auto; }
+.ra-vbtn{ display:flex; align-items:center; gap:10px; min-height:52px; padding:0 14px; border-radius:10px; border:1px solid var(--rr-line2); background:#fff; font:inherit; text-align:left; cursor:pointer; color:var(--rr-ink2); }
+.ra-vbtn span{ display:flex; flex-direction:column; } .ra-vbtn b{ font-size:14.5px; color:inherit; } .ra-vbtn small{ font-size:11.5px; color:var(--rr-ink3); }
+.ra-vbtn.on{ background:var(--rr-ink); border-color:var(--rr-ink); color:#fff; } .ra-vbtn.on small{ color:rgba(255,255,255,.7); }
+.ra-searchbox{ flex:1 1 220px; display:flex; align-items:center; gap:8px; min-height:52px; padding:0 14px; border:1px solid var(--rr-line2); border-radius:10px; color:var(--rr-ink3); background:#fff; }
+.ra-searchbox:focus-within{ border-color:var(--rr-acc); box-shadow:0 0 0 2px var(--rr-acc-soft); }
+.ra-searchbox input{ flex:1; min-width:0; border:0; outline:0; font:inherit; font-size:15px; color:var(--rr-ink); background:none; }
+.ra-filters{ display:flex; flex-direction:column; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--rr-line); }
+.ra-frow{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.ra-flbl{ flex:0 0 72px; font-size:13px; font-weight:700; color:var(--rr-ink3); }
+.ra-chip{ min-height:34px; padding:0 13px; border-radius:999px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:13.5px; font-weight:600; color:var(--rr-ink2); cursor:pointer; }
+.ra-chip:hover{ background:var(--rr-surface); } .ra-chip.on{ background:var(--rr-acc-soft); border-color:var(--rr-acc); color:var(--rr-acc-ink); }
+.ra-hid{ display:inline-flex; align-items:center; gap:6px; margin-left:auto; font-size:13px; color:var(--rr-ink3); cursor:pointer; }
+@media (max-width:640px){ .ra-flbl{ flex-basis:100%; } .ra-hid{ margin-left:0; } .ra-view{ flex:1 1 100%; } .ra-vbtn{ flex:1; } .ra-vbtn small{ display:none; } }
+.ra-now{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:14px 2px 12px; font-size:14px; }
+.ra-now-t{ font-weight:700; color:var(--rr-ink); } .ra-now-n{ color:var(--rr-ink2); } .ra-now-n b{ color:var(--rr-ink); }
+.ra-clear{ margin-left:auto; min-height:32px; padding:0 12px; border-radius:999px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:13px; font-weight:600; color:var(--rr-ink2); cursor:pointer; } .ra-clear:hover{ background:var(--rr-surface); }
+.ra-empty{ background:#fff; border:1px dashed var(--rr-line2); border-radius:14px; padding:32px 20px; text-align:center; } .ra-empty b{ font-size:16px; color:var(--rr-ink); } .ra-empty p{ margin:8px 0 12px; font-size:14px; line-height:1.65; color:var(--rr-ink2); }
+.ra-qcards{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+.ra-qcard{ display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--rr-line); } .ra-qcard:first-child{ border-top:0; }
+.ra-qmain{ flex:1; min-width:0; } .ra-qcard .q{ margin:0; font-size:15px; line-height:1.6; color:var(--rr-ink); font-weight:600; }
+.ra-qcard .m{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px; font-size:12.5px; color:var(--rr-ink3); }
+.ra-hot{ font-weight:700; font-size:12px; border-radius:999px; padding:2px 9px; background:var(--rr-acc-soft); color:var(--rr-acc-ink); }
+.ra-fu{ margin-top:8px; padding:8px 10px; border-radius:8px; background:var(--rr-surface); } .ra-fu-l{ font-size:12px; font-weight:700; color:var(--rr-ink3); }
+.ra-fu ul{ margin:2px 0 0; padding-left:14px; list-style:none; font-size:13.5px; color:var(--rr-ink2); } .ra-fu ul li::before{ content:'ㄴ '; color:var(--rr-ink3); }
+.ra-copy{ flex:none; min-height:34px; padding:0 12px; border-radius:8px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:12.5px; font-weight:700; color:var(--rr-ink2); cursor:pointer; } .ra-copy:hover{ background:var(--rr-surface); } .ra-copy.ok{ border-color:var(--rr-ok); color:var(--rr-ok); }
+.ra-people{ display:flex; flex-direction:column; gap:8px; }
+.ra-person{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; overflow:hidden; } .ra-person.open{ border-color:var(--rr-line2); box-shadow:0 2px 10px rgba(0,0,0,.05); } .ra-person.hidden-r{ opacity:.6; }
+.ra-prow{ width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; border:0; background:none; font:inherit; text-align:left; cursor:pointer; }
+.ra-prow:hover{ background:var(--rr-surface); }
+.ra-av{ flex:none; width:38px; height:38px; border-radius:50%; background:var(--rr-surface); color:var(--rr-ink2); display:flex; align-items:center; justify-content:center; font-weight:800; }
+.ra-pmain{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.ra-pname{ font-size:15px; font-weight:800; color:var(--rr-ink); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.ra-new{ font-style:normal; font-size:11px; font-weight:700; color:#fff; background:var(--rr-acc); border-radius:999px; padding:1px 7px; }
+.ra-pname .ra-src{ font-style:normal; }
+.ra-pmeta{ font-size:13px; color:var(--rr-ink2); } .ra-pprev{ font-size:13px; color:var(--rr-ink3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .ra-pprev.none{ font-style:italic; }
+.ra-pside{ flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:6px; } .ra-pside i{ font-style:normal; }
+.ra-chev{ font-size:12px; color:var(--rr-ink3); }
+.ra-person .ra-detail{ padding:4px 16px 16px 66px; background:var(--rr-surface); border-top:1px solid var(--rr-line); }
+@media (max-width:640px){ .ra-person .ra-detail{ padding-left:16px; } .ra-av{ display:none; } }
+
+/* 2026-10-16g 관리자 면접 후기: 분야 탭 · 거르기 · 질문 유형 · 한 줄 목록 */
+#admin-view-reports, #admin-view-reportcall{ --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-line2:#d3d0ca; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-ok:#2f7a4a; --rr-ok-bg:#e7f3ec; --rr-surface:#f6f5f3; }
+.ra-cats{ display:flex; gap:6px; overflow-x:auto; padding:2px 0 10px; scrollbar-width:thin; }
+.ra-cat{ flex:none; min-height:40px; padding:0 14px; border-radius:999px; border:1px solid var(--rr-line2); background:#fff; font:inherit; font-size:14px; font-weight:600; color:var(--rr-ink2); cursor:pointer; white-space:nowrap; }
+.ra-cat b{ margin-left:4px; font-weight:700; color:var(--rr-ink3); } .ra-cat.on{ background:var(--rr-ink); border-color:var(--rr-ink); color:#fff; } .ra-cat.on b{ color:#fff; opacity:.8; }
+.ra-cat:focus-visible, .ra-qt:focus-visible, .ra-tr:focus-visible{ outline:2px solid var(--rr-acc); outline-offset:2px; }
+.ra-cat-none{ font-size:13.5px; color:var(--rr-ink3); align-self:center; }
+.ra-bar{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:10px 12px; }
+.ra-bar .voice-select{ width:auto; min-height:38px; } .ra-bar .ra-search{ flex:1 1 180px; min-width:0; margin:0; }
+.ra-sum{ display:flex; flex-wrap:wrap; gap:6px 16px; margin:12px 2px; font-size:13.5px; color:var(--rr-ink2); } .ra-sum b{ color:var(--rr-ink); } .ra-sum:empty{ display:none; }
+.ra-sum-res{ color:var(--rr-ink3); }
+.ra-qtypes{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.ra-qt{ min-height:34px; padding:0 12px; border-radius:8px; border:1px solid var(--rr-line); background:#fff; font:inherit; font-size:13px; font-weight:600; color:var(--rr-ink2); cursor:pointer; }
+.ra-qt b{ margin-left:3px; color:var(--rr-ink3); } .ra-qt.on{ border-color:var(--rr-acc); color:var(--rr-acc-ink); background:var(--rr-acc-soft); } .ra-qt.on b{ color:var(--rr-acc-ink); }
+.ra-fld{ font-weight:600; color:var(--rr-ink2); }
+.ra-table{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; overflow:hidden; }
+.ra-tr{ display:grid; grid-template-columns:minmax(90px,1.1fr) minmax(130px,1.6fr) 70px 140px 56px 24px; gap:10px; align-items:center; padding:12px 16px; border-top:1px solid var(--rr-line); font-size:14px; cursor:pointer; }
+.ra-tr:first-child{ border-top:0; } .ra-tr:hover:not(.head){ background:var(--rr-surface); } .ra-tr.open{ background:var(--rr-surface); }
+.ra-tr.head{ cursor:default; font-size:12.5px; font-weight:700; color:var(--rr-ink3); background:#fafaf8; }
+.ra-tr .nm{ font-weight:700; color:var(--rr-ink); } .ra-tr .fo small{ display:block; font-size:12.5px; color:var(--rr-ink3); } .ra-tr .dt, .ra-tr .nq{ color:var(--rr-ink2); font-variant-numeric:tabular-nums; } .ra-tr .chev{ color:var(--rr-ink3); text-align:right; }
+.ra-tr i{ font-style:normal; } .ra-tr.hidden-r{ opacity:.6; }
+.ra-detail{ padding:4px 16px 16px 16px; background:var(--rr-surface); border-top:1px dashed var(--rr-line2); }
+.ra-detail .ra-acts{ display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap; } .ra-detail .ra-acts small{ margin-right:auto; color:var(--rr-ink3); }
+.ra-call-cnt{ font-size:13.5px; color:var(--rr-ink2); } #ra-call .ra-call-bar .voice-select{ width:auto !important; flex:0 0 auto; min-width:160px; } #ra-call .ra-call-list{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:0 16px; border-top:1px solid var(--rr-line); }
+#ra-call .ra-call-row:last-child{ border-bottom:0; }
+@media (max-width:720px){
+  .ra-tr{ grid-template-columns:1fr auto; gap:4px 10px; } .ra-tr.head{ display:none; }
+  .ra-tr .nm{ grid-column:1; } .ra-tr .fo{ grid-column:1; } .ra-tr .dt{ display:none; } .ra-tr > span:nth-child(4){ grid-column:2; grid-row:1; justify-self:end; } .ra-tr .nq{ grid-column:2; grid-row:2; justify-self:end; font-size:13px; } .ra-tr .chev{ display:none; }
+  .ra-bar .voice-select{ flex:1 1 40%; }
+}
+
 /* 2026-10-16f 질문 모아보기 */
 .ra-qgroup{ background:#fff; border:1px solid var(--rr-line); border-radius:14px; padding:16px 18px; margin-bottom:12px; }
 .ra-qgroup h3{ margin:0 0 10px; font-size:16px; color:var(--rr-ink); } .ra-qgroup h3 small{ font-size:12.5px; font-weight:500; color:var(--rr-ink3); margin-left:6px; }
@@ -3998,6 +4151,69 @@ body.rr-drawer-open{ overflow:hidden; }
 /* 2026-10-16e: hidden 속성이 display 설정에 덮이지 않게 (면접자 화면에 '누구의 후기인가요?' 칸이 보이던 문제) */
 #modal-rr [hidden], #modal-rr-nudge [hidden], .rr-drawer [hidden], #screen-pending [hidden], #admin-view-reports [hidden], #admin-view-approvals [hidden]{ display:none !important; }
 body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !important; }
+
+/* 2026-10-16j 면접 후기 상세 정렬 다듬기: 머리글 한 줄 도구막대 · 3단 높이 맞춤 · 화면 폭에 따라 2단/1단 */
+#admin-view-reports{ container-type:inline-size; container-name:ra; }
+#admin-view-reports .ra-head{ display:block; margin-bottom:14px; }
+#admin-view-reports .ra-head h2{ margin:0; font-size:26px; line-height:1.3; }
+#admin-view-reports .ra-head p{ margin:4px 0 0; }
+.ra-back{ margin:0 0 4px -6px; }
+.ra-toolbar{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
+.ra-toolbar .ra-searchbox{ flex:1 1 260px; min-height:44px; max-width:none; }
+.ra-toolbar .ra-period{ flex:none; }
+.ra-tb-acts{ display:flex; gap:8px; flex:none; margin-left:auto; }
+.ra-search-row{ display:none; }
+/* 3단: 거르기 | 목록 | 상세 — 같은 높이로 */
+.ra-split{ display:grid; grid-template-columns:216px minmax(0,1fr) minmax(0,1.15fr); gap:12px; align-items:stretch; }
+.ra-side, .ra-mid, .ra-det{ max-width:none; margin:0; }
+.ra-side{ padding:12px 10px; gap:12px; align-self:stretch; }
+.ra-side-sec{ display:flex; flex-direction:column; flex:none; gap:0; }
+.ra-side-sec h4{ display:block; float:none; width:auto; }
+.ra-side-sec + .ra-side-sec{ padding-top:12px; border-top:1px solid var(--rr-line); }
+.ra-side-sec h4{ margin:0 0 4px 8px; font-size:12px; letter-spacing:.02em; }
+.ra-side-btn{ min-height:36px; font-size:13.5px; padding:0 8px; }
+.ra-ck{ min-height:32px; padding:0 8px; font-size:13.5px; }
+.ra-mid{ display:flex; flex-direction:column; }
+.ra-mid-h{ min-height:52px; box-sizing:border-box; padding:8px 12px 8px 14px; }
+.ra-mid-list{ flex:1; max-height:none; overflow:visible; }
+.ra-li{ padding:12px 14px; gap:6px; }
+.ra-li .m{ gap:6px 10px; }
+.ra-det{ padding:18px 20px 20px; gap:18px; align-self:stretch; }
+.ra-det-chip{ margin-bottom:-6px; }
+.ra-det-q{ margin:0; font-size:19px; line-height:1.5; }
+.ra-det-who{ align-items:flex-start; } .ra-det-who h3{ gap:6px 8px; } .ra-det-who h3 .ra-res{ font-size:12px; } .ra-det-who p{ margin-top:4px; }
+.ra-det-stats{ gap:8px; } .ra-det-stats > div{ padding:10px 12px; display:flex; flex-direction:column; justify-content:space-between; min-height:66px; } .ra-det-stats span{ white-space:nowrap; } .ra-det-stats b{ line-height:1.2; }
+.ra-det-sec h4{ font-size:13.5px; margin-bottom:8px; }
+.ra-det-person{ display:grid; grid-template-columns:32px minmax(0,1fr) auto; align-items:center; gap:10px; padding:9px 2px; }
+.ra-det-person .pi{ display:flex; flex-direction:column; min-width:0; } .ra-det-person .pi b{ font-size:14px; } .ra-det-person .pi small{ font-size:12.5px; color:var(--rr-ink3); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ra-det-person i{ margin-left:0; }
+.ra-det-acts{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; margin-top:2px; padding-top:16px; border-top:1px solid var(--rr-line); }
+.ra-det-acts .ra-abtn{ width:100%; padding:0 8px; }
+.ra-det-acts.two{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+.ra-abtn{ padding:0 10px; white-space:nowrap; }
+/* 폭이 좁으면: 거르기를 위 가로 막대로, 목록 | 상세 2단 */
+@container ra (max-width: 860px){
+  .ra-toolbar .ra-searchbox{ flex-basis:100%; }
+  .ra-split{ grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); }
+  .ra-side{ grid-column:1 / -1; flex-direction:column; gap:8px; padding:10px 12px; }
+  .ra-side-sec{ display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; gap:4px 6px; }
+  .ra-side-sec{ position:relative; padding-left:70px; min-height:34px; }
+  .ra-side-sec h4{ position:absolute; left:0; top:9px; width:64px; }
+  .ra-side-sec + .ra-side-sec h4{ top:17px; }
+  .ra-side-sec + .ra-side-sec{ padding-top:8px; }
+  .ra-side-sec h4{ flex:0 0 64px; margin:0; }
+  .ra-side-btn{ width:auto; min-height:34px; padding:0 12px; border:1px solid var(--rr-line2); border-radius:999px; gap:6px; }
+  .ra-side-btn.on{ border-color:var(--rr-ink); } .ra-side-btn.t.on{ border-color:var(--rr-acc); }
+  .ra-ck{ padding:0 6px 0 2px; gap:6px; } .ra-ck b{ margin-left:2px; }
+  .ra-det-acts{ grid-template-columns:repeat(2, minmax(0,1fr)); } .ra-det-acts .ra-abtn.dark{ grid-column:1 / -1; }
+  .ra-det-acts.two .ra-abtn.dark{ grid-column:auto; }
+}
+@container ra (max-width: 640px){
+  .ra-split{ grid-template-columns:minmax(0,1fr); }
+  .ra-tb-acts{ margin-left:0; flex-wrap:wrap; }
+  .ra-toolbar .ra-period{ flex:1 1 auto; } .ra-toolbar .ra-pbtn{ flex:1; }
+  .ra-det-stats{ grid-template-columns:repeat(3, minmax(0,1fr)); } .ra-det-stats b{ font-size:18px; }
+}
 
 </style>
 </head>
@@ -4558,7 +4774,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5a5 5 0 0 1 6 5"/></svg>
         면접자
       </button>
-      <button class="admin-menu-btn" data-group="reviews" onclick="showAdminView('reports')">
+      <button class="admin-menu-btn" data-group="reviews" onclick="try{ ReportAdmin.view = 'overview'; }catch(_){} showAdminView('reports')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
         면접 후기 <span class="menu-badge" id="ra-nav-badge" style="display:none;"></span>
       </button>
@@ -4678,21 +4894,34 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         <div id="ap-list"></div>
       </div>
 
-      <!-- 면접 후기 · 실제 질문 (2026-10-16a) -->
+      <!-- 면접 후기 (2026-10-16i: 첫 화면 = 한눈에 보기 · 누르면 = 거르기/목록/상세 3단) -->
       <div class="admin-view" id="admin-view-reports">
+        <div class="ra-head">
+          <button type="button" class="ra-back" id="ra-back" onclick="ReportAdmin.go('overview')" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>한눈에 보기로</button>
+          <h2 id="ra-title">면접 후기 한눈에 보기</h2><p id="ra-sub">분야 카드나 질문을 누르면 자세히 볼 수 있어요.</p>
+        </div>
+        <div class="ra-toolbar">
+          <label class="ra-searchbox"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="ra-search" placeholder="질문 · 이름 · 기관으로 찾기" aria-label="검색" oninput="ReportAdmin.q = this.value; if(ReportAdmin.view !== 'detail' &amp;&amp; this.value.trim()){ ReportAdmin.view = 'detail'; ReportAdmin.mode = 'people'; } ReportAdmin.selKey = null; ReportAdmin.selId = null; ReportAdmin.render()"></label>
+          <div class="ra-period" id="ra-period" role="group" aria-label="기간">
+            <button type="button" class="ra-pbtn on" data-v="" onclick="ReportAdmin.set('period','')">전체 기간</button><button type="button" class="ra-pbtn" data-v="7" onclick="ReportAdmin.set('period','7')">최근 7일</button><button type="button" class="ra-pbtn" data-v="30" onclick="ReportAdmin.set('period','30')">최근 30일</button>
+          </div>
+          <div class="ra-tb-acts">
+            <button type="button" class="ra-hbtn primary" onclick="RealReport.openPhone()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>전화 후기 입력</button>
+            <button type="button" class="ra-hbtn" onclick="ReportAdmin.exportCsv()" title="지금 보고 있는 후기를 엑셀에서 열 수 있는 파일로 내려받아요"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>엑셀로</button>
+            <button type="button" class="ra-hbtn icon" onclick="ReportAdmin.load(true)" title="새로 고침" aria-label="새로 고침"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></button>
+          </div>
+        </div>
+        <div id="ra-body"></div>
+      </div>
+
+      <!-- 연락할 사람 (2026-10-16g: 면접 후기에서 분리) -->
+      <div class="admin-view" id="admin-view-reportcall">
         <div class="admin-view-head">
-          <div><h2>면접 후기 · 실제 질문</h2>
-          <p>면접자가 직접 남긴 후기와 교육팀이 전화로 받은 후기를 모아 봐요. 남긴 질문은 그 분야 연습 문항(<b>실전 기출 · 합격자 제보</b>)에 바로 들어가요. 이상한 질문이 있으면 <b>문항 숨기기</b>로 연습에서 빼고, 모범답안은 문항 관리에서 채울 수 있어요.</p></div>
-          <div class="beta-head-btns"><button class="btn-manage primary" onclick="RealReport.openPhone()">전화 후기 입력</button><button class="btn-manage" onclick="ReportAdmin.load(true)">새로 고침</button></div>
+          <div><h2>연락할 사람</h2>
+          <p>분야가 열린 면접자 중 아직 후기를 남기지 않은 사람이 위에 와요. 국회처럼 전화로 직접 물어본 내용은 <b>후기 입력</b>으로 넣으면 면접 후기에 모여요.</p></div>
+          <button class="btn-manage" onclick="ReportAdmin.load(true)">새로 고침</button>
         </div>
-        <div class="admin-stats" id="ra-stats"></div>
         <div id="ra-call"></div>
-        <div class="admin-toolbar">
-          <div class="uf-chips" id="ra-chips"></div>
-          <div class="seg" id="ra-mode"><button type="button" class="seg-btn on" data-mode="cards" onclick="ReportAdmin.setMode('cards')">후기별</button><button type="button" class="seg-btn" data-mode="questions" onclick="ReportAdmin.setMode('questions')">질문 모아보기</button></div>
-          <select id="ra-field" class="voice-select admin-filter" onchange="ReportAdmin.render()"><option value="">모든 분야</option></select>
-        </div>
-        <div id="ra-list"></div>
       </div>
 
       <!-- 면접 기록 -->
@@ -9777,79 +10006,201 @@ const ApprovalAdmin = {
 
 /* ---------------- 관리자: 면접 후기 · 실제 질문 ---------------- */
 const ReportAdmin = {
-  rows:null, src:'all', callField:'assembly', mode:'cards',
-  setMode(m){ this.mode = m; this.render(); },
-  async load(force){
-    const list = document.getElementById('ra-list'); if(!list) return;
-    if(!this.rows || force){
-      list.innerHTML = '<div class="qa-empty">불러오는 중…</div>';
-      try{ const { data, error } = await sb.from('interview_reports').select('*').order('created_at', { ascending:false }).limit(500); if(error) throw error; this.rows = data || []; }
-      catch(e){ list.innerHTML = `<div class="qa-empty">면접 후기를 불러오지 못했어요. (${escapeHtml(String(e.message||e))})</div>`; return; }
-    }
-    const fs = document.getElementById('ra-field');
-    if(fs && fs.options.length <= 1) fs.innerHTML = '<option value="">모든 분야</option>' + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
-    this.render();
-  },
-  setSrc(v){ this.src = v; this.render(); },
-  setCallField(v){ this.callField = v; this.renderCall(); },
+  /* 2026-10-16i: 사용자 선택 "C안 첫 화면 + B안 상세"
+   *  · 첫 화면(한눈에 보기): 기간 · 많이 나온 질문 TOP 5 · 분야 카드(합격/대기/불합격 막대·자주 나온 질문·유형) · 최근 들어온 후기
+   *  · 상세(분야 카드·TOP 질문·최근 후기를 누르면): 왼쪽 거르기(분야·질문 유형·결과·기간) / 가운데 목록(질문별·사람별) / 오른쪽 고른 것의 상세와 바로 할 일 */
+  rows:null, view:'overview', period:'', field:'all', qtype:'all', res:{ pass:true, waiting:true, fail:true, unknown:true }, q:'', showHidden:false,
+  mode:'questions', selKey:null, selId:null, callField:'assembly',
+  QTYPES: [
+    ['intro', '자기소개 · 지원 동기', /자기\s*소개|지원\s*(한\s*)?동기|지원한\s*이유|왜\s*지원|되려는\s*이유|되고\s*싶|입사|우리\s*기관|선택한\s*이유|포부/],
+    ['situ', '상황 대처', /어떻게\s*(하|대처|기록|처리)|만약|한다면|라면|요청하면|요구하면|상황|대처|갈등|민원|실수(를|하)|빼\s*달라|지워\s*달라|동시\s*발언/],
+    ['job', '직무 · 기관 지식', /국회|의회|법원|검찰|해바라기|조례|교섭단체|국정감사|본회의|위원회|회의록|속기(사)?(의|가)?\s*(업무|역할|하는\s*일)|업무|제도|법(률|안)?|공무원|의무|AI|인공지능/],
+    ['exp', '경험 · 역량', /경험|해\s*본|했던|강점|약점|장점|단점|성격|자격(증)?|역량|능력|타자|속도|스트레스|협업|팀/],
+    ['etc', '마무리 · 기타', /./],
+  ],
+  RES: [['pass','합격'], ['waiting','결과 대기'], ['fail','불합격'], ['unknown','밝히지 않음']],
+  norm(t){ return String(t||'').replace(/[\s.,?!·…~"'()\[\]]/g,''); },
+  qtypeOf(t){ t = String(t||''); if(/마지막|하고\s*싶은\s*말|궁금한\s*(점|것)|질문\s*있/.test(t)) return 'etc'; for(const [k,,re] of this.QTYPES){ if(k !== 'etc' && re.test(t)) return k; } return 'etc'; },
+  typeName(k){ return (this.QTYPES.find(x=>x[0]===k)||[])[1] || ''; },
   who(r){ const u = (state.adminUsers||[]).find(x=>x.id===r.user_id); return u ? (u.name||'') : (r.person_name || '(이름 없음)'); },
-  render(){
-    const rows = this.rows || [];
-    const st = document.getElementById('ra-stats');
-    if(st){
-      const self = rows.filter(r=>r.source==='self').length, phone = rows.length - self;
-      const added = rows.reduce((s,r)=>s+(r.hidden?0:(r.added_count||0)),0), pass = rows.filter(r=>r.result==='pass').length; const noRep = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).length && !rows.some(r=>r.user_id===u.id && (r.questions||[]).length)).length;
-      st.innerHTML = statTile(rows.length+'<i>건</i>', '면접 후기', { foot:`직접 ${self} · 전화 ${phone}` })
-        + statTile(added+'<i>개</i>', '연습 문항이 된 질문', { foot:'실전 기출 · 합격자 제보' })
-        + statTile(pass+'<i>명</i>', '합격 알려 줌', { foot:'결과를 알려 준 후기 기준' })
-        + statTile(noRep+'<i>명</i>', '아직 안 남긴 사람', { foot:'분야가 열린 면접자 기준', go:"document.getElementById('ra-call').scrollIntoView({behavior:'smooth'})" });
+  isNew(r){ return (Date.now() - new Date(r.created_at).getTime()) < 2*86400000; },
+  when(iso){ const d = new Date(iso), t = new Date(); const day = Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate()) - new Date(d.getFullYear(),d.getMonth(),d.getDate()))/86400000); return day === 0 ? `오늘 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` : day === 1 ? '어제' : `${d.getMonth()+1}/${d.getDate()}`; },
+  resChip(r){ return `<i class="ra-res ${r}">${RR_RESULT[r]||''}</i>`; },
+  async load(force){
+    const box = document.getElementById('ra-body');
+    if(!this.rows || force){
+      if(box) box.innerHTML = '<div class="qa-empty">불러오는 중…</div>';
+      try{ const { data, error } = await sb.from('interview_reports').select('*').order('created_at', { ascending:false }).limit(1000); if(error) throw error; this.rows = data || []; }
+      catch(e){ if(box) box.innerHTML = `<div class="qa-empty">면접 후기를 불러오지 못했어요. (${escapeHtml(String(e.message||e))})</div>`; return; }
     }
-    this.renderCall();
-    const chips = document.getElementById('ra-chips');
-    if(chips) chips.innerHTML = [['all','전체'],['self','면접자가 직접'],['phone','전화 후기'],['hidden','숨김']].map(([k,l])=>`<button type="button" class="uf-chip${this.src===k?' on':''}" onclick="ReportAdmin.setSrc('${k}')">${l} <b>${rows.filter(r=>k==='all'?true:k==='hidden'?r.hidden:r.source===k).length}</b></button>`).join('');
-    const fsel = (document.getElementById('ra-field')||{}).value || '';
-    const shown = rows.filter(r=>(this.src==='all' || (this.src==='hidden' ? r.hidden : r.source===this.src)) && (!fsel || r.field_id===fsel));
-    const list = document.getElementById('ra-list'); if(!list) return;
-    document.querySelectorAll('#ra-mode .seg-btn').forEach(b=>b.classList.toggle('on', b.dataset.mode === this.mode));
-    if(shown.length && this.mode === 'questions'){ list.innerHTML = this.questionsHtml(shown); return; }
-    if(!shown.length){ list.innerHTML = '<div class="qa-empty">아직 남긴 면접 후기가 없어요. 면접자 홈에 "합격하면 꼭 남겨 주세요" 카드가 보이고, 전화로 받은 후기는 위의 <b>전화 후기 입력</b>으로 넣을 수 있어요.</div>'; return; }
-    list.innerHTML = shown.map(r=>{
-      const qs = Array.isArray(r.questions) ? r.questions : [];
-      const res = `<span class="ra-res ${r.result}">${RR_RESULT[r.result]||r.result}</span>`;
-      const src = r.source === 'phone' ? '<span class="ra-src phone">전화</span>' : '<span class="ra-src">직접</span>';
-      const meta = [rrFieldName(r.field_id), r.org, r.interview_date ? String(r.interview_date).slice(0,10).replace(/-/g,'.') : ''].filter(Boolean).map(escapeHtml).join(' · ');
-      return `<article class="ra-card${r.hidden?' hidden-r':''}">
-        <header class="ra-head"><div><b class="ra-who">${escapeHtml(this.who(r))}</b> ${src} ${res}${r.hidden?' <span class="ra-res fail">숨김</span>':''}<div class="ra-meta">${meta}<small> · ${formatDateFull(r.created_at)} 등록${r.added_count?` · 연습 문항 ${r.added_count}개`:''}</small></div></div>
-          <div class="ra-acts"><button class="btn-manage" onclick="ReportAdmin.edit(${r.id})">고치기</button>${qs.length ? `<button class="btn-manage" onclick="ReportAdmin.toggleHidden(${r.id})">${r.hidden?'다시 보이기':'문항 숨기기'}</button>` : ''}</div></header>
-        ${qs.length ? `<ol class="ra-qs">${qs.map(q=>`<li>${escapeHtml(q.q||'')}${(q.follow||[]).length ? `<ul>${q.follow.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ol>` : '<p class="ra-none">아직 질문이 없어요 (면접 날짜만 알려 줌)</p>'}
-        ${r.format_note || r.tips ? `<div class="ra-notes">${r.format_note ? `<p><b>면접 형식</b> ${escapeHtml(r.format_note)}</p>` : ''}${r.tips ? `<p><b>분위기·팁</b> ${escapeHtml(r.tips)}</p>` : ''}</div>` : ''}
-      </article>`;
+    this.render(); this.renderCall();
+  },
+  /* ---------- 거르기 ---------- */
+  periodRows(){ const days = this.period ? +this.period : 0, now = Date.now(); return (this.rows||[]).filter(r=>(this.showHidden || !r.hidden) && (!days || (now - new Date(r.created_at).getTime()) <= days*86400000)); },
+  /** 상세 화면 조건(분야 제외) */
+  base(){
+    const q = this.q.trim().toLowerCase();
+    return this.periodRows().filter(r=>{
+      if(!this.res[r.result] && r.result !== 'planned') return false;
+      if(q){ const hay = [this.who(r), r.org, rrFieldName(r.field_id), r.tips, r.format_note, ...(r.questions||[]).flatMap(x=>[x.q, ...(x.follow||[])])].join(' ').toLowerCase(); if(!hay.includes(q)) return false; }
+      return true;
+    });
+  },
+  current(){ const b = this.base(); return this.field === 'all' ? b : b.filter(r=>r.field_id === this.field); },
+  groups(rows){
+    const m = new Map();
+    rows.forEach(r=>{ (r.questions||[]).forEach(q=>{ const n = this.norm(q.q); if(!n) return; const k = r.field_id + '|' + n; let g = m.get(k);
+      if(!g){ g = { key:k, q:q.q, field:r.field_id, type:this.qtypeOf(q.q), who:new Map(), follow:new Set(), orgs:new Set(), last:r.created_at, pass:0 }; m.set(k, g); }
+      const w = r.user_id || r.person_name || ('r'+r.id); if(!g.who.has(w)){ g.who.set(w, r); if(r.result === 'pass') g.pass++; }
+      (q.follow||[]).forEach(x=>g.follow.add(x)); if(r.org) g.orgs.add(r.org); if(r.created_at > g.last) g.last = r.created_at; }); });
+    return [...m.values()].sort((a,b)=>b.who.size-a.who.size || String(b.last).localeCompare(String(a.last)));
+  },
+  /* ---------- 이동 ---------- */
+  go(view, opt){ opt = opt || {}; this.view = view; if('field' in opt) this.field = opt.field; if('mode' in opt) this.mode = opt.mode; if('key' in opt) this.selKey = opt.key; if('id' in opt) this.selId = opt.id; if(opt.resetType) this.qtype = 'all'; this.render(); window.scrollTo({ top:0 }); },
+  openField(f){ this.go('detail', { field:f, mode:'questions', key:null, id:null, resetType:true }); },
+  openTop(key){ const f = key.split('|')[0]; this.qtype = 'all'; this.go('detail', { field:f, mode:'questions', key }); },
+  openReport(id){ const r = (this.rows||[]).find(x=>x.id===id); this.qtype = 'all'; this.go('detail', { field: r ? r.field_id : 'all', mode:'people', id }); },
+  set(k, v){ this[k] = v; if(k === 'field' || k === 'qtype'){ this.selKey = null; this.selId = null; } this.render(); },
+  toggleRes(k){ this.res[k] = !this.res[k]; this.selKey = null; this.selId = null; this.render(); },
+  pickQ(key){ this.selKey = key; this.render(); this.scrollDetail(); },
+  pickR(id){ this.selId = id; this.render(); this.scrollDetail(); },
+  scrollDetail(){ if(window.innerWidth < 1000){ const d = document.getElementById('ra-detail'); if(d) setTimeout(()=>d.scrollIntoView({ behavior:'smooth', block:'start' }), 30); } },
+  render(){
+    const body = document.getElementById('ra-body'); if(!body) return;
+    document.querySelectorAll('#ra-period .ra-pbtn').forEach(b=>b.classList.toggle('on', b.dataset.v === this.period));
+    const back = document.getElementById('ra-back'); if(back) back.hidden = this.view !== 'detail';
+    const title = document.getElementById('ra-title'); if(title) title.textContent = this.view === 'detail' ? `면접 후기 · ${this.field === 'all' ? '전체 분야' : rrFieldName(this.field)}` : '면접 후기 한눈에 보기';
+    const sub = document.getElementById('ra-sub'); if(sub) sub.textContent = this.view === 'detail' ? '왼쪽에서 고르고, 가운데 목록을 누르면 오른쪽에 자세히 나와요.' : '분야 카드나 질문을 누르면 자세히 볼 수 있어요.';
+    if(!(this.rows||[]).length){ body.innerHTML = `<div class="ra-empty"><b>아직 들어온 면접 후기가 없어요</b><p>면접자가 홈 팝업이나 내 메뉴 → 면접 질문 남기기로 남기면 여기에 분야별로 모여요.<br>전화로 들은 후기는 오른쪽 위 <b>전화 후기 입력</b>으로 넣을 수 있어요.</p></div>`; return; }
+    body.innerHTML = this.view === 'detail' ? this.detailHtml() : this.overviewHtml();
+  },
+  /* ---------- C안: 한눈에 보기 ---------- */
+  overviewHtml(){
+    const rows = this.periodRows();
+    if(!rows.length) return `<div class="ra-empty"><b>이 기간에 들어온 후기가 없어요</b><p>기간을 '전체'로 바꿔 보세요.</p></div>`;
+    const gs = this.groups(rows); this._top = gs.slice(0,5);
+    const max = Math.max(1, ...this._top.map(g=>g.who.size));
+    const top = `<section class="ra-top5"><div class="ra-top5-h"><h3>가장 많이 나온 질문 TOP 5</h3><span>받았다고 남긴 사람 수 기준 · ${this.period ? `최근 ${this.period}일` : '전체 기간'}</span></div>
+      ${this._top.map((g,i)=>`<button type="button" class="ra-top5-row" onclick="ReportAdmin.openTop(ReportAdmin._top[${i}].key)"><b class="rk${i<3?' hi':''}">${i+1}</b><span class="tq"><span>${escapeHtml(g.q)}</span><small>${escapeHtml(rrFieldName(g.field))} · ${escapeHtml(this.typeName(g.type))}</small></span><span class="bar" aria-hidden="true"><i style="width:${Math.round(g.who.size/max*100)}%"></i></span><span class="tn">${g.who.size}명</span></button>`).join('') || '<p class="ra-none">아직 질문이 없어요</p>'}</section>`;
+    const fids = RR_FIELD_IDS.filter(id=>rows.some(r=>r.field_id===id));
+    const cards = fids.map(id=>{
+      const fr = rows.filter(r=>r.field_id===id), fg = gs.filter(g=>g.field===id);
+      const c = k=>fr.filter(r=>r.result===k).length, n = fr.length || 1;
+      const tc = {}; fg.forEach(g=>{ tc[g.type] = (tc[g.type]||0) + 1; });
+      const types = Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`<span class="ra-tychip">${escapeHtml(this.typeName(k).split(' · ')[0])} ${v}</span>`).join('');
+      return `<article class="ra-fcard"><div class="ra-fcard-h"><h3>${escapeHtml(rrFieldName(id))}</h3><span>후기 <b>${fr.length}</b>건 · 질문 <b>${fg.length}</b>개</span></div>
+        <div class="ra-rbar" aria-label="결과 비율"><i class="p" style="width:${c('pass')/n*100}%"></i><i class="w" style="width:${(c('waiting')+c('planned'))/n*100}%"></i><i class="f" style="width:${c('fail')/n*100}%"></i></div>
+        <div class="ra-rleg"><span><i class="p"></i>합격 ${c('pass')}</span><span><i class="w"></i>결과 대기 ${c('waiting')+c('planned')}</span><span><i class="f"></i>불합격 ${c('fail')}</span></div>
+        <div class="ra-ftop"><span class="lbl">자주 나온 질문</span>${fg.slice(0,3).map(g=>`<p><i>${g.who.size}명</i>${escapeHtml(g.q)}</p>`).join('') || '<p class="ra-none">아직 질문이 없어요</p>'}</div>
+        ${types ? `<div class="ra-tychips">${types}</div>` : ''}
+        <button type="button" class="ra-fgo" onclick="ReportAdmin.openField('${id}')">${escapeHtml(rrFieldName(id))} 질문 전체 보기 →</button></article>`;
     }).join('');
+    const recent = rows.slice(0,6).map(r=>{ const qs = r.questions||[];
+      return `<button type="button" class="ra-rrow" onclick="ReportAdmin.openReport(${r.id})"><span class="w">${this.when(r.created_at)}</span><b>${escapeHtml(this.who(r))}${r.source==='phone'?' <i class="ra-src phone">전화</i>':''}${this.isNew(r)?' <i class="ra-new">새 후기</i>':''}</b><span class="q">${escapeHtml(rrFieldName(r.field_id))}${qs.length ? ` · “${escapeHtml(String(qs[0].q||'').slice(0,40))}”${qs.length>1?` 외 ${qs.length-1}개`:''}` : ' · 질문 없음'}</span>${this.resChip(r.result)}</button>`; }).join('');
+    return top + `<div class="ra-fcards">${cards}</div>` + `<section class="ra-recent"><div class="ra-recent-h"><h3>최근 들어온 후기</h3><button type="button" class="ra-link" onclick="ReportAdmin.go('detail',{ field:'all', mode:'people', id:null, key:null, resetType:true })">사람별로 모두 보기 →</button></div>${recent}</section>`;
   },
-  /** 질문 모아보기: 분야별로 같은 질문을 묶어 몇 명이 받았는지 (꼬리질문도 함께) */
-  questionsHtml(rows){
-    const norm = t=>String(t||'').replace(/[\s.,?!·…~"'()\[\]]/g,'');
-    const byField = {};
-    rows.forEach(r=>{ (r.questions||[]).forEach(q=>{ const k = norm(q.q); if(!k) return; const f = (byField[r.field_id] = byField[r.field_id] || new Map()); let g = f.get(k); if(!g){ g = { q:q.q, n:0, who:new Set(), follow:new Set(), last:r.created_at, orgs:new Set() }; f.set(k, g); } g.n++; g.who.add(r.user_id || r.person_name || r.id); (q.follow||[]).forEach(x=>g.follow.add(x)); if(r.org) g.orgs.add(r.org); if(r.created_at > g.last) g.last = r.created_at; }); });
-    const fids = Object.keys(byField).sort((a,b)=>RR_FIELD_IDS.indexOf(a)-RR_FIELD_IDS.indexOf(b));
-    if(!fids.length) return '<div class="qa-empty">아직 남긴 질문이 없어요.</div>';
-    return fids.map(fid=>{ const list = [...byField[fid].values()].sort((a,b)=>b.who.size-a.who.size || String(b.last).localeCompare(String(a.last)));
-      return `<section class="ra-qgroup"><h3>${escapeHtml(rrFieldName(fid))} <small>질문 ${list.length}개</small></h3><ol class="ra-qall">${list.map(g=>`<li><div class="q">${escapeHtml(g.q)}</div><div class="m"><span class="ra-cnt${g.who.size>1?' hot':''}">${g.who.size}명</span>${g.orgs.size ? escapeHtml([...g.orgs].slice(0,3).join(', ')) + ' · ' : ''}${formatDateFull(g.last)}</div>${g.follow.size ? `<ul>${[...g.follow].slice(0,6).map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ol></section>`; }).join('');
+  /* ---------- B안: 상세 (거르기 / 목록 / 상세) ---------- */
+  detailHtml(){
+    const base = this.base(), rows = this.current();
+    const fcnt = {}; base.forEach(r=>{ fcnt[r.field_id] = (fcnt[r.field_id]||0) + 1; });
+    const fids = RR_FIELD_IDS.filter(id=>(this.rows||[]).some(r=>r.field_id===id) || id === this.field);
+    const fbtn = (id, label, n)=>`<button type="button" class="ra-side-btn${this.field===id?' on':''}" aria-pressed="${this.field===id}" onclick="ReportAdmin.set('field','${id}')"><span>${label}</span><b>${n}</b></button>`;
+    const gsAll = this.groups(rows); const tcnt = {}; gsAll.forEach(g=>{ tcnt[g.type] = (tcnt[g.type]||0) + 1; });
+    const tbtn = (k, label, n)=>`<button type="button" class="ra-side-btn t${this.qtype===k?' on':''}" aria-pressed="${this.qtype===k}" onclick="ReportAdmin.set('qtype','${k}')"><span>${label}</span><b>${n}</b></button>`;
+    const rcnt = {}; this.periodRows().filter(r=>this.field==='all' || r.field_id===this.field).forEach(r=>{ rcnt[r.result] = (rcnt[r.result]||0) + 1; });
+    const side = `<aside class="ra-side" aria-label="거르기">
+      <div class="ra-side-sec"><h4>분야</h4>${fbtn('all', '전체 분야', base.length)}${fids.map(id=>fbtn(id, escapeHtml(rrFieldName(id)), fcnt[id]||0)).join('')}</div>
+      ${this.mode === 'questions' ? `<div class="ra-side-sec"><h4>질문 유형</h4>${tbtn('all', '모든 유형', gsAll.length)}${this.QTYPES.filter(([k])=>tcnt[k]).map(([k,l])=>tbtn(k, l, tcnt[k])).join('')}</div>` : ''}
+      <div class="ra-side-sec"><h4>결과</h4>${this.RES.map(([k,l])=>`<label class="ra-ck"><input type="checkbox" ${this.res[k]?'checked':''} onchange="ReportAdmin.toggleRes('${k}')"> ${l}<b>${rcnt[k]||0}</b></label>`).join('')}</div>
+      <div class="ra-side-sec"><h4>그 밖에</h4><label class="ra-ck"><input type="checkbox" ${this.showHidden?'checked':''} onchange="ReportAdmin.set('showHidden', this.checked)"> 연습에서 뺀 후기도 보기</label></div>
+    </aside>`;
+    // 가운데 목록
+    let listInner = '', detail = '';
+    if(this.mode === 'questions'){
+      const gs = gsAll.filter(g=>this.qtype==='all' || g.type===this.qtype); this._gs = gs;
+      if(!this.selKey || !gs.some(g=>g.key===this.selKey)) this.selKey = gs[0] ? gs[0].key : null;
+      listInner = gs.length ? gs.map((g,i)=>`<button type="button" class="ra-li${g.key===this.selKey?' on':''}" aria-pressed="${g.key===this.selKey}" onclick="ReportAdmin.pickQ(ReportAdmin._gs[${i}].key)"><span class="t">${escapeHtml(g.q)}</span><span class="m">${g.who.size>1?`<i class="ra-hot">많이 나옴 · ${g.who.size}명</i>`:`<i class="ra-cnt">${g.who.size}명</i>`}${g.pass?`<span>합격자 ${g.pass}명</span>`:''}${this.field==='all'?`<span>${escapeHtml(rrFieldName(g.field))}</span>`:''}<span>${formatDateShort(g.last)}</span></span></button>`).join('')
+        : `<div class="ra-empty sm"><b>조건에 맞는 질문이 없어요</b><p>왼쪽에서 조건을 바꿔 보세요.</p></div>`;
+      const g = gs.find(x=>x.key===this.selKey); detail = g ? this.qDetailHtml(g) : '<div class="ra-empty sm"><b>질문을 고르면 여기에 자세히 나와요</b></div>';
+    } else {
+      this._rs = rows;
+      if(!this.selId || !rows.some(r=>r.id===this.selId)) this.selId = rows[0] ? rows[0].id : null;
+      listInner = rows.length ? rows.map(r=>{ const qs = r.questions||[]; return `<button type="button" class="ra-li p${r.id===this.selId?' on':''}" aria-pressed="${r.id===this.selId}" onclick="ReportAdmin.pickR(${r.id})"><span class="av" aria-hidden="true">${escapeHtml((this.who(r)||'?').slice(0,1))}</span><span class="pm"><span class="t">${escapeHtml(this.who(r))}${this.isNew(r)?' <i class="ra-new">새 후기</i>':''}${r.source==='phone'?' <i class="ra-src phone">전화</i>':''}</span><span class="m"><span>${escapeHtml([rrFieldName(r.field_id), r.org].filter(Boolean).join(' · '))}</span></span><span class="pv">${qs.length ? `“${escapeHtml(String(qs[0].q||'').slice(0,40))}”${qs.length>1?` 외 ${qs.length-1}개`:''}` : '질문 없음'}</span></span>${this.resChip(r.result)}</button>`; }).join('')
+        : `<div class="ra-empty sm"><b>조건에 맞는 후기가 없어요</b><p>왼쪽에서 조건을 바꿔 보세요.</p></div>`;
+      const r = rows.find(x=>x.id===this.selId); detail = r ? this.rDetailHtml(r) : '<div class="ra-empty sm"><b>후기를 고르면 여기에 자세히 나와요</b></div>';
+    }
+    const cnt = this.mode === 'questions' ? `질문 ${(this._gs||[]).length}개` : `후기 ${rows.length}건`;
+    const label = [this.field==='all' ? '전체 분야' : rrFieldName(this.field), this.mode==='questions' && this.qtype!=='all' ? this.typeName(this.qtype) : ''].filter(Boolean).join(' · ');
+    const list = `<section class="ra-mid" aria-label="목록"><div class="ra-mid-h"><span><b>${escapeHtml(label)}</b> <small>${cnt}</small></span>
+      <span class="ra-seg" role="group" aria-label="보기 방식"><button type="button" class="${this.mode==='questions'?'on':''}" aria-pressed="${this.mode==='questions'}" onclick="ReportAdmin.set('mode','questions')">질문별</button><button type="button" class="${this.mode==='people'?'on':''}" aria-pressed="${this.mode==='people'}" onclick="ReportAdmin.set('mode','people')">사람별</button></span></div>
+      <div class="ra-mid-list">${listInner}</div></section>`;
+    return `<div class="ra-split">${side}${list}<section class="ra-det" id="ra-detail" aria-label="자세히">${detail}</section></div>`;
   },
-  /** 연락할 사람: 이 분야가 열린 면접자 + 후기 상태 (국회는 전화로 직접 받기) */
+  qDetailHtml(g){
+    const people = [...g.who.values()].sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+    this._sel = g;
+    return `<span class="ra-det-chip">${escapeHtml(this.typeName(g.type))} · ${escapeHtml(rrFieldName(g.field))}</span>
+      <h3 class="ra-det-q">${escapeHtml(g.q)}</h3>
+      <div class="ra-det-stats"><div><span>받은 사람</span><b>${g.who.size}명</b></div><div class="ok"><span>그중 합격</span><b>${g.pass}명</b></div><div><span>최근 나온 날</span><b class="sm">${(()=>{ const d = new Date(g.last); return `${d.getMonth()+1}월 ${d.getDate()}일`; })()}</b></div></div>
+      ${g.orgs.size ? `<div class="ra-det-sec"><h4>나온 기관</h4><div class="ra-tychips">${[...g.orgs].map(o=>`<span class="ra-tychip">${escapeHtml(o)}</span>`).join('')}</div></div>` : ''}
+      <div class="ra-det-sec"><h4>이어진 꼬리질문</h4>${g.follow.size ? `<ul class="ra-det-fu">${[...g.follow].map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : '<p class="ra-none">남긴 꼬리질문이 없어요</p>'}</div>
+      <div class="ra-det-sec"><h4>이 질문을 받은 사람</h4>${people.map(r=>`<button type="button" class="ra-det-person" onclick="ReportAdmin.go('detail',{ mode:'people', id:${r.id} })"><span class="av" aria-hidden="true">${escapeHtml((this.who(r)||'?').slice(0,1))}</span><span class="pi"><b>${escapeHtml(this.who(r))}</b><small>${escapeHtml([r.org, r.interview_date ? '면접 ' + String(r.interview_date).slice(5,10).replace('-','/') : '', r.source==='phone' ? '전화' : ''].filter(Boolean).join(' · '))}</small></span>${this.resChip(r.result)}</button>`).join('')}</div>
+      <div class="ra-det-acts"><button type="button" class="ra-abtn dark" onclick="ReportAdmin.copySel(this)">질문 복사</button><button type="button" class="ra-abtn" onclick="hardQOpenQm(ReportAdmin._sel.field, ReportAdmin._sel.q)">모범답안 쓰기</button><button type="button" class="ra-abtn soft" onclick="ReportAdmin.removeQ()">연습에서 빼기</button></div>`;
+  },
+  rDetailHtml(r){
+    const qs = r.questions||[];
+    const meta = [rrFieldName(r.field_id), r.org, r.interview_date ? '면접 ' + String(r.interview_date).slice(0,10).replace(/-/g,'.') : '', r.source==='phone' ? '전화 후기' : '면접자가 직접', formatDateFull(r.created_at) + ' 등록'].filter(Boolean).map(escapeHtml).join(' · ');
+    return `<div class="ra-det-who"><span class="av big" aria-hidden="true">${escapeHtml((this.who(r)||'?').slice(0,1))}</span><div><h3>${escapeHtml(this.who(r))}${this.isNew(r)?' <i class="ra-new">새 후기</i>':''}${this.resChip(r.result)}</h3><p>${meta}</p></div></div>
+      <div class="ra-det-sec"><h4>받은 질문 ${qs.length}개</h4>${qs.length ? `<ol class="ra-det-qs">${qs.map(q=>`<li>${escapeHtml(q.q||'')}${(q.follow||[]).length ? `<ul>${q.follow.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}</li>`).join('')}</ol>` : '<p class="ra-none">질문 없음</p>'}</div>
+      ${r.format_note ? `<div class="ra-det-sec"><h4>면접 형식</h4><p class="ra-det-p">${escapeHtml(r.format_note)}</p></div>` : ''}
+      ${r.tips ? `<div class="ra-det-sec"><h4>분위기 · 다음 지원자에게</h4><p class="ra-det-p">${escapeHtml(r.tips)}</p></div>` : ''}
+      ${r.added_count ? `<p class="ra-det-added">이 후기에서 연습 문항이 된 질문 ${r.added_count}개${r.hidden ? ' (지금은 연습에서 빠져 있어요)' : ''}</p>` : ''}
+      <div class="ra-det-acts two"><button type="button" class="ra-abtn dark" onclick="ReportAdmin.edit(${r.id})">고치기</button>${qs.length ? `<button type="button" class="ra-abtn soft" onclick="ReportAdmin.toggleHidden(${r.id})">${r.hidden?'연습에 다시 넣기':'질문 연습에서 빼기'}</button>` : ''}</div>`;
+  },
+  async copySel(btn){ const g = this._sel; if(!g) return; try{ await navigator.clipboard.writeText(g.q); btn.textContent = '복사했어요'; setTimeout(()=>{ btn.textContent = '질문 복사'; }, 1400); }catch(_){ showToast('복사하지 못했어요', 'warn'); } },
+  /** 고른 질문(합격자 제보로 들어간 문항)만 연습에서 빼기 */
+  async removeQ(){
+    const g = this._sel; if(!g) return;
+    if(!confirm(`"${g.q.slice(0,40)}" 질문을 ${rrFieldName(g.field)} 연습 문항에서 뺄까요?\n(후기는 그대로 두고, 합격자 제보로 들어간 문항만 숨겨요)`)) return;
+    try{
+      const { data, error } = await sb.from('questions').select('id,q,is_active').eq('field_id', g.field).eq('category', '합격자 제보');
+      if(error) throw error;
+      const ids = (data||[]).filter(x=>this.norm(x.q) === this.norm(g.q) && x.is_active !== false).map(x=>x.id);
+      if(!ids.length){ showToast('연습 문항에 들어간 같은 질문이 없어요 (이미 있던 질문이라 건너뛰었거나 이미 빠져 있어요).'); return; }
+      const u = await sb.from('questions').update({ is_active:false }).in('id', ids);
+      if(u.error) throw u.error;
+      showToast(`연습 문항에서 뺐어요 (${ids.length}개). 문항 관리에서 다시 켤 수 있어요.`, 'ok');
+      try{ QuestionBank.load(true); }catch(_){}
+    }catch(e){ showToast('빼지 못했어요: ' + ((e && e.message) || e), 'warn'); }
+  },
+  /** 지금 보고 있는 후기를 CSV(엑셀)로 */
+  exportCsv(){
+    const rows = this.view === 'detail' ? this.current() : this.periodRows(); if(!rows.length){ showToast('내려받을 후기가 없어요'); return; }
+    const esc = v=>{ const t = String(v==null?'':v).replace(/"/g,'""'); return /[",\n]/.test(t) ? `"${t}"` : t; };
+    const lines = [['이름','분야','기관','면접일','결과','받은 방법','질문','꼬리질문','면접 형식','분위기·팁','등록일'].join(',')];
+    rows.forEach(r=>{ const qs = r.questions||[];
+      lines.push([this.who(r), rrFieldName(r.field_id), r.org||'', r.interview_date||'', RR_RESULT[r.result]||'', r.source==='phone'?'전화':'직접',
+        qs.map((q,i)=>`${i+1}. ${q.q}`).join('\n'), qs.map((q,i)=>(q.follow||[]).length ? `${i+1}. ${(q.follow||[]).join(' / ')}` : '').filter(Boolean).join('\n'),
+        r.format_note||'', r.tips||'', formatDateFull(r.created_at)].map(esc).join(',')); });
+    const blob = new Blob(['﻿' + lines.join('\r\n')], { type:'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `stenotalk_interview_reports_${this.view==='detail' && this.field!=='all' ? this.field : 'all'}_${formatYmd(new Date())}.csv`;   // 한글 파일 이름은 일부 브라우저에서 'download'로 바뀌어 영문으로
+    document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    try{ Activity.log('report_export', { n: rows.length }); }catch(_){}
+  },
+  /* ---------- 연락할 사람 (별도 탭) ---------- */
+  setCallField(v){ this.callField = v; this.renderCall(); },
   renderCall(){
     const box = document.getElementById('ra-call'); if(!box) return;
     const f = this.callField; const rows = this.rows || [];
     const users = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).includes(f));
-    const stOf = u=>{ const mine = rows.filter(r=>r.user_id===u.id); const r = mine[0]; if(!r) return { k:0, t:'후기 없음', c:'none' }; if(r.result==='planned') return { k:1, t:`면접 예정 ${r.interview_date ? String(r.interview_date).slice(5,10).replace('-','/') : ''}`, c:'plan' }; return { k:2, t:(RR_RESULT[r.result]||'') + (mine.some(x=>(x.questions||[]).length) ? ' · 질문 있음' : ''), c:r.result }; };
+    const stOf = u=>{ const mine = rows.filter(r=>r.user_id===u.id); const r = mine[0]; if(!r) return { k:0, t:'후기 없음', c:'none' }; return { k:1, t:(RR_RESULT[r.result]||'') + (mine.some(x=>(x.questions||[]).length) ? ' · 질문 있음' : ''), c:r.result }; };
     const list = users.map(u=>({ u, s:stOf(u) })).sort((a,b)=>a.s.k-b.s.k || String(a.u.name||'').localeCompare(String(b.u.name||''),'ko'));
     const none = list.filter(x=>x.s.k===0);
-    box.innerHTML = `<details class="ra-call-box"${f==='assembly' ? ' open' : ''}><summary><b>연락할 사람</b> <small>${escapeHtml(rrFieldName(f))} 면접자 ${users.length}명 · 후기 없음 ${none.length}명</small></summary>
-      <div class="ra-call-bar"><select class="voice-select" onchange="ReportAdmin.setCallField(this.value)">${RR_FIELD_IDS.map(id=>`<option value="${id}"${id===f?' selected':''}>${escapeHtml(rrFieldName(id))}</option>`).join('')}</select>
-        <button class="btn-manage" onclick="ReportAdmin.copyPhones()"${none.length?'':' disabled'}>후기 없는 사람 연락처 복사</button>
-        <span class="ra-call-tip">${f==='assembly' ? '국회는 전화로 직접 묻고, 들은 내용은 <b>후기 입력</b>으로 넣어 주세요.' : '이 분야는 면접자가 홈에서 직접 남겨요. 전화로 받았다면 후기 입력으로 넣어 주세요.'}</span></div>
-      ${list.length ? `<div class="ra-call-list">${list.map(({u,s})=>`<div class="ra-call-row"><span class="nm">${escapeHtml(u.name||'')}</span><span class="ph">${escapeHtml(u.phone||'번호 없음')}</span><span class="ra-res ${s.c}">${escapeHtml(s.t)}</span><button class="btn-manage" onclick="RealReport.openPhone({ userId:'${u.id}', field:'${f}' })">후기 입력</button></div>`).join('')}</div>` : '<div class="qa-empty">이 분야가 열린 면접자가 없어요.</div>'}
-    </details>`;
+    box.innerHTML = `<div class="ra-call-bar"><select class="voice-select" aria-label="분야" onchange="ReportAdmin.setCallField(this.value)">${RR_FIELD_IDS.map(id=>`<option value="${id}"${id===f?' selected':''}>${escapeHtml(rrFieldName(id))}</option>`).join('')}</select>
+        <span class="ra-call-cnt">면접자 <b>${users.length}</b>명 · 후기 없음 <b>${none.length}</b>명</span>
+        <button class="btn-manage" onclick="ReportAdmin.copyPhones()"${none.length?'':' disabled'}>후기 없는 사람 연락처 복사</button></div>
+      ${list.length ? `<div class="ra-call-list">${list.map(({u,s})=>`<div class="ra-call-row"><span class="nm">${escapeHtml(u.name||'')}</span><span class="ph">${escapeHtml(u.phone||'번호 없음')}</span><span class="ra-res ${s.c}">${escapeHtml(s.t)}</span><button class="btn-manage" onclick="RealReport.openPhone({ userId:'${u.id}', field:'${f}' })">후기 입력</button></div>`).join('')}</div>` : '<div class="qa-empty">이 분야가 열린 면접자가 없어요.</div>'}`;
   },
   async copyPhones(){
     const rows = this.rows || []; const f = this.callField;
@@ -10845,7 +11196,7 @@ async function openAdminScreen(view){
   Activity.setPresence('admin');
   showAdminView(view || state.adminView || 'overview');
   await renderAdmin();
-  try{ if(state.adminView === 'reports') ReportAdmin.render(); if(state.adminView === 'approvals') ApprovalAdmin.render(); }catch(_){}
+  try{ if(state.adminView === 'reports' || state.adminView === 'reportcall'){ ReportAdmin.render(); ReportAdmin.renderCall(); } if(state.adminView === 'approvals') ApprovalAdmin.render(); }catch(_){}
 }
 /* ---------------- 어려운 문항 TOP 10 (관리자 · 2026-10-12) ----------------
  * interview_answers(꼬리질문 제외)를 문항 문장별로 모아 평균 점수가 낮은 순으로 보여 줌.
@@ -10964,7 +11315,7 @@ async function hardQOpenQm(fieldId, q){
 const ADMIN_GROUPS = {
   status:   { label:'현황', views:[['overview','현황 요약'],['beta','베타 현황'],['live','접속 현황'],['feedback','의견 · 문제']] },
   users:    { label:'면접자', views:[['users','면접자 관리'],['approvals','승인 요청']] },
-  reviews:  { label:'면접 후기', views:[['reports','면접 후기 · 실제 질문']] },
+  reviews:  { label:'면접 후기', views:[['reports','면접 후기'],['reportcall','연락할 사람']] },
   questions:{ label:'문항', views:[['questions','문항 관리'],['hardq','어려운 문항'],['realset','실전 세트 · 코치']] },
   records:  { label:'기록', views:[['records','면접 기록'],['export','데이터 내보내기']] },
   settings: { label:'설정', views:[['pipeline','AI · 음성 설정']] },
@@ -11002,7 +11353,7 @@ function showAdminView(view){
   if(view === 'realset') loadRealSetView();
   if(view === 'hardq') loadHardQ();
   if(view === 'approvals') ApprovalAdmin.load(true);
-  if(view === 'reports') ReportAdmin.load(true);
+  if(view === 'reports' || view === 'reportcall') ReportAdmin.load(true);
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
   try{ renderAdminSubtabs(view); }catch(e){ console.warn('[관리자 탭]', e); }
   window.scrollTo({top:0});
