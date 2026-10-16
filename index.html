@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-16j';
+var APP_VERSION = '2026-10-16k';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -4215,6 +4215,12 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
   .ra-det-stats{ grid-template-columns:repeat(3, minmax(0,1fr)); } .ra-det-stats b{ font-size:18px; }
 }
 
+
+/* 2026-10-16k 후기가 0건이어도 한눈에 보기 틀은 보이게 */
+.ra-ov-note{ background:#fff4d6; color:#5c3d00; border-radius:12px; padding:12px 16px; margin-bottom:14px; font-size:14px; line-height:1.6; }
+.ra-top5 .ra-none{ margin:6px 0 2px; font-size:14px; color:#b9b8b4; }
+.ra-ftop p.ra-none{ color:var(--rr-ink3); font-size:13.5px; }
+.ra-recent-none{ margin:0; padding:14px 0 4px; border-top:1px solid var(--rr-line); font-size:14px; color:var(--rr-ink3); }
 </style>
 </head>
 <body>
@@ -10071,18 +10077,20 @@ const ReportAdmin = {
     const back = document.getElementById('ra-back'); if(back) back.hidden = this.view !== 'detail';
     const title = document.getElementById('ra-title'); if(title) title.textContent = this.view === 'detail' ? `면접 후기 · ${this.field === 'all' ? '전체 분야' : rrFieldName(this.field)}` : '면접 후기 한눈에 보기';
     const sub = document.getElementById('ra-sub'); if(sub) sub.textContent = this.view === 'detail' ? '왼쪽에서 고르고, 가운데 목록을 누르면 오른쪽에 자세히 나와요.' : '분야 카드나 질문을 누르면 자세히 볼 수 있어요.';
-    if(!(this.rows||[]).length){ body.innerHTML = `<div class="ra-empty"><b>아직 들어온 면접 후기가 없어요</b><p>면접자가 홈 팝업이나 내 메뉴 → 면접 질문 남기기로 남기면 여기에 분야별로 모여요.<br>전화로 들은 후기는 오른쪽 위 <b>전화 후기 입력</b>으로 넣을 수 있어요.</p></div>`; return; }
+    if(!(this.rows||[]).length && this.view === 'detail'){ body.innerHTML = `<div class="ra-empty"><b>아직 들어온 면접 후기가 없어요</b><p>면접자가 홈 팝업이나 내 메뉴 → 면접 질문 남기기로 남기면 여기에 분야별로 모여요.<br>전화로 들은 후기는 오른쪽 위 <b>전화 후기 입력</b>으로 넣을 수 있어요.</p></div>`; return; }
     body.innerHTML = this.view === 'detail' ? this.detailHtml() : this.overviewHtml();
   },
   /* ---------- C안: 한눈에 보기 ---------- */
   overviewHtml(){
-    const rows = this.periodRows();
-    if(!rows.length) return `<div class="ra-empty"><b>이 기간에 들어온 후기가 없어요</b><p>기간을 '전체'로 바꿔 보세요.</p></div>`;
+    const rows = this.periodRows(), none = !(this.rows||[]).length;
+    const notice = none ? `<div class="ra-ov-note"><b>아직 들어온 면접 후기가 없어요.</b> 면접자가 홈 팝업이나 내 메뉴 → 면접 질문 남기기로 남기거나, 전화로 들은 후기를 <b>전화 후기 입력</b>으로 넣으면 아래 칸이 채워져요.</div>`
+      : (!rows.length ? `<div class="ra-ov-note"><b>이 기간에 들어온 후기가 없어요.</b> 기간을 '전체 기간'으로 바꿔 보세요.</div>` : '');
     const gs = this.groups(rows); this._top = gs.slice(0,5);
     const max = Math.max(1, ...this._top.map(g=>g.who.size));
     const top = `<section class="ra-top5"><div class="ra-top5-h"><h3>가장 많이 나온 질문 TOP 5</h3><span>받았다고 남긴 사람 수 기준 · ${this.period ? `최근 ${this.period}일` : '전체 기간'}</span></div>
       ${this._top.map((g,i)=>`<button type="button" class="ra-top5-row" onclick="ReportAdmin.openTop(ReportAdmin._top[${i}].key)"><b class="rk${i<3?' hi':''}">${i+1}</b><span class="tq"><span>${escapeHtml(g.q)}</span><small>${escapeHtml(rrFieldName(g.field))} · ${escapeHtml(this.typeName(g.type))}</small></span><span class="bar" aria-hidden="true"><i style="width:${Math.round(g.who.size/max*100)}%"></i></span><span class="tn">${g.who.size}명</span></button>`).join('') || '<p class="ra-none">아직 질문이 없어요</p>'}</section>`;
-    const fids = RR_FIELD_IDS.filter(id=>rows.some(r=>r.field_id===id));
+    let fids = RR_FIELD_IDS.filter(id=>rows.some(r=>r.field_id===id));
+    if(!fids.length) fids = ['assembly','council','court'];
     const cards = fids.map(id=>{
       const fr = rows.filter(r=>r.field_id===id), fg = gs.filter(g=>g.field===id);
       const c = k=>fr.filter(r=>r.result===k).length, n = fr.length || 1;
@@ -10096,8 +10104,8 @@ const ReportAdmin = {
         <button type="button" class="ra-fgo" onclick="ReportAdmin.openField('${id}')">${escapeHtml(rrFieldName(id))} 질문 전체 보기 →</button></article>`;
     }).join('');
     const recent = rows.slice(0,6).map(r=>{ const qs = r.questions||[];
-      return `<button type="button" class="ra-rrow" onclick="ReportAdmin.openReport(${r.id})"><span class="w">${this.when(r.created_at)}</span><b>${escapeHtml(this.who(r))}${r.source==='phone'?' <i class="ra-src phone">전화</i>':''}${this.isNew(r)?' <i class="ra-new">새 후기</i>':''}</b><span class="q">${escapeHtml(rrFieldName(r.field_id))}${qs.length ? ` · “${escapeHtml(String(qs[0].q||'').slice(0,40))}”${qs.length>1?` 외 ${qs.length-1}개`:''}` : ' · 질문 없음'}</span>${this.resChip(r.result)}</button>`; }).join('');
-    return top + `<div class="ra-fcards">${cards}</div>` + `<section class="ra-recent"><div class="ra-recent-h"><h3>최근 들어온 후기</h3><button type="button" class="ra-link" onclick="ReportAdmin.go('detail',{ field:'all', mode:'people', id:null, key:null, resetType:true })">사람별로 모두 보기 →</button></div>${recent}</section>`;
+      return `<button type="button" class="ra-rrow" onclick="ReportAdmin.openReport(${r.id})"><span class="w">${this.when(r.created_at)}</span><b>${escapeHtml(this.who(r))}${r.source==='phone'?' <i class="ra-src phone">전화</i>':''}${this.isNew(r)?' <i class="ra-new">새 후기</i>':''}</b><span class="q">${escapeHtml(rrFieldName(r.field_id))}${qs.length ? ` · “${escapeHtml(String(qs[0].q||'').slice(0,40))}”${qs.length>1?` 외 ${qs.length-1}개`:''}` : ' · 질문 없음'}</span>${this.resChip(r.result)}</button>`; }).join('') || '<p class="ra-none ra-recent-none">아직 들어온 후기가 없어요. 들어오면 여기에 최근 순서로 쌓여요.</p>';
+    return notice + top + `<div class="ra-fcards">${cards}</div>` + `<section class="ra-recent"><div class="ra-recent-h"><h3>최근 들어온 후기</h3><button type="button" class="ra-link" onclick="ReportAdmin.go('detail',{ field:'all', mode:'people', id:null, key:null, resetType:true })">사람별로 모두 보기 →</button></div>${recent}</section>`;
   },
   /* ---------- B안: 상세 (거르기 / 목록 / 상세) ---------- */
   detailHtml(){
