@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-19c';
+var APP_VERSION = '2026-10-19d';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -4990,7 +4990,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <div class="admin-view" id="admin-view-realset">
         <div class="admin-view-head">
           <div><h2>실전 세트 · 자기소개 코치</h2>
-          <p>수강생(관리자 제외)마다 <b>국회 실전 세트</b>를 몇 번 봤는지, 최근 점수와 15분 초과 여부, 면접관 종합 의견을 한눈에 봐요. <b>1분 자기소개 코치</b>로 대본을 몇 번 만들고 따라 말했는지도 함께 보여요. 줄을 누르면 그 사람의 실전 세트 기록이 펼쳐져요.</p></div>
+          <p>수강생(관리자 제외)마다 <b>실전 세트</b>(분야별)를 몇 번 봤는지, 최근 점수와 15분 초과 여부, 면접관 종합 의견을 한눈에 봐요. <b>1분 자기소개 코치</b>로 대본을 몇 번 만들고 따라 말했는지도 함께 보여요. 줄을 누르면 그 사람의 실전 세트 기록이 펼쳐져요.</p></div>
           <div class="beta-head-btns"><button class="btn-manage" onclick="loadRealSetView(true)">새로 고침</button></div>
         </div>
         <div class="live-note" id="rs-note" style="display:none;"></div>
@@ -5650,7 +5650,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
 
     <p class="result-print-foot">StenoTalk AI · 한국AI속기사협회 AI 모의면접 리포트 — 질문 유형별 면접 기준과 모범답안 요점으로 채점한 참고 결과예요. 실제 면접에서는 내 경험과 생각을 진솔하게 전하는 것이 가장 중요해요.</p>
     <div class="panel set-review-panel" id="set-review-panel" hidden>
-      <div class="section-title"><span>면접관 종합 의견 <small class="sr-tag">국회 실전 세트</small></span><span class="sr-src" id="sr-src"></span></div>
+      <div class="section-title"><span>면접관 종합 의견 <small class="sr-tag" id="sr-tag">실전 세트</small></span><span class="sr-src" id="sr-src"></span></div>
       <p class="sr-headline" id="sr-headline"></p>
       <div class="sr-slots" id="sr-slots"></div>
       <div class="sr-grid">
@@ -5744,7 +5744,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
             <div class="opt" style="grid-column:1/-1;">
               <div class="opt-lbl">면접 구성 <span class="opt-new">국회 실전 세트</span></div><div class="opt-sub" id="realset-sub">실전 세트는 실제 국회 면접처럼 정해진 순서의 7문항을 <b>15분 안에</b> 진행해요. 답변마다 시간 제한은 없어요. 다 말씀하신 뒤 <b>답변 완료</b>를 누르면 다음 질문으로 넘어가요. 15분이 지나면 마지막 질문으로 넘어가요.</div>
               <div class="chip-row" id="chip-realset"><button type="button" class="chip sel" data-val="normal" onclick="selectChip(this,'realset')"><i class="ck">✓</i>일반 면접</button><button type="button" class="chip" data-val="set" onclick="selectChip(this,'realset')"><i class="ck">✓</i>실전 세트 (15분)</button></div>
-              <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li>국회 지식</li><li>국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
+              <ol class="realset-steps" id="realset-steps" hidden><li>1분 자기소개</li><li>지원동기</li><li class="rs-know">국회 지식</li><li class="rs-know">국회 지식</li><li>속기 실무 상황</li><li id="realset-step6">경험 질문</li><li>마지막 할 말</li></ol>
             </div>
           </div>
           <div id="setup-std-options" class="opt-pair">
@@ -11035,8 +11035,8 @@ function renderHomeExtras(history, isAdmin, expired){
   const f = state.dashField ? FIELDS.find(x=>x.id===state.dashField) : null;
   if(!f || expired){ reco.style.display = 'none'; return; }
   reco.style.display = '';
-  const isAssembly = f.id === 'assembly';
-  const btns = `<div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary" onclick="startRecommendedSet()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>이 세트로 시작</button>${isAssembly?`<button class="d3-btn d3-btn-ghost" onclick="startRealSetFromHome()">실전 세트 (국회 형식)</button>`:''}<button class="d3-btn-text" type="button" onclick="startSelectedField()">직접 고르기 →</button></div>`;
+  const canSetHome = canRealSet(f.id);
+  const btns = `<div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary" onclick="startRecommendedSet()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>이 세트로 시작</button>${canSetHome?`<button class="d3-btn d3-btn-ghost" onclick="startRealSetFromHome()">실전 세트 (${escapeHtml(realSetCfg(f.id).org)} 형식)</button>`:''}<button class="d3-btn-text" type="button" onclick="startSelectedField()">직접 고르기 →</button></div>`;
   const base = (title, desc, chips, mins)=>`<div class="g4-reco-head"><span class="g4-reco-eyebrow">오늘의 추천 세트</span><span class="g4-reco-time">약 ${mins}분</span></div><h2>${title}</h2><p>${desc}</p>${chips.length?`<div class="g4-reco-chips">${chips.map(c=>`<span>${escapeHtml(c)}</span>`).join('')}</div>`:''}${btns}`;
   const sub = document.getElementById('hero-sub');
   if(history.length < 2){
@@ -11964,7 +11964,7 @@ function openSetup(fieldId){
   document.getElementById('setup-title').textContent = state.selectedField.name+' 면접 준비';
   try{ const ic=document.getElementById('setup-head-ic'); if(ic && state.selectedField.icon){ ic.innerHTML = svg(state.selectedField.icon); } }catch(e){}
   document.getElementById('setup-std-options').style.display = isReview ? 'none' : '';
-  { const rb = document.getElementById('setup-realset-block'); const canSet = fieldId === 'assembly'; if(rb) rb.style.display = canSet ? '' : 'none'; if(!canSet) state.realSet = false; applyRealSetUI(); }
+  { const rb = document.getElementById('setup-realset-block'); const canSet = canRealSet(fieldId); if(rb) rb.style.display = canSet ? '' : 'none'; if(!canSet) state.realSet = false; applyRealSetUI(); }
   state.interviewStyle = 'dialog';
   const reviewNote = document.getElementById('review-setup-note');
   reviewNote.style.display = isReview ? '' : 'none';
@@ -12179,8 +12179,8 @@ function updateSetupSummary(){
   const fu = (state.dialogFollowups===0) ? '꼬리질문 없음' : `꼬리질문 최대 ${state.dialogFollowups||3}개`;
   const cam = (document.getElementById('switch-cam')||{}).checked ? '카메라 켬' : '카메라 끔';
   const hasResume = (state.customQuestions && state.customQuestions.length) || !!state.cvText;
-  const realSet = !isReview && state.realSet && state.selectedField && state.selectedField.id === 'assembly';
-  const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : realSet ? ['국회 실전 세트 7문항 · 15분', fu] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
+  const realSet = !isReview && state.realSet && state.selectedField && canRealSet(state.selectedField.id);
+  const parts = isReview ? [`복습 질문 ${state.questionCount||0}개`] : realSet ? [`${curRealSetName()} 7문항 · 15분`, fu] : [`기본 질문 ${state.questionCount||5}개`, fu, `난이도 ${state.difficulty||'중'}`];
   parts.push(`진행 방식 ${pr}`, cam); if(state.timedMode==='real' && !realSet) parts.push('실전 시간 제한'); if(hasResume) parts.push('서류 반영');
   el.textContent = parts.join(' · ');
   const ms = document.getElementById('setup-ms-config'); if(ms) ms.textContent = isReview ? `복습 ${state.questionCount||0}개` : realSet ? '실전 세트' : `질문 ${state.questionCount||5}개`;
@@ -13540,11 +13540,13 @@ function selectChip(el,type){
 }
 /* 국회 실전 세트: 켜면 질문 수·난이도를 숨기고(순서·문항 고정) 답변 시간을 "실전"으로 고정. 끄면 전에 고른 답변 시간으로 돌아감 */
 function applyRealSetUI(){
-  const on = !!state.realSet && !!(state.selectedField && state.selectedField.id === 'assembly');
+  const on = !!state.realSet && !!(state.selectedField && canRealSet(state.selectedField.id));
+  const rsc = realSetCfg(state.selectedField ? state.selectedField.id : '') || realSetCfg('assembly');
   document.querySelectorAll('#chip-realset .chip').forEach(c=>c.classList.toggle('sel', (c.dataset.val==='set') === on));
   const steps = document.getElementById('realset-steps'); if(steps) steps.hidden = !on;
-  { const nb = document.querySelector('#setup-realset-block .opt-new'); if(nb) nb.hidden = !on; }
-  { const rs = document.getElementById('realset-sub'); if(rs){ if(!rs.dataset.setHtml) rs.dataset.setHtml = rs.innerHTML; rs.innerHTML = on ? rs.dataset.setHtml : '일반 면접은 아래에서 고른 질문 수·난이도로 진행해요. <b>국회 실전 세트</b>를 고르면 실제 국회 면접 순서로 7문항을 15분 안에 진행해요.'; } }
+  { const nb = document.querySelector('#setup-realset-block .opt-new'); if(nb){ nb.hidden = !on; nb.textContent = rsc.org + ' 실전 세트'; } }
+  document.querySelectorAll('#realset-steps .rs-know').forEach(li=>{ li.textContent = rsc.know; });
+  { const rs = document.getElementById('realset-sub'); if(rs){ if(!rs.dataset.setHtml) rs.dataset.setHtml = rs.innerHTML; rs.innerHTML = on ? rs.dataset.setHtml.replace('실제 국회 면접', '실제 ' + escapeHtml(rsc.org) + ' 면접') : `일반 면접은 아래에서 고른 질문 수·난이도로 진행해요. <b>${escapeHtml(rsc.org)} 실전 세트</b>를 고르면 실제 ${escapeHtml(rsc.org)} 면접 순서로 7문항을 15분 안에 진행해요.`; } }
   const std = document.getElementById('setup-std-options');
   const isReview = state.selectedField && state.selectedField.id === 'review';
   if(std) std.style.display = (isReview || on) ? 'none' : '';
@@ -14307,7 +14309,7 @@ const RubricPoints = {
   load(){
     if(this.map) return Promise.resolve(true);
     if(this.loading) return this.loading;
-    this.loading = fetch('rubric-points.json?v=20261019', { cache:'force-cache' }).then(r=>r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status))).then(arr=>{
+    this.loading = fetch('rubric-points.json?v=20261019d', { cache:'force-cache' }).then(r=>r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status))).then(arr=>{
       const m = new Map(); (arr||[]).forEach(x=>{ if(x && x.id != null) m.set(Number(x.id), x); }); this.map = m; return true;
     }).catch(e=>{ console.warn('[채점 포인트] 불러오지 못해 모범답안 자동 분해로 채점해요', e && e.message); this.loading = null; return false; });
     return this.loading;
@@ -15020,7 +15022,7 @@ function lv3Apply(on){
   if(rh3Iv){ clearInterval(rh3Iv); rh3Iv = null; }
   const t = document.getElementById('rh3-title'); if(t && state.selectedField) t.textContent = `${state.selectedField.name} 라이브 면접`;
   const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '질문이 끝나면 자동으로 답변을 듣고, 다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어가요. 이 면접은 채점돼요.';
-  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = state.dialogRealSet ? '국회 실전 세트 · 다 말하면 "답변 완료" · 전체 15분' : state.timedMode === 'real' ? '실전 모드 · 자기소개 60초 · 답변 90초 · 다 말하면 "답변 완료"' : '권장 답변 시간 30초~1분 · 다 말하면 "답변 완료"';
+  const qf = document.getElementById('rh3-qfoot-text'); if(qf) qf.textContent = state.dialogRealSet ? `${curRealSetName()} · 다 말하면 "답변 완료" · 전체 15분` : state.timedMode === 'real' ? '실전 모드 · 자기소개 60초 · 답변 90초 · 다 말하면 "답변 완료"' : '권장 답변 시간 30초~1분 · 다 말하면 "답변 완료"';
   if(state.currentUser){ const n = document.getElementById('nav-username-rh3'); if(n) n.textContent = state.currentUser.name || ''; const av = document.getElementById('rh3-avatar'); if(av) av.textContent = (state.currentUser.name||'?').slice(0,1); }
   const cp = document.getElementById('cam-preview'); if(cp) cp.classList.remove('folded'); const fb = document.getElementById('lv3-fold'); if(fb) fb.textContent = '접기';
   lv3 = { listenStart:null, lastSec:0, phase:'' };
@@ -15031,7 +15033,7 @@ function lv3Sync(){
   if(!sec || !sec.classList.contains('lv3') || !sec.classList.contains('active') || state.interviewMode !== 'dialog'){ if(lv3Iv){ clearInterval(lv3Iv); lv3Iv = null; } return; }
   // 진행: "질문 i / N"
   const pt = (document.getElementById('iv-progress')||{}).textContent || '';
-  const m = pt.match(/(\d+)\s*\/\s*(\d+)/); const isSet = !!(state.dialogRealSet || (state.realSet && state.selectedField && state.selectedField.id === 'assembly')); const i = m ? +m[1] : 0, n = m ? +m[2] : (isSet ? 7 : (state.questionCount||5));
+  const m = pt.match(/(\d+)\s*\/\s*(\d+)/); const isSet = !!(state.dialogRealSet || (state.realSet && state.selectedField && canRealSet(state.selectedField.id))); const i = m ? +m[1] : 0, n = m ? +m[2] : (isSet ? 7 : (state.questionCount||5));
   const badge = (document.getElementById('iv-source-badge')||{}).textContent || '';
   const isFu = /꼬리/.test(badge), isCustom = /자기소개서/.test(badge);
   const ql = document.getElementById('rh3-qlabel'); const qn = document.getElementById('rh3-qno');
@@ -15099,9 +15101,9 @@ function closeRh3UserMenu(){ const m = document.getElementById('rh3-user-menu'),
 document.addEventListener('click', (e)=>{ const u = document.querySelector('#screen-interview .d3-user'); if(u && !u.contains(e.target)) closeRh3UserMenu(); });
 /** 라이브 면접 진행 순서 3단계 (준비 창·리허설 완료 창에서 같이 사용) */
 function readyStepsHtml(){
-  const isSet = !!(state.realSet && state.selectedField && state.selectedField.id === 'assembly');
+  const isSet = !!(state.realSet && state.selectedField && canRealSet(state.selectedField.id));
   return [
-    ['면접관이 인사와 함께 질문해요', isSet ? '국회 실전 순서로 7문항, 전체 15분이에요.' : '질문이 끝나면 자동으로 듣기 시작해요.'],
+    ['면접관이 인사와 함께 질문해요', isSet ? `${(realSetCfg(state.selectedField.id)||{}).org} 실전 순서로 7문항, 전체 15분이에요.` : '질문이 끝나면 자동으로 듣기 시작해요.'],
     ['바로 말로 답하세요', '마이크 버튼은 누르지 않아도 돼요. 잠깐 멈춰도 넘어가지 않아요.'],
     ['다 말했으면 "답변 완료 · 다음으로"', '버튼을 눌러야 면접관이 다음 질문을 해요.'],
   ].map((x,k)=>`<div class="rs-step"><span class="rs-no">${k+1}</span><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join('')
@@ -15714,7 +15716,7 @@ function startDialogInterview(){
   state.answerScores=[]; state.answerFeedback=[]; state.answerTexts=[]; state.answerDelivery=[]; state.pendingGrades=[]; state.followupInserted=true;
   state.interviewQuestions = []; state.dialogTranscript = [];
   state.savedRecordId = null; state.saveDone = false; state.lastSaveArgs = null; state.savePayload = null; setSaveBanner(null); state.quietHintShown = false;
-  state.dialogRealSet = !!state.realSet && state.selectedField.id === 'assembly';
+  state.dialogRealSet = !!state.realSet && canRealSet(state.selectedField.id);
   Activity.log('interview_start', Object.assign({ field: state.selectedField.name, mode:'dialog' }, state.dialogRealSet ? { set:'real' } : {}));
   Activity.setPresence('interview', { field: state.selectedField.name, mode:'dialog', q:0 });
   applyInterviewModeUI();
@@ -15833,11 +15835,11 @@ async function runDialogInterview(){
     manualEnd: true,   // 2026-10-12: 말이 멈춰도 자동으로 넘기지 않고, 면접자가 "답변 완료"를 눌러야 다음 질문으로 (한 답변 안전장치 5분)
   };
   // 국회 실전 세트: 순서 고정 7문항 · 전체 15분 · 실전 시간 제한
-  const realSet = !!state.realSet && state.selectedField.id === 'assembly';
+  const realSet = !!state.realSet && canRealSet(state.selectedField.id);
   state.dialogRealSet = realSet;
   if(realSet){ opt.realSet = true; opt.realMode = false; opt.count = 7; opt.setDurationMs = REAL_SET_MS; opt.maxAnswerMs = 5 * 60 * 1000; opt.silenceMs = 7000; }   // 답변별 시간 제한 없음: 말을 마치고 7초 조용하면 다음으로(생각할 틈), 안전장치로 한 답변 최대 5분
   state.dialogRealMode = opt.realMode;
-  if(realSet) tipOnce('realset', '국회 실전 세트예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 답변마다 시간 제한은 없고, 다 말씀하신 뒤 "답변 완료"를 누르면 면접관이 이어서 질문해요. 15분이 지나면 마지막 질문으로 넘어가요.');
+  if(realSet) tipOnce('realset', curRealSetName() + '예요. 실제 면접 순서로 7문항을 15분 안에 진행해요. 답변마다 시간 제한은 없고, 다 말씀하신 뒤 "답변 완료"를 누르면 면접관이 이어서 질문해요. 15분이 지나면 마지막 질문으로 넘어가요.');
   else if(opt.realMode) tipOnce('realmode', '실전 모드예요. 다 말씀하신 뒤 "답변 완료"를 눌러 주세요. 자기소개 60초, 답변 90초가 지나면 끊기고, 10초 동안 말을 시작하지 않으면 다음 질문으로 넘어가요.');
   else tipOnce('dialog', '다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어가요. 말이 잠깐 멈춰도 넘어가지 않으니 천천히 답해도 돼요.');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
@@ -16632,7 +16634,7 @@ async function endInterview(){
   document.getElementById('rs-count').textContent = `${state.currentQ}문항`;
   document.getElementById('result-title').textContent = state.selectedField.name + (state.interviewMode==='dialog' ? ' AI 대화 면접 결과' : ' 모의면접 결과');
   try{
-    const modeChip = document.getElementById('result-mode-chip'); if(modeChip) modeChip.textContent = (state.demoResult ? '시연용 샘플 · ' : '') + (state.interviewMode==='dialog' ? 'AI 대화 면접' : '모의면접') + (state.interviewMode==='dialog' && state.dialogRealSet && !state.demoResult ? ' · 국회 실전 세트' + (StenoLoop.stats && StenoLoop.stats.setTimeUp ? ' (15분 초과)' : '') : '');
+    const modeChip = document.getElementById('result-mode-chip'); if(modeChip) modeChip.textContent = (state.demoResult ? '시연용 샘플 · ' : '') + (state.interviewMode==='dialog' ? 'AI 대화 면접' : '모의면접') + (state.interviewMode==='dialog' && state.dialogRealSet && !state.demoResult ? ' · ' + curRealSetName() + (StenoLoop.stats && StenoLoop.stats.setTimeUp ? ' (15분 초과)' : '') : '');
     const modeEl = document.getElementById('rs-mode'); if(modeEl) modeEl.textContent = `${state.difficulty||'중'} · ${(typeof AI_GRADING_ENABLED!=='undefined' && AI_GRADING_ENABLED && AiSwitch.on('ai_grading')) ? 'AI 채점' : '규칙 평가'}`;
     const meta = document.getElementById('result-meta'); if(meta){ const d=new Date(); meta.textContent = `${(state.currentUser&&state.currentUser.name)||''} · ${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} · ${state.currentQ}문항 · ${durText(durationLabel)}`; }
   }catch(e){}
@@ -16729,7 +16731,7 @@ function buildSavePayload(durationLabel){
     mode: state.interviewMode === 'dialog' ? 'dialog' : 'classic',
   };
   if(state.nonverbal) rec.nonverbal = state.nonverbal;
-  if(state.interviewMode === 'dialog' && state.dialogRealSet){ rec.set_kind = 'assembly_real'; rec.set_overtime = !!state.setOvertime; if(state.setReview) rec.set_review = state.setReview; }
+  if(state.interviewMode === 'dialog' && state.dialogRealSet){ rec.set_kind = (state.selectedField && canRealSet(state.selectedField.id) ? state.selectedField.id : 'assembly') + '_real'; rec.set_overtime = !!state.setOvertime; if(state.setReview) rec.set_review = state.setReview; }
   const answers = state.interviewQuestions.slice(0, state.currentQ).map((item,i)=>({
     question_index: i,
     question_text: item.q,
@@ -18726,22 +18728,23 @@ function setReviewMiniHtml(row){
   const rv = row.set_review || {};
   const li = arr=>(arr||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
   const slots = (rv.slots||[]).map(s=>`<span class="srm-slot${s.score!=null && s.score<60?' low':''}">${escapeHtml(s.name)} <b>${s.score==null?'–':s.score}</b></span>`).join('');
-  return `<div class="srm"><div class="srm-head"><b>국회 실전 세트</b>${row.set_overtime?'<span class="srm-over">15분 초과</span>':''}<span class="srm-src">${rv.source==='ai'?'AI 면접관 의견':rv.headline?'채점 결과로 쓴 의견':''}</span></div>`
+  return `<div class="srm"><div class="srm-head"><b>${escapeHtml(realSetName(String(row.set_kind||'').replace(/_real$/,'')))}</b>${row.set_overtime?'<span class="srm-over">15분 초과</span>':''}<span class="srm-src">${rv.source==='ai'?'AI 면접관 의견':rv.headline?'채점 결과로 쓴 의견':''}</span></div>`
     + (rv.headline ? `<p class="srm-line">${escapeHtml(rv.headline)}</p>` : '<p class="srm-line">종합 의견이 저장되지 않은 기록이에요.</p>')
     + (slots ? `<div class="srm-slots">${slots}</div>` : '')
     + ((rv.strengths||[]).length || (rv.improvements||[]).length ? `<div class="srm-grid"><div><i>잘한 점</i><ul>${li(rv.strengths)}</ul></div><div><i>보완할 점</i><ul>${li(rv.improvements)}</ul></div></div>` : '')
     + ((rv.next||[]).length ? `<div class="srm-next"><i>다음 연습</i><ol>${li(rv.next)}</ol></div>` : '') + `</div>`;
 }
-const SET_SLOT_ORDER = ['자기소개','지원동기','국회 지식','속기 실무 상황','경험','자기소개서 질문','마지막 할 말'];
+const SET_SLOT_ORDER = ['자기소개','지원동기','국회 지식','지방의회 지식','법원·재판 지식','검찰·수사 지식','피해자 지원 제도','장애 학생 지원','기업 회의·보안','녹취·계약','속기 실무 상황','경험','자기소개서 질문','마지막 할 말'];
 const SET_SLOT_TIP = {
   '자기소개': '1분 자기소개 코치로 대본을 만들고 60초 안에 말하는 연습을 해 보세요.',
-  '지원동기': '왜 하필 국회인지(다른 기관과 다른 점)를 첫 문장으로 말해 보세요.',
+  '지원동기': '왜 하필 이 기관(분야)인지, 다른 곳과 다른 점을 첫 문장으로 말해 보세요.',
   '국회 지식': '질문 준비 화면의 국회 이해 문항으로 용어 정의를 30초씩 말해 보세요.',
   '속기 실무 상황': '첫 행동 → 확인 절차 → 보고 순서로 답하는 연습을 해 보세요.',
   '경험': '상황 → 내가 한 행동 → 결과(숫자) → 배운 점 순서로 다시 말해 보세요.',
   '자기소개서 질문': '자기소개서에 쓴 경험을 기간·역할·결과 숫자로 정리해 두세요.',
   '마지막 할 말': '감사 인사 + 강점 하나 + 각오로 30초 안에 끝내 보세요.',
 };
+['assembly','council','court','prosecution','sunflower','education','corporate','freelance'].forEach(fid=>{ const c = realSetCfg(fid); if(c && !SET_SLOT_TIP[c.know]) SET_SLOT_TIP[c.know] = `질문 준비 화면의 '${c.cat}' 문항으로 핵심 개념을 30초씩 말해 보세요.`; });
 const SetReview = {
   _seq: 0,
   reset(){ this._seq++; const p = document.getElementById('set-review-panel'); if(p) p.hidden = true; },
@@ -18783,6 +18786,7 @@ const SetReview = {
   render(rv, status){
     const p = document.getElementById('set-review-panel'); if(!p || !rv) return;
     p.hidden = false;
+    { const tg = document.getElementById('sr-tag'); if(tg) tg.textContent = curRealSetName(); }
     document.getElementById('sr-headline').textContent = rv.headline || '';
     const src = document.getElementById('sr-src');
     src.className = 'sr-src' + (status === 'loading' ? ' loading' : '');
@@ -18800,7 +18804,7 @@ const SetReview = {
     try{
       const qs = state.interviewQuestions || [];
       const items = qs.map((q,i)=>({ slot_name: q.slotName || (q.custom ? '자기소개서 질문' : ''), q: q.q, answer: String((state.answerTexts||[])[i]||'').slice(0,600), score: (state.answerScores||[])[i] || 0, followup: !!q.followup }));
-      const invoke = sb.functions.invoke('set-review', { body: { field_name: state.selectedField ? state.selectedField.name : '국회 속기사', interview_id: String(state.startTime||''), overall_score: state.lastAverageScore||0, duration_label: durationLabel||'', overtime: !!state.setOvertime, items } });
+      const invoke = sb.functions.invoke('set-review', { body: { field_id: state.selectedField ? state.selectedField.id : 'assembly', field_name: state.selectedField ? state.selectedField.name : '국회 속기사', interview_id: String(state.startTime||''), overall_score: state.lastAverageScore||0, duration_label: durationLabel||'', overtime: !!state.setOvertime, items } });
       const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과')), 40000));
       const { data, error } = await Promise.race([invoke, timeout]);
       if(error) throw new Error(error.message || String(error));
@@ -18817,7 +18821,23 @@ const SetReview = {
 };
 
 function realLimitMs(qText, isFollowup){ if(isFollowup) return 60000; return /자기\s*소개(?!서)/.test(qText||'') ? 60000 : 90000; }
-const REAL_SET_MS = 15 * 60 * 1000;   // 국회 실전 세트 전체 시간
+const REAL_SET_MS = 15 * 60 * 1000;   // 실전 세트 전체 시간 (모든 분야 15분)
+/* 2026-10-19d: 실전 세트를 8개 분야로 넓힘. 칸 이름(기관 지식)은 DB pick_real_set이 분야별로 돌려줌 */
+function realSetCfg(fid){
+  return ({
+    assembly:{ org:'국회', know:'국회 지식', cat:'국회 이해' },
+    council:{ org:'지방의회', know:'지방의회 지식', cat:'지방의회 이해' },
+    court:{ org:'법원', know:'법원·재판 지식', cat:'법원·재판 이해' },
+    prosecution:{ org:'검찰', know:'검찰·수사 지식', cat:'검찰·수사 이해' },
+    sunflower:{ org:'해바라기센터', know:'피해자 지원 제도', cat:'피해자 지원 제도 이해' },
+    education:{ org:'교육 속기', know:'장애 학생 지원', cat:'장애 학생 지원 이해' },
+    corporate:{ org:'기업 속기', know:'기업 회의·보안', cat:'기업 회의·보안 이해' },
+    freelance:{ org:'프리랜서', know:'녹취·계약', cat:'녹취·계약 이해' },
+  })[fid] || null;
+}
+function canRealSet(fid){ return !!realSetCfg(fid); }
+function realSetName(fid){ const c = realSetCfg(fid); return c ? c.org + ' 실전 세트' : '실전 세트'; }
+function curRealSetName(){ return realSetName(state.selectedField ? state.selectedField.id : ''); }
 const StenoLoop = {
   running:false, aborted:false, transcript:[], stats:{}, opt:{},
   async run(opt, onEvent){
