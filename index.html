@@ -10,7 +10,7 @@
 (function(){ try{ if(/\.github\.io$/i.test(location.hostname)){ location.replace('https://dev.sorizavaacademy.com/stenotalk/' + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/stenotalk$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-16l';
+var APP_VERSION = '2026-10-19b';
 </script>
 <title>StenoTalk AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -4579,35 +4579,29 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <p class="pd-lead"><b id="pd-name">회원</b>님, 이 서비스는 <b>서류 합격자 전용</b>이에요. 소리자바 아카데미 교육팀이 서류 합격을 확인한 뒤 연습할 분야를 열어 드려요.</p>
       <ol class="pd-steps">
         <li class="done"><b>회원가입</b><span>완료</span></li>
-        <li class="now"><b>서류 합격 확인</b><span id="pd-step2">합격 증빙 보내기</span></li>
+        <li class="now"><b>서류 합격 확인</b><span id="pd-step2">승인 요청 보내기</span></li>
         <li><b>면접 연습 시작</b><span>승인 후</span></li>
       </ol>
       <section class="pd-apply" id="pd-apply" aria-labelledby="pd-apply-t">
         <h2 class="pd-sub" id="pd-apply-t">여기서 바로 승인 요청하기</h2>
         <div class="pd-sent" id="pd-ap-sent" hidden></div>
         <div id="pd-apply-form">
-          <p class="pd-req-lead">서류 합격을 확인할 수 있는 화면(합격 문자, 합격자 발표 화면 등)을 올려 주시면 교육팀이 보고 바로 열어 드려요.</p>
+          <p class="pd-req-lead">서류에 합격한 분야를 골라 보내 주시면 교육팀이 확인한 뒤 바로 열어 드려요.</p>
           <label class="pd-lbl" for="pd-ap-field">서류에 합격한 분야</label>
           <select id="pd-ap-field" class="pd-in"></select>
-          <label class="pd-lbl" for="pd-ap-org">기관·직렬</label>
-          <input id="pd-ap-org" class="pd-in" maxlength="80" autocomplete="off" placeholder="예: 국회사무처 속기직 9급, ○○시의회 속기 임기제">
-          <span class="pd-lbl" id="pd-ap-file-lbl">합격 확인 캡처 <small>사진이나 PDF · 6MB까지</small></span>
-          <label class="pd-file"><input type="file" id="pd-ap-file" accept="image/*,application/pdf,.heic,.heif" onchange="Approval.pick(this)" aria-labelledby="pd-ap-file-lbl"><span id="pd-ap-file-name">파일 고르기</span></label>
-          <div class="pd-prev" id="pd-ap-prev" hidden></div>
           <label class="pd-lbl" for="pd-ap-memo">하고 싶은 말 <small>선택</small></label>
           <textarea id="pd-ap-memo" class="pd-in" rows="2" maxlength="500" placeholder="예: 면접일은 10월 30일이에요"></textarea>
-          <p class="pd-privacy">수험번호·생년월일처럼 확인에 필요 없는 정보는 가리고 올려 주세요. 올린 캡처는 교육팀만 볼 수 있고, 확인이 끝나면 지울 수 있어요.</p>
           <button type="button" class="d3-btn d3-btn-primary pd-send" id="pd-ap-send" onclick="Approval.submit()">승인 요청 보내기</button>
         </div>
       </section>
       <section class="pd-req" aria-labelledby="pd-req-t">
         <h2 class="pd-sub" id="pd-req-t">카카오톡으로 보내도 돼요</h2>
-        <p class="pd-req-lead">캡처를 올리기 어렵거나 급하면 소리자바 아카데미 카카오톡 채널로 이름·이메일·합격 기관과 합격 화면 캡처를 보내 주세요.</p>
+        <p class="pd-req-lead">급하면 소리자바 아카데미 카카오톡 채널로 이름·이메일·합격 기관을 보내 주세요.</p>
         <div class="pd-acts">
           <button type="button" class="pd-kakao" id="pd-kakao" onclick="pendingKakao()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡으로 승인 요청하기</button>
           <button type="button" class="d3-btn d3-btn-ghost" id="pd-copy" onclick="copyPendingRequest()">보낼 내용 복사하기</button>
         </div>
-        <p class="pd-copy-hint" id="pd-copy-hint">"보낼 내용 복사하기"를 누른 뒤 카카오톡 채팅창에 붙여 넣고, 합격 화면 캡처를 함께 보내 주세요.</p>
+        <p class="pd-copy-hint" id="pd-copy-hint">"보낼 내용 복사하기"를 누른 뒤 카카오톡 채팅창에 붙여 넣어 주세요.</p>
       </section>
       <div class="pd-acts pd-acts2">
         <button class="d3-btn d3-btn-primary" id="pd-check" onclick="checkPendingApproval(true)">승인됐는지 확인하기</button>
@@ -4618,7 +4612,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         <summary>이용 안내</summary>
         <ul>
           <li><b>서류 합격자만 이용할 수 있어요.</b> 가입만으로는 열리지 않고, 교육팀이 지원 기관의 서류 합격을 확인한 분께만 연습 분야를 열어 드려요.</li>
-          <li><b>합격 확인은 비대면으로 해요.</b> 위에서 합격 문자나 합격자 발표 화면 캡처를 올리거나 카카오톡으로 보내 주세요. 확인이 끝난 캡처는 교육팀이 지워요.</li>
+          <li><b>합격 확인은 비대면으로 해요.</b> 위에서 승인 요청을 보내거나 카카오톡으로 알려 주세요.</li>
           <li><b>합격이 확인된 기관(분야)만 열려요.</b> 다른 기관에도 합격했다면 함께 알려 주세요.</li>
           <li>합격 여부를 확인할 수 없으면 승인되지 않을 수 있어요.</li>
           <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 연습이 막히고, 연습 기록은 지워지지 않아요.</li>
@@ -4912,7 +4906,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <div class="admin-view" id="admin-view-approvals">
         <div class="admin-view-head">
           <div><h2>승인 요청</h2>
-          <p>승인 대기 화면에서 면접자가 올린 서류 합격 증빙이에요. 캡처를 확인하고 <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요. 확인이 끝난 캡처는 <b>캡처 지우기</b>로 지워 주세요.</p></div>
+          <p>승인 대기 화면에서 면접자가 보낸 승인 요청이에요. 분야·기관을 확인하고(캡처가 있으면 함께 보고) <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요. 확인이 끝난 캡처는 <b>캡처 지우기</b>로 지워 주세요.</p></div>
           <button class="btn-manage" onclick="ApprovalAdmin.load(true)">새로 고침</button>
         </div>
         <div class="uf-chips" id="ap-chips"></div>
@@ -5948,7 +5942,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
           <details><summary>마이크가 안 돼요 / "권한이 차단되어 있어요"라고 나와요</summary><p>주소창 왼쪽 자물쇠(또는 ⓘ) 아이콘을 누르고 마이크를 <b>허용</b>으로 바꾼 뒤 새로고침하세요. 줌·팀즈처럼 마이크를 쓰는 다른 프로그램은 닫아 주세요. 윈도우 설정 → 개인 정보 → 마이크에서 "앱이 마이크에 액세스하도록 허용"도 켜져 있어야 해요.</p></details>
           <details><summary>휴대폰으로 해도 되나요?</summary><p>될 수는 있지만 PC를 권장해요. 휴대폰은 반드시 <b>크롬(안드로이드)</b> 또는 <b>사파리(아이폰)</b> 앱에서 직접 주소를 열어 주세요. 카카오톡·네이버·인스타그램 안에서 열린 창에서는 오른쪽 위 ⋮ 또는 공유 버튼 → "다른 브라우저로 열기"를 눌러 주세요.</p></details>
           <details><summary>비밀번호를 잊었어요</summary><p>교육 담당 관리자에게 말씀하시면 임시 비밀번호를 만들어 드려요. 그 비밀번호로 로그인하면 앞으로 쓸 새 비밀번호를 한 번 정할 수 있어요.</p></details>
-          <details><summary>"승인 대기"라고 나오고 면접을 시작할 수 없어요</summary><p>서류 합격자 전용 서비스라, 교육팀이 지원 기관의 서류 합격을 확인한 뒤 해당 면접 분야를 열어 줘요. 승인 대기 화면의 "카카오톡으로 승인 요청하기"로 이름·이메일·합격 기관과 합격 확인 캡처를 보내 주세요.</p></details>
+          <details><summary>"승인 대기"라고 나오고 면접을 시작할 수 없어요</summary><p>서류 합격자 전용 서비스라, 교육팀이 지원 기관의 서류 합격을 확인한 뒤 해당 면접 분야를 열어 줘요. 승인 대기 화면의 "카카오톡으로 승인 요청하기"로 이름·이메일·합격 기관을 보내 주세요.</p></details>
           <details><summary>면접 기록이 안 보여요</summary><p>면접을 끝까지 마쳐야(결과 화면까지) 기록이 저장돼요. 중간에 창을 닫거나 "면접 종료"로 나가면 그때까지의 답변으로 결과가 만들어지지만, 리허설은 저장되지 않아요.</p></details>
         </div>
       </section>
@@ -9185,14 +9179,14 @@ function pendingRequestText(){
   const u = state.currentUser || {};
   const note = String(u.note || '').trim();
   return ['[StenoTalk 면접 연습 승인 요청]', `이름: ${u.name || ''}`, `가입 이메일: ${u.email || ''}`,
-          `서류 합격 기관·직렬: ${note && !/서류 결과 확인 중/.test(note) ? note : '(여기에 적어 주세요)'}`, '합격 확인 자료: (캡처를 함께 보내 주세요)'].join('\n');
+          `서류 합격 기관·직렬: ${note && !/서류 결과 확인 중/.test(note) ? note : '(여기에 적어 주세요)'}`].join('\n');
 }
 async function copyPendingRequest(){
   const text = pendingRequestText(), hint = document.getElementById('pd-copy-hint');
   let ok = false;
   try{ if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); ok = true; } }catch(_){}
   if(!ok){ try{ const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove(); }catch(_){} }
-  if(hint){ hint.className = 'pd-copy-hint' + (ok ? ' ok' : ''); hint.textContent = ok ? '복사했어요. 카카오톡 채팅창에 붙여 넣고 합격 화면 캡처를 함께 보내 주세요.' : '복사가 안 되는 환경이에요. 이름·이메일·합격 기관을 직접 적어 보내 주세요.'; }
+  if(hint){ hint.className = 'pd-copy-hint' + (ok ? ' ok' : ''); hint.textContent = ok ? '복사했어요. 카카오톡 채팅창에 붙여 넣어 주세요.' : '복사가 안 되는 환경이에요. 이름·이메일·합격 기관을 직접 적어 보내 주세요.'; }
   showToast(ok ? '보낼 내용을 복사했어요' : '복사하지 못했어요. 직접 적어 보내 주세요', ok ? undefined : 'warn');
 }
 let _pendingChecking = false;
@@ -9880,19 +9874,19 @@ const Approval = {
     if(!sel.options.length) sel.innerHTML = `<option value="">분야를 골라 주세요</option>` + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
     const r = this.last, sent = $('pd-ap-sent'), form = $('pd-apply-form'), step = $('pd-step2');
     const pending = r && r.status === 'submitted' && !this.showForm;
-    if(step) step.textContent = pending ? '교육팀 확인 중' : '합격 증빙 보내기';
+    if(step) step.textContent = pending ? '교육팀 확인 중' : '승인 요청 보내기';
     if(pending){
       sent.hidden = false; form.hidden = true;
       const at = new Date(r.created_at);
       sent.innerHTML = `<p class="pd-sent-t"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10.5l3.2 3L15 6.5"/></svg>승인 요청을 보냈어요</p>
-        <p class="pd-sent-d">${escapeHtml(rrFieldName(r.field_id))} · ${escapeHtml(r.org||'')}<br><small>${at.getMonth()+1}월 ${at.getDate()}일 ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}에 보냄${r.proof_path ? ' · 캡처 1개' : ''}</small></p>
+        <p class="pd-sent-d">${escapeHtml(rrFieldName(r.field_id))}${r.org && r.org !== rrFieldName(r.field_id) ? ' · '+escapeHtml(r.org) : ''}<br><small>${at.getMonth()+1}월 ${at.getDate()}일 ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}에 보냄${r.proof_path ? ' · 캡처 1개' : ''}</small></p>
         <p class="pd-sent-n">교육팀이 확인하면 이 화면이 저절로 바뀌어요. 급하면 아래 카카오톡으로 알려 주세요.</p>
         <button type="button" class="rr-link" onclick="Approval.again()">잘못 보냈어요 · 다시 보내기</button>`;
     }else{
       sent.hidden = !(r && r.status === 'rejected' && r.admin_note);
       if(!sent.hidden) sent.innerHTML = `<p class="pd-sent-t warn">다시 보내 주세요</p><p class="pd-sent-n">${escapeHtml(r.admin_note)}</p>`;
       form.hidden = false;
-      if(r && !sel.value){ sel.value = r.field_id || ''; const o = $('pd-ap-org'); if(o && !o.value) o.value = r.org || ''; }
+      if(r && !sel.value){ sel.value = r.field_id || ''; }
     }
   },
   again(){ this.showForm = true; this.render(); },
@@ -9919,22 +9913,16 @@ const Approval = {
   },
   async submit(){
     const $ = id=>document.getElementById(id);
-    const field = $('pd-ap-field').value, org = $('pd-ap-org').value.trim(), memo = $('pd-ap-memo').value.trim();
+    const field = $('pd-ap-field').value, memo = $('pd-ap-memo').value.trim();
+    const org = field ? rrFieldName(field) : '';   // 2026-10-19: 기관·직렬 칸 삭제 — 고른 분야 이름을 그대로 저장 (DB에서 org는 필수 칸)
     if(!field){ showToast('서류에 합격한 분야를 골라 주세요', 'warn'); $('pd-ap-field').focus(); return; }
-    if(org.length < 2){ showToast('기관·직렬을 적어 주세요 (예: 국회사무처 속기직)', 'warn'); $('pd-ap-org').focus(); return; }
-    if(!this.file){ showToast('합격을 확인할 수 있는 캡처를 올려 주세요', 'warn'); return; }
     const btn = $('pd-ap-send'); btn.disabled = true; btn.textContent = '보내는 중…';
     try{
-      const f = await this.shrink(this.file);
-      if(f.size > 6*1024*1024) throw new Error('too_big');
-      const ext = (f.name.match(/\.(\w+)$/) || [,'jpg'])[1].toLowerCase().replace('jpeg','jpg');
-      const path = `${state.currentUser.id}/${Date.now()}.${ext}`;
-      const up = await sb.storage.from('approval-proof').upload(path, f, { contentType: f.type || (ext === 'pdf' ? 'application/pdf' : 'image/'+ext), upsert:false });
-      if(up.error) throw up.error;
-      const { error } = await sb.from('approval_requests').insert({ user_id: state.currentUser.id, field_id: field, org, memo: memo || null, proof_path: path });
+      // 2026-10-19: 합격 확인 캡처 없이 분야·기관만으로 요청 (캡처 칸 삭제)
+      const { error } = await sb.from('approval_requests').insert({ user_id: state.currentUser.id, field_id: field, org, memo: memo || null, proof_path: null });
       if(error) throw error;
       try{ Activity.log('approval_request', { field }); }catch(_){}
-      this.file = null; this.showForm = false; $('pd-ap-file').value = ''; $('pd-ap-file-name').textContent = '파일 고르기'; $('pd-ap-prev').hidden = true;
+      this.showForm = false;
       await this.load(); this.render();
       showToast('승인 요청을 보냈어요. 확인되면 화면이 저절로 바뀌어요.', 'ok');
     }catch(e){
@@ -9971,7 +9959,7 @@ const ApprovalAdmin = {
       const u = users[r.user_id] || {}; const url = r.proof_path ? this.urls[r.proof_path] : null;
       const isPdf = /\.pdf$/i.test(r.proof_path||'');
       const thumb = r.proof_deleted_at ? '<div class="ap-thumb none">캡처 지움</div>'
-        : !r.proof_path ? '<div class="ap-thumb none">캡처 없음</div>'
+        : !r.proof_path ? '<div class="ap-thumb none">캡처 없이<br>요청</div>'
         : !url ? '<div class="ap-thumb none">캡처를 열 수 없음</div>'
         : isPdf ? `<a class="ap-thumb pdf" href="${url}" target="_blank" rel="noopener">PDF 열기</a>`
         : `<a class="ap-thumb" href="${url}" target="_blank" rel="noopener" title="크게 보기"><img src="${url}" alt="${escapeHtml(u.name||'')} 합격 증빙" loading="lazy"></a>`;
@@ -9982,7 +9970,7 @@ const ApprovalAdmin = {
         <div class="ap-main">
           <div class="ap-name">${u.id ? `<a href="javascript:void(0)" class="admin-name-link" onclick="openAdminUserDetail('${u.id}')">${escapeHtml(u.name||'(이름 없음)')}</a>` : '<b>(삭제된 계정)</b>'} ${st} <small>${when}</small></div>
           ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : ''}
-          <dl class="ap-dl"><dt>요청 분야</dt><dd>${escapeHtml(rrFieldName(r.field_id))}</dd><dt>기관·직렬</dt><dd>${escapeHtml(r.org||'')}</dd>${r.memo ? `<dt>남긴 말</dt><dd>${escapeHtml(r.memo)}</dd>` : ''}${r.admin_note ? `<dt>반려 사유</dt><dd>${escapeHtml(r.admin_note)}</dd>` : ''}<dt>지금 열린 분야</dt><dd>${open}</dd></dl>
+          <dl class="ap-dl"><dt>요청 분야</dt><dd>${escapeHtml(rrFieldName(r.field_id))}</dd>${r.org && r.org !== rrFieldName(r.field_id) ? `<dt>기관·직렬</dt><dd>${escapeHtml(r.org)}</dd>` : ''}${r.memo ? `<dt>남긴 말</dt><dd>${escapeHtml(r.memo)}</dd>` : ''}${r.admin_note ? `<dt>반려 사유</dt><dd>${escapeHtml(r.admin_note)}</dd>` : ''}<dt>지금 열린 분야</dt><dd>${open}</dd></dl>
         </div>
         <div class="ap-acts">
           ${r.status !== 'approved' && u.id ? `<button class="btn-manage primary" onclick="ApprovalAdmin.approve(${r.id})">승인 · 분야 열기</button>` : ''}
