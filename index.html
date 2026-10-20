@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20j';
+var APP_VERSION = '2026-10-20k';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -13010,7 +13010,8 @@ const Notice = {
     try{ Activity.log('notice_seen', { notices: ns.map(x=>x.id), replies: rs.map(x=>x.id) }); }catch(_){}
   },
   /** 내 메뉴 → 공지사항: 종 목록을 엶 */
-  openAll(){ this.openPanel(); },
+  // 2026-10-20k: 관리자는 종이 없으므로(목록 패널이 숨겨져 아무 반응이 없던 문제) 관리자 화면 → 공지사항 쓰기로 이동
+  openAll(){ if(state.currentUser && state.currentUser.isAdmin){ try{ openAdminScreen('notices'); }catch(_){} return; } this.openPanel(); },
   /** 관리자 미리 보기: 면접자가 종을 눌렀을 때 보이는 모양 그대로 창으로 */
   show(ns, rs, mode){
     const m = document.getElementById('modal-notice'); if(!m) return;
@@ -13023,7 +13024,7 @@ const Notice = {
   close(){ const m = document.getElementById('modal-notice'); if(m) m.classList.remove('active'); },
   reset(){ clearTimeout(this._t); clearTimeout(this._bt); this.checked = false; this.pending = false; this.cache = null; this.closePanel(); const b = document.getElementById('nt-bubble'); if(b){ b.hidden = true; b.classList.remove('on'); } const w = document.getElementById('nt-bell-wrap'); if(w) w.style.display = 'none'; this.close(); this.paint(); },
 };
-document.addEventListener('click', (e)=>{ const p = document.getElementById('nt-panel'); if(!p || p.hidden) return; const w = document.getElementById('nt-bell-wrap'); if(w && w.contains(e.target)) return; Notice.closePanel(); });
+document.addEventListener('click', (e)=>{ const p = document.getElementById('nt-panel'); if(!p || p.hidden) return; const w = document.getElementById('nt-bell-wrap'); if(w && w.contains(e.target)) return; if(e.target && e.target.closest && e.target.closest('#nt-menu-item')) return; Notice.closePanel(); });   // 내 메뉴 '공지사항'으로 연 목록이 같은 클릭에 바로 닫히던 문제 (2026-10-20k)
 document.addEventListener('keydown', (e)=>{ if(e.key !== 'Escape') return; const p = document.getElementById('nt-panel'); if(p && !p.hidden) Notice.closePanel(); });
 
 /* ---------------- 관리자: 공지사항 쓰기·관리 ---------------- */
