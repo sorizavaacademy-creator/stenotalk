@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20d';
+var APP_VERSION = '2026-10-20e';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -2167,7 +2167,8 @@ var APP_VERSION = '2026-10-20d';
   .fb-card.idea{border-left-color:#3D6BF0;} .fb-card.q{border-left-color:#0E7C5C;} .fb-card.bug{border-left-color:#E39B19;} .fb-card.err{border-left-color:#D92D20;}
   .fb-card.new{background:#FFFDF7;}
   .fb-card-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
-  .fb-kind{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:#EDF1F7;color:#4C5A74;} .fb-kind.idea{background:#EEF3FF;color:#2C55D6;} .fb-kind.q{background:#E6F7F1;color:#0E7C5C;} .fb-kind.bug{background:#FFF4E5;color:#B45309;} .fb-kind.err{background:#FDECEC;color:#B42318;}
+  .fb-kind{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:#EDF1F7;color:#4C5A74;} .fb-kind.idea{background:#EEF3FF;color:#2C55D6;} .fb-kind.q{background:#E6F7F1;color:#0E7C5C;} .fb-kind.bug{background:#FFF4E5;color:#B45309;} .fb-kind.err{background:#FDECEC;color:#B42318;} .fb-kind.perm{background:#F3F1EC;color:#6B5E3C;}
+  .fb-hint{margin-top:6px;font-size:12.5px;line-height:1.55;color:#5c5a52;background:#f6f5f1;border-radius:8px;padding:8px 10px;word-break:keep-all;}
   .fb-who b{font-size:13.5px;color:#1B2740;} .fb-who small{margin-left:6px;font-family:var(--font-mono);font-size:11.5px;color:#7C879B;}
   .fb-when{font-size:12px;color:#7C879B;margin-left:auto;white-space:nowrap;}
   .fb-status{width:auto !important;flex:0 0 auto;padding:5px 28px 5px 10px !important;font-size:12.5px;font-weight:700;border-radius:999px !important;} .fb-status.done{color:#0E7C5C;background:#E6F7F1;} .fb-status.mid{color:#B45309;background:#FFF4E5;}
@@ -2540,7 +2541,7 @@ var APP_VERSION = '2026-10-20d';
   @media(max-width:860px){ #screen-admin.v3 .fb-stats{grid-template-columns:1fr !important;} #screen-admin.v3 .live-stats{grid-template-columns:repeat(2,1fr) !important;} }
   #screen-admin.v3 .fb-card{border:1px solid var(--c-line);border-radius:var(--r-card);box-shadow:none;border-left:1px solid var(--c-line);padding:20px;background:#fff;}
   #screen-admin.v3 .fb-card.new{background:#fff;border-color:#e9b9a7;box-shadow:inset 3px 0 0 var(--c-accent);}
-  #screen-admin.v3 .fb-kind{height:24px;display:inline-flex;align-items:center;padding:0 8px;border-radius:6px;border:1px solid var(--c-line-strong);background:#fff;color:var(--c-ink-2);font-size:12px;} #screen-admin.v3 .fb-kind.bug{color:var(--c-accent-ink);border-color:#f3c9b8;} #screen-admin.v3 .fb-kind.err{color:var(--c-danger);border-color:#e7b7b1;} #screen-admin.v3 .fb-kind.idea, #screen-admin.v3 .fb-kind.q{color:var(--c-info);border-color:#c9d8e7;}
+  #screen-admin.v3 .fb-kind{height:24px;display:inline-flex;align-items:center;padding:0 8px;border-radius:6px;border:1px solid var(--c-line-strong);background:#fff;color:var(--c-ink-2);font-size:12px;} #screen-admin.v3 .fb-kind.bug{color:var(--c-accent-ink);border-color:#f3c9b8;} #screen-admin.v3 .fb-kind.err{color:var(--c-danger);border-color:#e7b7b1;} #screen-admin.v3 .fb-kind.perm{color:#6B5E3C;border-color:#ddd5c2;background:#faf8f3;} #screen-admin.v3 .fb-hint{font-size:13px;} #screen-admin.v3 .fb-kind.idea, #screen-admin.v3 .fb-kind.q{color:var(--c-info);border-color:#c9d8e7;}
   #screen-admin.v3 .fb-who b{font-size:15px;} #screen-admin.v3 .fb-who small{font-family:inherit;} #screen-admin.v3 .fb-when{margin-left:0;} 
   .fb-state-badge{margin-left:auto;height:24px;display:inline-flex;align-items:center;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600;background:#efeeea;color:var(--c-ink-2);} .fb-state-badge.new{background:var(--c-accent-soft);color:var(--c-accent-ink);} .fb-state-badge.mid{background:var(--c-warn-bg);color:var(--c-warn);} .fb-state-badge.done{background:var(--c-ok-bg);color:var(--c-ok);}
   #screen-admin.v3 .fb-msg{font-size:15px;} #screen-admin.v3 .fb-meta{font-size:13px;}
@@ -3668,6 +3669,9 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .mb-pop{margin-top:10px;background:#fff;border:1px solid #e6e4e0;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13.5px;color:#1c1c1e;}
 .mb-pop .mb-tg{flex:none;width:38px;height:22px;border-radius:999px;background:#2f7a4a;position:relative;} .mb-pop .mb-tg::after{content:'';position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;}
 .mb-pop .mb-sel{flex:none;font-size:12.5px;font-weight:700;color:#2f7a4a;background:#e7f3ec;border-radius:6px;padding:3px 8px;}
+.mb-pop .mb-ic{width:24px;height:24px;margin-right:8px;vertical-align:middle;} .mb-pop > span:first-child{display:inline-flex;align-items:center;min-width:0;word-break:keep-all;}
+.mb-win{background:#fff;border:1px solid #d3d0ca;border-radius:10px;padding:10px 12px 12px;} .mb-win-h{font-size:12.5px;font-weight:700;color:#45454a;padding-bottom:2px;word-break:keep-all;}
+.mb-ask{font-size:13px;color:#45454a;background:#fff;border:1px solid #d3d0ca;border-radius:10px;padding:10px 12px;word-break:keep-all;}
 .mb-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
 .mb-steps li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.55;color:#1c1c1e;word-break:keep-all;}
 .mb-steps li i{flex:none;width:24px;height:24px;border-radius:50%;background:#1f1f21;color:#fff;font-style:normal;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;line-height:1;margin-top:1px;}
@@ -4478,7 +4482,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <p class="mb-state" id="mb-state" aria-live="polite"></p>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="MicGuard.close()">닫기</button>
+      <button class="btn btn-outline" id="mb-close" onclick="MicGuard.dismiss()">닫기</button>
       <button class="btn btn-solid" id="mb-recheck" onclick="MicGuard.recheck()">바꿨어요 · 다시 확인</button>
     </div>
     <a class="mb-more" id="mb-more" onclick="MicGuard.close(); if(MicGuard.kind!=='cam') openMicHelp()">그래도 안 되면: 자세한 해결 방법 보기</a>
@@ -12259,7 +12263,7 @@ async function startCamPreview(){
   }catch(err){
     console.warn('[카메라 미리보기 실패]', err);
     const name = err && err.name || '';
-    if(name==='NotAllowedError'){ if(msg){ msg.innerHTML = '카메라 권한이 차단되어 있어요 · <a href="javascript:void(0)" onclick="MicGuard.open(\'setup\', \'cam\')" style="text-decoration:underline;color:#fff;font-weight:700;">푸는 방법 보기</a><br><small>면접은 카메라 없이도 진행돼요</small>'; } box.classList.add('off'); setCamPill('차단됨','warn'); try{ if(!MicGuard.camShown){ MicGuard.camShown = true; MicGuard.open('setup', 'cam'); } }catch(_){} return; }
+    if(name==='NotAllowedError'){ try{ MicGuard.lastCamErr = err; }catch(_){} if(msg){ msg.innerHTML = '카메라가 막혀 있어요 · <a href="javascript:void(0)" onclick="MicGuard.open(\'setup\', \'cam\')" style="text-decoration:underline;color:#fff;font-weight:700;">푸는 방법 보기</a><br><small>면접은 카메라 없이도 진행돼요</small>'; } box.classList.add('off'); setCamPill('차단됨','warn'); try{ if(!MicGuard.camShown){ MicGuard.camShown = true; MicGuard.open('setup', 'cam', err); } }catch(_){} return; }
     if(msg) msg.textContent = name==='NotAllowedError' ? '카메라 권한이 차단되어 있어요 · 면접은 카메라 없이도 진행돼요' : name==='NotFoundError' ? '연결된 카메라가 없어요 · 면접은 카메라 없이도 진행돼요' : '카메라를 열지 못했어요 · 면접은 카메라 없이도 진행돼요';
     box.classList.add('off'); setCamPill('확인 필요','warn');
   }
@@ -12413,10 +12417,13 @@ const Feedback = {
   /** 자동 오류 기록: 같은 내용은 10분에 한 번, 세션당 30건까지 */
   async auto(kind, message, detail){
     if(!state.currentUser || this.disabled) return;
-    const key = kind + '|' + String(message).slice(0,80); const now = Date.now();
+    const key = state.currentUser.id + '|' + kind + '|' + String(message).slice(0,80); const now = Date.now();
+    // 새로고침해도 같은 내용이 또 쌓이지 않게 브라우저에 10분간 기억 (2026-10-20e)
+    if(!this._lsLoaded){ this._lsLoaded = true; try{ const o = JSON.parse(localStorage.getItem('stenotalk_fb_sent') || '{}'); for(const k in o){ if(now - o[k] < 10*60*1000 && !this.sent[k]) this.sent[k] = o[k]; } }catch(_){} }
     if(this.sent[key] && now - this.sent[key] < 10*60*1000) return;
     if(this.autoCount >= 30) return;
     this.sent[key] = now; this.autoCount++;
+    try{ const o = {}; for(const k in this.sent){ if(now - this.sent[k] < 10*60*1000) o[k] = this.sent[k]; } localStorage.setItem('stenotalk_fb_sent', JSON.stringify(o)); }catch(_){}
     this.lastError = { kind, message: String(message).slice(0,200), at: new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) };
     try{
       const { error } = await sb.from('feedback').insert({ user_id: state.currentUser.id, kind:'오류', message: `[${kind}] ${String(message).slice(0,800)}`, screen: this.screenName(), detail: Object.assign(this.context(), detail||{}), auto:true });
@@ -12633,7 +12640,8 @@ function copyBetaNudgeList(){
 function statTile(num, lbl, o={}){ return `<div class="admin-stat${o.cls?' '+o.cls:''}${o.go?' link':''}"${o.go?` onclick="${o.go}" title="누르면 이동"`:''}><div class="lbl">${lbl}${o.scope?`<span class="scope">${o.scope}</span>`:''}</div><div class="num">${num}</div>${o.foot?`<div class="foot">${o.foot}</div>`:''}</div>`; }
 function fbUserName(id){ const u = (state.adminUsers||[]).find(x=>x.id===id); return u ? (u.name||'') : '(알 수 없음)'; }
 function fbUserPhone(id){ const u = (state.adminUsers||[]).find(x=>x.id===id); return u ? (u.phone||'') : ''; }
-function fbKindCls(r){ return r.auto || r.kind==='오류' ? 'err' : r.kind==='문제' ? 'bug' : r.kind==='질문' ? 'q' : 'idea'; }
+function fbIsPerm(r){ const m = String(r.message||''); return !!r.auto && (/^\[(권한 차단|카메라 차단 안내|마이크 차단 안내)\]/.test(m) || /권한이 차단되어|설정에서 마이크가 꺼져|묻는 창이 닫혔/.test(m)); }
+function fbKindCls(r){ if(fbIsPerm(r)) return 'perm'; return r.auto || r.kind==='오류' ? 'err' : r.kind==='문제' ? 'bug' : r.kind==='질문' ? 'q' : 'idea'; }
 function setFeedbackFilter(v){ state.feedbackFilter = v; renderFeedback(); }
 function renderFeedback(){
   const rows = state.feedbackRows || [];
@@ -12665,7 +12673,9 @@ function renderFeedback(){
   if(!shown.length){ list.innerHTML = `<div class="qa-empty" style="margin:12px;">${rows.length ? '조건에 맞는 글이 없어요.' : '아직 받은 의견·문제가 없어요.'}</div>`; return; }
   list.innerHTML = shown.map(r=>{
     const d = r.detail || {}; const cls = fbKindCls(r);
-    const kindLabel = r.auto ? '자동 오류' : r.kind;
+    const isPerm = fbIsPerm(r);
+    const kindLabel = isPerm ? '권한 차단' : r.auto ? '자동 오류' : r.kind;
+    const permCause = d.cause === 'system' ? '원인: 컴퓨터(윈도우·맥) 설정에서 꺼져 있음' : d.cause === 'dismissed' ? '원인: 권한을 묻는 창을 그냥 닫음' : d.cause === 'inapp' ? '원인: 카카오톡 등 앱 안의 창으로 열었음' : d.cause === 'site' ? '원인: 브라우저에서 이 사이트를 차단함' : '';
     const meta = [d.browser ? d.browser + (d.mobile ? ' · 휴대폰' : '') : '', r.screen ? '화면 ' + r.screen : '', d.field ? d.field : '', d.lastError && !r.auto ? '최근 오류 ' + d.lastError.kind : ''].filter(Boolean).join(' · ');
     return `<div class="fb-card ${cls}${r.status==='새 글' ? ' new' : ''}" data-id="${r.id}">
       <div class="fb-card-head">
@@ -12675,6 +12685,7 @@ function renderFeedback(){
         <span class="fb-state-badge ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':'new'}">${escapeHtml(r.status)}</span>
       </div>
       <div class="fb-msg">${escapeHtml(r.message||'')}</div>
+      ${isPerm ? `<div class="fb-hint">면접자 기기·브라우저 설정 문제예요(프로그램 오류 아님). 면접자 화면에 푸는 방법이 함께 떴어요.${permCause ? ' ' + escapeHtml(permCause) + '.' : ''} 계속 안 되면 다른 브라우저(크롬)나 휴대폰으로 열도록 안내해 주세요.</div>` : ''}
       ${meta ? `<div class="fb-meta">${escapeHtml(meta)}</div>` : ''}
       <details class="fb-detail"><summary>자동 첨부 정보</summary><pre>${escapeHtml(JSON.stringify(d, null, 1))}</pre></details>
       <div class="fb-admin-row">
@@ -13659,8 +13670,8 @@ function syncRealSetDocStep(){
  * 권한 차단 / 마이크 없음 / 다른 프로그램 사용 중 / 소리 없음을 구분해서 안내합니다.
  */
 let micCheck = { stream:null, ctx:null, raf:null, heard:false, startedAt:0 };
-function setMicCheck(kind, text){
-  if(kind === 'err' && typeof Feedback !== 'undefined') Feedback.auto('마이크', text);
+function setMicCheck(kind, text, noReport){
+  if(kind === 'err' && !noReport && typeof Feedback !== 'undefined') Feedback.auto('마이크', text);
   const box = document.getElementById('mic-check');
   if(!box) return;
   box.className = 'mic-check' + (kind ? ' '+kind : '');
@@ -13673,6 +13684,11 @@ function setMicCheck(kind, text){
 }
 function micErrorMessage(err){
   const name = (err && (err.name || err.error)) || '';
+  const emsg = String((err && err.message) || '').toLowerCase();
+  if(name==='NotAllowedError' && /system/.test(emsg))
+    return {kind:'err', text:'윈도우(기기) 설정에서 마이크가 꺼져 있어요. 설정 → 개인 정보 및 보안 → 마이크를 켠 뒤 브라우저를 다시 열어 주세요.', help:true};
+  if(name==='NotAllowedError' && /dismiss/.test(emsg))
+    return {kind:'err', text:'마이크 사용을 묻는 창이 닫혔어요. 다시 시도해서 "허용"을 눌러 주세요.', help:true};
   if(name==='NotAllowedError' || name==='SecurityError' || name==='not-allowed' || name==='service-not-allowed')
     return {kind:'err', text:'마이크 권한이 차단되어 있어요. 주소창 왼쪽 아이콘에서 마이크를 "허용"으로 바꾼 뒤 새로고침해 주세요.', help:true};
   if(name==='NotFoundError' || name==='OverconstrainedError' || name==='audio-capture')
@@ -13749,7 +13765,9 @@ async function startMicLevelAnim(){
   }catch(err){
     console.warn('[마이크 확인 실패]', err);
     const m = micErrorMessage(err);
-    setMicCheck(m.kind, m.text);
+    const blocked = err && (err.name === 'NotAllowedError' || err.name === 'SecurityError');
+    setMicCheck(m.kind, m.text, blocked);   // 막힘은 아래 안내창이 원인과 함께 한 번만 기록
+    if(blocked){ try{ MicGuard.lastMicErr = err; MicGuard.open('setup', 'mic', err); }catch(_){} }
     fill.style.width = '4%';
     { const dv = document.getElementById('setup-mic-dev'); if(dv) dv.textContent = '마이크를 찾지 못했어요'; }
   }
@@ -19248,7 +19266,7 @@ const MicGuard = {
   },
   onChange(v){
     const m = document.getElementById('modal-micblock');
-    if(this.kind === 'cam') return;
+    if(this.kind !== 'mic') return;
     if(v === 'granted' && m && m.classList.contains('active')){ this.setState('ok', '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>this.close(), 1200); }
     // 면접 도중 권한이 '허용'에서 빠지면(이번만 허용 만료 등) 바로 알려 줌
     if(v !== 'granted' && this._last === 'granted'){ try{ if(interviewInProgress()) showToast('마이크 권한이 풀렸어요. 다시 물어보면 "사이트 방문 시 허용"을 눌러 주세요. ("이번만 허용"은 화면이 바뀌면 풀릴 수 있어요)', 'warn'); Feedback.auto('마이크', '면접 중 권한 상태 변경: granted → ' + v); }catch(_){} }
@@ -19270,8 +19288,31 @@ const MicGuard = {
     if(/Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome\/|Edg\/|Whale\//.test(ua)) return 'mac-safari';
     return 'pc';
   },
-  guideHtml(pf){
+  /* (2026-10-20e) 왜 막혔는지 구분: site = 브라우저에서 이 사이트를 차단 / system = 윈도우·맥 설정에서 꺼짐 / dismissed = 묻는 창을 그냥 닫음 */
+  isEdge(){ return /Edg\//.test(navigator.userAgent || ''); },
+  isMac(){ return /Macintosh/.test(navigator.userAgent || '') && !(navigator.maxTouchPoints > 1); },
+  /** 기기 설정 이름: 윈도우 / 맥 / 휴대폰 */
+  osWord(){ const pf = this.platform(); return pf === 'pc' ? (this.isMac() ? '맥' : '윈도우') : pf === 'mac-safari' ? '맥' : '휴대폰'; },
+  /** 안드로이드에서 쓰는 브라우저 이름 (휴대폰 설정 → 애플리케이션 목록에 보이는 이름) */
+  appName(){ const ua = navigator.userAgent || ''; const pf = this.platform();
+    if(pf === 'samsung') return '삼성 인터넷'; if(pf === 'ios-safari') return 'Safari';
+    if(/Whale\//.test(ua)) return '웨일'; if(/EdgA\/|EdgiOS\//.test(ua)) return 'Edge'; if(/Firefox\/|FxiOS\//.test(ua)) return 'Firefox';
+    return 'Chrome'; },
+  async permOf(name){ try{ if(!navigator.permissions || !navigator.permissions.query) return 'unknown'; return (await navigator.permissions.query({ name })).state; }catch(_){ return 'unknown'; } },
+  causeOf(err, perm){
+    const msg = String((err && err.message) || '').toLowerCase();
+    if(/system/.test(msg)) return 'system';
+    if(/dismiss/.test(msg)) return 'dismissed';
+    if(perm === 'denied') return 'site';
+    if(err && err.name === 'NotAllowedError' && perm === 'granted') return 'system';
+    return 'site';
+  },
+  devName(k){ return k === 'both' ? '카메라와 마이크' : k === 'cam' ? '카메라' : '마이크'; },
+  causeName(c){ return c === 'system' ? (this.osWord() === '휴대폰' ? '휴대폰 설정에서 브라우저 권한이 꺼져 있음' : this.osWord() === '맥' ? '맥 설정에서 꺼져 있음' : '윈도우(기기) 설정에서 꺼져 있음') : c === 'dismissed' ? '권한을 묻는 창을 그냥 닫음' : c === 'inapp' ? '카카오톡 등 앱 안의 창이라 막힘' : '브라우저에서 이 사이트를 차단함'; },
+  guideHtml(pf, k, cause){
+    k = k || 'mic'; cause = cause || 'site';
     const host = location.host || 'dev.sorizavaacademy.com';
+    const D = this.devName(k);
     const I = {
       tune:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
       lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
@@ -19279,70 +19320,180 @@ const MicGuard = {
       menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
       dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>'
     };
+    const MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+    const CAM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3"/></svg>';
+    const devs = k === 'both' ? [['카메라', CAM_SVG], ['마이크', MIC_SVG]] : k === 'cam' ? [['카메라', CAM_SVG]] : [['마이크', MIC_SVG]];
     const bar = (hit, right, arrow)=>`<div class="mb-bar"><span class="mb-hit">${hit}</span><span class="mb-url">${escapeHtml(host)}/zavapass</span><span class="mb-dim">${right||I.reload}</span></div><div class="mb-arrow">↑ ${arrow}</div>`;
-    const MIC_IC = '<i class="mb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></i>';
-    const pop = (label, ctl)=>`<div class="mb-pop"><span>${MIC_IC}${label}</span>${ctl==='sel' ? '<span class="mb-sel">허용</span>' : '<span class="mb-tg" aria-hidden="true"></span>'}</div>`;
+    const pop1 = (label, ctl, svg)=>`<div class="mb-pop"><span>${svg ? `<i class="mb-ic">${svg}</i>` : ''}${label}</span>${ctl==='sel' ? '<span class="mb-sel">허용</span>' : '<span class="mb-tg" aria-hidden="true"></span>'}</div>`;
+    const pop = (pre, ctl)=>devs.map(([n, svg])=>pop1(pre + n, ctl, svg)).join('');
     const steps = arr => '<ol class="mb-steps">' + arr.map((t,i)=>`<li><i>${i+1}</i><span>${t}</span></li>`).join('') + '</ol>';
+    const out = (pic, st, alt)=>`<div class="mb-pic">${pic}</div>${steps(st)}${alt ? `<p class="mb-alt">${alt}</p>` : ''}`;
+    const camNote = k === 'cam' ? ' 카메라 없이도 면접은 할 수 있어요.' : '';
+
+    // 1) 묻는 창을 그냥 닫은 경우: 다시 물어보게 하면 끝
+    if(cause === 'dismissed' && pf !== 'inapp'){
+      return out(`<div class="mb-ask"><b>${escapeHtml(host)}</b>에서 다음 권한을 요청합니다</div>` + pop('', 'sel'),
+        ['아래 <b>다시 물어보기</b>를 눌러요.', '주소창 아래에 뜨는 창에서 <b>허용</b>을 눌러요.', '"이번만 허용"보다 <b>사이트 방문 시 허용</b>(항상 허용)이 좋아요. 다음에 다시 묻지 않아요.'],
+        '창이 뜨지 않으면 주소창 맨 왼쪽 아이콘을 눌러 ' + D + '를 <b>허용</b>으로 바꾼 뒤 새로고침(<span class="kbd">F5</span>)해 주세요.');
+    }
+    // 2) 브라우저는 허용인데 컴퓨터 설정에서 꺼진 경우
+    if(cause === 'system' && pf === 'pc'){
+      if(this.isMac()){
+        return out('<div class="mb-win"><div class="mb-win-h">시스템 설정 › 개인정보 보호 및 보안 › ' + devs[0][0] + '</div>' + pop1('Google Chrome / Microsoft Edge', 'tg') + '</div>',
+          ['화면 왼쪽 위 <b>애플 메뉴 → 시스템 설정</b>을 열어요.', '<b>개인정보 보호 및 보안</b> → <b>' + devs.map(d=>d[0]).join('</b>, <b>') + '</b>를 눌러요.', '지금 쓰는 브라우저(<b>Chrome</b>·<b>Edge</b> 등)를 <b>켜요</b>.', '브라우저를 <b>완전히 종료</b>(<span class="kbd">⌘</span>+<span class="kbd">Q</span>)했다가 다시 열어요.'],
+          '회사 컴퓨터는 관리자가 막아 두었을 수 있어요. 그럴 땐 휴대폰이나 다른 컴퓨터로 열어 주세요.' + camNote);
+      }
+      const d0 = devs[0][0];
+      return out('<div class="mb-win"><div class="mb-win-h">설정 › 개인 정보 및 보안 › ' + d0 + '</div>' + pop1(d0 + ' 액세스', 'tg') + pop1('데스크톱 앱이 ' + d0 + '에 액세스하도록 허용', 'tg') + '</div>',
+        ['키보드에서 <span class="kbd">윈도우 키</span> + <span class="kbd">I</span>를 눌러 <b>설정</b>을 열어요.',
+         '<b>개인 정보 및 보안</b> → <b>' + devs.map(d=>d[0]).join('</b>, <b>') + '</b>' + (k === 'both' ? '를 차례로 눌러요.' : '를 눌러요.'),
+         '<b>' + d0 + ' 액세스</b>와 <b>데스크톱 앱이 ' + d0 + '에 액세스하도록 허용</b>을 모두 <b>켬</b>으로 바꿔요.' + (k === 'both' ? ' 마이크도 똑같이 켜요.' : ''),
+         '브라우저 창을 <b>모두 닫았다가</b> 다시 열어요.'],
+        '회사·학교 컴퓨터는 관리자가 막아 두었을 수 있어요. 그럴 땐 휴대폰이나 다른 컴퓨터로 열어 주세요.' + camNote);
+    }
+    // 2-1) 휴대폰: 브라우저 앱 자체의 카메라·마이크 권한이 꺼진 경우
+    // 아이폰 크롬·웨일 등은 사이트별 설정이 없어서 늘 아이폰 설정에서 켜야 함
+    if((cause === 'system' && /^(android|samsung|ios-safari|ios-other)$/.test(pf)) || (pf === 'ios-other' && cause !== 'dismissed')){
+      const app = this.appName(); const ios = /^ios/.test(pf);
+      return out('<div class="mb-win"><div class="mb-win-h">설정 › ' + (ios ? '앱' : '애플리케이션') + ' › ' + app + (ios ? '' : ' › 권한') + '</div>' + pop('', ios ? 'tg' : 'sel') + '</div>',
+        ios
+          ? ['아이폰 <b>설정</b> 앱을 열어요.', '<b>앱</b> → <b>' + app + '</b> 항목을 눌러요. (예전 iOS는 설정 첫 화면 아래쪽에 바로 있어요)', '<b>' + D + '</b>를 <b>켜요</b>(허용).', '이 화면으로 돌아와 <b>새로고침</b>해요.']
+          : ['휴대폰 <b>설정</b> 앱을 열어요.', '<b>애플리케이션</b> → <b>' + app + '</b> → <b>권한</b>을 눌러요.', '<b>' + D + '</b>를 <b>앱 사용 중에만 허용</b>으로 바꿔요.', '이 화면으로 돌아와 <b>새로고침</b>해요.'],
+        (ios ? '아이폰은 <b>Safari</b>로 여는 게 가장 안정적이에요.' : '그래도 안 되면 <b>크롬</b>으로 열어 보세요.') + camNote);
+    }
+    // 3) 브라우저에서 이 사이트를 차단한 경우 (기본)
+    const edge = this.isEdge();
     const G = {
-      pc: { pic: bar(I.tune, I.reload, '주소창 맨 왼쪽 아이콘을 눌러요') + pop('마이크', 'tg'),
-        steps: ['주소창 맨 왼쪽의 <b>조절 아이콘</b>(또는 <b>자물쇠</b>)을 눌러요.', '<b>마이크</b>를 <b>켜기(허용)</b>로 바꿔요.', '<b>새로고침</b>(<span class="kbd">F5</span>)을 누르면 끝이에요.'],
-        alt: '그래도 안 되면 윈도우 <b>설정 → 개인 정보 및 보안 → 마이크</b>에서 "마이크 액세스"가 켜져 있는지 확인해 주세요.' },
-      'mac-safari': { pic: pop('마이크', 'sel'),
-        steps: ['화면 맨 위 메뉴에서 <b>Safari → 설정</b>을 열어요.', '<b>웹 사이트</b> 탭 → 왼쪽 <b>마이크</b>를 눌러요.', `<b>${escapeHtml(host)}</b>를 <b>허용</b>으로 바꾸고 새로고침해요.`],
+      pc: { pic: bar(edge ? I.lock : I.tune, I.reload, '주소창 맨 왼쪽 아이콘을 눌러요') + pop('', 'tg'),
+        steps: edge
+          ? ['주소창 맨 왼쪽의 <b>자물쇠</b>(또는 조절 아이콘)를 눌러요.', '<b>이 사이트에 대한 사용 권한</b>에서 <b>' + D + '</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>(<span class="kbd">F5</span>)을 누르면 끝이에요.']
+          : ['주소창 맨 왼쪽의 <b>조절 아이콘</b>(또는 <b>자물쇠</b>)을 눌러요.', '<b>' + D + '</b>를 <b>켜기(허용)</b>로 바꿔요.', '<b>새로고침</b>(<span class="kbd">F5</span>)을 누르면 끝이에요.'],
+        alt: (edge
+          ? '목록에 안 보이면 엣지 오른쪽 위 <b>⋯ → 설정 → 쿠키 및 사이트 권한 → ' + devs.map(d=>d[0]).join(' / ') + '</b>에서 <b>차단</b> 목록에 있는 <b>' + escapeHtml(location.hostname || host) + '</b>를 지우고 새로고침해 주세요.'
+          : '목록에 안 보이면 크롬 오른쪽 위 <b>⋮ → 설정 → 개인 정보 보호 및 보안 → 사이트 설정 → ' + devs.map(d=>d[0]).join(' / ') + '</b>에서 <b>차단</b> 목록에 있는 이 사이트를 지우고 새로고침해 주세요.')
+          + ' 그래도 안 되면 윈도우 <b>설정 → 개인 정보 및 보안 → ' + devs.map(d=>d[0]).join(' / ') + '</b>가 켜져 있는지 확인해 주세요.' },
+      'mac-safari': { pic: pop('', 'sel'),
+        steps: ['화면 맨 위 메뉴에서 <b>Safari → 설정</b>을 열어요.', '<b>웹 사이트</b> 탭 → 왼쪽 <b>' + devs.map(d=>d[0]).join('</b>, <b>') + '</b>를 눌러요.', `<b>${escapeHtml(host)}</b>를 <b>허용</b>으로 바꾸고 새로고침해요.`],
         alt: '크롬으로 여는 걸 더 추천해요. 음성 인식이 더 안정적이에요.' },
-      android: { pic: bar(I.tune, I.dots, '주소창 왼쪽 아이콘을 눌러요') + pop('권한 → 마이크', 'tg'),
-        steps: ['주소창 왼쪽의 <b>조절 아이콘</b>(또는 자물쇠)을 눌러요.', '<b>권한</b> → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '화면을 아래로 당기거나 <b>새로고침</b>해요.'],
-        alt: '목록에 마이크가 없으면 휴대폰 <b>설정 → 애플리케이션 → Chrome → 권한 → 마이크</b>를 "앱 사용 중에만 허용"으로 바꿔 주세요.' },
-      samsung: { pic: bar(I.lock, I.menu, '주소창 왼쪽 자물쇠를 눌러요') + pop('마이크', 'sel'),
-        steps: ['주소창 왼쪽의 <b>자물쇠</b>를 눌러요.', '<b>권한</b>(또는 사이트 권한) → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
-        alt: '자물쇠가 없으면 아래쪽 <b>≡ 메뉴 → 설정 → 사이트 및 다운로드 → 사이트 권한 → 마이크</b>에서 바꿔요. 휴대폰 <b>설정 → 애플리케이션 → 삼성 인터넷 → 권한 → 마이크</b>도 확인해 주세요.' },
-      'ios-safari': { pic: bar('가가', I.reload, '주소창의 "가가"(aA) 버튼을 눌러요') + pop('웹 사이트 설정 → 마이크', 'sel'),
-        steps: ['주소창의 <b>"가가"</b>(aA) 버튼을 눌러요. (안 보이면 주소창을 한 번 눌러요)', '<b>웹 사이트 설정</b> → <b>마이크</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
-        alt: '그래도 안 되면 아이폰 <b>설정 → 앱 → Safari → 마이크</b>를 "허용"으로 바꿔 주세요. 홈 화면 아이콘으로 열었다면 Safari에서 직접 열어 보세요.' },
-      'ios-other': { pic: pop('설정 → 앱 → 이 브라우저 → 마이크', 'tg'),
-        steps: ['아이폰 <b>설정</b> 앱을 열어요.', '<b>앱</b> → 지금 쓰는 브라우저(예: <b>Chrome</b>)를 찾아요.', '<b>마이크</b>를 켜고, 이 화면으로 돌아와 새로고침해요.'],
+      android: { pic: bar(I.tune, I.dots, '주소창 왼쪽 아이콘을 눌러요') + pop('권한 → ', 'tg'),
+        steps: ['주소창 왼쪽의 <b>조절 아이콘</b>(또는 자물쇠)을 눌러요.', '<b>권한</b> → <b>' + D + '</b>를 <b>허용</b>으로 바꿔요.', '화면을 아래로 당기거나 <b>새로고침</b>해요.'],
+        alt: '목록에 없으면 휴대폰 <b>설정 → 애플리케이션 → Chrome → 권한 → ' + D + '</b>를 "앱 사용 중에만 허용"으로 바꿔 주세요.' },
+      samsung: { pic: bar(I.lock, I.menu, '주소창 왼쪽 자물쇠를 눌러요') + pop('', 'sel'),
+        steps: ['주소창 왼쪽의 <b>자물쇠</b>를 눌러요.', '<b>권한</b>(또는 사이트 권한) → <b>' + D + '</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
+        alt: '자물쇠가 없으면 아래쪽 <b>≡ 메뉴 → 설정 → 사이트 및 다운로드 → 사이트 권한 → ' + D + '</b>에서 바꿔요. 휴대폰 <b>설정 → 애플리케이션 → 삼성 인터넷 → 권한 → ' + D + '</b>도 확인해 주세요.' },
+      'ios-safari': { pic: bar('가가', I.reload, '주소창의 "가가"(aA) 버튼을 눌러요') + pop('웹 사이트 설정 → ', 'sel'),
+        steps: ['주소창의 <b>"가가"</b>(aA) 버튼을 눌러요. (안 보이면 주소창을 한 번 눌러요)', '<b>웹 사이트 설정</b> → <b>' + D + '</b>를 <b>허용</b>으로 바꿔요.', '<b>새로고침</b>해요.'],
+        alt: '그래도 안 되면 아이폰 <b>설정 → 앱 → Safari → ' + D + '</b>를 "허용"으로 바꿔 주세요. 홈 화면 아이콘으로 열었다면 Safari에서 직접 열어 보세요.' },
+      'ios-other': { pic: pop('설정 → 앱 → 이 브라우저 → ', 'tg'),
+        steps: ['아이폰 <b>설정</b> 앱을 열어요.', '<b>앱</b> → 지금 쓰는 브라우저(예: <b>Chrome</b>)를 찾아요.', '<b>' + D + '</b>를 켜고, 이 화면으로 돌아와 새로고침해요.'],
         alt: '아이폰은 <b>Safari</b>로 여는 게 가장 안정적이에요.' },
       inapp: { pic: bar(I.dots, I.dots, '오른쪽 위 ⋮ 또는 공유 버튼') ,
-        steps: ['카카오톡·네이버 같은 앱 안의 창에서는 마이크가 막혀 있어요.', '오른쪽 위 <b>⋮</b>(또는 공유 버튼) → <b>"다른 브라우저로 열기"</b>를 눌러요.', '<b>크롬</b>(아이폰은 <b>Safari</b>)에서 다시 로그인해요.'],
+        steps: ['카카오톡·네이버 같은 앱 안의 창에서는 ' + D + '가 막혀 있어요.', '오른쪽 위 <b>⋮</b>(또는 공유 버튼) → <b>"다른 브라우저로 열기"</b>를 눌러요.', '<b>크롬</b>(아이폰은 <b>Safari</b>)에서 다시 로그인해요.'],
         alt: '' }
     };
     const g = G[pf] || G.pc;
-    return `<div class="mb-pic">${g.pic}</div>${steps(g.steps)}${g.alt ? `<p class="mb-alt">${g.alt}</p>` : ''}`;
+    return out(g.pic, g.steps, (g.alt || '') + (g.alt && camNote ? camNote : ''));
   },
-  open(where, kind){
+  /** 안내창 열기. kind: 'mic' | 'cam' (이미 다른 쪽 안내가 떠 있거나 둘 다 막혀 있으면 한 번에 안내) · err: getUserMedia 오류(원인 구분용) */
+  async open(where, kind, err){
     const m = document.getElementById('modal-micblock'); if(!m) return;
-    this.kind = kind === 'cam' ? 'cam' : 'mic';
-    const pf = this.platform();
-    document.getElementById('mb-guide').innerHTML = this.kind==='cam' ? this.guideHtml(pf).replace(/마이크/g,'카메라').replace(/<rect x="9" y="3" width="6" height="11" rx="3"\/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"\/>/g,'<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3"/>') : this.guideHtml(pf);
-    { const ic = document.querySelector('#modal-micblock .mb-ic'); if(ic) ic.innerHTML = this.kind==='cam' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3zM4 4l16 16"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg>'; }
-    { const h = m.querySelector('.modal-head h2'); if(h){ const ic = h.querySelector('.mb-ic'); h.innerHTML = (ic ? ic.outerHTML : '') + (this.kind==='cam' ? '카메라가 막혀 있어요' : '마이크가 막혀 있어요'); } }
-    const sub = document.getElementById('mb-sub');
-    if(sub) sub.textContent = this.kind === 'cam'
-      ? (pf === 'inapp' ? '지금 열린 창에서는 카메라를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.' : "지금 이 사이트의 카메라가 '차단'으로 되어 있어요. 카메라 없이도 면접은 되지만, 표정·시선 분석과 내 모습 다시 보기를 쓰려면 아래 순서대로 한 번만 바꿔 주세요.")
-      : pf === 'inapp' ? '지금 열린 창에서는 마이크를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.'
-      : (where === 'coach' ? '자기소개 연습을 하려면 마이크가 필요해요. ' : '면접 답변을 들으려면 마이크가 필요해요. ') + "지금 이 사이트의 마이크가 '차단'으로 되어 있어요. 아래 순서대로 한 번만 바꿔 주세요.";
-    const rb = document.getElementById('mb-recheck'); if(rb) rb.style.display = pf === 'inapp' ? 'none' : '';
-    { const more = document.getElementById('mb-more'); if(more) more.style.display = this.kind === 'cam' ? 'none' : ''; }
+    kind = kind === 'cam' ? 'cam' : 'mic';
+    if(!err) err = kind === 'cam' ? this.lastCamErr : this.lastMicErr;
+    if(kind === 'cam') this.camFailed = true; else this.micFailed = true;
+    const active = m.classList.contains('active');
+    const [camSt, micSt] = await Promise.all([this.permOf('camera'), this.permOf('microphone')]);
+    const camWanted = (()=>{ const c = document.getElementById('switch-cam'); return !c || c.checked; })();
+    let k = kind;
+    if(active && this.kind && this.kind !== kind) k = 'both';
+    else if(kind === 'cam' && (micSt === 'denied' || this.micFailed)) k = 'both';
+    else if(kind === 'mic' && where === 'setup' && camWanted && (camSt === 'denied' || this.camFailed)) k = 'both';
+    let cause = this.causeOf(err, kind === 'cam' ? camSt : micSt);
+    if(active && k === 'both' && this.cause && this.cause !== cause && this.cause !== 'site') cause = this.cause;
+    if(this.platform() === 'inapp') cause = 'inapp';
+    else if(this.platform() === 'ios-other' && cause !== 'dismissed') cause = 'system';
+    this.kind = k; this.cause = cause; this.where = where; this.perm = { cam: camSt, mic: micSt };
+    this.render();
     this.setState('', '');
     m.classList.add('active'); this.shownAt = Date.now();
-    try{ Feedback.auto(this.kind==='cam' ? '카메라 차단 안내' : '마이크 차단 안내', '권한 차단 상태에서 시작 시도 (' + pf + ')', { where: where||'' }); }catch(_){}
+    // 자동 기록은 1.5초 뒤 한 번만 (카메라·마이크가 잇달아 막히면 하나로 묶어서)
+    clearTimeout(this._repT);
+    const errInfo = err ? { errName: err.name || '', errMsg: String(err.message || '').slice(0,120) } : {};
+    this._repT = setTimeout(()=>{
+      try{ const pf = this.platform(); Feedback.auto('권한 차단', this.devName(this.kind) + ' 막힘 · ' + this.causeName(this.cause) + ' (' + (this.isEdge() ? 'Edge·' : '') + pf + ')',
+        Object.assign({ where: this.where || '', block: this.kind, cause: this.cause, camPerm: this.perm.cam, micPerm: this.perm.mic }, errInfo)); }catch(_){}
+    }, 1500);
+  },
+  render(){
+    const m = document.getElementById('modal-micblock'); if(!m) return;
+    const k = this.kind || 'mic', cause = this.cause || 'site', where = this.where || '';
+    const pf = this.platform(); const D = this.devName(k);
+    document.getElementById('mb-guide').innerHTML = this.guideHtml(pf, k, cause);
+    const ICON = k === 'mic'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10l5-3v10l-5-3zM4 4l16 16"/></svg>';
+    { const h = m.querySelector('.modal-head h2'); if(h) h.innerHTML = `<span class="mb-ic" aria-hidden="true">${ICON}</span>${D}가 막혀 있어요`; }
+    const sub = document.getElementById('mb-sub');
+    const need = k === 'cam' ? '' : (where === 'coach' ? '자기소개 연습을 하려면 마이크가 꼭 필요해요. ' : '면접 답변을 들으려면 마이크가 꼭 필요해요. ');
+    if(sub) sub.textContent = pf === 'inapp' ? `지금 열린 창에서는 ${D}를 쓸 수 없어요. 아래처럼 다른 브라우저로 열어 주세요.`
+      : cause === 'dismissed' ? `${need}${D} 사용을 묻는 창이 그냥 닫혔어요. 아래 "다시 물어보기"를 누르고 "허용"을 눌러 주세요.`
+      : cause === 'system' && pf === 'pc' ? `${need}브라우저는 괜찮은데 ${this.osWord()} 설정에서 ${D}가 꺼져 있어요. 아래 순서대로 켜 주세요.`
+      : (cause === 'system' && /^(android|samsung|ios-safari|ios-other)$/.test(pf)) || pf === 'ios-other' ? `${need}휴대폰 설정에서 ${this.appName()}의 ${D} 권한이 꺼져 있어요. 아래 순서대로 켜 주세요.`
+      : k === 'cam' ? "지금 이 사이트의 카메라가 '차단'으로 되어 있어요. 카메라 없이도 면접은 되지만, 표정·시선 분석과 내 모습 다시 보기를 쓰려면 아래 순서대로 한 번만 바꿔 주세요."
+      : `${need}지금 이 사이트의 ${D}가 '차단'으로 되어 있어요. 아래 순서대로 ${k === 'both' ? '한 번에' : '한 번만'} 바꿔 주세요.`;
+    const rb = document.getElementById('mb-recheck'); if(rb){ rb.style.display = pf === 'inapp' ? 'none' : ''; rb.textContent = this.recheckLabel(); }
+    const cb = document.getElementById('mb-close'); if(cb) cb.textContent = k === 'cam' && document.getElementById('switch-cam') && document.getElementById('modal-setup') && document.getElementById('modal-setup').classList.contains('active') ? '카메라 없이 진행' : '닫기';
+    { const more = document.getElementById('mb-more'); if(more) more.style.display = k === 'cam' ? 'none' : ''; }
+  },
+  recheckLabel(){ return this.cause === 'dismissed' ? '다시 물어보기' : '바꿨어요 · 다시 확인'; },
+  /** 닫기: 카메라만 막힌 상태에서 면접 준비 창이면 카메라를 끄고 계속 진행 */
+  dismiss(){
+    const cb = document.getElementById('mb-close');
+    if(cb && cb.textContent === '카메라 없이 진행'){
+      try{ const chk = document.getElementById('switch-cam'); if(chk){ chk.checked = false; onSetupCamToggle(false); } }catch(_){}
+      try{ showToast('카메라를 끄고 진행해요. 면접 준비 창에서 언제든 다시 켤 수 있어요.', 'ok'); }catch(_){}
+    }
+    this.close();
   },
   close(){ const m = document.getElementById('modal-micblock'); if(m) m.classList.remove('active'); },
   setState(cls, t){ const el = document.getElementById('mb-state'); if(!el) return; el.className = 'mb-state' + (cls ? ' ' + cls : ''); el.textContent = t; },
+  /** 한 장치씩 실제로 열어 보고 결과를 알려 줌. 원인이 바뀌면(예: 사이트는 풀렸는데 윈도우에서 막힘) 안내를 그에 맞게 바꿈 */
+  async tryDev(dev){
+    try{ const st = await navigator.mediaDevices.getUserMedia(dev === 'cam' ? { video:true } : { audio:true }); st.getTracks().forEach(t=>t.stop()); return { ok:true }; }
+    catch(e){ return { ok:false, err:e, perm: await this.permOf(dev === 'cam' ? 'camera' : 'microphone') }; }
+  },
   async recheck(){
     const btn = document.getElementById('mb-recheck'); if(btn){ btn.disabled = true; btn.textContent = '확인 중…'; }
     try{
-      const cam = this.kind === 'cam';
-      let v = cam ? 'unknown' : await this.state();
-      if(cam){ try{ const st = await navigator.permissions.query({ name:'camera' }); v = st.state; }catch(_){ v = 'unknown'; } }
-      if(v !== 'denied'){
-        try{ const st = await navigator.mediaDevices.getUserMedia(cam ? { video:true } : { audio:true }); st.getTracks().forEach(t=>t.stop()); v = 'granted'; }
-        catch(e){ if(e && e.name === 'NotAllowedError') v = 'denied'; }
+      const k = this.kind || 'mic';
+      const want = k === 'both' ? ['mic', 'cam'] : [k];
+      const res = {};
+      for(const d of want) res[d] = await this.tryDev(d);
+      const failed = want.filter(d=>!res[d].ok);
+      const afterOk = ()=>{
+        try{ const setupOn = document.getElementById('modal-setup') && document.getElementById('modal-setup').classList.contains('active');
+          if(setupOn && want.includes('cam')){ const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }
+          if(setupOn && want.includes('mic') && typeof startMicLevelAnim === 'function') startMicLevelAnim();
+        }catch(_){}
+      };
+      if(!failed.length){
+        this.camFailed = this.camFailed && !want.includes('cam'); this.micFailed = this.micFailed && !want.includes('mic');
+        this.setState('ok', `✓ ${this.devName(k)}가 허용됐어요. ${k === 'cam' ? '미리보기를 다시 열게요.' : '이제 시작할 수 있어요.'}`);
+        setTimeout(()=>{ this.close(); afterOk(); }, 1200);
+        return;
       }
-      if(v === 'granted'){ this.setState('ok', cam ? '✓ 카메라가 허용됐어요. 미리보기를 다시 열게요.' : '✓ 마이크가 허용됐어요. 이제 시작할 수 있어요.'); setTimeout(()=>{ this.close(); if(cam){ try{ const chk = document.getElementById('switch-cam'); if(chk && chk.checked) startCamPreview(); }catch(_){} } }, 1200); }
-      else if(v === 'denied'){ this.setState('bad', '아직 막혀 있어요. 위 순서대로 바꾼 뒤 새로고침하고 다시 눌러 주세요.'); }
-      else { this.setState('ok', `이제 시작할 때 ${cam?'카메라':'마이크'}를 물어보면 "사이트 방문 시 허용"(또는 "허용")을 눌러 주세요. "이번만 허용"은 다음 화면에서 다시 막힐 수 있어요.`); setTimeout(()=>this.close(), 2600); }
-    }finally{ if(btn){ btn.disabled = false; btn.textContent = '바꿨어요 · 다시 확인'; } }
+      // 일부만 풀렸으면 남은 쪽만 안내
+      const nk = failed.length === 2 ? 'both' : failed[0];
+      const f0 = res[failed[0]];
+      const nc = this.causeOf(f0.err, f0.perm);
+      if(failed.length < want.length){ if(want.includes('mic') && res.mic.ok){ this.micFailed = false; afterOk(); } }
+      const changed = nk !== this.kind || nc !== this.cause;
+      this.kind = nk; this.cause = nc;
+      if(changed) this.render();
+      const partial = failed.length < want.length ? (res.mic && res.mic.ok ? '마이크는 됐어요. ' : '카메라는 됐어요. ') : '';
+      this.setState('bad', partial + (nc === 'system' ? `이번엔 ${this.osWord()} 설정에서 ${this.devName(nk)}가 막혀 있어요. 위 순서대로 켜 주세요.`
+        : nc === 'dismissed' ? '묻는 창이 다시 닫혔어요. "다시 물어보기"를 누르고 "허용"을 눌러 주세요.'
+        : '아직 막혀 있어요. 위 순서대로 바꾼 뒤 새로고침(F5)하고 다시 눌러 주세요.') + (nk === 'cam' ? ' 카메라 없이 진행해도 돼요.' : ''));
+    }finally{ if(btn){ btn.disabled = false; btn.textContent = this.recheckLabel(); } }
   }
 };
 function interviewInProgress(){
