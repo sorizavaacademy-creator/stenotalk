@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-19g';
+var APP_VERSION = '2026-10-20b';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3814,6 +3814,52 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 #screen-pending .pd-acts .d3-btn{ min-height:44px; }
 #screen-pending .pd-note{ font-size:13px; line-height:1.6; color:var(--c-ink-3, #66666c); margin:16px 0 0; }
 #screen-pending .pd-note.ok{ color:var(--c-ok, #2f7a4a); font-weight:600; }
+/* 2026-10-20a: 기간 종료 = 흐린 앱 화면 위의 창 */
+#screen-pending .pd-lockbg{ display:none; }
+#screen-pending.pd-locked{ position:relative; overflow:hidden; background:#ece9e4; }
+#screen-pending.pd-locked .pd-lockbg{ display:block; position:fixed; inset:0; filter:blur(7px) saturate(.9); transform:scale(1.04); pointer-events:none; user-select:none; background:var(--c-surface, #f6f5f3); }
+#screen-pending.pd-locked::after{ content:''; position:fixed; inset:0; background:rgba(24,24,28,.38); pointer-events:none; }
+#screen-pending.pd-locked .pd{ position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:24px 16px; }
+#screen-pending.pd-locked .pd-top{ display:none; }
+#screen-pending.pd-locked .pd-card{ box-shadow:0 24px 60px rgba(0,0,0,.28); border:none; max-height:calc(100vh - 48px); overflow:auto; }
+.pd-lockbg .lb-hdr{ display:flex; align-items:center; gap:28px; height:64px; padding:0 40px; background:#fff; border-bottom:1px solid var(--c-line, #e6e4e0); }
+.pd-lockbg .lb-nav{ display:flex; gap:22px; font-size:14px; color:var(--c-ink-2, #45454a); } .pd-lockbg .lb-nav i{ font-style:normal; }
+.pd-lockbg .lb-av{ margin-left:auto; width:32px; height:32px; border-radius:50%; background:#dcd8d2; }
+.pd-lockbg .lb-body{ max-width:1080px; margin:0 auto; padding:36px 40px; }
+.pd-lockbg .lb-hi{ font-size:24px; font-weight:700; color:var(--c-ink, #1c1c1e); margin:0 0 20px; }
+.pd-lockbg .lb-hero{ background:#fff; border-radius:18px; padding:28px; display:flex; flex-direction:column; gap:12px; border:1px solid var(--c-line, #e6e4e0); }
+.pd-lockbg .lb-hero span{ height:16px; width:62%; border-radius:8px; background:#e7e3dd; } .pd-lockbg .lb-hero span.sm{ width:40%; }
+.pd-lockbg .lb-hero em{ width:160px; height:44px; border-radius:10px; background:var(--c-accent, #e8532a); opacity:.8; margin-top:6px; }
+.pd-lockbg .lb-tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:18px; }
+.pd-lockbg .lb-tiles div{ background:#fff; border:1px solid var(--c-line, #e6e4e0); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px; }
+.pd-lockbg .lb-tiles span{ height:10px; width:50%; border-radius:6px; background:#ebe7e1; } .pd-lockbg .lb-tiles b{ height:26px; width:40%; border-radius:8px; background:#ddd8d1; }
+.pd-lockbg .lb-rows{ margin-top:18px; display:flex; flex-direction:column; gap:10px; } .pd-lockbg .lb-rows div{ height:56px; background:#fff; border:1px solid var(--c-line, #e6e4e0); border-radius:12px; }
+@media (max-width:760px){ .pd-lockbg .lb-nav{ display:none; } .pd-lockbg .lb-hdr{ padding:0 18px; } .pd-lockbg .lb-body{ padding:22px 18px; } .pd-lockbg .lb-tiles{ grid-template-columns:repeat(2,1fr); } #screen-pending.pd-locked .pd{ justify-content:flex-end; padding:16px 12px 76px; } #screen-pending.pd-locked .pd-card{ max-height:calc(100vh - 92px); } }
+/* 2026-10-20b: 기간 종료 창 문장·정렬 다듬기 */
+#screen-pending.pd-locked .pd-card{ padding:32px 32px 24px; border-radius:20px; }
+#screen-pending.pd-locked .pd-card > .pd-logout{ display:none; }
+#screen-pending .pd-logout.in-foot{ display:none; }
+#screen-pending.pd-locked .pd-logout.in-foot{ display:inline-flex; align-items:center; min-height:36px; margin:0; padding:0 4px; }
+#pd-closed .pd-h{ margin:14px 0 8px; font-size:26px; letter-spacing:-.02em; }
+#pd-closed .pd-lead{ margin:0 0 22px; font-size:15px; line-height:1.6; word-break:keep-all; }
+#pd-closed .pd-lead-sub{ display:block; margin-top:2px; font-size:14px; color:var(--c-ink-3, #66666c); }
+#screen-pending.pd-locked #rr-closed{ display:block; margin:0; padding:20px 20px 18px; background:#fbf8f5; border:1px solid #f1e5dc; border-left:1px solid #f1e5dc; border-radius:14px; }
+#screen-pending.pd-locked #rr-closed .rr-ic{ display:none; }
+#screen-pending.pd-locked #rr-closed .rr-kicker{ margin:0 0 6px; font-size:13px; font-weight:700; letter-spacing:0; }
+#screen-pending.pd-locked #rr-closed .rr-title{ margin:0 0 6px; font-size:18px; line-height:1.4; word-break:keep-all; }
+#screen-pending.pd-locked #rr-closed .rr-desc{ margin:0 0 16px; font-size:14px; line-height:1.65; color:var(--c-ink-2, #45454a); text-wrap:pretty; word-break:keep-all; }
+#screen-pending.pd-locked #rr-closed .rr-acts{ display:flex; flex-wrap:wrap; gap:8px; }
+#screen-pending.pd-locked #rr-closed .rr-btn{ flex:1 1 0; min-height:46px; font-size:15px; justify-content:center; }
+#screen-pending.pd-locked #rr-closed .rr-btn.primary{ flex-basis:100%; }
+#pd-closed .pd-foot{ margin-top:20px; padding-top:16px; border-top:1px solid var(--c-line, #e6e4e0); }
+#pd-closed .pd-foot .pd-or{ margin:0; font-size:13px; line-height:1.5; color:var(--c-ink-3, #66666c); word-break:keep-all; }
+#pd-closed .pd-foot-acts{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; }
+#screen-pending .pd-kakao.sm{ min-height:36px; padding:0 14px; border-radius:10px; font-size:14px; gap:6px; width:auto; }
+@media (max-width:520px){
+  #screen-pending.pd-locked .pd-card{ padding:26px 20px 18px; }
+  #pd-closed .pd-h{ font-size:23px; }
+  #screen-pending .pd-kakao.sm{ flex:1; }
+}
 #screen-pending .pd-logout{ margin-top:18px; background:none; border:none; padding:6px 0; font-size:13px; color:var(--c-ink-3, #66666c); text-decoration:underline; cursor:pointer; }
 @media (max-width:520px){ #screen-pending .pd-card{ padding:22px 18px; } #screen-pending .pd-h{ font-size:22px; } #screen-pending .pd-steps{ grid-template-columns:1fr; } #screen-pending .pd-acts .d3-btn{ width:100%; justify-content:center; } }
 /* 2026-10-15 승인 대기: 카카오톡 승인 요청·이용 안내 */
@@ -4572,6 +4618,16 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
 <!-- ============ DASHBOARD ============ -->
 <!-- ============ 승인 대기 (2026-10-15) : 관리자가 연습 분야를 열어 주기 전에는 이 화면만 보임 ============ -->
 <section id="screen-pending" class="screen v3" aria-labelledby="pd-title">
+  <!-- 2026-10-20a: 이용 기간이 끝난 수강생 — 뒤에는 흐리게 처리한 앱 화면, 앞에는 '면접 후기 남기기' 창만 -->
+  <div class="pd-lockbg" aria-hidden="true">
+    <div class="lb-hdr"><span class="d3-logo"><i class="d3-dot"></i>ZAVAPASS</span><span class="lb-nav"><i>홈</i><i>면접 연습</i><i>리포트</i><i>내 성장</i><i>자기소개 코치</i></span><span class="lb-av"></span></div>
+    <div class="lb-body">
+      <p class="lb-hi"><b id="lb-name">회원</b>님, 오늘도 연습해 볼까요?</p>
+      <div class="lb-hero"><span></span><span></span><span class="sm"></span><em></em></div>
+      <div class="lb-tiles"><div><span></span><b></b></div><div><span></span><b></b></div><div><span></span><b></b></div><div><span></span><b></b></div></div>
+      <div class="lb-rows"><div></div><div></div><div></div></div>
+    </div>
+  </div>
   <div class="pd">
     <header class="pd-top"><span class="d3-logo"><i class="d3-dot"></i>ZAVAPASS</span><span class="d3-org">한국AI속기사협회</span></header>
     <main class="pd-card">
@@ -4626,11 +4682,13 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
      </div>
      <div id="pd-closed" hidden>
       <span class="pd-chip done"><i></i>이용 기간 종료</span>
-      <h1 class="pd-h">면접은 어떠셨어요?</h1>
-      <p class="pd-lead"><b id="pd-c-name">회원</b>님, 이용 기간이 끝나 면접 연습은 더 할 수 없어요. 연습 기록은 지워지지 않아요.</p>
+      <h1 class="pd-h" id="pd-c-title">면접은 어떠셨어요?</h1>
+      <p class="pd-lead"><b id="pd-c-name">회원</b>님, 이용 기간이 끝나 연습이 닫혔어요. <span class="pd-lead-sub">연습 기록은 그대로 보관돼요.</span></p>
       <section id="rr-closed" aria-label="실제 면접 질문 남기기"></section>
-      <p class="pd-or">연습 기간을 늘리고 싶으면 카카오톡으로 문의해 주세요.</p>
-      <div class="pd-acts"><button type="button" class="pd-kakao" onclick="openKakaoChannel()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡 문의</button></div>
+      <div class="pd-foot">
+        <p class="pd-or">연습 기간을 늘리고 싶으면 카카오톡으로 문의해 주세요.</p>
+        <div class="pd-foot-acts"><button type="button" class="pd-kakao sm" onclick="openKakaoChannel()"><svg class="kk-ic" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡 문의</button><button type="button" class="pd-logout in-foot" onclick="handleLogout()">로그아웃</button></div>
+      </div>
      </div>
       <button class="pd-logout" onclick="handleLogout()">로그아웃</button>
     </main>
@@ -9166,6 +9224,7 @@ function renderPendingScreen(){
   const closed = isClosedExpired(u);
   const w = document.getElementById('pd-wait'), c = document.getElementById('pd-closed');
   if(w) w.hidden = closed; if(c) c.hidden = !closed;
+  { const sc = document.getElementById('screen-pending'); if(sc) sc.classList.toggle('pd-locked', closed); const ln = document.getElementById('lb-name'); if(ln) ln.textContent = u.name || '회원'; }
   const n = document.getElementById('pd-name'); if(n) n.textContent = u.name || '회원';
   const cn = document.getElementById('pd-c-name'); if(cn) cn.textContent = u.name || '회원';
   if(closed){ try{ RealReport.renderClosed(); }catch(_){} }
@@ -9604,11 +9663,12 @@ const RealReport = {
       desc = '면접이 끝나면 기억날 때 받은 질문을 남겨 주세요. 면접일이 지나면 여기서 다시 알려 드릴게요.';
       acts = btn('질문 남기기', "RealReport.open('self')", true);
     }else if(ph === 'after'){
-      title = '면접 어떠셨어요?';
+      title = where === 'closed' ? '면접에서 받은 질문을 남겨 주세요' : '면접 어떠셨어요?';
       desc = '잊기 전에 받은 질문을 남겨 주세요. 한두 개만 적어도 다음 지원자에게 큰 도움이 돼요.';
       acts = btn('지금 남기기', "RealReport.open('self')", true);
     }else if(ph === 'waiting' || ph === 'ask'){
       title = ph === 'ask' ? '결과 나왔나요?' : '남겨 주셔서 고마워요';
+      kicker = '결과를 알려 주세요';
       desc = `${added ? `남겨 주신 질문 중 <b>${added}개</b>가 연습 문항이 됐어요. ` : ''}결과가 나오면 알려 주세요.`;
       acts = btn('합격했어요', `RealReport.setResult(${r.id},'pass')`, ph === 'ask') + btn('불합격이에요', `RealReport.setResult(${r.id},'fail')`) + btn('질문 더 남기기', "RealReport.open('self')");
     }else if(ph === 'pass'){
@@ -9636,6 +9696,7 @@ const RealReport = {
     const box = document.getElementById('rr-closed'); if(!box) return;
     await this.load();
     box.innerHTML = this.cardHtml('closed');
+    { const t = document.getElementById('pd-c-title'); if(t) t.textContent = (this.mine && this.mine.length) ? '후기를 남겨 주셔서 고마워요' : '면접은 어떠셨어요?'; }
   },
   /* ---- 팝업으로 요청 (2026-10-16c: 로그인할 때마다 한 번) ----
    *  · 아직 아무것도 안 남김 → 홈 카드와 같은 "합격하면 꼭 남겨 주세요" 팝업
