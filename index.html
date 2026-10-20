@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20b';
+var APP_VERSION = '2026-10-20d';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -4011,6 +4011,15 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .rr-menu-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:#e8532a; margin-left:8px; vertical-align:2px; }
 .rr-menu-dot[hidden], .rr-av-dot[hidden]{ display:none; }
 .d3-user-btn{ position:relative; }
+.admin-sub.admin-email{ color:var(--c-ink-2, #45454a); font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px; }
+@media (max-width:760px){ .admin-sub.admin-email{ max-width:100%; } }
+.bt-name small.bt-email{ color:var(--c-ink-2, #45454a); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+/* 2026-10-20c: 관리자는 머리줄 이름 아래에 로그인 아이디(이메일)를 늘 보여 줌 */
+.d3-user-btn.has-id{ max-width:300px; height:48px; }
+.d3-user-meta{ display:flex; flex-direction:column; align-items:flex-start; min-width:0; line-height:1.2; text-align:left; }
+.d3-user-id{ font-size:12px; font-weight:500; color:var(--c-ink-3, #66666c); max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+@media (max-width:520px){ .d3-user-id{ max-width:140px; } }
+@media (max-width:400px){ .a3-hdr .d3-user-id{ max-width:108px; } }
 .rr-av-dot{ position:absolute; left:26px; top:2px; width:10px; height:10px; border-radius:50%; background:#e8532a; border:2px solid #fff; }
 .rr-drawer{ position:fixed; inset:0; z-index:950; visibility:hidden; pointer-events:none; --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-line2:#d3d0ca; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-ok:#2f7a4a; --rr-ok-bg:#e7f3ec; --rr-surface:#f6f5f3; }
 .rr-drawer.on{ visibility:visible; pointer-events:auto; }
@@ -4941,7 +4950,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         </div>
         <div class="admin-toolbar">
           <div class="uf-chips" id="uf-chips"></div>
-          <input type="text" id="admin-user-search" class="admin-search" placeholder="이름, 휴대폰 번호, 메모로 검색" oninput="filterAdminUsers()">
+          <input type="text" id="admin-user-search" class="admin-search" placeholder="이름, 아이디, 휴대폰 번호, 메모로 검색" oninput="filterAdminUsers()">
           <select id="admin-status-filter" class="voice-select admin-filter" onchange="filterAdminUsers()">
             <option value="">모든 상태</option>
           </select>
@@ -9092,6 +9101,7 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  paintAdminId();
   try{ setTimeout(()=>AppUpdate.maybeShow(), 300); }catch(_){}
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
@@ -9101,6 +9111,26 @@ function showScreen(id){
   try{ if(typeof ScreenKeep !== 'undefined'){ if(id === 'screen-interview') ScreenKeep.on(); else ScreenKeep.off(); } }catch(_){}
   if(id === 'screen-result' && state.currentUser){ const av = document.getElementById('r3-avatar'); if(av){ av.textContent = (state.currentUser.name||'?').slice(0,1); av.title = state.currentUser.name || ''; } }
   document.body.classList.toggle('v3-ui', id === 'screen-login' || id === 'screen-pending' || id === 'screen-dashboard' || id === 'screen-admin' || id === 'screen-practice' || id === 'screen-result' || (id === 'screen-interview' && (state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog')));
+}
+/** 2026-10-20d: 관리자 화면 — 면접자 아이디(로그인 이메일)를 붙여 둠 (DB admin_user_emails, 관리자만 결과 받음) */
+async function attachAdminEmails(list){
+  try{ const { data, error } = await sb.rpc('admin_user_emails'); if(error) throw error; const m = {}; (data||[]).forEach(r=>{ m[r.id] = r.email; }); (list||[]).forEach(u=>{ if(m[u.id]) u.email = m[u.id]; }); }
+  catch(e){ console.warn('[면접자 아이디 불러오기 실패]', e.message||e); }
+}
+/** 2026-10-20c: 관리자 계정이면 모든 머리줄의 이름 아래에 아이디(로그인 이메일)를 표시 */
+function paintAdminId(){
+  try{
+    const u = state.currentUser, show = !!(u && u.isAdmin && u.email);
+    document.querySelectorAll('.d3-user-btn').forEach(btn=>{
+      const nm = btn.querySelector('.d3-user-name'); if(!nm) return;
+      let meta = btn.querySelector('.d3-user-meta'), idEl = btn.querySelector('.d3-user-id');
+      if(show){
+        if(!meta){ meta = document.createElement('span'); meta.className = 'd3-user-meta'; nm.parentNode.insertBefore(meta, nm); meta.appendChild(nm); }
+        if(!idEl){ idEl = document.createElement('span'); idEl.className = 'd3-user-id'; meta.appendChild(idEl); }
+        idEl.textContent = u.email; btn.title = u.email; btn.classList.add('has-id');
+      }else if(idEl){ idEl.remove(); btn.classList.remove('has-id'); btn.removeAttribute('title'); }
+    });
+  }catch(_){}
 }
 function svg(name){
   return `<svg class="ic-duo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
@@ -10712,6 +10742,7 @@ async function renderDashboard(){
     if(isAdmin){
       const { data: allProfiles, error: profErr } = await sb.from('profiles').select('*');
       const list = (!profErr && allProfiles) ? allProfiles : [];
+      await attachAdminEmails(list);
       state.adminUsers = list;
       const students = list.filter(u=>!u.is_admin);
       const opened = students.filter(u=>(u.allowed_fields||[]).length>0).length, waiting = students.length - opened;
@@ -12529,7 +12560,7 @@ function renderRealSetView(){
   const defs = [['all','전체',all.length],['set','실전 세트 응시',setPeople],['noset','아직 안 봄',all.length-setPeople],['over','15분 초과 있음',all.filter(r=>r.over).length],['coach','코치 사용',coachPeople]];
   document.getElementById('rs-chips').innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setRealSetFilter('${v}')">${l} <b>${n}</b></button>`).join('');
   const pass = r => cur==='all' || (cur==='set' && r.n) || (cur==='noset' && !r.n) || (cur==='over' && r.over) || (cur==='coach' && (r.coachMake || r.coachPractice || r.script));
-  const rows = all.filter(pass).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
+  const rows = all.filter(pass).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.email||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
     .sort((a,b)=>((b.last ? new Date(b.last.created_at).getTime() : 0) - (a.last ? new Date(a.last.created_at).getTime() : 0)) || (b.coachMake+b.coachPractice) - (a.coachMake+a.coachPractice) || (a.u.name||'').localeCompare(b.u.name||''));
   const el = document.getElementById('rs-table');
   if(!rows.length){ el.innerHTML = `<div class="qa-empty" style="margin:12px;">${all.length ? '조건에 맞는 사람이 없어요.' : '아직 수강생이 없어요.'}</div>`; return; }
@@ -12545,7 +12576,7 @@ function renderRealSetView(){
       }).join('') : '<div class="muted" style="padding:6px 0;">실전 세트 기록이 아직 없어요.</div>') + `<div style="padding-top:8px;"><button type="button" class="btn-manage" onclick="event.stopPropagation(); openAdminUserDetail('${r.u.id}')">면접자 상세 열기</button></div></div>`;
     }
     return `<div class="bt-row rs-row" onclick="toggleRealSetRow('${r.u.id}')" title="누르면 실전 세트 기록이 펼쳐져요">
-      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
+      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${r.u.email?`<small class="bt-email">${escapeHtml(r.u.email)}</small>`:''}${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
       <span class="bt-cell" data-l="실전 세트">${r.n ? `<b>${r.n}회</b><small>평균 ${r.avg!=null?r.avg+'점':'–'}</small>` : '<span class="muted">0회</span>'}</span>
       <span class="bt-cell" data-l="최근 점수">${r.last && r.last.score!=null ? `<b>${r.last.score}점</b><small>최고 ${r.best!=null?r.best+'점':'–'}</small>` : '<span class="muted">–</span>'}</span>
       <span class="bt-cell" data-l="15분 초과">${r.over ? `<span class="bt-pill none">${r.over}회</span>` : (r.n ? '<span class="muted">없음</span>' : '<span class="muted">–</span>')}</span>
@@ -12571,7 +12602,7 @@ function renderBetaView(){
   const defs = [['all','전체',all.length],['none','시작 안 함',cnt('none')],['idle','2일+ 미접속',cnt('idle')],['hot','활발',cnt('hot')],['expired','기간 끝남',all.filter(r=>r.st==='expired').length]];
   document.getElementById('beta-chips').innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setBetaFilter('${v}')">${l} <b>${n}</b></button>`).join('');
   const order = { none:0, idle:1, mid:2, hot:3, expired:4 };
-  const rows = all.filter(r=>cur==='all' || r.st===cur).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
+  const rows = all.filter(r=>cur==='all' || r.st===cur).filter(r=>{ if(!q) return true; const h = ((r.u.name||'')+' '+(r.u.email||'')+' '+(r.u.phone||'')+' '+phoneDigits(r.u.phone||'')).toLowerCase(); return h.includes(q); })
     .sort((a,b)=>(order[a.st]-order[b.st]) || ((b.days??999)-(a.days??999)) || (a.u.name||'').localeCompare(b.u.name||''));
   const pill = { none:['none','시작 안 함'], idle:['idle','2일+ 미접속'], hot:['hot','활발'], mid:['','보통'], expired:['exp','기간 끝남'] };
   const el = document.getElementById('beta-table');
@@ -12582,7 +12613,7 @@ function renderBetaView(){
     const accTxt = r.acc.until ? (r.acc.expired ? '<span class="bt-bad">끝남</span>' : `${r.acc.label}<small>${r.acc.daysLeft===0?'오늘까지':r.acc.daysLeft+'일 남음'}</small>`) : '<span class="muted">기한 없음</span>';
     const perm = r.hasPerm ? '' : ' <span class="bt-warn-tag">권한 없음</span>';
     return `<div class="bt-row" onclick="openAdminUserDetail('${r.u.id}')" title="누르면 면접자 상세가 열려요">
-      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${perm}${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
+      <span class="bt-name"><b>${escapeHtml(r.u.name||'(이름 없음)')}</b>${perm}${r.u.email?`<small class="bt-email">${escapeHtml(r.u.email)}</small>`:''}${r.u.phone?`<small>${escapeHtml(r.u.phone)}</small>`:''}</span>
       <span><span class="bt-pill ${pc}">${pt}</span></span>
       <span class="bt-cell" data-l="마지막 접속">${lastTxt}</span>
       <span class="bt-cell" data-l="연습"><b>${r.n}회</b><small>최근 3일 ${r.recent}회</small></span>
@@ -17385,6 +17416,7 @@ async function renderAdmin(){
     return;
   }
   const users = profiles || [];
+  await attachAdminEmails(users);
   state.adminUsers = users;
 
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
@@ -17563,13 +17595,14 @@ async function renderAdmin(){
     const isExpiring = !u.is_admin && (acc.expired || (acc.until && acc.daysLeft <= 3));
     const di = u.is_admin ? null : adminDeviceInfo(u.id);
     const devLine = !di || !di.s ? '' : `<div class="up-dev${di.warn ? ' warn' : ''}" title="최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회 · 누적 기기 전환 ${di.s.takeovers||0}회"><span class="up-dev-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/></svg></span>${escapeHtml(di.s.device || '기기 정보 없음')} · ${agoLabel(di.s.last_seen)}${di.warn ? ' <b class="up-dev-tag">기기 주의</b>' : (di.rep7 ? ` · 전환 ${di.rep7}회` : '')}</div>`;
-    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
           <a href="javascript:void(0)" class="admin-name-link" onclick="openAdminUserDetail('${u.id}')" title="클릭하면 상세 기록을 볼 수 있어요">${escapeHtml(u.name || '')}</a>
           ${u.is_admin ? ' <span class="perm-chip">관리자</span>' : ` <span class="status-chip ${statusChipClass(status)}">${escapeHtml(status)}</span>`}${isSelf ? ' <span class="status-chip">나</span>' : ''}${u.is_admin ? '' : ' '+accessChipHtml(u.access_until)}${u.ai_override==='on' ? ' <span class="status-chip until" title="이 사람만 AI 즉석 꼬리질문·채점 켬">AI 켬</span>' : u.ai_override==='off' ? ' <span class="status-chip" title="이 사람만 AI 끔">AI 끔</span>' : ''}
         </div>
+        ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
         ${u.is_admin ? '' : `<div class="up-state">${acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
@@ -19837,7 +19870,7 @@ function openAdminUserDetail(userId){
   document.getElementById('au-title').textContent = u.name || '수강생';
   { const pr = document.getElementById('au-pw-result'); if(pr){ pr.style.display='none'; pr.innerHTML=''; } const pb = document.getElementById('au-pw-btn'); if(pb){ pb.disabled=false; pb.textContent='임시 비밀번호 만들기'; } renderAuPwState(u); }
   document.getElementById('au-desc').textContent =
-    `가입 ${formatDateFull(u.created_at)} · 권한: ${allowedNames.length ? allowedNames.join(', ') : '없음'}`;
+    `${u.email ? '아이디 '+u.email+' · ' : ''}가입 ${formatDateFull(u.created_at)} · 권한: ${allowedNames.length ? allowedNames.join(', ') : '없음'}`;
 
   // 상태 · 메모
   const statusSel = document.getElementById('au-status');
