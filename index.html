@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20i';
+var APP_VERSION = '2026-10-20j';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3965,6 +3965,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   .nt-bubble{ right:-44px; } .nt-bubble::before{ right:59px; }
 }
 
+/* ---- 직원 계정 표시 (2026-10-20j) ---- */
+.tag.tag-staff{ background:#eef1f6; color:#4C5A74; } .perm-chip.staff{ background:#eef1f6; color:#4C5A74; border-color:#d5dbe6; }
 /* ---- 면접자 관리 거르기 줄 (2026-10-20i) ---- */
 #screen-admin .admin-toolbar.uf-toolbar{ flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:10px; min-width:0; }
 .uf-row{ display:flex; align-items:center; gap:10px 12px; flex-wrap:wrap; min-width:0; }
@@ -5096,7 +5098,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
           </div>
           <div id="admin-list"></div>
         </div>
-        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. <b>상태·분야</b> 칩으로 골라 본 뒤 맨 위 체크박스를 누르면 지금 보이는 사람만 모두 골라져요.</span></div>
+        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-staff">직원</span>8개 분야를 모두 받은 직원 계정 · 통계에서 빠짐</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. <b>상태·분야</b> 칩으로 골라 본 뒤 맨 위 체크박스를 누르면 지금 보이는 사람만 모두 골라져요.</span></div>
       </div>
 
       <!-- 승인 요청 (2026-10-16a) -->
@@ -10453,7 +10455,7 @@ const ReportAdmin = {
   renderCall(){
     const box = document.getElementById('ra-call'); if(!box) return;
     const f = this.callField; const rows = this.rows || [];
-    const users = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).includes(f));
+    const users = (state.adminUsers||[]).filter(u=>isStudentAcct(u) && (u.allowed_fields||[]).includes(f));
     const stOf = u=>{ const mine = rows.filter(r=>r.user_id===u.id); const r = mine[0]; if(!r) return { k:0, t:'후기 없음', c:'none' }; return { k:1, t:(RR_RESULT[r.result]||'') + (mine.some(x=>(x.questions||[]).length) ? ' · 질문 있음' : ''), c:r.result }; };
     const list = users.map(u=>({ u, s:stOf(u) })).sort((a,b)=>a.s.k-b.s.k || String(a.u.name||'').localeCompare(String(b.u.name||''),'ko'));
     const none = list.filter(x=>x.s.k===0);
@@ -10464,7 +10466,7 @@ const ReportAdmin = {
   },
   async copyPhones(){
     const rows = this.rows || []; const f = this.callField;
-    const list = (state.adminUsers||[]).filter(u=>!u.is_admin && (u.allowed_fields||[]).includes(f) && !rows.some(r=>r.user_id===u.id));
+    const list = (state.adminUsers||[]).filter(u=>isStudentAcct(u) && (u.allowed_fields||[]).includes(f) && !rows.some(r=>r.user_id===u.id));
     const text = list.map(u=>`${u.name||''}\t${u.phone||''}`).join('\n');
     try{ await navigator.clipboard.writeText(text); showToast(`${list.length}명의 이름·연락처를 복사했어요`, 'ok'); }catch(_){ showToast('복사하지 못했어요', 'warn'); }
   },
@@ -10897,7 +10899,7 @@ async function renderDashboard(){
       const list = (!profErr && allProfiles) ? allProfiles : [];
       await attachAdminEmails(list);
       state.adminUsers = list;
-      const students = list.filter(u=>!u.is_admin);
+      const students = list.filter(u=>isStudentAcct(u));
       const opened = students.filter(u=>(u.allowed_fields||[]).length>0).length, waiting = students.length - opened;
       const now = Date.now(), weekAgoIso = new Date(now - 7*86400000).toISOString();
       const [pr, rr] = await Promise.all([
@@ -11509,7 +11511,7 @@ function renderHardQ(){
     const rec = HardQ.recs[a.record_id]; if(!rec) return;
     if(field && rec.field_id !== field) return;
     if(since && new Date(rec.created_at).getTime() < since) return;
-    const u = users[rec.user_id]; if(u && u.is_admin) return;      // 관리자 연습은 빼고
+    const u = users[rec.user_id]; if(u && !isStudentAcct(u)) return;      // 관리자·직원 연습은 빼고
     const key = String(a.question_text||'').replace(/\s+/g,' ').trim(); if(!key) return;
     let g = groups.get(key); if(!g){ g = { q:key, items:[], people:new Set(), fields:new Set(), axes:{} }; groups.set(key, g); }
     g.items.push({ a, rec }); g.people.add(rec.user_id); g.fields.add(rec.field_name || rec.field_id || '');
@@ -11595,7 +11597,7 @@ function renderOverviewHardQ(){
     if(!HardQ.rows){ try{ const recs = {}; (state.adminRecords||[]).forEach(r=>{ recs[r.id]=r; }); HardQ.recs = recs; const r = await sbAll(()=>sb.from('interview_answers').select('record_id,question_text,answer_text,score,feedback,kind,created_at').order('created_at',{ascending:false})); if(r.error) throw r.error; HardQ.rows = (r.data||[]).filter(a=>a.kind!=='followup' && a.score!=null && recs[a.record_id]); HardQ.loadedAt = Date.now(); }catch(e){ sec.style.display='none'; return; } }
     const users = {}; (state.adminUsers||[]).forEach(u=>{ users[u.id]=u; });
     const groups = new Map();
-    HardQ.rows.forEach(a=>{ const rec = HardQ.recs[a.record_id]; if(!rec) return; const u = users[rec.user_id]; if(u && u.is_admin) return; const key = String(a.question_text||'').replace(/\s+/g,' ').trim(); if(!key) return; let g = groups.get(key); if(!g){ g = { q:key, sc:[], axes:{} }; groups.set(key,g); } g.sc.push(a.score||0); const ax = hardQAxes(a.feedback); if(ax) Object.entries(ax).forEach(([k,v])=>{ (g.axes[k]=g.axes[k]||[]).push(v); }); });
+    HardQ.rows.forEach(a=>{ const rec = HardQ.recs[a.record_id]; if(!rec) return; const u = users[rec.user_id]; if(u && !isStudentAcct(u)) return; const key = String(a.question_text||'').replace(/\s+/g,' ').trim(); if(!key) return; let g = groups.get(key); if(!g){ g = { q:key, sc:[], axes:{} }; groups.set(key,g); } g.sc.push(a.score||0); const ax = hardQAxes(a.feedback); if(ax) Object.entries(ax).forEach(([k,v])=>{ (g.axes[k]=g.axes[k]||[]).push(v); }); });
     const ranked = [...groups.values()].filter(g=>g.sc.length>=2).map(g=>{ const avg = Math.round(g.sc.reduce((s,v)=>s+v,0)/g.sc.length); const ax = Object.entries(g.axes).map(([k,a])=>[k, a.reduce((s,v)=>s+v,0)/a.length]).sort((a,b)=>a[1]-b[1]); return { q:g.q, n:g.sc.length, avg, weak: ax.length ? ax[0][0] : '' }; }).sort((a,b)=>a.avg-b.avg || b.n-a.n).slice(0,5);
     if(!ranked.length){ sec.style.display = 'none'; return; }
     sec.style.display = '';
@@ -11634,9 +11636,9 @@ function filterAdminUsers(){
   let shown = 0;
   document.querySelectorAll('#admin-list .admin-row').forEach(row=>{
     const hay = (row.dataset.search || '');
-    const chipOk = !chip || (chip === '__devwarn' ? row.dataset.devwarn === '1' : chip === '__admin' ? row.dataset.admin === '1' : chip === '__expired' ? row.dataset.expired === '1' : chip === '__pending' ? row.dataset.pending === '1' : chip === '__active' ? row.dataset.active === '1' : true);
+    const chipOk = !chip || (chip === '__devwarn' ? row.dataset.devwarn === '1' : chip === '__admin' ? row.dataset.admin === '1' : chip === '__staff' ? row.dataset.staff === '1' : chip === '__expired' ? row.dataset.expired === '1' : chip === '__pending' ? row.dataset.pending === '1' : chip === '__active' ? row.dataset.active === '1' : true);
     const stOk = !st || row.dataset.status === st;
-    const fldOk = !fld || (row.dataset.fields || '').split(',').includes(fld);
+    const fldOk = !fld || (row.dataset.staff !== '1' && (row.dataset.fields || '').split(',').includes(fld));   // 직원(8개 분야 전부)은 분야별 보기에서 빼고 '직원'으로 따로
     const ok = (!q || hay.includes(q)) && chipOk && stOk && fldOk;
     row.style.display = ok ? '' : 'none';
     if(ok) shown++;
@@ -11755,7 +11757,7 @@ function renderAdminRecordsView(){
     return `<div class="person-group${open}" data-uid="${escapeHtml(uid)}" data-search="${escapeHtml(search)}">
       <div class="person-head" onclick="togglePersonGroup('${escapeHtml(uid)}')">
         <svg class="person-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-        <span><span class="admin-name">${escapeHtml(nm)}</span>${u && u.is_admin ? ' <span class="perm-chip">관리자</span>' : ''}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span>
+        <span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span>
         <span class="person-fields">${fieldBadgesHtml(fields.map(n=>{ const f = FIELDS.find(x=>x.name===n); return f ? f.id : null; }).filter(Boolean))}</span>
         <span class="person-scores"><b>${recs.length}회</b> · 평균 ${avg}점 · 최고 ${best}점 ${scoreTrendHtml(recs)}</span>
         <span class="admin-sub" style="margin:0;white-space:nowrap;">최근 ${formatDateFull(recs[0].created_at)}</span>
@@ -12655,7 +12657,7 @@ async function loadBetaView(force){
   renderBetaView();
 }
 function betaRows(){
-  const users = (state.adminUsers||[]).filter(u=>!u.is_admin);
+  const users = (state.adminUsers||[]).filter(u=>isStudentAcct(u));
   const recs = state.adminRecordsByUser || {}; const logs = state.betaLogs || []; const fb = state.betaFb || [];
   const now = Date.now(), DAY = 86400000;
   const lastLogin = {}; logs.forEach(l=>{ if(l.event==='login' && !lastLogin[l.user_id]) lastLogin[l.user_id] = new Date(l.created_at).getTime(); });
@@ -12691,7 +12693,7 @@ async function loadRealSetView(force){
   renderRealSetView();
 }
 function realSetRows(){
-  const users = (state.adminUsers||[]).filter(u=>!u.is_admin);
+  const users = (state.adminUsers||[]).filter(u=>isStudentAcct(u));
   const recs = state.adminRecordsByUser || {}; const logs = state.rsLogs || [];
   return users.map(u=>{
     const sets = (recs[u.id]||[]).filter(r=>r.set_kind).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
@@ -13042,7 +13044,7 @@ const NoticeAdmin = {
   stateOf(n){ const now = Date.now(); if(!n.active) return ['off','내림']; if(n.ends_at && new Date(n.ends_at).getTime() <= now) return ['end','기간 끝남']; if(n.starts_at && new Date(n.starts_at).getTime() > now) return ['wait','예약']; return ['on','게시 중']; },
   render(){
     const list = document.getElementById('nt-list'); if(!list) return;
-    const students = (state.adminUsers||[]).filter(u=>!u.is_admin).length;
+    const students = (state.adminUsers||[]).filter(u=>isStudentAcct(u)).length;
     const cnt = document.getElementById('nt-list-count'); if(cnt) cnt.textContent = this.rows.length ? `공지 ${this.rows.length}개` : '';
     if(!this.rows.length){ list.innerHTML = '<div class="qa-empty" style="margin:12px 0;">아직 쓴 공지가 없어요. 위에서 첫 공지를 써 보세요.</div>'; return; }
     list.innerHTML = this.rows.map(n=>{ const [cls, lbl] = this.stateOf(n); const rd = this.reads[n.id] || 0;
@@ -13198,7 +13200,7 @@ async function refreshLiveView(){
   const inactiveRows = (()=>{
     const lastLogin = {}; logs.forEach(l=>{ if(l.event==='login' && !lastLogin[l.user_id]) lastLogin[l.user_id] = l.created_at; });
     const onlineIds = new Set(online.map(p=>p.user_id));
-    const targets = users.filter(u=>!u.is_admin && (u.allowed_fields||[]).length && !accessInfo(u.access_until).expired && !onlineIds.has(u.id));
+    const targets = users.filter(u=>isStudentAcct(u) && (u.allowed_fields||[]).length && !accessInfo(u.access_until).expired && !onlineIds.has(u.id));
     const rows = targets.map(u=>{ const t = lastLogin[u.id] ? new Date(lastLogin[u.id]).getTime() : null; return { u, t, days: t ? Math.floor((now - t)/86400000) : null }; })
       .filter(x=>x.t === null || x.days >= 2).sort((a,b)=>(b.days==null?999:b.days)-(a.days==null?999:a.days));
     return { rows, targets };
@@ -13233,7 +13235,7 @@ async function refreshLiveView(){
     const stateTxt = p.screen==='interview' ? '면접 중' : idle ? '잠시 멈춤' : '둘러보는 중';
     return `<div class="online-row">
       <span class="av ${stateCls}">${escapeHtml((nm||'?').slice(0,1))}<i class="online-dot${idle?' idle':''}${p.screen==='interview'?' practice':''}"></i></span>
-      <span><span class="admin-name">${escapeHtml(nm)}</span>${u && u.is_admin ? ' <span class="perm-chip">관리자</span>' : ''} <span class="st-pill ${stateCls}">${stateTxt}</span>${u && u.phone ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(u.phone)}</span>` : ''}</span>
+      <span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)} <span class="st-pill ${stateCls}">${stateTxt}</span>${u && u.phone ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(u.phone)}</span>` : ''}</span>
       <span class="online-where">${presenceLabel(p)}</span>
       <span class="admin-sub" style="margin:0;white-space:nowrap;">${agoLabel(p.updated_at)}</span>
     </div>`;
@@ -13283,7 +13285,7 @@ function renderLiveTimeline(){
     return `<div class="tl-group${open}" data-uid="${escapeHtml(uid)}">
       <div class="tl-head" onclick="toggleLiveGroup('${escapeHtml(uid)}')">
         <svg class="person-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-        <span class="tl-who"><span class="av">${escapeHtml((nm||'?').slice(0,1))}</span><span><span class="admin-name">${escapeHtml(nm)}</span>${u && u.is_admin ? ' <span class="perm-chip">관리자</span>' : ''}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span></span>
+        <span class="tl-who"><span class="av">${escapeHtml((nm||'?').slice(0,1))}</span><span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span></span>
         <span class="tl-chips tl-hide"><span class="tl-chip"><b>${activeDays}</b>일 활동</span><span class="tl-chip"><b>${logins}</b>회 접속</span><span class="tl-chip ok"><b>${ends}</b>회 면접 완료</span>${aborts?`<span class="tl-chip warn"><b>${aborts}</b>회 중단</span>`:''}</span>
         <span class="tl-last"><span class="ev-tag ${ACTIVITY_CLS[last.event]||''}">${ACTIVITY_LABEL[last.event]||escapeHtml(last.event)}</span><small>${agoLabel(last.created_at)}</small></span>
       </div>
@@ -17901,11 +17903,15 @@ async function renderAdmin(){
   const now = Date.now();
   const days7 = now - 7*24*3600*1000;
   const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-  const thisMonth = allRecords.filter(r=>new Date(r.created_at) >= monthStart).length;
-  const activeUsers = new Set(allRecords.filter(r=>new Date(r.created_at).getTime() >= days7).map(r=>r.user_id)).size;
-  const avgAll = allRecords.length ? Math.round(allRecords.reduce((s,r)=>s+(r.score||0),0)/allRecords.length) : null;
+  // 2026-10-20j: 현황 숫자·그래프·분야별 평균은 면접자 기록만 (관리자·직원 연습 제외)
+  const studentIds = new Set(users.filter(u=>isStudentAcct(u)).map(u=>u.id));
+  const statRecords = allRecords.filter(r=>studentIds.has(r.user_id));
+  const thisMonth = statRecords.filter(r=>new Date(r.created_at) >= monthStart).length;
+  const activeUsers = new Set(statRecords.filter(r=>new Date(r.created_at).getTime() >= days7).map(r=>r.user_id)).size;
+  const avgAll = statRecords.length ? Math.round(statRecords.reduce((s,r)=>s+(r.score||0),0)/statRecords.length) : null;
 
-  const students = users.filter(u=>!u.is_admin);
+  const students = users.filter(u=>isStudentAcct(u));
+  const staffCount = users.filter(u=>isStaffAcct(u)).length, adminCount = users.filter(u=>u.is_admin).length;
   const expiredCount = students.filter(u=>accessInfo(u.access_until).expired).length;
   const soonCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.until && !a.expired && a.daysLeft <= 3; }).length;
   const grantedCount = students.filter(u=>(u.allowed_fields||[]).length>0).length;
@@ -17914,13 +17920,13 @@ async function renderAdmin(){
   const elP = document.getElementById('ov-stats-people');
   const activeCount = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length;
   if(elP) elP.innerHTML =
-      tile(students.length+'<i>명</i>', '등록 면접자', {scope:'전체', foot: users.length-students.length ? `관리자 ${users.length-students.length}명 별도` : '관리자 계정 제외', go:"adminGo('users','')"})
+      tile(students.length+'<i>명</i>', '등록 면접자', {scope:'전체', foot: (adminCount || staffCount) ? [adminCount ? `관리자 ${adminCount}명` : '', staffCount ? `직원 ${staffCount}명` : ''].filter(Boolean).join(' · ') + ' 별도' : '관리자 계정 제외', go:"adminGo('users','')"})
     + tile(activeCount+'<i>명</i>', '이용 중', {scope:'현재', foot:'권한 있고 기간이 남은 면접자', go:"adminGo('users','__active')"})
     + tile(pendingCount+'<i>명</i>', '권한 대기', {scope:'현재', cls: pendingCount ? 'warn' : '', foot:'열어준 분야가 없는 면접자', go:"adminGo('users','__pending')"})
-    + tile(activeUsers+'<i>명</i>', '최근 연습한 사람', {scope:'최근 7일', foot:`이번 달 완료 ${thisMonth}회 · 전체 ${allRecords.length}회`, go:"adminGo('live')"});
+    + tile(activeUsers+'<i>명</i>', '최근 연습한 사람', {scope:'최근 7일', foot:`이번 달 완료 ${thisMonth}회 · 전체 ${statRecords.length}회`, go:"adminGo('live')"});
   const elR = document.getElementById('ov-stats-practice');
   if(elR) elR.innerHTML =
-      tile(avgAll!=null ? avgAll+'<i>점</i> <span class="of">/ 100</span>' : '–', '평균 점수', {scope:'전체 기간', foot:`완료된 연습 ${allRecords.length}회 기준`, go:"adminGo('records')"})
+      tile(avgAll!=null ? avgAll+'<i>점</i> <span class="of">/ 100</span>' : '–', '평균 점수', {scope:'전체 기간', foot:`완료된 연습 ${statRecords.length}회 기준`, go:"adminGo('records')"})
     + tile(aiTotalUsed+'<i>회</i>', 'AI 면접 사용', {scope:'누적', foot:`오늘 ${aiTodayUsed}회 · ${(AiSwitch.settings.ai_followup || AiSwitch.settings.ai_grading) ? 'AI 켜짐' : 'AI 꺼짐'}`, go:"adminGo('pipeline')"})
     + tile(`${AiSwitch.limits.daily}<i>회/일</i>`, '1인당 이용 한도', {scope:'AI 면접', foot:`전체 기간 ${AiSwitch.limits.total}회`, go:"adminGo('pipeline')"})
     + tile((aiTotalUsed*AI_COST.interview('basic').total).toLocaleString()+'<i>원</i>', '예상 비용', {scope:'누적 · 추정', foot:'기본 설정 1회 기준 · 실제 청구액 아님', go:"adminGo('pipeline')"});
@@ -17941,7 +17947,7 @@ async function renderAdmin(){
     const activeStudents = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired);
     const idle = activeStudents.filter(u=>{ const recs = byUser[u.id]||[]; return !recs.length || (now - new Date(recs[0].created_at).getTime()) > 3*86400000; });
     if(activeStudents.length && idle.length) items.push({ cls:'', txt:`<b>${idle.length}명</b>이 3일 넘게 연습이 없어요 <small>(${idle.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${idle.length>4?' 외':''})</small>`, go:"adminGo('live')", btn:'접속 현황' });
-    const nearCap = Object.entries(state.adminAiUsage||{}).filter(([id,u])=>{ const p = users.find(x=>x.id===id); if(!p || p.is_admin) return false; const lim = AiSwitch.limits.total + (p.ai_bonus||0); return lim && u.used_total >= lim*0.8; }).length;
+    const nearCap = Object.entries(state.adminAiUsage||{}).filter(([id,u])=>{ const p = users.find(x=>x.id===id); if(!p || !isStudentAcct(p)) return false; const lim = AiSwitch.limits.total + (p.ai_bonus||0); return lim && u.used_total >= lim*0.8; }).length;
     if(nearCap) items.push({ cls:'', txt:`<b>${nearCap}명</b>이 AI 면접 총 한도의 80% 이상을 썼어요`, go:"adminGo('users','')", btn:'횟수 추가' });
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn); if(dw.length) items.push({ cls:'warn', txt:`<b>${dw.length}명</b>이 최근 7일 동안 여러 기기를 번갈아 썼어요 <small>(${dw.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${dw.length>4?' 외':''} · 계정 공유 의심)</small>`, go:"adminGo('users','__devwarn')", btn:'확인' }); }
     const fbNew = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length;
@@ -17954,7 +17960,7 @@ async function renderAdmin(){
   const sparkEl = document.getElementById('ov-spark');
   if(sparkEl){
     const days = []; for(let i=13;i>=0;i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-i); days.push(d); }
-    const counts = days.map(d=>{ const s = d.getTime(), e = s + 86400000; return allRecords.filter(r=>{ const t = new Date(r.created_at).getTime(); return t >= s && t < e; }).length; });
+    const counts = days.map(d=>{ const s = d.getTime(), e = s + 86400000; return statRecords.filter(r=>{ const t = new Date(r.created_at).getTime(); return t >= s && t < e; }).length; });
     const max = Math.max(1, ...counts), sum = counts.reduce((a,b)=>a+b,0), week = counts.slice(7).reduce((a,b)=>a+b,0), prev = counts.slice(0,7).reduce((a,b)=>a+b,0);
     const diffTxt = prev ? (week > prev ? `지난주보다 +${week-prev}회` : week < prev ? `지난주보다 ${week-prev}회` : '지난주와 같음') : (week ? '지난주 기록 없음' : '');
     sparkEl.innerHTML = `<div class="ov-spark-head"><div><b>최근 14일 면접 횟수</b><small>하루에 몇 번 모의면접이 끝났는지 · 오늘은 주황색</small></div><div class="ov-spark-kpi"><span><b>${sum}</b>회 <small>14일 합계</small></span><span><b>${week}</b>회 <small>최근 7일</small></span><span><b>${(sum/14).toFixed(1)}</b>회 <small>하루 평균</small></span>${diffTxt?`<span class="${week>prev?'up':week<prev?'down':'same'}">${diffTxt}</span>`:''}</div></div>
@@ -17963,17 +17969,17 @@ async function renderAdmin(){
   }
   // 접이식 패널 요약 글
   const ffSub = document.getElementById('ov-fold-field-sub');
-  if(ffSub){ const cnt = {}; allRecords.forEach(r=>{ const k = r.field_name||r.field_id; if(k) cnt[k]=(cnt[k]||0)+1; }); const ks = Object.entries(cnt).sort((a,b)=>b[1]-a[1]); ffSub.textContent = ks.length ? `${ks.length}개 분야 · ${ks.slice(0,2).map(([k,n])=>k+' '+n+'회').join(', ')}` : '아직 기록 없음'; }
+  if(ffSub){ const cnt = {}; statRecords.forEach(r=>{ const k = r.field_name||r.field_id; if(k) cnt[k]=(cnt[k]||0)+1; }); const ks = Object.entries(cnt).sort((a,b)=>b[1]-a[1]); ffSub.textContent = ks.length ? `${ks.length}개 분야 · ${ks.slice(0,2).map(([k,n])=>k+' '+n+'회').join(', ')}` : '아직 기록 없음'; }
   try{ renderOverviewHardQ(); }catch(e){ console.warn('[현황 어려운 문항]', e); }
   const frSub = document.getElementById('ov-fold-recent-sub');
-  if(frSub && allRecords.length){ const r0 = allRecords[0]; const nm = (users.find(u=>u.id===r0.user_id)||{}).name||''; frSub.textContent = `가장 최근 ${formatDateFull(r0.created_at)} · ${nm} ${r0.score}점`; }
+  if(frSub && statRecords.length){ const r0 = statRecords[0]; const nm = (users.find(u=>u.id===r0.user_id)||{}).name||''; frSub.textContent = `가장 최근 ${formatDateFull(r0.created_at)} · ${nm} ${r0.score}점`; }
 
 
   // 분야별 평균 점수 / 응시 횟수
   const fieldWrap = document.getElementById('admin-field-stats');
   if(fieldWrap){
     const byField = {};
-    allRecords.forEach(r=>{
+    statRecords.forEach(r=>{
       const key = r.field_name || r.field_id;
       if(!byField[key]) byField[key] = {n:0, sum:0};
       byField[key].n += 1; byField[key].sum += (r.score||0);
@@ -18012,12 +18018,13 @@ async function renderAdmin(){
     const status = u.status || '준비 중';
     const isSelf = !!(state.currentUser && u.id === state.currentUser.id);
     const acc = accessInfo(u.access_until);
-    const isActive = !u.is_admin && allowedFields.length > 0 && !acc.expired;
+    const isStaff = isStaffAcct(u);
+    const isActive = !u.is_admin && !isStaff && allowedFields.length > 0 && !acc.expired;
     const isPending = !u.is_admin && allowedFields.length === 0;
-    const isExpiring = !u.is_admin && (acc.expired || (acc.until && acc.daysLeft <= 3));
+    const isExpiring = !u.is_admin && !isStaff && (acc.expired || (acc.until && acc.daysLeft <= 3));
     const di = u.is_admin ? null : adminDeviceInfo(u.id);
     const devLine = !di || !di.s ? '' : `<div class="up-dev${di.warn ? ' warn' : ''}" title="최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회 · 누적 기기 전환 ${di.s.takeovers||0}회"><span class="up-dev-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/></svg></span>${escapeHtml(di.s.device || '기기 정보 없음')} · ${agoLabel(di.s.last_seen)}${di.warn ? ' <b class="up-dev-tag">기기 주의</b>' : (di.rep7 ? ` · 전환 ${di.rep7}회` : '')}</div>`;
-    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-fields="${escapeHtml(allowedFields.join(','))}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-staff="${isStaff ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-fields="${escapeHtml(allowedFields.join(','))}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
@@ -18026,7 +18033,7 @@ async function renderAdmin(){
         </div>
         ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
-        ${u.is_admin ? '' : `<div class="up-state">${acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
+        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="8개 분야를 모두 받은 직원 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
       <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
@@ -18048,9 +18055,10 @@ async function renderAdmin(){
     const expiringCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.expired || (a.until && a.daysLeft <= 3); }).length;
     const defs = [['', '전체', users.length], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__pending', '권한 대기', pendingCount], ['__expired', '만료 · 임박', expiringCount]];
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn).length; if(dw) defs.push(['__devwarn', '기기 주의', dw]); }
-    defs.push(['__admin', '관리자', users.length - students.length]);
-    const tone = { __active:'ok', __pending:'warn', __expired:'danger', __devwarn:'warn', __admin:'mute' };
-    chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${tone[v] ? ' t-'+tone[v] : ''}" data-val="${v}" onclick="setUserFilter('${v}')">${tone[v] && v !== '__admin' ? '<i class="uf-dot" aria-hidden="true"></i>' : ''}${l} <b>${n}</b></button>`).join('');
+    if(staffCount) defs.push(['__staff', '직원', staffCount]);
+    defs.push(['__admin', '관리자', adminCount]);
+    const tone = { __active:'ok', __pending:'warn', __expired:'danger', __devwarn:'warn', __staff:'staff', __admin:'mute' };
+    chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${tone[v] ? ' t-'+tone[v] : ''}" data-val="${v}" onclick="setUserFilter('${v}')">${tone[v] && v !== '__admin' && v !== '__staff' ? '<i class="uf-dot" aria-hidden="true"></i>' : ''}${l} <b>${n}</b></button>`).join('');
   }
   // 분야 칩 (2026-10-20i): 열어 준 분야별로 보기 — 한 명이라도 열린 분야만
   const fieldEl = document.getElementById('uf-field-chips'), fieldRow = document.getElementById('uf-field-row');
@@ -18080,7 +18088,7 @@ async function renderAdmin(){
   // 현황 요약: 최근 5건
   const recent = document.getElementById('admin-recent-list');
   if(recent){
-    recent.innerHTML = allRecords.length ? allRecords.slice(0,5).map(r=>`
+    recent.innerHTML = statRecords.length ? statRecords.slice(0,5).map(r=>`
       <div class="record-list-row" onclick="openRecordDetailFromList('${r.id}')">
         <div>
           <div class="history-field">${escapeHtml(nameOf[r.user_id] || '(삭제된 계정)')} · ${escapeHtml(r.field_name||'')}</div>
@@ -18202,6 +18210,11 @@ function fmtMD(ymd){ const [y,m,d] = ymd.split('-'); const w = ['일','월','화
 function scorePillClass(s){ s = Number(s)||0; return s >= 85 ? 'hi' : s >= 75 ? '' : s >= 60 ? 'mid' : 'low'; }
 /* 분야 배지 (면접자 관리 · 면접 기록): 아이콘 동그라미 + 짧은 이름. 4개 이상이면 아이콘만 + "n개 분야", 누르면 전체 이름이 펼쳐짐 */
 const FIELD_HUES = { assembly:'#2C55D6', council:'#0E7C5C', court:'#7A4D00', prosecution:'#5B3FD6', sunflower:'#D97706', education:'#0F766E', corporate:'#475569', freelance:'#BE185D' };
+/* 직원 계정 (2026-10-20j 사용자 결정): 관리자가 아니면서 8개 분야를 모두 받은 계정 = 직원·강사 테스트용
+ * → 면접자 관리에서 '직원'으로 따로 모으고, 현황·통계·분야별 인원·연락할 사람 등 면접자 숫자에서는 뺌 */
+function isStaffAcct(u){ if(!u || u.is_admin) return false; const a = u.allowed_fields || []; return FIELDS.length > 0 && FIELDS.every(f=>a.includes(f.id)); }
+function isStudentAcct(u){ return !!u && !u.is_admin && !isStaffAcct(u); }
+function acctChip(u){ return !u ? '' : u.is_admin ? ' <span class="perm-chip">관리자</span>' : isStaffAcct(u) ? ' <span class="perm-chip staff">직원</span>' : ''; }
 function fieldBadgesHtml(ids){
   ids = (ids||[]).filter(Boolean);
   const list = ids.map(id=>FIELDS.find(f=>f.id===id) || { id, name:id, icon:'dome' });
