@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20m';
+var APP_VERSION = '2026-10-20n';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4042,6 +4042,19 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   .nt-bubble{ right:-44px; } .nt-bubble::before{ right:59px; }
 }
 
+
+/* ---- 관리자 머리줄 의견·문제 버튼 (2026-10-20n) ---- */
+.d3-user{ display:flex; align-items:center; gap:6px; }
+.adm-fb-btn{ position:relative; flex:none; display:inline-flex; align-items:center; gap:6px; height:40px; padding:0 12px; border:1px solid var(--c-line, #e6e4e0); border-radius:999px; background:#fff; color:var(--c-ink-2, #45454a); font:inherit; font-size:13.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.adm-fb-btn:hover{ border-color:var(--c-ink, #1c1c1e); color:var(--c-ink, #1c1c1e); }
+.adm-fb-btn.has-new{ border-color:#f3c9b8; background:#fdf0eb; color:#c2401b; }
+.adm-fb-badge{ min-width:20px; height:20px; padding:0 6px; box-sizing:border-box; border-radius:999px; background:#e8532a; color:#fff; font-size:11.5px; font-weight:800; line-height:20px; text-align:center; }
+.adm-fb-badge[hidden]{ display:none; }
+@media(max-width:640px){
+  .adm-fb-btn{ width:40px; padding:0; justify-content:center; gap:0; }
+  .adm-fb-btn .adm-fb-lbl{ display:none; }
+  .adm-fb-badge{ position:absolute; top:-3px; right:-4px; min-width:18px; height:18px; line-height:18px; font-size:10.5px; padding:0 5px; box-shadow:0 0 0 2px #fff; }
+}
 /* ---- 직원 계정 표시 (2026-10-20j) ---- */
 .tag.tag-staff{ background:#eef1f6; color:#4C5A74; } .perm-chip.staff{ background:#eef1f6; color:#4C5A74; border-color:#d5dbe6; }
 /* ---- 면접자 관리 거르기 줄 (2026-10-20i) ---- */
@@ -4207,6 +4220,8 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .d3-user-id{ font-size:12px; font-weight:500; color:var(--c-ink-3, #66666c); max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 @media (max-width:520px){ .d3-user-id{ max-width:140px; } }
 @media (max-width:400px){ .a3-hdr .d3-user-id{ max-width:108px; } }
+@media (max-width:440px){ .a3-hdr .d3-user-id{ max-width:84px; } .a3-hdr .d3-user{ gap:4px; } .a3-hdr .d3-user-btn{ padding-right:4px; gap:6px; } }
+@media (max-width:380px){ .a3-hdr .d3-user-id{ max-width:64px; } .a3-hdr .d3-caret{ display:none; } }
 .rr-av-dot{ position:absolute; left:26px; top:2px; width:10px; height:10px; border-radius:50%; background:#e8532a; border:2px solid #fff; }
 .rr-drawer{ position:fixed; inset:0; z-index:950; visibility:hidden; pointer-events:none; --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-line2:#d3d0ca; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-ok:#2f7a4a; --rr-ok-bg:#e7f3ec; --rr-surface:#f6f5f3; }
 .rr-drawer.on{ visibility:visible; pointer-events:auto; }
@@ -9331,6 +9346,7 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   paintAdminId();
+  try{ AdminFb.refresh(); }catch(_){}
   try{ setTimeout(()=>AppUpdate.maybeShow(), 300); }catch(_){}
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
   const hfab = document.getElementById('help-fab'); if(hfab) hfab.style.display = (state.currentUser && !state.currentUser.isAdmin && id === 'screen-dashboard') ? '' : 'none';
@@ -9347,6 +9363,44 @@ async function attachAdminEmails(list){
   catch(e){ console.warn('[면접자 아이디 불러오기 실패]', e.message||e); }
 }
 /** 2026-10-20c: 관리자 계정이면 모든 머리줄의 이름 아래에 아이디(로그인 이메일)를 표시 */
+
+/* 관리자 머리줄 '의견·문제' 버튼 (2026-10-20n): 새 글 수를 숫자로 보여 주고 누르면 바로 의견·문제 화면
+   (예전에는 이름 메뉴나 현황 → 의견·문제로 들어가야 해서 놓치기 쉬웠음) */
+const AdminFb = {
+  n:null, t:0,
+  async refresh(force){
+    if(!state.currentUser || !state.currentUser.isAdmin){ this.paint(); return; }
+    this.paint();
+    if(!force && this.n !== null && Date.now() - this.t < 20000) return;
+    this.t = Date.now();
+    try{ const r = await sb.from('feedback').select('id,status').eq('status', '새 글').limit(500); if(!r.error) this.n = (r.data||[]).filter(x=>!x.status || x.status === '새 글').length; }catch(_){}
+    this.paint();
+  },
+  set(n){ this.n = n; this.t = Date.now(); this.paint(); },
+  go(){
+    try{ ['closeUserMenu','closeAdminUserMenu','closePracticeUserMenu','closeRh3UserMenu'].forEach(f=>{ if(typeof window[f] === 'function') window[f](); }); }catch(_){}
+    const sc = document.querySelector('.screen.active');
+    if(sc && sc.id === 'screen-admin') showAdminView('feedback'); else openAdminScreen('feedback');
+  },
+  paint(){
+    const isAdm = !!(state.currentUser && state.currentUser.isAdmin);
+    const n = this.n || 0;
+    document.querySelectorAll('.d3-user').forEach(box=>{
+      let b = box.querySelector('.adm-fb-btn');
+      if(!isAdm){ if(b) b.remove(); return; }
+      if(!b){
+        b = document.createElement('button'); b.type = 'button'; b.className = 'adm-fb-btn';
+        b.onclick = (e)=>{ e.stopPropagation(); AdminFb.go(); };
+        b.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><span class="adm-fb-lbl">의견·문제</span><span class="adm-fb-badge" hidden></span>';
+        box.insertBefore(b, box.firstChild);
+      }
+      const bd = b.querySelector('.adm-fb-badge'); bd.textContent = n > 99 ? '99+' : String(n); bd.hidden = !n;
+      b.classList.toggle('has-new', !!n);
+      b.title = n ? `새 의견·문제 ${n}건 · 눌러서 보기` : '의견·문제 보기';
+      b.setAttribute('aria-label', b.title);
+    });
+  },
+};
 function paintAdminId(){
   try{
     const u = state.currentUser, show = !!(u && u.isAdmin && u.email);
@@ -12718,7 +12772,7 @@ async function loadFeedback(force){
   }
   renderFeedback();
   const badge = document.getElementById('fb-nav-badge');
-  if(badge){ const n = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; }
+  if(badge){ const n = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
 }
 /* ---------- 관리자 · 베타 현황 (2026-10-07) ----------
    면접자(관리자 제외)별: 마지막 접속(activity_log login) · 연습 횟수(interview_records) · 평균/최근 점수 · 자동 오류/의견(feedback) · 이용 기간 */
@@ -12955,7 +13009,7 @@ async function updateFeedback(id, patch){
     const r = (state.feedbackRows||[]).find(x=>x.id===id); if(r) Object.assign(r, patch);
     const who = r ? fbUserName(r.user_id) : '';
     showToast(notify === 'on' ? `처리 완료로 바꿨어요. ${who ? who + ' 님' : '보낸 사람'}께 '해결됐어요' 알림이 가요.` : notify === 'off' ? `"${patch.status}"으로 바꿨어요. 해결 알림은 거뒀어요.` : patch.status ? `"${patch.status}"으로 바꿨어요` : '메모를 저장했어요', 'ok'); renderFeedback();
-    const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = (state.feedbackRows||[]).filter(x=>x.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; }
+    const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = (state.feedbackRows||[]).filter(x=>x.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
   }catch(e){ showToast('저장 실패: ' + (e.message||e)); }
 }
 async function deleteFeedback(id){
@@ -17949,7 +18003,7 @@ async function renderAdmin(){
     (usage||[]).forEach(u=>{ state.adminAiUsage[u.user_id] = u; });
     await AiSwitch.load();
   }catch(e){ console.warn('[AI 사용량 조회 실패 — step7_ai_usage_limit.sql 실행 여부 확인]', e.message||e); }
-  try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].message !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; } } }catch(_){}
+  try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].message !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} } } }catch(_){}
   // 2026-10-16a: 서류 합격 증빙(승인 요청) — 확인 대기 건수와 사람별 표시
   state.apSubmitted = {};
   try{ const { data: apr } = await sb.from('approval_requests').select('id,user_id,status,field_id,created_at').eq('status','submitted').order('created_at',{ascending:false}).limit(300); (apr||[]).forEach(r=>{ if(!state.apSubmitted[r.user_id]) state.apSubmitted[r.user_id] = r; }); }catch(_){}
