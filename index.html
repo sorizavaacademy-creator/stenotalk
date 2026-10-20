@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20n';
+var APP_VERSION = '2026-10-20o';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4043,6 +4043,13 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 }
 
 
+
+/* ---- 관리자 위쪽 메뉴 (2026-10-20o): 관리자는 연습하지 않으므로 면접 연습·리포트·내 성장만 숨김 (홈 화면은 그대로) ---- */
+body.is-admin-ui .d3-nav a[data-go="practice"], body.is-admin-ui .d3-nav a[data-go="reports"], body.is-admin-ui .d3-nav a[data-go="growth"]{ display:none !important; }
+/* 2026-10-20o: 관리자 메뉴에 공지사항·관리자 화면을 홈 옆에 꺼내고, 이름 메뉴에서는 같은 항목·카카오톡 문의를 뺌 */
+.d3-nav a.adm-only{ display:none; }
+body.is-admin-ui .d3-nav a.adm-only{ display:inline-flex; }
+body.is-admin-ui #d3-user-menu #nt-menu-item, body.is-admin-ui #d3-user-menu #nav-admin-btn, body.is-admin-ui #d3-user-menu .stu-only{ display:none !important; }
 /* ---- 관리자 머리줄 의견·문제 버튼 (2026-10-20n) ---- */
 .d3-user{ display:flex; align-items:center; gap:6px; }
 .adm-fb-btn{ position:relative; flex:none; display:inline-flex; align-items:center; gap:6px; height:40px; padding:0 12px; border:1px solid var(--c-line, #e6e4e0); border-radius:999px; background:#fff; color:var(--c-ink-2, #45454a); font:inherit; font-size:13.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
@@ -4918,6 +4925,8 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <a class="d3-brand" href="javascript:void(0)" onclick="goDashboard()"><span class="d3-logo"><i class="d3-dot"></i>ZAVAPASS</span><span class="d3-org">한국AI속기사협회</span></a>
       <nav class="d3-nav" aria-label="주 메뉴" data-nav="dash">
         <a href="javascript:void(0)" data-go="home" aria-current="page" onclick="navGo('home')">홈</a>
+        <a href="javascript:void(0)" class="adm-only" data-adm="notices" onclick="openAdminScreen('notices')">공지사항</a>
+        <a href="javascript:void(0)" class="adm-only" data-adm="admin" onclick="openAdminScreen()">관리자 화면</a>
         <a href="javascript:void(0)" data-go="practice" onclick="navGo('practice')">면접 연습</a>
         <a href="javascript:void(0)" data-go="reports" onclick="navGo('reports')">리포트</a>
         <a href="javascript:void(0)" data-go="growth" onclick="navGo('growth')">내 성장</a>
@@ -4936,12 +4945,12 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         </div>
         <button class="d3-user-btn" id="d3-user-btn" onclick="toggleUserMenu(event)" aria-expanded="false"><span class="d3-avatar" id="d3-avatar">김</span><i class="rr-av-dot" id="rr-av-dot" hidden aria-hidden="true"></i><span class="d3-user-name" id="nav-username">김속기 님</span><svg class="d3-caret" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg></button>
         <div class="d3-menu" id="d3-user-menu" style="display:none;">
-          <button onclick="closeUserMenu(); openMyPage()">마이페이지</button>
+          <button class="stu-only" onclick="closeUserMenu(); openMyPage()">마이페이지</button>
           <button id="rr-menu-item" class="rr-menu-item" onclick="closeUserMenu(); (state.currentUser && state.currentUser.isAdmin) ? openAdminScreen('reports') : RealReport.openDrawer()" style="display:none;">면접 질문 남기기<span class="rr-menu-dot" id="rr-menu-dot" hidden></span></button>
           <button onclick="closeUserMenu(); openAllHistory()">리포트 전체</button>
           <button id="nt-menu-item" onclick="closeUserMenu(); Notice.openAll()">공지사항<span class="nt-menu-dot" id="nt-menu-dot" hidden></span></button>
-          <button onclick="closeUserMenu(); openFeedback()">의견 · 문제 보내기</button>
-          <button class="kakao-show" onclick="closeUserMenu(); openKakaoChannel()" style="display:none;">카카오톡 문의</button>
+          <button class="stu-only" onclick="closeUserMenu(); openFeedback()">의견 · 문제 보내기</button>
+          <button class="kakao-show stu-only" onclick="closeUserMenu(); openKakaoChannel()" style="display:none;">카카오톡 문의</button>
           <button id="nav-admin-btn" onclick="closeUserMenu(); openAdminScreen()" style="display:none;">관리자 화면</button>
           <hr><button onclick="closeUserMenu(); handleLogout()">로그아웃</button>
         </div>
@@ -9346,6 +9355,7 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   paintAdminId();
+  try{ document.body.classList.toggle('is-admin-ui', !!(state.currentUser && state.currentUser.isAdmin)); }catch(_){}   // 2026-10-20o 관리자: 면접 연습·리포트·내 성장 메뉴 숨김
   try{ AdminFb.refresh(); }catch(_){}
   try{ setTimeout(()=>AppUpdate.maybeShow(), 300); }catch(_){}
   const fab = document.getElementById('fb-fab'); if(fab) fab.style.display = (state.currentUser && !state.currentUser.isAdmin && id !== 'screen-login') ? '' : 'none';
