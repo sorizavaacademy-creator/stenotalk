@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20h';
+var APP_VERSION = '2026-10-20i';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3964,6 +3964,29 @@ body.hs-mobile #pc-qr-card{display:none !important;}
   .nt-panel{ position:fixed; left:12px; right:12px; top:64px; width:auto; max-height:calc(100dvh - 88px); }
   .nt-bubble{ right:-44px; } .nt-bubble::before{ right:59px; }
 }
+
+/* ---- 면접자 관리 거르기 줄 (2026-10-20i) ---- */
+#screen-admin .admin-toolbar.uf-toolbar{ flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:10px; min-width:0; }
+.uf-row{ display:flex; align-items:center; gap:10px 12px; flex-wrap:wrap; min-width:0; }
+.uf-row-top .admin-search{ flex:1; min-width:200px; }
+.uf-row-top .admin-filter{ flex:none; width:auto; min-width:170px; }
+.uf-row-top .admin-toolbar-count{ margin-left:auto; font-weight:700; }
+.uf-lbl{ flex:none; width:34px; font-size:13px; font-weight:700; color:var(--c-ink-3, #66666c); }
+.uf-toolbar .uf-row + .uf-row{ border-top:1px dashed var(--c-line, #e6e4e0); padding-top:10px; }
+#screen-admin .uf-toolbar .uf-chips{ flex:1; min-width:0; margin:0; padding:0; background:none; border:0; display:flex; flex-wrap:wrap; gap:6px; }
+.uf-chip .uf-dot{ width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block; opacity:.9; }
+#screen-admin .uf-chip.t-ok .uf-dot{ color:#2f7a4a; } #screen-admin .uf-chip.t-warn .uf-dot{ color:#d97706; } #screen-admin .uf-chip.t-danger .uf-dot{ color:#c0392b; }
+#screen-admin .uf-chip.on .uf-dot{ color:#fff; }
+.uf-reset{ align-self:flex-end; border:0; background:none; font:inherit; font-size:12.5px; color:var(--c-ink-3, #66666c); text-decoration:underline; text-underline-offset:3px; cursor:pointer; padding:0 2px; margin-top:-4px; }
+@media(max-width:640px){
+  .uf-row{ flex-wrap:nowrap; align-items:flex-start; }
+  #screen-admin .uf-toolbar .uf-row-top{ flex-wrap:wrap; }
+  #screen-admin .uf-toolbar .uf-row-top .admin-search{ flex:1 1 100%; min-width:0; width:100%; }
+  #screen-admin .uf-toolbar .uf-row-top .admin-filter{ flex:1 1 auto; min-width:0; }
+  .uf-lbl{ padding-top:8px; }
+  #screen-admin .uf-toolbar .uf-chips{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; } #screen-admin .uf-toolbar .uf-chips::-webkit-scrollbar{ display:none; }
+  #screen-admin .uf-toolbar .uf-chip{ flex:none; }
+}
 /* ---- 해결 알림 (2026-10-20h) ---- */
 .fb-notify{ display:block; margin-top:6px; font-size:12px; line-height:1.45; color:var(--c-ink-3, #66666c); word-break:keep-all; } .fb-notify.ok{ color:#2f7a4a; font-weight:600; } .fb-notify.wait{ color:#b45309; font-weight:600; }
 .nt-done{ display:flex; align-items:center; gap:8px; padding:12px 14px 4px; } .nt-done b{ font-size:15.5px; color:#1c1c1e; } .nt-done time{ margin-left:auto; font-size:12px; color:#66666c; }
@@ -5049,13 +5072,17 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
           </div>
           <button class="btn-add-user" onclick="openAddUser()">지원자 등록 안내</button>
         </div>
-        <div class="admin-toolbar">
-          <div class="uf-chips" id="uf-chips"></div>
-          <input type="text" id="admin-user-search" class="admin-search" placeholder="이름, 아이디, 휴대폰 번호, 메모로 검색" oninput="filterAdminUsers()">
-          <select id="admin-status-filter" class="voice-select admin-filter" onchange="filterAdminUsers()">
-            <option value="">모든 상태</option>
-          </select>
-          <span class="admin-toolbar-count" id="admin-user-count"></span>
+        <div class="admin-toolbar uf-toolbar">
+          <div class="uf-row uf-row-top">
+            <input type="text" id="admin-user-search" class="admin-search" placeholder="이름, 아이디, 휴대폰 번호, 메모로 검색" oninput="filterAdminUsers()">
+            <select id="admin-status-filter" class="voice-select admin-filter" onchange="filterAdminUsers()" aria-label="준비 단계">
+              <option value="">모든 준비 단계</option>
+            </select>
+            <span class="admin-toolbar-count" id="admin-user-count"></span>
+          </div>
+          <div class="uf-row"><span class="uf-lbl">상태</span><div class="uf-chips" id="uf-chips"></div></div>
+          <div class="uf-row" id="uf-field-row" style="display:none;"><span class="uf-lbl">분야</span><div class="uf-chips" id="uf-field-chips"></div></div>
+          <button type="button" class="uf-reset" id="uf-reset" style="display:none;" onclick="resetUserFilters()">조건 모두 지우기</button>
         </div>
         <div class="admin-select-bar" id="admin-select-bar">
           <span id="admin-select-count">0명 선택됨</span>
@@ -5069,7 +5096,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
           </div>
           <div id="admin-list"></div>
         </div>
-        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. "권한 대기" 칩을 누른 뒤 맨 위 체크박스를 누르면 대기 중인 사람만 모두 골라져요.</span></div>
+        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. <b>상태·분야</b> 칩으로 골라 본 뒤 맨 위 체크박스를 누르면 지금 보이는 사람만 모두 골라져요.</span></div>
       </div>
 
       <!-- 승인 요청 (2026-10-16a) -->
@@ -11420,8 +11447,7 @@ async function openGrowthView(field){
 /* ---------------- 관리자 화면 (사이드바 메뉴) ---------------- */
 async function dashAdminGo(filter){
   await openAdminScreen('users');
-  const sel = document.getElementById('admin-status-filter');
-  if(sel && filter !== undefined){ sel.value = filter; if(typeof filterAdminUsers==='function') filterAdminUsers(); }
+  if(filter !== undefined){ try{ setUserFilter(filter, false); }catch(_){} }
 }
 async function openAdminScreen(view){
   if(!state.currentUser || !state.currentUser.isAdmin){ showToast('관리자만 들어갈 수 있어요.'); return; }
@@ -11599,23 +11625,40 @@ function normalizeSearch(v){
   // 숫자와 하이픈만 입력했다면 번호 검색으로 보고 숫자만 비교 (010-1234 / 0101234 / 5678 모두 찾기)
   return /^[\d\s-]+$/.test(t) && /\d/.test(t) ? phoneDigits(t) : t;
 }
+/* 면접자 관리 거르기 (2026-10-20i): 상태 칩 · 분야 칩 · 준비 단계(드롭다운) · 검색을 함께 적용 */
 function filterAdminUsers(){
   const q = normalizeSearch(document.getElementById('admin-user-search').value);
-  const st = document.getElementById('admin-status-filter').value;
+  const sel = document.getElementById('admin-status-filter');
+  if(sel && /^__/.test(sel.value)){ state.userChip = sel.value; sel.value = ''; }   // 예전 방식으로 넘어온 값
+  const chip = state.userChip || '', st = sel ? sel.value : '', fld = state.userField || '';
   let shown = 0;
   document.querySelectorAll('#admin-list .admin-row').forEach(row=>{
     const hay = (row.dataset.search || '');
-    const stOk = !st || (st === '__devwarn' ? row.dataset.devwarn === '1' : st === '__admin' ? row.dataset.admin === '1' : st === '__expired' ? row.dataset.expired === '1' : st === '__pending' ? row.dataset.pending === '1' : st === '__active' ? row.dataset.active === '1' : row.dataset.status === st);
-    const ok = (!q || hay.includes(q)) && stOk;
+    const chipOk = !chip || (chip === '__devwarn' ? row.dataset.devwarn === '1' : chip === '__admin' ? row.dataset.admin === '1' : chip === '__expired' ? row.dataset.expired === '1' : chip === '__pending' ? row.dataset.pending === '1' : chip === '__active' ? row.dataset.active === '1' : true);
+    const stOk = !st || row.dataset.status === st;
+    const fldOk = !fld || (row.dataset.fields || '').split(',').includes(fld);
+    const ok = (!q || hay.includes(q)) && chipOk && stOk && fldOk;
     row.style.display = ok ? '' : 'none';
     if(ok) shown++;
   });
   const empty = document.getElementById('admin-list-empty');
   if(empty) empty.style.display = shown ? 'none' : '';
   const cnt = document.getElementById('admin-user-count'); if(cnt) cnt.textContent = `${shown}명`;
-  document.querySelectorAll('#uf-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === (['','__pending','__active','__expired','__admin','__devwarn'].includes(st) ? st : '__status')));
+  document.querySelectorAll('#uf-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === chip));
+  document.querySelectorAll('#uf-field-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === fld));
+  const rs = document.getElementById('uf-reset'); if(rs) rs.style.display = (chip || st || fld || q) ? '' : 'none';
 }
-function setUserFilter(v){ const sel = document.getElementById('admin-status-filter'); if(sel){ sel.value = v; } filterAdminUsers(); }
+/** 상태 칩(빈 값·__로 시작) 또는 준비 단계 값 */
+function setUserFilter(v, keepField){
+  v = v || '';
+  const sel = document.getElementById('admin-status-filter');
+  if(v && !/^__/.test(v)){ if(sel) sel.value = v; }
+  else state.userChip = v;
+  if(keepField === false) state.userField = '';
+  filterAdminUsers();
+}
+function setUserField(v){ state.userField = v || ''; filterAdminUsers(); }
+function resetUserFilters(){ state.userChip = ''; state.userField = ''; const sel = document.getElementById('admin-status-filter'); if(sel) sel.value = ''; const q = document.getElementById('admin-user-search'); if(q) q.value = ''; filterAdminUsers(); }
 // 더 보기(⋯) 메뉴: 다른 곳을 누르면 닫힘
 document.addEventListener('click', (e)=>{ document.querySelectorAll('details.row-more[open]').forEach(d=>{ if(!d.contains(e.target)) d.removeAttribute('open'); }); });
 /* ---------------- 관리자 면접 기록: 사람별 묶음 / 전체 목록 ---------------- */
@@ -17974,7 +18017,7 @@ async function renderAdmin(){
     const isExpiring = !u.is_admin && (acc.expired || (acc.until && acc.daysLeft <= 3));
     const di = u.is_admin ? null : adminDeviceInfo(u.id);
     const devLine = !di || !di.s ? '' : `<div class="up-dev${di.warn ? ' warn' : ''}" title="최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회 · 누적 기기 전환 ${di.s.takeovers||0}회"><span class="up-dev-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/></svg></span>${escapeHtml(di.s.device || '기기 정보 없음')} · ${agoLabel(di.s.last_seen)}${di.warn ? ' <b class="up-dev-tag">기기 주의</b>' : (di.rep7 ? ` · 전환 ${di.rep7}회` : '')}</div>`;
-    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-fields="${escapeHtml(allowedFields.join(','))}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
@@ -18003,17 +18046,29 @@ async function renderAdmin(){
   const chipsEl = document.getElementById('uf-chips');
   if(chipsEl){
     const expiringCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.expired || (a.until && a.daysLeft <= 3); }).length;
-    const defs = [['', '전체', users.length], ['__pending', '권한 대기', pendingCount], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__expired', '만료 · 임박', expiringCount], ['__admin', '관리자', users.length - students.length]];
-    { const dw = students.filter(u=>adminDeviceInfo(u.id).warn).length; if(dw) defs.splice(4, 0, ['__devwarn', '기기 주의', dw]); }
-    chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip" data-val="${v}" onclick="setUserFilter('${v}')">${l} <b>${n}</b></button>`).join('');
+    const defs = [['', '전체', users.length], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__pending', '권한 대기', pendingCount], ['__expired', '만료 · 임박', expiringCount]];
+    { const dw = students.filter(u=>adminDeviceInfo(u.id).warn).length; if(dw) defs.push(['__devwarn', '기기 주의', dw]); }
+    defs.push(['__admin', '관리자', users.length - students.length]);
+    const tone = { __active:'ok', __pending:'warn', __expired:'danger', __devwarn:'warn', __admin:'mute' };
+    chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${tone[v] ? ' t-'+tone[v] : ''}" data-val="${v}" onclick="setUserFilter('${v}')">${tone[v] && v !== '__admin' ? '<i class="uf-dot" aria-hidden="true"></i>' : ''}${l} <b>${n}</b></button>`).join('');
+  }
+  // 분야 칩 (2026-10-20i): 열어 준 분야별로 보기 — 한 명이라도 열린 분야만
+  const fieldEl = document.getElementById('uf-field-chips'), fieldRow = document.getElementById('uf-field-row');
+  if(fieldEl){
+    const fc = {}; students.forEach(u=>(u.allowed_fields||[]).forEach(id=>{ fc[id] = (fc[id]||0) + 1; }));
+    const fl = FIELDS.filter(f=>fc[f.id]);
+    if(state.userField && !fc[state.userField]) state.userField = '';
+    if(fieldRow) fieldRow.style.display = fl.length ? '' : 'none';
+    fieldEl.innerHTML = `<button type="button" class="uf-chip" data-val="" onclick="setUserField('')">전체 분야</button>` + fl.map(f=>`<button type="button" class="uf-chip" data-val="${f.id}" onclick="setUserField('${f.id}')">${escapeHtml(f.name)} <b>${fc[f.id]}</b></button>`).join('');
   }
 
   // 상태 필터 옵션 (현재 선택 유지)
   const stSel = document.getElementById('admin-status-filter');
   if(stSel){
     const cur = stSel.value;
-    stSel.innerHTML = '<option value="">모든 상태</option>' + USER_STATUSES.map(s=>`<option value="${s}">${s}</option>`).join('') + '<option value="__pending">권한 대기</option><option value="__active">이용 중</option><option value="__devwarn">기기 주의</option><option value="__admin">관리자만</option><option value="__expired">이용 기간 만료 · 임박</option>';
-    stSel.value = cur;
+    if(/^__/.test(cur)) state.userChip = cur;
+    stSel.innerHTML = '<option value="">모든 준비 단계</option>' + USER_STATUSES.map(s=>`<option value="${s}">준비 단계 · ${s}</option>`).join('');
+    stSel.value = /^__/.test(cur) ? '' : cur;
   }
   filterAdminUsers();
 
@@ -18165,7 +18220,7 @@ function fieldBadgesHtml(ids){
 /** 관리자 화면 이동 (현황 요약 숫자 칸 클릭) — filter: 면접자 관리의 빠른 필터 값 */
 function adminGo(view, filter){
   showAdminView(view);
-  if(view === 'users' && filter !== undefined){ const sel = document.getElementById('admin-status-filter'); if(sel){ sel.value = filter; filterAdminUsers(); } }
+  if(view === 'users' && filter !== undefined){ try{ setUserFilter(filter, false); }catch(_){} }
   if(view === 'pipeline') showPipePane('ai');
 }
 /* AI 비용 추정 모델 (원, 추정치 · 1달러 1,400원 기준 · 2026-10-01)
