@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20e';
+var APP_VERSION = '2026-10-20h';
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
@@ -3935,6 +3935,87 @@ body.hs-mobile #pc-qr-card{display:none !important;}
 .rr-nudge-chips{ display:flex; flex-wrap:wrap; gap:8px; }
 /* 2026-10-16b 다시 요청 팝업 */
 .rr-nudge-box{ max-width:440px !important; }
+
+/* ---- 종(알림) · 말풍선 · 목록 (2026-10-20g) ---- */
+#screen-dashboard .d3-user{ display:flex; align-items:center; gap:4px; }
+.nt-bell-wrap{ position:relative; flex:none; }
+.nt-bell{ position:relative; width:44px; height:44px; border-radius:50%; border:1px solid transparent; background:none; color:var(--c-ink-2, #45454a); display:grid; place-items:center; cursor:pointer; }
+.nt-bell:hover, .nt-bell[aria-expanded="true"]{ background:var(--c-surface, #f6f5f3); border-color:var(--c-line, #e6e4e0); color:var(--c-ink, #1c1c1e); }
+.nt-badge{ position:absolute; top:5px; right:4px; min-width:18px; height:18px; padding:0 5px; box-sizing:border-box; border-radius:999px; background:#e8532a; color:#fff; font-size:11px; font-weight:800; line-height:18px; text-align:center; box-shadow:0 0 0 2px #fff; }
+.nt-badge[hidden]{ display:none; }
+.nt-bubble{ position:absolute; right:-6px; top:calc(100% + 10px); z-index:31; display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:max-content; max-width:min(280px, calc(100vw - 32px)); padding:10px 14px; border:0; border-radius:12px; background:#1f1f21; color:#fff; text-align:left; font:inherit; cursor:pointer; box-shadow:0 10px 28px rgba(0,0,0,.18); opacity:0; transform:translateY(-4px); transition:opacity .2s, transform .2s; }
+.nt-bubble.on{ opacity:1; transform:none; }
+.nt-bubble::before{ content:''; position:absolute; top:-6px; right:21px; width:12px; height:12px; background:#1f1f21; transform:rotate(45deg); border-radius:2px; }
+.nt-bubble b{ font-size:14px; font-weight:700; line-height:1.4; word-break:keep-all; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.nt-bubble span{ font-size:12.5px; color:#ffb69c; font-weight:600; }
+.nt-bubble[hidden]{ display:none; }
+.nt-panel{ position:absolute; right:-52px; top:calc(100% + 8px); z-index:32; width:min(400px, calc(100vw - 24px)); max-height:min(70vh, 600px); display:flex; flex-direction:column; background:#fff; border:1px solid var(--c-line, #e6e4e0); border-radius:14px; box-shadow:0 16px 40px rgba(0,0,0,.14);
+  --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-surface:#f6f5f3; }
+.nt-panel[hidden]{ display:none; }
+.nt-panel-head{ display:flex; align-items:center; justify-content:space-between; padding:12px 12px 10px 18px; border-bottom:1px solid var(--rr-line); } .nt-panel-head b{ font-size:16px; }
+.nt-panel-x{ width:36px; height:36px; border:0; border-radius:8px; background:none; color:var(--rr-ink3); display:grid; place-items:center; cursor:pointer; } .nt-panel-x:hover{ background:var(--rr-surface); color:var(--rr-ink); }
+.nt-panel-body{ overflow-y:auto; padding:14px 16px 18px; overscroll-behavior:contain; }
+.nt-panel .nt-item{ padding:12px 14px; } .nt-panel .nt-item p, .nt-panel .nt-a p{ font-size:14.5px; } .nt-panel .nt-item h4{ font-size:15px; }
+.nt-item.new{ background:#fff; border:1px solid #f3c9b8; box-shadow:0 0 0 3px var(--rr-acc-soft, #fdf0eb); }
+.nt-new{ display:inline-block; font-style:normal; font-size:11px; font-weight:800; color:#fff; background:#e8532a; border-radius:5px; padding:1px 6px; margin-right:6px; vertical-align:2px; }
+.nt-who .nt-new{ margin:0 0 0 6px; }
+.nt-empty{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; padding:28px 8px; color:var(--rr-ink3, #66666c); font-size:13.5px; } .nt-empty b{ color:var(--rr-ink, #1c1c1e); font-size:15px; }
+@media(max-width:640px){
+  .nt-panel{ position:fixed; left:12px; right:12px; top:64px; width:auto; max-height:calc(100dvh - 88px); }
+  .nt-bubble{ right:-44px; } .nt-bubble::before{ right:59px; }
+}
+/* ---- 해결 알림 (2026-10-20h) ---- */
+.fb-notify{ display:block; margin-top:6px; font-size:12px; line-height:1.45; color:var(--c-ink-3, #66666c); word-break:keep-all; } .fb-notify.ok{ color:#2f7a4a; font-weight:600; } .fb-notify.wait{ color:#b45309; font-weight:600; }
+.nt-done{ display:flex; align-items:center; gap:8px; padding:12px 14px 4px; } .nt-done b{ font-size:15.5px; color:#1c1c1e; } .nt-done time{ margin-left:auto; font-size:12px; color:#66666c; }
+.nt-ok{ flex:none; width:22px; height:22px; border-radius:50%; background:#2f7a4a; color:#fff; display:grid; place-items:center; }
+.nt-done .nt-new{ margin:0; }
+.nt-reply .nt-q{ background:none; padding:4px 14px 10px 44px; } .nt-tip{ margin:0; padding:0 14px 12px 44px; font-size:13px; line-height:1.55; color:#45454a; word-break:keep-all; }
+/* ---- 공지사항 · 답장 (2026-10-20f) ---- */
+.nt-box{ max-width:520px !important; --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-surface:#f6f5f3; }
+.nt-box .nt-head{ text-align:center; padding-top:26px; border-bottom:0; }
+.nt-box .nt-head h2{ font-size:21px !important; line-height:1.4; margin:0; color:var(--rr-ink); word-break:keep-all; }
+.nt-box .modal-body{ max-height:min(56vh, 520px); overflow-y:auto; padding-top:6px; }
+.nt-sec + .nt-sec{ margin-top:18px; }
+.nt-h{ margin:0 0 8px; font-size:13px; font-weight:700; color:var(--rr-ink3); letter-spacing:.01em; }
+.nt-reply{ border:1px solid var(--rr-line); border-radius:12px; overflow:hidden; } .nt-reply + .nt-reply{ margin-top:10px; }
+.nt-reply.new{ border-color:#f3c9b8; box-shadow:0 0 0 3px var(--rr-acc-soft); }
+.nt-q{ padding:10px 14px; background:var(--rr-surface); } .nt-a{ padding:12px 14px; background:#fff; }
+.nt-who{ display:block; font-size:12px; font-weight:700; color:var(--rr-ink3); margin-bottom:3px; } .nt-a .nt-who{ color:var(--rr-acc-ink); }
+.nt-q p{ margin:0; font-size:13.5px; line-height:1.55; color:var(--rr-ink2); word-break:keep-all; overflow-wrap:anywhere; }
+.nt-a p{ margin:0; font-size:15px; line-height:1.65; color:var(--rr-ink); word-break:keep-all; overflow-wrap:anywhere; }
+.nt-item{ padding:14px 16px; border-radius:12px; background:var(--rr-surface); } .nt-item + .nt-item{ margin-top:10px; }
+.nt-item h4{ margin:0 0 2px; font-size:15.5px; color:var(--rr-ink); word-break:keep-all; }
+.nt-item time{ display:block; font-size:12px; color:var(--rr-ink3); margin-bottom:6px; }
+.nt-item p{ margin:0; font-size:15px; line-height:1.7; color:var(--rr-ink); word-break:keep-all; overflow-wrap:anywhere; }
+.nt-empty{ text-align:center; color:var(--rr-ink3); margin:18px 0; }
+.nt-foot-note{ margin:14px 0 0; font-size:12.5px; color:var(--rr-ink3); text-align:center; word-break:keep-all; }
+.nt-box .modal-foot{ justify-content:center; } .nt-box .modal-foot .btn{ min-width:160px; }
+.nt-menu-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#e8532a; margin-left:6px; vertical-align:middle; } .nt-menu-dot[hidden]{ display:none; }
+/* 관리자 공지 화면 */
+.nt-form{ background:#fff; border:1px solid var(--c-line, #e6e4e0); border-radius:12px; padding:18px 20px; margin-bottom:18px; display:flex; flex-direction:column; gap:6px; }
+.nt-form-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; } .nt-form-head b{ font-size:16px; }
+.nt-link{ border:0; background:none; font:inherit; font-size:13px; color:var(--c-ink-3, #66666c); text-decoration:underline; cursor:pointer; }
+.nt-form .pipe-input{ width:100%; box-sizing:border-box; font-size:14.5px; } .nt-form input.pipe-input{ height:44px; padding:0 12px; } .nt-form .fb-admin-lbl{ margin-top:8px; }
+.nt-ta{ min-height:130px; resize:vertical; line-height:1.6; font-family:inherit; padding:10px 12px; }
+.nt-period{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; font-size:14px; } .nt-period input[type=date]{ height:38px; padding:0 8px; border:1px solid var(--c-line-strong, #d3d0ca); border-radius:8px; font:inherit; }
+.nt-acts{ display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-top:12px; flex-wrap:wrap; } .nt-acts .btn, .nt-acts .btn-manage{ flex:0 0 auto; width:auto; min-width:110px; height:44px; padding:0 18px; } .nt-count{ margin-right:auto; font-size:12.5px; color:var(--c-ink-3, #66666c); }
+.nt-list{ display:flex; flex-direction:column; gap:12px; }
+.nt-card{ background:#fff; border:1px solid var(--c-line, #e6e4e0); border-radius:12px; padding:16px 18px; } .nt-card.off, .nt-card.end{ opacity:.72; } .nt-card.editing{ border-color:#e8532a; box-shadow:0 0 0 3px #fdf0eb; }
+.nt-card-head{ display:flex; align-items:center; gap:8px; } .nt-card-head b{ font-size:15.5px; word-break:keep-all; }
+.nt-state{ flex:none; font-size:11.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:#EDF1F7; color:#4C5A74; } .nt-state.on{ background:#e7f3ec; color:#2f7a4a; } .nt-state.end, .nt-state.off{ background:#f1f0ee; color:#66666c; }
+.nt-card-meta{ margin-top:4px; font-size:12.5px; color:var(--c-ink-3, #66666c); } .nt-card-meta b{ color:var(--c-ink, #1c1c1e); }
+.nt-card-body{ margin:10px 0 0; font-size:14px; line-height:1.6; color:var(--c-ink-2, #45454a); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; word-break:keep-all; }
+.nt-card-acts{ display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; } .nt-card-acts .fb-del{ margin-left:auto; }
+/* 의견·문제 카드: 답장 */
+.fb-reply{ margin-top:14px; border-top:1px dashed var(--c-line, #e6e4e0); padding-top:12px; }
+.fb-reply > summary{ cursor:pointer; font-size:13.5px; font-weight:700; color:var(--c-ink, #1c1c1e); list-style:none; display:flex; align-items:center; gap:6px; } .fb-reply > summary::-webkit-details-marker{ display:none; }
+.fb-reply > summary::before{ content:'▸'; font-size:11px; color:var(--c-ink-3, #66666c); } .fb-reply[open] > summary::before{ content:'▾'; }
+.fb-reply > summary small{ font-weight:600; color:#2f7a4a; } .fb-reply > summary small.wait{ color:#b45309; }
+.fb-reply-body{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.fb-reply-sent{ background:#f6f5f1; border-radius:8px; padding:10px 12px; font-size:13.5px; line-height:1.55; color:#45454a; word-break:keep-all; } .fb-reply-sent span{ display:block; font-size:12px; color:#66666c; margin-bottom:2px; }
+.fb-reply-ta{ width:100%; box-sizing:border-box; min-height:64px; resize:vertical; font:inherit; font-size:14px; line-height:1.55; padding:9px 11px; }
+.fb-reply-acts{ display:flex; gap:8px; justify-content:flex-end; align-items:center; flex-wrap:wrap; } .fb-reply-acts .nt-link{ margin-right:auto; }
+
 .rr-nudge-box .rrn-head{ text-align:center; padding-top:28px; border-bottom:0; }
 .rrn-ic{ display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:16px; background:var(--rr-acc-soft); color:var(--rr-acc-ink); margin-bottom:12px; }
 .rrn-kicker{ margin:0 0 4px !important; font-size:13.5px !important; font-weight:700; color:var(--rr-acc-ink) !important; }
@@ -4413,6 +4494,13 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="modal-notice" role="dialog" aria-modal="true" aria-labelledby="nt-title">
+  <div class="modal-box nt-box">
+    <div class="modal-head nt-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/></svg></span><p class="rrn-kicker" id="nt-kicker">공지사항</p><h2 id="nt-title">새 소식이 있어요</h2></div>
+    <div class="modal-body" id="nt-body"></div>
+    <div class="modal-foot"><button class="btn btn-solid" id="nt-ok" onclick="Notice.close()">확인했어요</button></div>
+  </div>
+</div>
 <!-- ============ 1분 자기소개 코치 (2026-10-08) ============ -->
 <div class="modal-overlay" id="modal-coach" role="dialog" aria-modal="true" aria-labelledby="coach-title">
   <div class="modal-box modal-wide coach-box">
@@ -4721,11 +4809,20 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <nav style="display:none !important;"><a href="javascript:void(0)" class="kk-link kakao-show" onclick="openKakaoChannel()" style="display:none;"><svg class="kk-ic" viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg><span class="kk-full">카카오톡 문의</span><span class="kk-short">카톡 문의</span></a>
       </nav>
       <div class="d3-user">
+        <div class="nt-bell-wrap" id="nt-bell-wrap" style="display:none;">
+          <button type="button" class="nt-bell" id="nt-bell" onclick="Notice.togglePanel(event)" aria-label="알림" aria-expanded="false" aria-controls="nt-panel"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg><span class="nt-badge" id="nt-badge" hidden>0</span></button>
+          <button type="button" class="nt-bubble" id="nt-bubble" hidden onclick="Notice.openPanel()"><b id="nt-bubble-t">새 소식이 있어요</b><span>눌러서 보기</span></button>
+          <div class="nt-panel" id="nt-panel" hidden role="dialog" aria-label="알림">
+            <div class="nt-panel-head"><b>알림</b><button type="button" class="nt-panel-x" onclick="Notice.closePanel()" aria-label="닫기"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="nt-panel-body" id="nt-panel-body"></div>
+          </div>
+        </div>
         <button class="d3-user-btn" id="d3-user-btn" onclick="toggleUserMenu(event)" aria-expanded="false"><span class="d3-avatar" id="d3-avatar">김</span><i class="rr-av-dot" id="rr-av-dot" hidden aria-hidden="true"></i><span class="d3-user-name" id="nav-username">김속기 님</span><svg class="d3-caret" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg></button>
         <div class="d3-menu" id="d3-user-menu" style="display:none;">
           <button onclick="closeUserMenu(); openMyPage()">마이페이지</button>
           <button id="rr-menu-item" class="rr-menu-item" onclick="closeUserMenu(); (state.currentUser && state.currentUser.isAdmin) ? openAdminScreen('reports') : RealReport.openDrawer()" style="display:none;">면접 질문 남기기<span class="rr-menu-dot" id="rr-menu-dot" hidden></span></button>
           <button onclick="closeUserMenu(); openAllHistory()">리포트 전체</button>
+          <button id="nt-menu-item" onclick="closeUserMenu(); Notice.openAll()">공지사항<span class="nt-menu-dot" id="nt-menu-dot" hidden></span></button>
           <button onclick="closeUserMenu(); openFeedback()">의견 · 문제 보내기</button>
           <button class="kakao-show" onclick="closeUserMenu(); openKakaoChannel()" style="display:none;">카카오톡 문의</button>
           <button id="nav-admin-btn" onclick="closeUserMenu(); openAdminScreen()" style="display:none;">관리자 화면</button>
@@ -5322,7 +5419,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <div class="admin-view" id="admin-view-feedback">
         <div class="admin-view-head">
           <div><h2>의견 · 문제</h2>
-          <p>면접자가 "의견·문제 보내기" 버튼으로 보낸 글과, 프로그램이 자동으로 기록한 오류(마이크·음성 인식·화면 오류)예요. 읽었으면 <b>확인 중</b>, 고쳤으면 <b>처리 완료</b>로 바꿔 두면 새 글만 골라 볼 수 있어요.</p></div>
+          <p>면접자가 "의견·문제 보내기" 버튼으로 보낸 글과, 프로그램이 자동으로 기록한 오류(마이크·음성 인식·화면 오류)예요. 읽었으면 <b>확인 중</b>, 고쳤으면 <b>처리 완료</b>로 바꿔 두면 새 글만 골라 볼 수 있어요. <b>처리 완료</b>로 바꾸면 보낸 사람 화면의 종(알림)에 <b>'해결됐어요'</b>가 떠요.</p></div>
           <button class="btn-manage" onclick="loadFeedback(true)">새로 고침</button>
         </div>
         <div class="live-note" id="fb-note" style="display:none;"></div>
@@ -5334,6 +5431,28 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
         </div>
         <div class="admin-count-line"><span class="admin-toolbar-count" id="fb-count"></span></div>
         <div class="fb-list" id="fb-list"></div>
+      </div>
+
+      <!-- 공지사항 (2026-10-20f) -->
+      <div class="admin-view" id="admin-view-notices">
+        <div class="admin-view-head">
+          <div><h2>공지사항</h2>
+          <p>쓰고 게시하면 면접자 화면 위쪽 <b>종(알림)</b>에 숫자가 붙고, 로그인 직후 종 아래에 <b>"새 공지" 말풍선</b>이 잠깐 떠요. 종을 눌러 읽으면 숫자가 사라져요. 면접자가 보낸 글은 <b>의견 · 문제</b>에서 '처리 완료'로 바꾸면 보낸 사람에게 '해결됐어요' 알림이 자동으로 가요.</p></div>
+          <button class="btn-manage" onclick="NoticeAdmin.load(true)">새로 고침</button>
+        </div>
+        <div class="live-note" id="nt-admin-note" style="display:none;"></div>
+        <div class="nt-form" id="nt-form">
+          <div class="nt-form-head"><b id="nt-form-title">새 공지 쓰기</b><button type="button" class="nt-link" id="nt-cancel-edit" style="display:none;" onclick="NoticeAdmin.resetForm()">고치기 그만두고 새로 쓰기</button></div>
+          <label class="fb-admin-lbl" for="nt-in-title">제목 <small>· 80자까지</small></label>
+          <input type="text" class="pipe-input" id="nt-in-title" maxlength="80" placeholder="예: 10월 20일 업데이트 안내">
+          <label class="fb-admin-lbl" for="nt-in-body">내용 <small>· 짧을수록 잘 읽혀요 (2000자까지)</small></label>
+          <textarea class="pipe-input nt-ta" id="nt-in-body" maxlength="2000" rows="6" oninput="NoticeAdmin.count()" placeholder="예: 보내 주신 의견을 반영했어요.&#10;· 카메라·마이크가 막혔을 때 푸는 방법을 더 쉽게 안내해요.&#10;새로고침(F5) 후 써 보시고, 불편한 점은 '의견 · 문제 보내기'로 알려 주세요."></textarea>
+          <label class="fb-admin-lbl">게시 기간</label>
+          <div class="nt-period"><span>오늘부터</span><input type="date" id="nt-in-end" aria-label="끝나는 날"><span>까지</span><label class="pipe-check" style="margin:0;"><input type="checkbox" id="nt-in-noend" onchange="NoticeAdmin.noEndChanged()"> 끝나는 날 없음</label></div>
+          <div class="nt-acts"><span class="nt-count" id="nt-count">0 / 2000</span><button type="button" class="btn-manage" onclick="NoticeAdmin.preview()">미리 보기</button><button type="button" class="btn btn-solid" id="nt-save" onclick="NoticeAdmin.save()">게시하기</button></div>
+        </div>
+        <div class="admin-count-line"><span class="admin-toolbar-count" id="nt-list-count"></span></div>
+        <div class="nt-list" id="nt-list"></div>
       </div>
 
       <!-- 데이터 내보내기 -->
@@ -9574,6 +9693,7 @@ async function endInterviewForKick(){
 async function handleLogout(){
   try{ MicStream.close(); }catch(_){}
   try{ RealReport.reset(); }catch(_){}
+  try{ Notice.reset(); }catch(_){}
   state.resumeText = ''; state.cvText = ''; state.cvFileName = ''; state.resumeFull = ''; state.cvFull = ''; try{ DocQ.followMap = new Map(); }catch(_){}
   try{ AnswerAudio.clear(); }catch(_){}
   try{ SelfCam.reset(); }catch(_){}
@@ -9721,6 +9841,7 @@ const RealReport = {
   async refreshHome(){
     const card = document.getElementById('rr-card'); if(!card) return;
     if(!this.isUser()){ card.style.display = 'none'; this.paintMenu(); return; }
+    try{ Notice.check(); }catch(_){}   // 2026-10-20f 공지·답장 창이 먼저, '합격하면 남겨 주세요'는 그다음
     await this.load();
     card.innerHTML = ''; card.style.display = 'none';   // 2026-10-16d: 홈에는 두지 않고 내 메뉴 → 사이드바로
     this.paintMenu(); if(document.getElementById('rr-drawer').classList.contains('on')) this.renderDrawer();
@@ -9750,7 +9871,7 @@ const RealReport = {
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
     const kind = this.nudgeKind(); if(!kind) return;
     try{ if(localStorage.getItem(this.nudgeKey()) === formatYmd(new Date())) return; }catch(_){}   // '오늘 하루 보지 않기'를 누른 날만 안 뜸
-    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open');
+    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open') || document.body.classList.contains('nt-panel-open') || (typeof Notice !== 'undefined' && Notice.pending);
     if(busy){ if(tries < 60) clearTimeout(this._nt), this._nt = setTimeout(()=>this.maybeNudge(tries+1), 3000); return; }
     this.showNudge(kind);
   },
@@ -10640,6 +10761,7 @@ function endTour(done){
 window.addEventListener('resize', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); });
 window.addEventListener('scroll', ()=>{ if(Tour.on) tourPlace(tourTarget(Tour.steps[Tour.i])); }, { passive:true });
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && document.body.classList.contains('rr-drawer-open')){ RealReport.closeDrawer(); return; } });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ const m = document.getElementById('modal-notice'); if(m && m.classList.contains('active')) Notice.close(); } });
 document.addEventListener('keydown', (e)=>{ if(!Tour.on) return; if(e.key==='Escape') endTour(); else if(e.key==='ArrowRight' || e.key==='Enter') tourGo(1); else if(e.key==='ArrowLeft') tourGo(-1); });
 /* ---------- 매일 연습 유도 (2026-10-07): 오늘 연습 여부 · 연속 일수 · 최근 7일 ---------- */
 function practiceStreak(history){
@@ -11426,7 +11548,7 @@ async function hardQOpenQm(fieldId, q){
 
 /* 관리자 메뉴 5개 묶음 (2026-10-14): 화면(view) → 묶음(group) · 묶음 안 탭 */
 const ADMIN_GROUPS = {
-  status:   { label:'현황', views:[['overview','현황 요약'],['beta','베타 현황'],['live','접속 현황'],['feedback','의견 · 문제']] },
+  status:   { label:'현황', views:[['overview','현황 요약'],['beta','베타 현황'],['live','접속 현황'],['feedback','의견 · 문제'],['notices','공지사항']] },
   users:    { label:'면접자', views:[['users','면접자 관리'],['approvals','승인 요청']] },
   reviews:  { label:'면접 후기', views:[['reports','면접 후기'],['reportcall','연락할 사람']] },
   questions:{ label:'문항', views:[['questions','문항 관리'],['hardq','어려운 문항'],['realset','실전 세트 · 코치']] },
@@ -11459,6 +11581,7 @@ function showAdminView(view){
   state.adminView = view;
   if(view === 'pipeline') pipeInit();
   if(view === 'feedback') loadFeedback();
+  if(view === 'notices') NoticeAdmin.load(true);
   else { if(StenoLoop.running) StenoLoop.stop(); else if(StenoListener.active) StenoListener.stop('manual'); }
   if(view === 'live') startLiveRefresh(); else stopLiveRefresh();
   if(view === 'beta') loadBetaView();
@@ -12689,7 +12812,7 @@ function renderFeedback(){
       ${meta ? `<div class="fb-meta">${escapeHtml(meta)}</div>` : ''}
       <details class="fb-detail"><summary>자동 첨부 정보</summary><pre>${escapeHtml(JSON.stringify(d, null, 1))}</pre></details>
       <div class="fb-admin-row">
-        <div class="fb-admin-col"><label class="fb-admin-lbl">처리 상태 <small>· 바꾸면 바로 저장</small></label><select class="voice-select fb-status ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':''}" onchange="updateFeedback(${r.id}, {status:this.value})">${FB_STATUSES.map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="fb-admin-col"><label class="fb-admin-lbl">처리 상태 <small>· 바꾸면 바로 저장</small></label><select class="voice-select fb-status ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':''}" onchange="updateFeedback(${r.id}, {status:this.value})">${FB_STATUSES.map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select>${fbNotifyLine(r)}</div>
         <div class="fb-admin-col grow"><label class="fb-admin-lbl">관리자 처리 메모 <small>· 면접자에게 보이지 않음</small></label><div class="fb-note-row"><input type="text" class="pipe-input" id="fb-note-${r.id}" value="${escapeHtml(r.admin_note||'')}" placeholder="예: 10/3 수정 배포" onkeydown="if(event.key==='Enter'){ updateFeedback(${r.id}, {admin_note:this.value}); }"><button class="btn-manage" onclick="updateFeedback(${r.id}, {admin_note:document.getElementById('fb-note-${r.id}').value})">메모 저장</button></div></div>
       </div>
       <div class="fb-card-foot"><button class="fb-del" onclick="deleteFeedback(${r.id})">삭제</button></div>
@@ -12697,9 +12820,19 @@ function renderFeedback(){
   }).join('');
 }
 async function updateFeedback(id, patch){
-  try{ const { error } = await sb.from('feedback').update(Object.assign({ updated_at: new Date().toISOString() }, patch)).eq('id', id); if(error) throw error;
+  // 2026-10-20h: '처리 완료'로 바꾸면 보낸 사람 종(알림)에 '해결됐어요'가 뜸 (replied_at = 알림 보낸 시각). 완료를 되돌리면 알림도 거둠
+  const prev = (state.feedbackRows||[]).find(x=>x.id===id);
+  let notify = '';
+  if(patch.status && prev && patch.status !== prev.status){
+    if(patch.status === '처리 완료'){ patch = Object.assign({}, patch, { replied_at: new Date().toISOString(), reply_seen_at: null }); notify = 'on'; }
+    else if(prev.status === '처리 완료'){ patch = Object.assign({}, patch, { replied_at: null, reply_seen_at: null }); notify = 'off'; }
+  }
+  try{ let { error } = await sb.from('feedback').update(Object.assign({ updated_at: new Date().toISOString() }, patch)).eq('id', id);
+    if(error && notify && /replied_at|reply_seen_at/.test(error.message||'')){ const p2 = Object.assign({}, patch); delete p2.replied_at; delete p2.reply_seen_at; notify = ''; patch = p2; ({ error } = await sb.from('feedback').update(Object.assign({ updated_at: new Date().toISOString() }, p2)).eq('id', id)); }
+    if(error) throw error;
     const r = (state.feedbackRows||[]).find(x=>x.id===id); if(r) Object.assign(r, patch);
-    showToast(patch.status ? `"${patch.status}"으로 바꿨어요` : '메모를 저장했어요', 'ok'); renderFeedback();
+    const who = r ? fbUserName(r.user_id) : '';
+    showToast(notify === 'on' ? `처리 완료로 바꿨어요. ${who ? who + ' 님' : '보낸 사람'}께 '해결됐어요' 알림이 가요.` : notify === 'off' ? `"${patch.status}"으로 바꿨어요. 해결 알림은 거뒀어요.` : patch.status ? `"${patch.status}"으로 바꿨어요` : '메모를 저장했어요', 'ok'); renderFeedback();
     const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = (state.feedbackRows||[]).filter(x=>x.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; }
   }catch(e){ showToast('저장 실패: ' + (e.message||e)); }
 }
@@ -12707,6 +12840,234 @@ async function deleteFeedback(id){
   if(!confirm('이 글을 삭제할까요? 되돌릴 수 없어요.')) return;
   try{ const { error } = await sb.from('feedback').delete().eq('id', id); if(error) throw error; state.feedbackRows = (state.feedbackRows||[]).filter(x=>x.id!==id); renderFeedback(); showToast('삭제했어요', 'ok'); }
   catch(e){ showToast('삭제 실패: ' + (e.message||e)); }
+}
+
+/* ============================================================
+ * 공지사항 + 의견·문제 답장 (2026-10-20f · step24)
+ *  · 면접자: 위쪽 종(알림)에 안 본 개수. 새 소식이 있으면 로그인 직후 종 아래 말풍선을 8초 띄움(2026-10-20g: 큰 창 대신)
+ *    종을 누르면 목록이 펼쳐지고 그때 읽음 표시. '합격하면 남겨 주세요' 팝업은 말풍선 다음
+ *  · 내 메뉴 → 공지사항: 같은 목록을 엶
+ *  · 관리자: 현황 → 공지사항(쓰기·수정·내리기·읽은 사람 수), 의견·문제 카드마다 '면접자에게 답장'
+ * ============================================================ */
+function ntMD(iso){ if(!iso) return ''; const d = new Date(iso); return `${d.getMonth()+1}/${d.getDate()}`; }
+function ntText(s){ return escapeHtml(String(s||'')).replace(/\n/g, '<br>'); }
+/** 면접자가 보낸 글을 짧게: 자동 기록은 앞의 [종류]를 빼고 '자동으로 기록된 문제'로 */
+function ntQuote(r){
+  let m = String(r.message||'').trim();
+  if(r.auto) return /카메라|마이크|권한/.test(m) ? '카메라·마이크가 막혀 있던 문제 (프로그램이 자동으로 알려 준 기록)' : '사용 중 생긴 오류 (프로그램이 자동으로 알려 준 기록)';
+  return m.length > 140 ? m.slice(0, 140) + '…' : m;
+}
+/** 글 종류별 '해결' 문구: 의견 → 반영됐어요, 질문 → 확인했어요, 문제·자동 기록 → 해결됐어요 */
+function ntDoneWord(r){
+  const k = r.auto ? '문제' : (r.kind || '');
+  if(k === '의견' || k === '베타 평가') return { noun:'의견', done:'의견이 반영됐어요', bubble:'보내 주신 의견이 반영됐어요', tip:'' };
+  if(k === '질문') return { noun:'질문', done:'질문을 확인했어요', bubble:'보내 주신 질문을 확인했어요', tip:'' };
+  return { noun:'문제', done:'해결됐어요', bubble:'보내 주신 문제가 해결됐어요', tip:'새로고침(F5) 후 다시 써 보세요. 또 생기면 \'의견 · 문제 보내기\'로 알려 주세요.' };
+}
+const Notice = {
+  pending:false, checked:false, cur:null, cache:null, newIds:null,
+  isUser(){ return !!(state.currentUser && !state.currentUser.isAdmin); },
+  seenKey(){ return 'stenotalk_notice_seen_' + ((state.currentUser||{}).id || ''); },
+  localSeen(){ try{ return JSON.parse(localStorage.getItem(this.seenKey()) || '{}') || {}; }catch(_){ return {}; } },
+  rKey(r){ return 'r' + r.id + '@' + (r.replied_at || ''); },   // 답장을 고쳐 다시 보내면 새 답장으로 다시 알림
+  live(n){ const now = Date.now(); return n && n.active !== false && (!n.starts_at || new Date(n.starts_at).getTime() <= now) && (!n.ends_at || new Date(n.ends_at).getTime() > now); },
+  async fetch(){
+    const uid = (state.currentUser||{}).id; const out = { notices:[], read:new Set(), replies:[] };
+    try{ const r = await sb.from('notices').select('id,title,body,starts_at,ends_at,active,created_at').order('starts_at', {ascending:false}).limit(20); if(!r.error) out.notices = (r.data||[]).filter(n=>this.live(n)); }catch(_){}
+    try{ const r = await sb.from('notice_reads').select('notice_id').eq('user_id', uid); if(!r.error) (r.data||[]).forEach(x=>out.read.add(x.notice_id)); }catch(_){}
+    try{ const r = await sb.from('feedback').select('id,kind,message,auto,status,created_at,reply,replied_at,reply_seen_at').eq('user_id', uid).not('replied_at', 'is', null).order('replied_at', {ascending:false}).limit(20); if(!r.error) out.replies = r.data||[]; }catch(_){}
+    out.replies = out.replies.filter(x=>x.replied_at && (!x.status || x.status === '처리 완료')).sort((a,b)=>new Date(b.replied_at||0) - new Date(a.replied_at||0));
+    this.cache = out; return out;
+  },
+  /** 아직 안 본 공지·답장 */
+  unseen(){
+    const d = this.cache; if(!d) return { ns:[], rs:[] }; const ls = this.localSeen();
+    return { ns: d.notices.filter(n=>!d.read.has(n.id) && !ls['n'+n.id]), rs: d.replies.filter(r=>!r.reply_seen_at && !ls[this.rKey(r)]) };
+  },
+  /** 홈에 들어올 때 한 번: 종에 숫자를 달고, 새 소식이 있으면 종 아래 말풍선을 잠깐 띄움 (2026-10-20g: 큰 창 대신) */
+  async check(){
+    if(!this.isUser() || this.checked) return;
+    this.checked = true;
+    const wrap = document.getElementById('nt-bell-wrap'); if(wrap) wrap.style.display = '';
+    try{
+      await this.fetch(); this.paint();
+      const u = this.unseen();
+      if(u.ns.length || u.rs.length){ this.pending = true; this.waitBubble(0); }
+    }catch(e){ this.pending = false; console.warn('[공지 확인 실패]', e.message||e); }
+  },
+  waitBubble(tries){
+    clearTimeout(this._t);
+    if(!this.isUser()){ this.pending = false; return; }
+    const act = document.querySelector('.screen.active');
+    let tourSeen = true; try{ tourSeen = !!localStorage.getItem(tourKey()); }catch(_){}
+    const busy = !act || act.id !== 'screen-dashboard' || document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on)
+      || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open') || (!tourSeen && tries < 4);
+    if(busy){ if(tries < 120) this._t = setTimeout(()=>this.waitBubble(tries+1), 1500); else this.pending = false; return; }
+    this.bubble();
+  },
+  bubble(){
+    const b = document.getElementById('nt-bubble'), t = document.getElementById('nt-bubble-t'); if(!b || !t){ this.pending = false; return; }
+    const u = this.unseen(); const n = u.ns.length + u.rs.length;
+    if(!n){ this.pending = false; return; }
+    t.textContent = u.rs.length && !u.ns.length ? (u.rs.length === 1 ? ntDoneWord(u.rs[0]).bubble : `보내 주신 글 ${u.rs.length}개가 해결됐어요`) : u.ns.length === 1 && !u.rs.length ? '새 공지: ' + (u.ns[0].title || '') : `새 소식 ${n}개가 있어요`;
+    b.hidden = false; requestAnimationFrame(()=>b.classList.add('on'));
+    try{ Activity.log('notice_bubble', { notices: u.ns.map(x=>x.id), replies: u.rs.map(x=>x.id) }); }catch(_){}
+    clearTimeout(this._bt); this._bt = setTimeout(()=>this.hideBubble(), 8000);
+  },
+  hideBubble(){
+    clearTimeout(this._bt);
+    const b = document.getElementById('nt-bubble'); if(b){ b.classList.remove('on'); setTimeout(()=>{ b.hidden = true; }, 200); }
+    if(this.pending){ this.pending = false; try{ setTimeout(()=>RealReport.maybeNudge(), 700); }catch(_){} }   // 말풍선 다음 차례: '합격하면 남겨 주세요'
+  },
+  /** 종 숫자 */
+  paint(){
+    const u = this.unseen(); const n = u.ns.length + u.rs.length;
+    const bd = document.getElementById('nt-badge'); if(bd){ bd.textContent = n > 9 ? '9+' : String(n); bd.hidden = !n; }
+    const bell = document.getElementById('nt-bell'); if(bell) bell.setAttribute('aria-label', n ? `알림 · 새 소식 ${n}개` : '알림');
+    const dot = document.getElementById('nt-menu-dot'); if(dot) dot.hidden = !n;
+  },
+  panelHtml(ns, rs, newSet){
+    let h = '';
+    if(rs.length){
+      h += `<section class="nt-sec"><h3 class="nt-h">보내 주신 글</h3>` + rs.map(r=>{ const w = ntDoneWord(r); const isNew = newSet.has('r'+r.id); return `<div class="nt-reply${isNew ? ' new' : ''}">
+        <div class="nt-done"><span class="nt-ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>${w.done}</b>${isNew ? '<i class="nt-new">새 소식</i>' : ''}<time>${ntMD(r.replied_at)}</time></div>
+        <div class="nt-q"><span class="nt-who">내가 보낸 글 · ${ntMD(r.created_at)}</span><p>${escapeHtml(ntQuote(r))}</p></div>
+        ${w.tip ? `<p class="nt-tip">${w.tip}</p>` : ''}${r.reply ? `<p class="nt-tip">${ntText(r.reply)}</p>` : ''}</div>`; }).join('') + `</section>`;
+    }
+    if(ns.length){
+      h += `<section class="nt-sec"><h3 class="nt-h">공지</h3>` + ns.map(n=>`<article class="nt-item${newSet.has('n'+n.id) ? ' new' : ''}"><h4>${newSet.has('n'+n.id) ? '<i class="nt-new">새 공지</i>' : ''}${escapeHtml(n.title||'')}</h4><time>${ntMD(n.starts_at || n.created_at)}${n.ends_at ? ` · ${ntMD(n.ends_at)}까지` : ''}</time><p>${ntText(n.body)}</p></article>`).join('') + `</section>`;
+    }
+    return h || '<div class="nt-empty"><b>새 소식이 없어요</b><span>공지나 보내 주신 의견의 답장이 오면 여기에 보여요.</span></div>';
+  },
+  togglePanel(e){ if(e) e.stopPropagation(); const p = document.getElementById('nt-panel'); if(p && !p.hidden) this.closePanel(); else this.openPanel(); },
+  /** 종을 누르면: 목록을 펼치고, 안 본 것은 '새' 표시와 함께 보여 준 뒤 읽음으로 */
+  async openPanel(){
+    if(!state.currentUser) return;
+    this.hideBubble(); try{ closeUserMenu(); }catch(_){}
+    const p = document.getElementById('nt-panel'), body = document.getElementById('nt-panel-body'), bell = document.getElementById('nt-bell'); if(!p || !body) return;
+    if(!this.cache) body.innerHTML = '<div class="nt-empty"><span>불러오는 중…</span></div>';
+    p.hidden = false; if(bell) bell.setAttribute('aria-expanded', 'true'); document.body.classList.add('nt-panel-open');
+    try{ await this.fetch(); }catch(_){}
+    const d = this.cache || { notices:[], replies:[], read:new Set() }; const u = this.unseen();
+    const newSet = new Set([...u.ns.map(n=>'n'+n.id), ...u.rs.map(r=>'r'+r.id)]);
+    body.innerHTML = this.panelHtml(d.notices, d.replies, newSet);
+    body.scrollTop = 0;
+    if(newSet.size) this.markRead(u.ns, u.rs);
+  },
+  closePanel(){ const p = document.getElementById('nt-panel'), bell = document.getElementById('nt-bell'); if(p) p.hidden = true; if(bell) bell.setAttribute('aria-expanded', 'false'); document.body.classList.remove('nt-panel-open'); },
+  async markRead(ns, rs){
+    const ls = this.localSeen(); const now = Date.now();
+    ns.forEach(n=>{ ls['n'+n.id] = now; }); rs.forEach(r=>{ ls[this.rKey(r)] = now; });
+    try{ localStorage.setItem(this.seenKey(), JSON.stringify(ls)); }catch(_){}
+    this.paint();
+    try{ if(ns.length){ const { error } = await sb.from('notice_reads').upsert(ns.map(n=>({ notice_id:n.id, user_id: state.currentUser.id })), { onConflict:'notice_id,user_id', ignoreDuplicates:true }); if(error) throw error; } }catch(e){ console.warn('[공지 읽음 저장 실패]', e.message||e); }
+    try{ if(rs.length){ const { error } = await sb.rpc('feedback_reply_seen', { p_ids: rs.map(r=>r.id) }); if(error) throw error; rs.forEach(r=>{ r.reply_seen_at = new Date().toISOString(); }); } }catch(e){ console.warn('[답장 읽음 저장 실패]', e.message||e); }
+    try{ Activity.log('notice_seen', { notices: ns.map(x=>x.id), replies: rs.map(x=>x.id) }); }catch(_){}
+  },
+  /** 내 메뉴 → 공지사항: 종 목록을 엶 */
+  openAll(){ this.openPanel(); },
+  /** 관리자 미리 보기: 면접자가 종을 눌렀을 때 보이는 모양 그대로 창으로 */
+  show(ns, rs, mode){
+    const m = document.getElementById('modal-notice'); if(!m) return;
+    document.getElementById('nt-kicker').textContent = '미리 보기';
+    document.getElementById('nt-title').textContent = '면접자가 종(알림)을 누르면 이렇게 보여요';
+    document.getElementById('nt-body').innerHTML = this.panelHtml(ns, rs, new Set(ns.map(n=>'n'+n.id)));
+    document.getElementById('nt-ok').textContent = '닫기';
+    m.classList.add('active');
+  },
+  close(){ const m = document.getElementById('modal-notice'); if(m) m.classList.remove('active'); },
+  reset(){ clearTimeout(this._t); clearTimeout(this._bt); this.checked = false; this.pending = false; this.cache = null; this.closePanel(); const b = document.getElementById('nt-bubble'); if(b){ b.hidden = true; b.classList.remove('on'); } const w = document.getElementById('nt-bell-wrap'); if(w) w.style.display = 'none'; this.close(); this.paint(); },
+};
+document.addEventListener('click', (e)=>{ const p = document.getElementById('nt-panel'); if(!p || p.hidden) return; const w = document.getElementById('nt-bell-wrap'); if(w && w.contains(e.target)) return; Notice.closePanel(); });
+document.addEventListener('keydown', (e)=>{ if(e.key !== 'Escape') return; const p = document.getElementById('nt-panel'); if(p && !p.hidden) Notice.closePanel(); });
+
+/* ---------------- 관리자: 공지사항 쓰기·관리 ---------------- */
+const NoticeAdmin = {
+  rows:[], reads:{}, editId:null,
+  defaultEnd(){ const d = new Date(Date.now() + 7*86400000); return formatYmd(d); },
+  async load(force){
+    const list = document.getElementById('nt-list'); if(!list) return;
+    if(!this.editId) this.resetForm(true);
+    try{
+      const r = await sb.from('notices').select('*').order('created_at', {ascending:false}).limit(100); if(r.error) throw r.error; this.rows = r.data || [];
+      const rr = await sbAll(()=>sb.from('notice_reads').select('notice_id,user_id'));
+      const reads = {}; ((rr && rr.data) || []).forEach(x=>{ reads[x.notice_id] = (reads[x.notice_id]||0) + 1; }); this.reads = reads;
+      document.getElementById('nt-admin-note').style.display = 'none';
+    }catch(e){ this.rows = this.rows || []; const n = document.getElementById('nt-admin-note'); if(n){ n.style.display = ''; n.textContent = '공지사항 표를 읽지 못했어요. (' + (e.message||e) + ')'; } }
+    this.render();
+  },
+  stateOf(n){ const now = Date.now(); if(!n.active) return ['off','내림']; if(n.ends_at && new Date(n.ends_at).getTime() <= now) return ['end','기간 끝남']; if(n.starts_at && new Date(n.starts_at).getTime() > now) return ['wait','예약']; return ['on','게시 중']; },
+  render(){
+    const list = document.getElementById('nt-list'); if(!list) return;
+    const students = (state.adminUsers||[]).filter(u=>!u.is_admin).length;
+    const cnt = document.getElementById('nt-list-count'); if(cnt) cnt.textContent = this.rows.length ? `공지 ${this.rows.length}개` : '';
+    if(!this.rows.length){ list.innerHTML = '<div class="qa-empty" style="margin:12px 0;">아직 쓴 공지가 없어요. 위에서 첫 공지를 써 보세요.</div>'; return; }
+    list.innerHTML = this.rows.map(n=>{ const [cls, lbl] = this.stateOf(n); const rd = this.reads[n.id] || 0;
+      return `<div class="nt-card ${cls}${this.editId===n.id?' editing':''}">
+        <div class="nt-card-head"><span class="nt-state ${cls}">${lbl}</span><b>${escapeHtml(n.title||'')}</b></div>
+        <div class="nt-card-meta">${ntMD(n.starts_at||n.created_at)} ~ ${n.ends_at ? ntMD(n.ends_at) : '끝나는 날 없음'} · 읽은 사람 <b>${rd}</b>명${students ? ` / 면접자 ${students}명` : ''}</div>
+        <p class="nt-card-body">${ntText(n.body)}</p>
+        <div class="nt-card-acts"><button type="button" class="btn-manage" onclick="NoticeAdmin.edit(${n.id})">수정</button><button type="button" class="btn-manage" onclick="NoticeAdmin.preview(${n.id})">미리 보기</button><button type="button" class="btn-manage" onclick="NoticeAdmin.toggle(${n.id})">${n.active ? '내리기' : '다시 올리기'}</button><button type="button" class="fb-del" onclick="NoticeAdmin.remove(${n.id})">삭제</button></div>
+      </div>`; }).join('');
+  },
+  formVals(){ const t = document.getElementById('nt-in-title').value.trim(), b = document.getElementById('nt-in-body').value.trim(), noEnd = document.getElementById('nt-in-noend').checked, end = document.getElementById('nt-in-end').value;
+    return { title:t, body:b, ends_at: noEnd || !end ? null : new Date(end + 'T23:59:59').toISOString() }; },
+  count(){ const b = document.getElementById('nt-in-body'), c = document.getElementById('nt-count'); if(b && c) c.textContent = `${b.value.length} / 2000`; },
+  noEndChanged(){ const ne = document.getElementById('nt-in-noend').checked; document.getElementById('nt-in-end').disabled = ne; },
+  resetForm(silent){
+    this.editId = null;
+    const set = (id,v)=>{ const el = document.getElementById(id); if(el) el.value = v; };
+    set('nt-in-title',''); set('nt-in-body',''); set('nt-in-end', this.defaultEnd());
+    const ne = document.getElementById('nt-in-noend'); if(ne){ ne.checked = false; this.noEndChanged(); }
+    const h = document.getElementById('nt-form-title'); if(h) h.textContent = '새 공지 쓰기';
+    const s = document.getElementById('nt-save'); if(s) s.textContent = '게시하기';
+    const c = document.getElementById('nt-cancel-edit'); if(c) c.style.display = 'none';
+    this.count(); if(!silent) this.render();
+  },
+  edit(id){
+    const n = this.rows.find(x=>x.id===id); if(!n) return;
+    this.editId = id;
+    document.getElementById('nt-in-title').value = n.title || ''; document.getElementById('nt-in-body').value = n.body || '';
+    document.getElementById('nt-in-noend').checked = !n.ends_at; document.getElementById('nt-in-end').value = n.ends_at ? formatYmd(new Date(n.ends_at)) : this.defaultEnd(); this.noEndChanged();
+    document.getElementById('nt-form-title').textContent = '공지 고치기'; document.getElementById('nt-save').textContent = '고친 내용 저장';
+    document.getElementById('nt-cancel-edit').style.display = ''; this.count(); this.render();
+    document.getElementById('nt-form').scrollIntoView({ block:'start', behavior:'smooth' });
+  },
+  async save(){
+    const v = this.formVals();
+    if(!v.title){ showToast('제목을 써 주세요.'); document.getElementById('nt-in-title').focus(); return; }
+    if(!v.body){ showToast('내용을 써 주세요.'); document.getElementById('nt-in-body').focus(); return; }
+    if(v.ends_at && new Date(v.ends_at).getTime() <= Date.now()){ showToast('끝나는 날은 오늘이나 그 뒤로 골라 주세요.'); return; }
+    const btn = document.getElementById('nt-save'); if(btn) btn.disabled = true;
+    try{
+      if(this.editId){ const { error } = await sb.from('notices').update(Object.assign({ updated_at: new Date().toISOString() }, v)).eq('id', this.editId); if(error) throw error; showToast('공지를 고쳤어요. 이미 읽은 사람에게는 새 소식으로 다시 알리지 않아요.', 'ok'); }
+      else { const { error } = await sb.from('notices').insert(Object.assign({ active:true }, v)); if(error) throw error; showToast('게시했어요. 면접자 화면의 종(알림)에 숫자가 붙어요.', 'ok'); }
+      this.resetForm(true); await this.load(true);
+    }catch(e){ showToast('저장 실패: ' + (e.message||e)); }
+    finally{ if(btn) btn.disabled = false; }
+  },
+  preview(id){
+    const n = id ? this.rows.find(x=>x.id===id) : Object.assign({ starts_at: new Date().toISOString() }, this.formVals());
+    if(!n || !n.title){ showToast('제목을 쓰면 미리 볼 수 있어요.'); return; }
+    Notice.show([n], [], 'preview');
+  },
+  async toggle(id){
+    const n = this.rows.find(x=>x.id===id); if(!n) return; const nv = !n.active;
+    try{ const { error } = await sb.from('notices').update({ active: nv, updated_at: new Date().toISOString() }).eq('id', id); if(error) throw error; n.active = nv; showToast(nv ? '다시 올렸어요.' : '내렸어요. 면접자에게 더 이상 보이지 않아요.', 'ok'); this.render(); }
+    catch(e){ showToast('저장 실패: ' + (e.message||e)); }
+  },
+  async remove(id){
+    if(!confirm('이 공지를 삭제할까요? 읽은 기록도 함께 지워지고 되돌릴 수 없어요. (잠시 숨기려면 "내리기"를 쓰세요)')) return;
+    try{ const { error } = await sb.from('notices').delete().eq('id', id); if(error) throw error; this.rows = this.rows.filter(x=>x.id!==id); if(this.editId===id) this.resetForm(true); showToast('삭제했어요.', 'ok'); this.render(); }
+    catch(e){ showToast('삭제 실패: ' + (e.message||e)); }
+  },
+};
+
+/* ---------------- 관리자: 의견·문제 '해결됐어요' 알림 표시 (2026-10-20h) ---------------- */
+function fbNotifyLine(r){
+  if(r.status !== '처리 완료') return `<small class="fb-notify">'처리 완료'로 바꾸면 ${escapeHtml(fbUserName(r.user_id))} 님께 '해결됐어요' 알림이 가요.</small>`;
+  if(!r.replied_at) return '<small class="fb-notify">알림 없이 처리 완료됨 (알림 기능 전에 끝낸 글)</small>';
+  return r.reply_seen_at ? `<small class="fb-notify ok">✓ 해결 알림 보냄 · ${ntMD(r.reply_seen_at)}에 확인함</small>` : `<small class="fb-notify wait">✓ 해결 알림 보냄 · 아직 안 봄</small>`;
 }
 
 const Activity = {
