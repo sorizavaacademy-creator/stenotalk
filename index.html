@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21c';
+var APP_VERSION = '2026-10-21d';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -10891,7 +10891,8 @@ const QuestionBank = {
     if(this.loading && !force) return this.loading;
     this.loading = (async()=>{
       try{
-        const { data, error } = await sb.from('questions').select('id,field_id,bank,category,q,hint,ref,diff,sort_order,is_active').eq('is_active', true).order('sort_order', {ascending:true}).order('id', {ascending:true});
+        // 2026-10-21d: 한 번에 1,000개까지만 와서 뒤쪽 문항(프리랜서 공통 33개)이 빠지던 문제 → 1,000개씩 나눠 끝까지
+        const { data, error } = await sbAll(()=>sb.from('questions').select('id,field_id,bank,category,q,hint,ref,diff,sort_order,is_active').eq('is_active', true).order('sort_order', {ascending:true}).order('id', {ascending:true}));
         if(error) throw error;
         if(Array.isArray(data) && data.length > 50){ this.rebuild(data); this.loaded = true; }
         else throw new Error('문항이 너무 적어요 ('+((data||[]).length)+'개)');
@@ -10928,7 +10929,7 @@ async function qmLoad(){
   if(sel && !sel.options.length) sel.innerHTML = qmFields().map(f=>`<option value="${f.id}">${escapeHtml(f.name)}</option>`).join('');
   if(sel) sel.value = Qm.field;
   try{
-    const { data, error } = await sb.from('questions').select('*').order('sort_order', {ascending:true}).order('id', {ascending:true});
+    const { data, error } = await sbAll(()=>sb.from('questions').select('*').order('sort_order', {ascending:true}).order('id', {ascending:true}));   // 2026-10-21d 1,000개 넘어도 전부
     if(error) throw error;
     Qm.rows = data || [];
     if(note) note.style.display = 'none';
