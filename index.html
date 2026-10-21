@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21k';
+var APP_VERSION = '2026-10-21l';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -14227,37 +14227,37 @@ const DocQ = {
     // 2026-10-21h: 한 번에 하나만 묻도록 짧게 (나머지는 꼬리질문으로)
     const where = sec && sec.title ? `자기소개서 '${sec.title}'에` : '자기소개서에';
     if(quote && typeof quote === 'object'){
-      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 어떤 경험이었는지 말씀해 주시겠어요?`;
+      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 어떤 경험이었는지 말씀해 주세요.`;
     }
     const said = `${where} '${quote}'고 쓰셨는데요,`;
     switch(kind){
-      case 'result': return `${said} 그 결과를 얻기까지 본인이 직접 바꾼 것은 무엇이었나요?`;
-      case 'conflict': return `${said} 그 의견 차이를 어떻게 좁히셨는지 말씀해 주시겠어요?`;
-      case 'conflictAct': return `${said} 상대방이 그 방법을 받아들이도록 어떻게 설명하셨나요?`;
-      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨나요?`;
-      case 'motive': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주시겠어요?`;
-      case 'plan': return `${said} 그 다짐을 위해 입사 후 첫 1년 동안 무엇을 하실 계획인가요?`;
-      case 'belief': return `${said} 그렇게 생각하게 된 계기를 말씀해 주시겠어요?`;
-      case 'learn': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주시겠어요?`;
-      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기는 무엇이었나요?`;
-      case 'trait': return `${said} 그런 성향이 드러났던 일을 하나 말씀해 주시겠어요?`;
-      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지 말씀해 주시겠어요?`;
+      case 'result': return `${said} 그 결과를 얻기까지 본인이 직접 바꾼 것을 말씀해 주세요.`;
+      case 'conflict': return `${said} 그 의견 차이를 어떻게 좁히셨는지 말씀해 주세요.`;
+      case 'conflictAct': return `${said} 상대방이 그 방법을 받아들이도록 어떻게 설명하셨는지 말씀해 주세요.`;
+      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨는지 말씀해 주세요.`;
+      case 'motive': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주세요.`;
+      case 'plan': return `${said} 그 다짐을 위해 입사 후 첫 1년 동안 무엇을 하실 계획인지 말씀해 주세요.`;
+      case 'belief': return `${said} 그렇게 생각하게 된 계기를 말씀해 주세요.`;
+      case 'learn': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주세요.`;
+      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기를 말씀해 주세요.`;
+      case 'trait': return `${said} 그런 성향이 드러났던 일을 하나 말씀해 주세요.`;
+      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지 말씀해 주세요.`;
     }
   },
   _follow(kind, quote){
     // 같은 문장에 대해 한 번 더 들어가는 꼬리질문 (서류 내용 범위 안에서)
     const q = typeof quote === 'object' ? quote.np : quote;
     switch(kind){
-      case 'result': return '그 결과는 무엇으로 확인하셨나요?';
-      case 'conflict': case 'conflictAct': return '지금 다시 그 상황이 온다면, 처음부터 다르게 하실 부분이 있을까요?';
-      case 'skill': return '실제 회의를 속기할 때 그 실력은 어떤 장면에서 가장 잘 드러나나요?';
-      case 'motive': return '그 경험이 속기 직무를 고르는 데 어떤 영향을 주었나요?';
-      case 'plan': return '그 계획을 이루는 데 지금 가장 부족한 점은 무엇이라고 보십니까?';
-      case 'belief': return '그 생각이 실제로 일하는 태도에서는 어떻게 드러난다고 보십니까?';
-      case 'learn': return '그 깨달음이 지금 공부하거나 일하는 방식에는 어떻게 이어지고 있나요?';
-      case 'decide': return '준비하면서 가장 힘들었던 순간은 어떻게 넘기셨나요?';
-      case 'trait': return '그 성향이 속기 업무에서는 어떤 장점이 된다고 보십니까?';
-      default: return q ? '그렇게 했을 때 실제로 달라진 점은 무엇이었나요?' : '';
+      case 'result': return '그 결과를 무엇으로 확인하셨는지 말씀해 주세요.';
+      case 'conflict': case 'conflictAct': return '지금 다시 그 상황이 온다면, 처음부터 다르게 하실 부분을 말씀해 주세요.';
+      case 'skill': return '실제 회의를 속기할 때 그 실력이 어떤 장면에서 가장 잘 드러나는지 말씀해 주세요.';
+      case 'motive': return '그 경험이 속기 직무를 고르는 데 어떤 영향을 주었는지 말씀해 주세요.';
+      case 'plan': return '그 계획을 이루는 데 지금 가장 부족한 점이 무엇인지 말씀해 주세요.';
+      case 'belief': return '그 생각이 실제로 일하는 태도에서 어떻게 드러나는지 말씀해 주세요.';
+      case 'learn': return '그 깨달음이 지금 공부하거나 일하는 방식에 어떻게 이어지고 있는지 말씀해 주세요.';
+      case 'decide': return '준비하면서 가장 힘들었던 순간을 어떻게 넘기셨는지 말씀해 주세요.';
+      case 'trait': return '그 성향이 속기 업무에서 어떤 장점이 되는지 말씀해 주세요.';
+      default: return q ? '그렇게 했을 때 실제로 달라진 점을 말씀해 주세요.' : '';
     }
   },
   fromResume(raw){
@@ -14347,25 +14347,25 @@ const DocQ = {
       let q, follow = [];
       if(x.kind === 'award'){
         q = /(대회|경진|경연|공모전|올림피아드)/.test(x.main)
-          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회는 어떻게 준비하셨나요?`
-          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨는지 말씀해 주시겠어요?`;
-        follow.push('그 경험에서 얻은 것이 실제 속기 업무에서는 어떻게 도움이 된다고 보십니까?');
+          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회를 어떻게 준비하셨는지 말씀해 주세요.`
+          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨는지 말씀해 주세요.`;
+        follow.push('그 경험에서 얻은 것이 실제 속기 업무에 어떻게 도움이 되는지 말씀해 주세요.');
       }else if(x.kind === 'training'){
-        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것은 무엇이었나요?`;
-        follow.push('배운 내용을 실제 업무에는 어떻게 쓰고 계신가요?', '배운 내용 중에 실무에서 생각처럼 잘 되지 않았던 부분도 있었나요?');
+        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것을 말씀해 주세요.`;
+        follow.push('배운 내용을 실제 업무에 어떻게 쓰고 계신지 말씀해 주세요.', '배운 내용 중 실무에서 생각처럼 잘 되지 않았던 부분이 있으면 말씀해 주세요.');
       }else if(x.kind === 'cert'){
-        q = `이력서에 ${item} 자격을 적으셨는데요, 준비하며 가장 힘들었던 점은 어떻게 넘기셨나요?`;
+        q = `이력서에 ${item} 자격을 적으셨는데요, 준비하며 가장 힘들었던 점을 어떻게 넘기셨는지 말씀해 주세요.`;
       }else{
-        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할을 말씀해 주시겠어요?`;
+        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할을 말씀해 주세요.`;
         // 2026-10-21h: 괄호 안 내용의 뜻(분량·계약 형태·업무 설명)에 맞춰 묻기 ("그만큼의 일을 하면서"처럼 어색한 말 없애기)
         if(x.paren){
           const pq = J("'" + x.paren.slice(0, 40) + "'", '이라고/라고');
-          if(/\d+\s*(건|시간|쪽|페이지|매|분량|개|편|회의)/.test(x.paren) && !/주\s*\d+\s*회/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 정도 분량을 맡으시면서 정확성은 어떻게 지키셨나요?`);
-          else if(/(기간제|계약직|임기제|인턴|아르바이트|파트|비상근|위촉|프리랜서|주\s*\d+\s*회)/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 기간에 맡으신 일 가운데 가장 책임이 컸던 일은 무엇이었나요?`);
-          else follow.push(`이력서에 ${pq} 적으셨는데요, 그 일에서 본인이 직접 맡은 부분은 어디까지였나요?`);
+          if(/\d+\s*(건|시간|쪽|페이지|매|분량|개|편|회의)/.test(x.paren) && !/주\s*\d+\s*회/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 정도 분량을 맡으시면서 정확성을 어떻게 지키셨는지 말씀해 주세요.`);
+          else if(/(기간제|계약직|임기제|인턴|아르바이트|파트|비상근|위촉|프리랜서|주\s*\d+\s*회)/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 기간에 맡으신 일 가운데 가장 책임이 컸던 일을 말씀해 주세요.`);
+          else follow.push(`이력서에 ${pq} 적으셨는데요, 그 일에서 본인이 직접 맡은 부분이 어디까지였는지 말씀해 주세요.`);
         }
-        if(x.extra.length) follow.push(`같은 기간에 '${x.extra[0].replace(/\s*\([^)]*\)\s*/g,' ').trim().slice(0, 40)}'도 하셨다고 적으셨는데요, 그 일은 앞의 일과 무엇이 달랐나요?`);
-        follow.push('그 일에서 가장 기억에 남는 상황을 하나 말씀해 주시겠어요?');
+        if(x.extra.length) follow.push(`같은 기간에 '${x.extra[0].replace(/\s*\([^)]*\)\s*/g,' ').trim().slice(0, 40)}'도 하셨다고 적으셨는데요, 그 일이 앞의 일과 어떻게 달랐는지 말씀해 주세요.`);
+        follow.push('그 일에서 가장 기억에 남는 상황을 하나 말씀해 주세요.');
       }
       return { q: q.replace(/\s{2,}/g, ' '), ref:null, custom:true, doc:'cv', section: x.kind, src: x.raw, kind: x.kind, score: x.score, quoteCore: x.main, follow: follow.filter(Boolean).slice(0, 2),
                hint: '이력서에 적은 기간·역할·숫자와 맞게, 내가 직접 한 일을 중심으로 답해 보세요.' };
@@ -14414,7 +14414,7 @@ function refreshDocQuestions(){
     qs = all.slice(0, 2).map(x=>Object.assign(x, { spoken: DocGuard.forSpeech(x.q), follow: (x.follow || []).map(f=>DocGuard.forSpeech(f)) }));
     qs.forEach(x=>DocQ.followMap.set(x.q, x.follow.slice()));
   }catch(e){ console.warn('[서류 질문 만들기 실패]', e); }
-  if(!qs.length && r.trim()) qs = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 경험 하나를, 언제·어디서·무엇을 했는지 중심으로 말씀해 주시겠어요?', ref:null, custom:true, doc:'resume'}];
+  if(!qs.length && r.trim()) qs = [{q:'제출하신 자기소개서에서 가장 강조하고 싶었던 경험 하나를, 언제·어디서·무엇을 했는지 중심으로 말씀해 주세요.', ref:null, custom:true, doc:'resume'}];
   state.customQuestions = qs;
   try{ syncRealSetDocStep(); }catch(_){}
   return qs;
@@ -15284,7 +15284,7 @@ const LF_DEMAND = [
   { id:'joy',     re:/(보람)/, label:'보람 장면', act:'보람을 느낀 장면 말하기', fn:a=>a.exp, tpl:'가장 보람 있었던 순간은 [장면]이었습니다. [이유] 때문에 이 일을 계속하고 싶다고 느꼈습니다.' },
   { id:'first',   re:/(가장 먼저)/, label:'첫 대응', act:'가장 먼저 할 일부터', fn:a=>a.firstStep, tpl:'가장 먼저 [첫 대응]을 하겠습니다. 그래야 [이유]이기 때문입니다.' },
   { id:'principle',re:/(규정이나 원칙|기준이 되는)/, label:'판단 기준', act:'규정·원칙 이름 말하기', fn:a=>a.principle, tpl:'판단 기준은 [규정·원칙]입니다. 그래서 [구체 행동]을 하겠습니다.' },
-  { id:'report',  re:/(보고하시겠|알리시겠)/, label:'보고 시점·방법', act:'언제·누구에게 보고할지', fn:a=>a.report, tpl:'[시점]에 [상급자]께 [내용]을 바로 보고하고, 지시에 따라 처리하겠습니다.' },
+  { id:'report',  re:/(보고하시겠|보고하실|알리시겠|알리실)/, label:'보고 시점·방법', act:'언제·누구에게 보고할지', fn:a=>a.report, tpl:'[시점]에 [상급자]께 [내용]을 바로 보고하고, 지시에 따라 처리하겠습니다.' },
   { id:'after',   re:/(사후|재발|해결되지 않으면)/, label:'사후 조치', act:'끝난 뒤 확인 단계 말하기', fn:a=>a.after, tpl:'끝난 뒤에는 [확인 방법]으로 다시 점검하고, [재발 방지책]을 기록해 두겠습니다.' },
   { id:'jobwhy',  re:/(속기 업무에서는 왜|속기 업무와 연결)/, label:'업무 연결', act:'속기 업무 장면과 연결', fn:a=>a.domain>=2, tpl:'속기 업무에서는 [이유] 때문에 중요하고, 특히 [업무 장면]에서 필요합니다.' },
   { id:'unique',  re:/(차별점|누구나)/, label:'나만의 강점', act:'나만의 근거 한 가지', fn:a=>a.numbers>0 || (a.exp && a.myAction), tpl:'제 차별점은 [나만의 경험·수치]입니다. [사례]에서 이를 보여 드렸습니다.' },
@@ -15426,13 +15426,13 @@ const Rubric = {
     const s = String(q||'').replace(/\s+/g,' ');
     if(/(마지막으로|하고 싶은 말|끝으로 한 말씀)/.test(s)) return 'closing';
     if(/(자기\s*소개(?!서)|본인을 소개|간단히 소개|소개해\s*(주|보))/.test(s)) return 'intro';
-    if(/(지원\s*동기|지원한 이유|왜 지원|지원하게 된|지원하셨|선택한 이유|선택하게 된|속기를 선택|마음에 드는 부분|이 직무를 선택|우리 (기관|회사|법원|의회|국회|검찰|센터))/.test(s)) return 'motive';
+    if(/(지원\s*동기|지원한 이유|왜 지원|지원하게 된|지원한 동기|지원하셨|선택한 이유|선택하게 된|속기를 선택|마음에 드는 부분|이 직무를 선택|우리 (기관|회사|법원|의회|국회|검찰|센터))/.test(s)) return 'motive';
     if(/(장점|단점|강점|약점|성격|보는 지원자|어떤 사람이라고|별명)/.test(s)) return 'personality';
     if(/(다면|생기면|발생하면|발생할 경우|요구하면|지시하면|겹칠|불만을 제기하면|어떻게\s*(하겠|하시겠|대처|대응|처리|해결|하실|하시|정리하시)|때(는|에)?\s*어떻게|경우(에)?(는)?\s*어떻게)/.test(s)) return 'situation';
     if(/(경험|해 본 적|했던|겪었|극복|성취|실패|어려웠던|힘들었던|보람|기억에 남는|이전 직장|업무를 했)/.test(s)) return 'experience';
     if(/(앞으로|계획|자기\s*계발|입사 후|목표|포부|년 후|노력하고 있는)/.test(s)) return 'plan';
     if(/(이란|란 무엇|무엇인가요|무엇입니까|무엇인지|뜻은|정의|차이|구성되|절차는|제도|종류|어떻게 다른|설명해)/.test(s) && !/(전략|방법|비결)/.test(s)) return 'knowledge';
-    if(/(생각하(나요|십니까|는가|는지|세요)|생각하시(는지|나요)|어떻게 생각|중요하다고|중요한 것|태도|자세|가치|덕목|필요한 (자질|역량)|해야 한다고|지켜야|왜 중요|중요한가)/.test(s)) return 'value';
+    if(/(생각하(나요|십니까|는가|는지|세요)|생각하시(는지|나요)|중요한지|어떻게 생각|중요하다고|중요한 것|태도|자세|가치|덕목|필요한 (자질|역량)|해야 한다고|지켜야|왜 중요|중요한가)/.test(s)) return 'value';
     if(/(전략|방법|비결|노하우|어떤 노력|어떻게\s*(줄|최소화|관리|극복|유지|높|향상|지키|교정|준비))/.test(s)) return 'method';
     return 'general';
   },
@@ -15850,9 +15850,9 @@ const LF_TPL = {
 
 const REHEARSAL_COUNT = 2;
 const FOLLOWUP_TEMPLATES = [
-  '방금 답변에서 말씀하신 내용 중 가장 어려웠던 부분은 무엇이었나요?',
-  '그렇게 판단하신 구체적인 이유를 조금 더 설명해 주시겠어요?',
-  '비슷한 상황이 다시 생긴다면 다르게 대응하실 부분이 있을까요?',
+  '방금 답변에서 말씀하신 내용 중 가장 어려웠던 부분을 말씀해 주세요.',
+  '그렇게 판단하신 구체적인 이유를 조금 더 설명해 주세요.',
+  '비슷한 상황이 다시 생긴다면 다르게 대응하실 부분을 말씀해 주세요.',
 ];
 
 function buildQuestionSet(count){
@@ -19038,7 +19038,7 @@ const StenoDialog = {
     }
     if(rb && rb.gate === 'short') want.unshift('example');
     const lines = (VoiceBank.loaded ? VoiceBank.lines : []).filter(l=>l.kind==='followup' && VoiceBank.urlFor(l.text));
-    const isPast = txt=>/(셨습니까|셨나요|였나요|었습니까|었나요|했던|났던|그 경험|그 일을|그때|그 과정|맡았던|걸렸|다시 그 상황|또 겪는다면)/.test(txt) && !/겠습니까/.test(txt);
+    const isPast = txt=>/(셨습니까|셨나요|였나요|었습니까|었나요|셨는지|었는지|였는지|했던|났던|그 경험|그 일을|그때|그 과정|맡았던|걸렸|다시 그 상황|또 겪는다면)/.test(txt) && !/(겠습니까|셨을지)/.test(txt);   // 2026-10-21l 평서문(~하셨는지 말씀해 주세요)도 과거 경험으로
     const tagOf = txt=>{ const d = LF_DEMAND.find(x=>x.re.test(txt)); return d ? d.id : null; };
     const toneRank = l=>{ const tn = tone || 'normal'; if(l.tone === tn) return 0; if(tn === 'hard') return l.tone === 'normal' ? 1 : 2; return l.tone === 'hard' ? 9 : 1; };
     const MEMO = { persist:'원칙 일관성 확인', other:'다른 경험 확인', regret:'자기 성찰 확인', own:'담당자 역할 확인', cert:'실제 실무 경험 확인', concrete:'추상적 답 구체화', motive2:'지원 동기 진정성 확인', example:'구체 사례 보강 필요', role:'본인 역할이 흐림', result:'결과(숫자) 보강 필요', learning:'배운 점 확인', first:'첫 대응 확인', principle:'판단 기준 확인', reason:'근거 보강 필요', report:'보고 절차 확인', pressure:'원칙과 지시 사이 판단 확인', after:'사후 조치 확인', known:'아는 범위 확인', summary:'핵심 정리 필요', jobwhy:'직무 연결 확인', risk:'위험 인식 확인', counter:'다른 관점 확인', time:'기간·시간 관리 확인' };
@@ -19049,8 +19049,8 @@ const StenoDialog = {
     const kwLine = tag=>{
       if(!kw) return null;
       const k = "'" + kw + "'";
-      if(tag === 'example') return pastOK ? `말씀하신 ${J(k, '과/와')} 관련해 실제로 겪으셨던 구체적인 사례를 하나만 들려주시겠어요?` : `말씀하신 ${J(k, '과/와')} 관련해, 실제 업무에서는 어떤 순서로 하실지 자세히 말씀해 주시겠어요?`;
-      if(tag === 'summary') return `말씀하신 내용 가운데 ${J(k, '이/가')} 왜 중요한지 한 문장으로 정리해 주시겠습니까?`;
+      if(tag === 'example') return pastOK ? `말씀하신 ${J(k, '과/와')} 관련해 실제로 겪으셨던 구체적인 사례를 하나만 들려주세요.` : `말씀하신 ${J(k, '과/와')} 관련해, 실제 업무에서는 어떤 순서로 하실지 자세히 말씀해 주세요.`;
+      if(tag === 'summary') return `말씀하신 내용 가운데 ${J(k, '이/가')} 왜 중요한지 한 문장으로 정리해 주세요.`;
       return null;
     };
     for(const tag of [...new Set(want)]){
@@ -19066,7 +19066,7 @@ const StenoDialog = {
     // 맞는 문장이 없으면: 유형에 어울리는 녹음 문장 아무거나 (가정 질문엔 과거 경험 질문 제외)
     const rest = lines.filter(l=>!this._used.has(l.text) && (pastOK || !isPast(l.text)) && toneRank(l) < 9);
     if(rest.length){ const pick = rest[Math.floor(Math.random()*rest.length)]; this._used.add(pick.text); return { followup: pick.text, evaluation:'', intent:'probe', model:'', audio_url: VoiceBank.urlFor(pick.text) }; }
-    const kq = kw ? `말씀하신 ${J("'" + kw + "'", '과/와')} 관련해, 실제 업무 장면을 하나 들어 조금 더 자세히 설명해 주시겠어요?` : null;
+    const kq = kw ? `말씀하신 ${J("'" + kw + "'", '과/와')} 관련해, 실제 업무 장면을 하나 들어 조금 더 자세히 설명해 주세요.` : null;
     const q = (kq && !this._used.has(kq)) ? kq : FOLLOWUP_TEMPLATES[Math.floor(Math.random()*FOLLOWUP_TEMPLATES.length)];
     this._used.add(q);
     return { followup: q, evaluation: '', intent: 'probe', model: '' };
