@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21d';
+var APP_VERSION = '2026-10-21f';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -19304,6 +19304,40 @@ async function playWithGate(a){
   try{ await a.play(); }
   catch(e){ if(e && e.name === 'NotAllowedError'){ await SoundGate.ask(); await a.play(); } else throw e; }
 }
+/* ---------------- 2026-10-21f 끝음 점검 (EndCheck) ----------------
+   타입캐스트가 가끔 문장 끝을 사람처럼 안 읽음: ① 끝에서 목소리가 확 가라앉으며 갈라짐 ② '무엇·어떻게' 질문인데 끝을 크게 올림.
+   받은 소리의 마지막 0.5초 목소리 높이(F0)를 평소 높이와 비교해 점수(0 = 정상)를 매김. 이 기기 안에서만 계산(서버로 보내지 않음). */
+const EndCheck = {
+  WH: /무엇|어떻게|어떤|왜|언제|어디|누구|얼마|몇|어느|무슨|뭐/,
+  stats: { checked:0, redone:0 },
+  async measure(blob){
+    const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if(!AC || !blob) return null;
+    const buf = await blob.arrayBuffer();
+    const ctx = new AC(1, 22050, 22050);
+    const ab = await new Promise((res, rej)=>{ try{ const p = ctx.decodeAudioData(buf, res, rej); if(p && p.then) p.then(res, rej); }catch(e){ rej(e); } });
+    const d = ab.getChannelData(0), sr = ab.sampleRate, n = d.length;
+    const hop = Math.round(sr * 0.02), fl = Math.round(sr * 0.04), minL = Math.round(sr / 350), maxL = Math.round(sr / 55);
+    const energy = s=>{ let e = 0; for(let j = 0; j < fl; j++) e += d[s + j] * d[s + j]; return e; };
+    const f0 = (s, e0)=>{ let best = 0, bl = 0; for(let L = minL; L <= maxL; L++){ let c = 0; for(let j = 0; j + L < fl; j++) c += d[s + j] * d[s + j + L]; if(c > best){ best = c; bl = L; } } return best / e0 > 0.4 ? sr / bl : 0; };
+    const E = []; for(let s = 0; s + fl <= n; s += hop) E.push(energy(s));
+    if(!E.length) return null;
+    let mx = 0; E.forEach(v=>{ if(v > mx) mx = v; });
+    let last = E.length - 1; while(last > 0 && E[last] < mx * 0.003) last--;
+    const all = []; for(let i = 0; i < last; i += 4){ if(E[i] > mx * 0.02){ const f = f0(i * hop, E[i]); if(f) all.push(f); } }
+    all.sort((a, b)=>a - b); const med = all[Math.floor(all.length / 2)] || 0;
+    const tv = []; for(let i = Math.max(0, last - 30); i <= last; i++){ if(E[i] > mx * 0.01){ const f = f0(i * hop, E[i]); if(f) tv.push(f); } }
+    const l4 = tv.slice(-4); if(!med || l4.length < 3) return null;
+    const srt = l4.slice().sort((a, b)=>a - b); const m4 = (srt[1] + srt[Math.min(2, srt.length - 1)]) / 2;
+    return { med, r4: m4 / med, lowN: l4.filter(v=>v < 75).length };
+  },
+  /** 0 = 정상, 클수록 이상. 분석이 안 되면 0 (그대로 씀) */
+  async score(blob, text){
+    let m = null; try{ m = await this.measure(blob); }catch(_){ return 0; }
+    if(!m) return 0;
+    let b = 0; if(m.lowN >= 2) b += 2; if(m.r4 < 0.62) b += 1; if(m.r4 > 1.25 && this.WH.test(text || '')) b += 1;
+    return b;
+  },
+};
 const StenoVoice = {
   provider: 'browser', openaiVoice: 'onyx', speed: 0.9, ttsModel: 'gpt-4o-mini-tts', instructions: '', audio: null, _seq: 0,
   /** 관리자 목소리 비교 화면에서 저장한 설정을 적용 */
@@ -19362,7 +19396,26 @@ const StenoVoice = {
     speakQuestion(text, onDone);
   },
   /** speak-text 호출을 최대 4번(바로·1.5초·3.5초·7초 뒤) 시도. 권한·요청 형식 오류(400·401·403)는 바로 포기 */
+  /** 2026-10-21f 타입캐스트로 즉석에서 만든 소리(꼬리질문 등)는 끝음을 바로 검사해, 끝이 갈라지거나 이상하게 올라가면 한 번 더 만들어 더 나은 쪽을 씀
+      (최대 2번 더, 합쳐 6초 안에서. 그 사이 다른 말이 시작되면 그만둠) */
   async fetchWithRetry(text, my){
+    let blob = await this._fetchRaw(text, my);
+    if(!(this.engine && this.engine.provider === 'typecast' && fetchSpeechBlob.last === 'typecast')) return blob;
+    try{
+      const t0 = Date.now(); let best = blob, bs = await EndCheck.score(blob, text), tries = 0;
+      while(bs > 0 && tries < 2 && Date.now() - t0 < 6000 && my === this._seq){
+        tries++;
+        let b2; try{ b2 = await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine); }catch(_){ break; }
+        if(fetchSpeechBlob.last !== 'typecast') break;
+        const s2 = await EndCheck.score(b2, text);
+        if(s2 < bs){ best = b2; bs = s2; }
+      }
+      if(tries) console.info('[끝음 점검] 다시 만듦 ' + tries + '번 · 남은 점수 ' + bs + ' · ' + ((Date.now() - t0) / 1000).toFixed(1) + '초');
+      EndCheck.stats.checked++; if(tries) EndCheck.stats.redone++;
+      return best;
+    }catch(e){ console.warn('[끝음 점검 건너뜀]', e && e.message); return blob; }
+  },
+  async _fetchRaw(text, my){
     const waits = [0, 1500, 3500, 7000]; let last = null;
     for(let i=0;i<waits.length;i++){
       if(waits[i]){ await new Promise(r=>setTimeout(r, waits[i])); if(my !== this._seq) throw new Error('취소됨'); }
