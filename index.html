@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21l';
+var APP_VERSION = '2026-10-21n';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5833,7 +5833,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       <div class="admin-view" id="admin-view-feedback">
         <div class="admin-view-head">
           <div><h2>의견 · 문제</h2>
-          <p>면접자가 "의견·문제 보내기" 버튼으로 보낸 글과, 프로그램이 자동으로 기록한 오류(마이크·음성 인식·화면 오류)예요. 읽었으면 <b>확인 중</b>, 고쳤으면 <b>처리 완료</b>로 바꿔 두면 새 글만 골라 볼 수 있어요. <b>처리 완료</b>로 바꾸면 보낸 사람 화면의 종(알림)에 <b>'해결됐어요'</b>가 떠요.</p></div>
+          <p>면접자가 "의견·문제 보내기" 버튼으로 보낸 글과, 프로그램이 자동으로 기록한 오류(마이크·음성 인식·화면 오류)예요. 읽었으면 <b>확인 중</b>, 고쳤으면 <b>처리 완료</b>로 바꿔 두면 새 글만 골라 볼 수 있어요. <b>처리 완료</b>로 바꾸면 보낸 사람 화면의 종(알림)에 <b>'해결됐어요'</b>가 떠요. 면접자 기기의 카메라·마이크 권한이 막혀서 생긴 자동 기록(<b>권한 차단</b>)은 프로그램 문제가 아니라서 알림 숫자에 세지 않아요.</p></div>
           <button class="btn-manage" onclick="loadFeedback(true)">새로 고침</button>
         </div>
         <div class="live-note" id="fb-note" style="display:none;"></div>
@@ -9668,7 +9668,7 @@ const AdminFb = {
     this.paint();
     if(!force && this.n !== null && Date.now() - this.t < 20000) return;
     this.t = Date.now();
-    try{ const r = await sb.from('feedback').select('id,status').eq('status', '새 글').limit(500); if(!r.error) this.n = (r.data||[]).filter(x=>!x.status || x.status === '새 글').length; }catch(_){}
+    try{ const r = await sb.from('feedback').select('id,status,auto,message').eq('status', '새 글').limit(500); if(!r.error) this.n = (r.data||[]).filter(fbAlert).length; }catch(_){}
     this.paint();
   },
   set(n){ this.n = n; this.t = Date.now(); this.paint(); },
@@ -13072,7 +13072,7 @@ async function loadFeedback(force){
   }
   renderFeedback();
   const badge = document.getElementById('fb-nav-badge');
-  if(badge){ const n = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
+  if(badge){ const n = (state.feedbackRows||[]).filter(fbAlert).length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
 }
 /* ---------- 관리자 · 베타 현황 (2026-10-07) ----------
    면접자(관리자 제외)별: 마지막 접속(activity_log login) · 연습 횟수(interview_records) · 평균/최근 점수 · 자동 오류/의견(feedback) · 이용 기간 */
@@ -13239,16 +13239,18 @@ function copyBetaNudgeList(){
 function statTile(num, lbl, o={}){ return `<div class="admin-stat${o.cls?' '+o.cls:''}${o.go?' link':''}"${o.go?` onclick="${o.go}" title="누르면 이동"`:''}><div class="lbl">${lbl}${o.scope?`<span class="scope">${o.scope}</span>`:''}</div><div class="num">${num}</div>${o.foot?`<div class="foot">${o.foot}</div>`:''}</div>`; }
 function fbUserName(id){ const u = (state.adminUsers||[]).find(x=>x.id===id); return u ? (u.name||'') : '(알 수 없음)'; }
 function fbUserPhone(id){ const u = (state.adminUsers||[]).find(x=>x.id===id); return u ? (u.phone||'') : ''; }
-function fbIsPerm(r){ const m = String(r.message||''); return !!r.auto && (/^\[(권한 차단|카메라 차단 안내|마이크 차단 안내)\]/.test(m) || /권한이 차단되어|설정에서 마이크가 꺼져|묻는 창이 닫혔/.test(m)); }
+function fbIsPerm(r){ const m = String(r.message||''); return !!r.auto && (/^\[(권한 차단|카메라 차단 안내|마이크 차단 안내)\]/.test(m) || /권한이 차단되어|설정에서 마이크가 꺼져|묻는 창이 닫혔|권한 상태 변경|not-allowed/.test(m)); }
+/** 2026-10-21n: 관리자 알림(숫자)에 셀 글 = '새 글' 중 면접자 기기 권한 차단 자동 기록은 뺌 (프로그램 문제가 아니라서) */
+function fbAlert(r){ return !!r && r.status==='새 글' && !fbIsPerm(r); }
 function fbKindCls(r){ if(fbIsPerm(r)) return 'perm'; return r.auto || r.kind==='오류' ? 'err' : r.kind==='문제' ? 'bug' : r.kind==='질문' ? 'q' : 'idea'; }
 function setFeedbackFilter(v){ state.feedbackFilter = v; renderFeedback(); }
 function renderFeedback(){
   const rows = state.feedbackRows || [];
   const stats = document.getElementById('fb-stats');
-  const newN = rows.filter(r=>r.status==='새 글').length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제').length;
+  const newN = rows.filter(fbAlert).length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제').length;
   const weekAgo = Date.now() - 7*86400000; const weekN = rows.filter(r=>new Date(r.created_at).getTime() >= weekAgo).length;
   const checkingN = rows.filter(r=>r.status==='확인 중').length, doneN = rows.filter(r=>r.status==='처리 완료').length;
-  if(stats) stats.innerHTML = statTile(`${newN}<i>건</i>`, '새 글', {scope:'처리 상태', cls: newN?'warn':'', foot:'아직 확인하지 않은 글 · 메뉴 배지와 같은 기준'})
+  if(stats) stats.innerHTML = statTile(`${newN}<i>건</i>`, '새 글', {scope:'처리 상태', cls: newN?'warn':'', foot:'아직 확인하지 않은 글 · 메뉴 배지와 같은 기준 (권한 차단 기록 제외)'})
     + statTile(`${checkingN}<i>건</i>`, '확인 중', {scope:'처리 상태', foot:'읽었고 아직 처리 전'})
     + statTile(`${doneN}<i>건</i>`, '처리 완료', {scope:'처리 상태', foot:`최근 7일 들어온 글 ${weekN}건`});
   const chips = document.getElementById('fb-chips');
@@ -13259,7 +13261,7 @@ function renderFeedback(){
   const hideDone = !!(document.getElementById('fb-hide-done')||{}).checked;
   const list = document.getElementById('fb-list'); if(!list) return;
   const shown = rows.filter(r=>{
-    if(cur==='new' && r.status!=='새 글') return false;
+    if(cur==='new' && !fbAlert(r)) return false;
     if(cur==='bug' && (r.auto || r.kind!=='문제')) return false;
     if(cur==='idea' && (r.auto || r.kind==='문제')) return false;
     if(cur==='err' && !r.auto) return false;
@@ -13276,7 +13278,7 @@ function renderFeedback(){
     const kindLabel = isPerm ? '권한 차단' : r.auto ? '자동 오류' : r.kind;
     const permCause = d.cause === 'system' ? '원인: 컴퓨터(윈도우·맥) 설정에서 꺼져 있음' : d.cause === 'dismissed' ? '원인: 권한을 묻는 창을 그냥 닫음' : d.cause === 'inapp' ? '원인: 카카오톡 등 앱 안의 창으로 열었음' : d.cause === 'site' ? '원인: 브라우저에서 이 사이트를 차단함' : '';
     const meta = [d.browser ? d.browser + (d.mobile ? ' · 휴대폰' : '') : '', r.screen ? '화면 ' + r.screen : '', d.field ? d.field : '', d.lastError && !r.auto ? '최근 오류 ' + d.lastError.kind : ''].filter(Boolean).join(' · ');
-    return `<div class="fb-card ${cls}${r.status==='새 글' ? ' new' : ''}" data-id="${r.id}">
+    return `<div class="fb-card ${cls}${fbAlert(r) ? ' new' : ''}" data-id="${r.id}">
       <div class="fb-card-head">
         <span class="fb-kind ${cls}">${escapeHtml(kindLabel)}</span>
         <span class="fb-who"><b>${escapeHtml(fbUserName(r.user_id))}</b>${fbUserPhone(r.user_id) ? `<small>${escapeHtml(fbUserPhone(r.user_id))}</small>` : ''}</span>
@@ -13284,7 +13286,7 @@ function renderFeedback(){
         <span class="fb-state-badge ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':'new'}">${escapeHtml(r.status)}</span>
       </div>
       <div class="fb-msg">${escapeHtml(r.message||'')}</div>
-      ${isPerm ? `<div class="fb-hint">면접자 기기·브라우저 설정 문제예요(프로그램 오류 아님). 면접자 화면에 푸는 방법이 함께 떴어요.${permCause ? ' ' + escapeHtml(permCause) + '.' : ''} 계속 안 되면 다른 브라우저(크롬)나 휴대폰으로 열도록 안내해 주세요.</div>` : ''}
+      ${isPerm ? `<div class="fb-hint">면접자 기기·브라우저 설정 문제예요(프로그램 오류 아님). 면접자 화면에 푸는 방법이 함께 떴어요.${permCause ? ' ' + escapeHtml(permCause) + '.' : ''} 계속 안 되면 다른 브라우저(크롬)나 휴대폰으로 열도록 안내해 주세요. 관리자 알림 숫자에는 세지 않아요.</div>` : ''}
       ${meta ? `<div class="fb-meta">${escapeHtml(meta)}</div>` : ''}
       <details class="fb-detail"><summary>자동 첨부 정보</summary><pre>${escapeHtml(JSON.stringify(d, null, 1))}</pre></details>
       <div class="fb-admin-row">
@@ -13309,7 +13311,7 @@ async function updateFeedback(id, patch){
     const r = (state.feedbackRows||[]).find(x=>x.id===id); if(r) Object.assign(r, patch);
     const who = r ? fbUserName(r.user_id) : '';
     showToast(notify === 'on' ? `처리 완료로 바꿨어요. ${who ? who + ' 님' : '보낸 사람'}께 '해결됐어요' 알림이 가요.` : notify === 'off' ? `"${patch.status}"으로 바꿨어요. 해결 알림은 거뒀어요.` : patch.status ? `"${patch.status}"으로 바꿨어요` : '메모를 저장했어요', 'ok'); renderFeedback();
-    const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = (state.feedbackRows||[]).filter(x=>x.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
+    const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = (state.feedbackRows||[]).filter(fbAlert).length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} }
   }catch(e){ showToast('저장 실패: ' + (e.message||e)); }
 }
 async function deleteFeedback(id){
@@ -18440,7 +18442,7 @@ async function renderAdmin(){
     (usage||[]).forEach(u=>{ state.adminAiUsage[u.user_id] = u; });
     await AiSwitch.load();
   }catch(e){ console.warn('[AI 사용량 조회 실패 — step7_ai_usage_limit.sql 실행 여부 확인]', e.message||e); }
-  try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].message !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(r=>r.status==='새 글').length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} } } }catch(_){}
+  try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,message,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].detail !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(fbAlert).length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} } } }catch(_){}
   // 2026-10-16a: 서류 합격 증빙(승인 요청) — 확인 대기 건수와 사람별 표시
   state.apSubmitted = {};
   try{ const { data: apr } = await sb.from('approval_requests').select('id,user_id,status,field_id,created_at').eq('status','submitted').order('created_at',{ascending:false}).limit(300); (apr||[]).forEach(r=>{ if(!state.apSubmitted[r.user_id]) state.apSubmitted[r.user_id] = r; }); }catch(_){}
@@ -18521,8 +18523,8 @@ async function renderAdmin(){
     const nearCap = Object.entries(state.adminAiUsage||{}).filter(([id,u])=>{ const p = users.find(x=>x.id===id); if(!p || !isStudentAcct(p)) return false; const lim = AiSwitch.limits.total + (p.ai_bonus||0); return lim && u.used_total >= lim*0.8; }).length;
     if(nearCap) items.push({ cls:'', txt:`<b>${nearCap}명</b>이 AI 면접 총 한도의 80% 이상을 썼어요`, go:"adminGo('users','')", btn:'횟수 추가' });
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn); if(dw.length) items.push({ cls:'warn', txt:`<b>${dw.length}명</b>이 최근 7일 동안 여러 기기를 번갈아 썼어요 <small>(${dw.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${dw.length>4?' 외':''} · 계정 공유 의심)</small>`, go:"adminGo('users','__devwarn')", btn:'확인' }); }
-    const fbNew = (state.feedbackRows||[]).filter(r=>r.status==='새 글').length;
-    if(fbNew) items.push({ cls:'warn', txt:`아직 안 읽은 <b>의견·문제 ${fbNew}건</b>이 있어요${(state.feedbackRows||[]).some(r=>r.status==='새 글' && r.auto) ? ' <small>(자동 기록된 오류 포함)</small>' : ''}`, go:"adminGo('feedback')", btn:'읽으러 가기' });
+    const fbNew = (state.feedbackRows||[]).filter(fbAlert).length;
+    if(fbNew) items.push({ cls:'warn', txt:`아직 안 읽은 <b>의견·문제 ${fbNew}건</b>이 있어요${(state.feedbackRows||[]).some(r=>fbAlert(r) && r.auto) ? ' <small>(자동 기록된 오류 포함)</small>' : ''}`, go:"adminGo('feedback')", btn:'읽으러 가기' });
     todoEl.innerHTML = `<div class="ov-todo-title"><span>확인이 필요한 것</span><small>${items.length ? items.length+'개 항목' : '0개 항목'}</small></div>` + (items.length
       ? `<ul class="ov-todo-list">` + items.map(it=>{ const m = it.txt.match(/<b>(\d+)[^<]*<\/b>/); const n = m ? m[1] : ''; return `<li><button type="button" class="ov-todo-item ${it.cls}" onclick="${it.go}"><span class="n">${n || '!'}</span><span class="tx">${it.txt}</span><span class="go">${it.btn} <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></span></button></li>`; }).join('') + `</ul>`
       : `<div class="ov-todo-empty">지금 확인할 항목이 없어요. 모두 정상이에요.</div>`);
