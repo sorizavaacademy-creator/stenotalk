@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21g';
+var APP_VERSION = '2026-10-21i';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -627,6 +627,19 @@ var APP_VERSION = '2026-10-21g';
   .tcc-break{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:13px;color:#45454a;} .tcc-break b{color:#1c1c1e;font-variant-numeric:tabular-nums;}
   .tcc-break .k{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle;} .tcc-break .k.live{background:#e8532a;} .tcc-break .k.rec{background:#1f1f21;} .tcc-break .k.pre{background:#a3a3a8;}
   @media (max-width:560px){ .tcc-right{text-align:left;} .tcc-big{font-size:26px;} .tcc-tiles b{font-size:16px;} }
+  /* 2026-10-21i 면접 중 즉석으로 읽은 문장 */
+  .tcl-sum{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:#45454a;margin-bottom:10px;} .tcl-sum b{color:#1c1c1e;font-variant-numeric:tabular-nums;}
+  .tcl-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;} .tcl-filter button{border:1px solid #e3e0da;background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;color:#55555b;cursor:pointer;} .tcl-filter button.on{background:#1f1f21;border-color:#1f1f21;color:#fff;}
+  .tcl-list{display:flex;flex-direction:column;border:1px solid #ecebe7;border-radius:12px;overflow:hidden;}
+  .tcl-row{display:grid;grid-template-columns:118px minmax(0,1fr) 92px;gap:4px 12px;align-items:start;padding:10px 12px;border-top:1px solid #f0eee9;font-size:13px;} .tcl-row:first-child{border-top:0;}
+  .tcl-row.new{background:#fff8f3;}
+  .tcl-when{color:#7c7c82;font-variant-numeric:tabular-nums;line-height:1.45;} .tcl-when b{display:block;color:#1c1c1e;font-weight:700;}
+  .tcl-text{color:#1c1c1e;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere;} .tcl-meta{display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:3px;font-size:12px;color:#7c7c82;}
+  .tcl-chip{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:700;background:#f1efeb;color:#55555b;} .tcl-chip.ai{background:#fdebe4;color:#b23c17;} .tcl-chip.rule{background:#eef1f6;color:#3b4a66;} .tcl-chip.q{background:#eef6ef;color:#2f6b3a;} .tcl-chip.new{background:#e8532a;color:#fff;}
+  .tcl-cr{text-align:right;font-variant-numeric:tabular-nums;} .tcl-cr b{display:block;font-size:14px;} .tcl-cr small{color:#9a9aa0;font-size:11.5px;}
+  .tcl-more{display:block;width:100%;border:0;border-top:1px solid #f0eee9;background:#faf9f7;padding:9px;font-size:13px;font-weight:600;color:#55555b;cursor:pointer;}
+  .tcl-empty{padding:16px 12px;font-size:13px;color:#7c7c82;}
+  @media (max-width:560px){ .tcl-row{grid-template-columns:minmax(0,1fr) auto;} .tcl-when{grid-column:1 / -1;display:flex;gap:8px;} .tcl-when b{display:inline;} }
   /* 2026-10-21c 면접관 목소리 (한 흐름 화면) */
   .vs{--vs-ink:#1c1c1e;--vs-ink2:#45454a;--vs-ink3:#7c7c82;--vs-line:#e6e3dd;--vs-soft:#f6f5f3;--vs-acc:#e8532a;--vs-acc-soft:#fdf0eb;--vs-ok:#2f7a4a;--vs-ok-bg:#e6f4ec;
     background:#fff;border:1px solid var(--vs-line);border-radius:16px;padding:22px 24px 24px;color:var(--vs-ink);font-size:14px;}
@@ -5257,7 +5270,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
       </button>
       <button class="admin-menu-btn" data-group="settings" onclick="showAdminView('pipeline')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        설정
+        설정 <span class="menu-badge" id="tts-nav-badge" style="display:none;" title="새로 즉석으로 읽은 문장"></span>
       </button>
     </aside>
 
@@ -5538,6 +5551,15 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
             <button class="btn btn-outline pipe-btn" id="tcc-refresh" onclick="TcCredit.load(true)">새로고침</button>
           </div>
           <div class="tcc" id="tcc-body"><div class="pipe-hint">불러오는 중…</div></div>
+        </div>
+
+        <!-- 2026-10-21i 면접 중 즉석으로 읽은 문장 (녹음본이 없어 타입캐스트로 바로 읽은 것) -->
+        <div class="pipe-card" id="tc-live-card">
+          <div class="ps-card-head">
+            <div><div class="subhead" style="margin:0;">면접 중 즉석으로 읽은 문장 <span class="menu-badge" id="tcl-new-badge" style="display:none;"></span></div>
+            <div class="pipe-hint">미리 녹음해 둔 음성이 없어 면접 중에 타입캐스트로 바로 읽은 문장이에요. AI 꼬리질문은 매번 새 문장이라 모두 여기에 남아요. 끝음이 어색해 다시 읽은 것도 크레딧에 함께 셌어요.</div></div>
+          </div>
+          <div id="tcl-body"><div class="pipe-hint">불러오는 중…</div></div>
         </div>
 
         <div class="pipe-card" id="ai-limit-card">
@@ -14168,54 +14190,61 @@ const DocQ = {
   },
   // 문장에서 인용할 절 하나 고르기 (너무 길면 쉼표·연결어미로 자른 뒤 동작이 있는 마지막 절)
   _quote(s){
+    // 2026-10-21h: 질문이 길어지지 않게 짧은 인용(44자 이하)을 먼저 찾고, 없을 때만 예전 길이(66·58자)까지 허용
     const plainAll = this._plain(this._trimLead(s));
+    // 쉼표로 자른 뒤 절에서는 이음말만 떼고 '제가·저는'은 남김 (떼면 '친 글자가…'처럼 어색해짐)
+    const parts = s.split(/,\s*/).map((x, i)=>i === 0 ? this._trimLead(x) : x.replace(/^(특히|또한|그리고|그래서|그 결과|결과적으로|이후에는|이후|당시에|당시|이를 통해|이 경험을 통해|그 과정에서|먼저|무엇보다|이처럼|그러나|하지만|다만)\s*,?\s*/, '').trim()).filter(Boolean);
+    const pickClause = max=>{
+      for(let i = parts.length - 1; i >= 0; i--){
+        const pl = this._plain(parts[i]);
+        if(pl && pl.length >= 10 && pl.length <= max && !/^(그|이|저|그것|이것)\s/.test(pl)) return pl;
+      }
+      return null;
+    };
+    if(plainAll && plainAll.length <= 44) return plainAll;
+    { const c = parts.length > 1 ? pickClause(44) : null; if(c) return c; }
     if(plainAll && plainAll.length <= 66) return plainAll;
-    const parts = s.split(/,\s*/).map(x=>this._trimLead(x)).filter(Boolean);
-    for(let i = parts.length - 1; i >= 0; i--){
-      const p = parts[i];
-      const pl = this._plain(p);
-      if(pl && pl.length >= 10 && pl.length <= 58 && !/^(그|이|저|그것|이것)\s/.test(pl)) return pl;
-      if(!pl && i < parts.length - 1 && p.length >= 10 && p.length <= 50 && /(며|고|서|여|면서)$/.test(p)) continue;
-    }
+    { const c = pickClause(58); if(c) return c; }
     // 마지막 수단: "~경험" 명사구
     const np = s.match(/([가-힣A-Za-z0-9·\s]{4,34}?경험)(?=을|이|과|에서|을 바탕|으로)/);
     if(np) return { np: np[1].trim().replace(/^(또한|특히|그리고)\s+/, '') };
     return null;
   },
   _q(sec, kind, quote){
-    const where = sec && sec.title ? `자기소개서 '${sec.title}' 부분에` : '자기소개서에';
+    // 2026-10-21h: 한 번에 하나만 묻도록 짧게 (나머지는 꼬리질문으로)
+    const where = sec && sec.title ? `자기소개서 '${sec.title}'에` : '자기소개서에';
     if(quote && typeof quote === 'object'){
-      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 그 경험이 구체적으로 무엇이었는지, 그리고 그 경험을 속기 업무에 어떻게 살리실 수 있을지 말씀해 주시겠어요?`;
+      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 어떤 경험이었는지 말씀해 주시겠어요?`;
     }
     const said = `${where} '${quote}'고 쓰셨는데요,`;
     switch(kind){
-      case 'result': return `${said} 그런 결과를 얻기까지 본인이 구체적으로 무엇을 바꾸었는지, 그리고 그 결과는 어떻게 확인하셨는지 말씀해 주시겠어요?`;
-      case 'conflict': return `${said} 그 의견 차이를 어떤 과정으로 좁히셨는지, 그때 본인이 한 말과 행동을 중심으로 말씀해 주시겠어요?`;
-      case 'conflictAct': return `${said} 상대방이 처음에는 다르게 생각했을 텐데, 그 방법을 받아들이게 하려고 어떻게 설명하고 설득하셨는지 말씀해 주시겠어요?`;
-      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨고, 실제 회의를 속기할 때는 그 실력이 어떻게 드러나는지 말씀해 주시겠어요?`;
-      case 'motive': return `${said} 그렇게 느끼게 된 구체적인 장면을 하나 들어서 말씀해 주시겠어요?`;
-      case 'plan': return `${said} 그 다짐을 지키기 위해 입사 후 첫 1년 동안 구체적으로 무엇을 하실 계획인지 말씀해 주시겠어요?`;
-      case 'belief': return `${said} 그렇게 생각하게 된 계기가 된 경험이 있다면 말씀해 주시겠어요?`;
-      case 'learn': return `${said} 그렇게 느끼게 된 구체적인 계기나 장면을 하나 말씀해 주시겠어요?`;
-      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기와, 그 뒤로 준비해 온 과정을 말씀해 주시겠어요?`;
-      case 'trait': return `${said} 그런 성향이 잘 드러났던 구체적인 일을 하나 들어서 말씀해 주시겠어요?`;
-      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지, 순서대로 구체적으로 말씀해 주시겠어요?`;
+      case 'result': return `${said} 그 결과를 얻기까지 본인이 직접 바꾼 것은 무엇이었나요?`;
+      case 'conflict': return `${said} 그 의견 차이를 어떻게 좁히셨는지 말씀해 주시겠어요?`;
+      case 'conflictAct': return `${said} 상대방이 그 방법을 받아들이도록 어떻게 설명하셨나요?`;
+      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨나요?`;
+      case 'motive': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주시겠어요?`;
+      case 'plan': return `${said} 그 다짐을 위해 입사 후 첫 1년 동안 무엇을 하실 계획인가요?`;
+      case 'belief': return `${said} 그렇게 생각하게 된 계기를 말씀해 주시겠어요?`;
+      case 'learn': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주시겠어요?`;
+      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기는 무엇이었나요?`;
+      case 'trait': return `${said} 그런 성향이 드러났던 일을 하나 말씀해 주시겠어요?`;
+      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지 말씀해 주시겠어요?`;
     }
   },
   _follow(kind, quote){
     // 같은 문장에 대해 한 번 더 들어가는 꼬리질문 (서류 내용 범위 안에서)
     const q = typeof quote === 'object' ? quote.np : quote;
     switch(kind){
-      case 'result': return '그 과정에서 가장 어려웠던 점은 무엇이었고, 그 경험을 앞으로 맡게 될 속기 업무에는 어떻게 적용하시겠습니까?';
+      case 'result': return '그 결과는 무엇으로 확인하셨나요?';
       case 'conflict': case 'conflictAct': return '지금 다시 그 상황이 온다면, 처음부터 다르게 하실 부분이 있을까요?';
-      case 'skill': return '속도와 정확성 중 하나를 포기해야 하는 순간이 온다면, 무엇을 먼저 지키시겠습니까?';
-      case 'motive': return '그 경험이 지금 지원하신 속기 직무를 선택하는 데 어떤 영향을 주었는지 조금 더 말씀해 주시겠어요?';
-      case 'plan': return '그 계획을 이루는 데 지금의 본인에게 가장 부족한 점은 무엇이라고 보십니까?';
+      case 'skill': return '실제 회의를 속기할 때 그 실력은 어떤 장면에서 가장 잘 드러나나요?';
+      case 'motive': return '그 경험이 속기 직무를 고르는 데 어떤 영향을 주었나요?';
+      case 'plan': return '그 계획을 이루는 데 지금 가장 부족한 점은 무엇이라고 보십니까?';
       case 'belief': return '그 생각이 실제로 일하는 태도에서는 어떻게 드러난다고 보십니까?';
-      case 'learn': return '그 깨달음이 지금 공부하거나 일하는 방식에는 어떻게 이어지고 있습니까?';
-      case 'decide': return '준비하면서 가장 힘들었던 순간은 언제였고, 그때 어떻게 버티셨나요?';
-      case 'trait': return '그 성향이 속기 업무에서는 어떤 장점이 되고, 반대로 조심해야 할 점은 무엇이라고 보십니까?';
-      default: return q ? '그렇게 했을 때 실제로 달라진 점은 무엇이었나요? 숫자나 구체적인 예로 말씀해 주시면 좋겠습니다.' : '';
+      case 'learn': return '그 깨달음이 지금 공부하거나 일하는 방식에는 어떻게 이어지고 있나요?';
+      case 'decide': return '준비하면서 가장 힘들었던 순간은 어떻게 넘기셨나요?';
+      case 'trait': return '그 성향이 속기 업무에서는 어떤 장점이 된다고 보십니까?';
+      default: return q ? '그렇게 했을 때 실제로 달라진 점은 무엇이었나요?' : '';
     }
   },
   fromResume(raw){
@@ -14269,7 +14298,9 @@ const DocQ = {
       let body = text.slice(mk.end, i + 1 < marks.length ? marks[i+1].at : text.length).trim();
       const lab = body.search(LABEL);
       if(lab > 0) body = body.slice(0, lab).trim();
-      if(/(졸업|입학|재학|대학교|대학원|고등학교|중학교|학점|휴학|편입|전공)/.test(body) || this._skip(body)) return;
+      // 2026-10-21h: '○○대학교 장애학생지원센터 문자통역 봉사'처럼 학교에서 한 일은 학력으로 보지 않음
+      const eduWord = /(졸업|입학|재학|학점|휴학|편입|전공)/.test(body) || (/(대학교|대학원|고등학교|중학교)/.test(body) && !/(봉사|근무|보조|센터|인턴|아르바이트|조교|통역|속기|기록|담당)/.test(body));
+      if(eduWord || this._skip(body)) return;
       body = body.replace(/[○◯●]+\s*/g, '').replace(/\((주|유|사|재|株)\)\s*/g, '').replace(/\s{2,}/g, ' ').trim();
       if(body.length < 4) return;
       let kind = 'career';
@@ -14303,18 +14334,25 @@ const DocQ = {
       let q, follow = [];
       if(x.kind === 'award'){
         q = /(대회|경진|경연|공모전|올림피아드)/.test(x.main)
-          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회를 준비하면서 실력을 어떻게 끌어올리셨는지 말씀해 주시겠어요?`
-          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨고 그때 본인이 특히 신경 쓴 점은 무엇이었는지 말씀해 주시겠어요?`;
+          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회는 어떻게 준비하셨나요?`
+          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨는지 말씀해 주시겠어요?`;
         follow.push('그 경험에서 얻은 것이 실제 속기 업무에서는 어떻게 도움이 된다고 보십니까?');
       }else if(x.kind === 'training'){
-        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것은 무엇이고, 실제 업무에 어떻게 쓰고 계신지 말씀해 주시겠어요?`;
-        follow.push('배운 내용 중에 실무에서 생각처럼 잘 되지 않았던 부분도 있었나요?');
+        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것은 무엇이었나요?`;
+        follow.push('배운 내용을 실제 업무에는 어떻게 쓰고 계신가요?', '배운 내용 중에 실무에서 생각처럼 잘 되지 않았던 부분도 있었나요?');
       }else if(x.kind === 'cert'){
-        q = `이력서에 ${item} 자격을 적으셨는데요, 그 자격을 준비하며 가장 힘들었던 점과 그것을 어떻게 넘기셨는지 말씀해 주시겠어요?`;
+        q = `이력서에 ${item} 자격을 적으셨는데요, 준비하며 가장 힘들었던 점은 어떻게 넘기셨나요?`;
       }else{
-        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할과 가장 기억에 남는 상황을 하나 말씀해 주시겠어요?`;
-        if(x.paren) follow.push(`이력서에 ${J("'" + x.paren.slice(0, 40) + "'", '이라고/라고')} 적으셨는데, 그만큼의 일을 하면서 정확성은 어떻게 지키셨나요?`);
+        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할을 말씀해 주시겠어요?`;
+        // 2026-10-21h: 괄호 안 내용의 뜻(분량·계약 형태·업무 설명)에 맞춰 묻기 ("그만큼의 일을 하면서"처럼 어색한 말 없애기)
+        if(x.paren){
+          const pq = J("'" + x.paren.slice(0, 40) + "'", '이라고/라고');
+          if(/\d+\s*(건|시간|쪽|페이지|매|분량|개|편|회의)/.test(x.paren) && !/주\s*\d+\s*회/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 정도 분량을 맡으시면서 정확성은 어떻게 지키셨나요?`);
+          else if(/(기간제|계약직|임기제|인턴|아르바이트|파트|비상근|위촉|프리랜서|주\s*\d+\s*회)/.test(x.paren)) follow.push(`이력서에 ${pq} 적으셨는데요, 그 기간에 맡으신 일 가운데 가장 책임이 컸던 일은 무엇이었나요?`);
+          else follow.push(`이력서에 ${pq} 적으셨는데요, 그 일에서 본인이 직접 맡은 부분은 어디까지였나요?`);
+        }
         if(x.extra.length) follow.push(`같은 기간에 '${x.extra[0].replace(/\s*\([^)]*\)\s*/g,' ').trim().slice(0, 40)}'도 하셨다고 적으셨는데요, 그 일은 앞의 일과 무엇이 달랐나요?`);
+        follow.push('그 일에서 가장 기억에 남는 상황을 하나 말씀해 주시겠어요?');
       }
       return { q: q.replace(/\s{2,}/g, ' '), ref:null, custom:true, doc:'cv', section: x.kind, src: x.raw, kind: x.kind, score: x.score, quoteCore: x.main, follow: follow.filter(Boolean).slice(0, 2),
                hint: '이력서에 적은 기간·역할·숫자와 맞게, 내가 직접 한 일을 중심으로 답해 보세요.' };
@@ -18393,6 +18431,8 @@ async function renderAdmin(){
   // 2026-10-16a: 서류 합격 증빙(승인 요청) — 확인 대기 건수와 사람별 표시
   state.apSubmitted = {};
   try{ const { data: apr } = await sb.from('approval_requests').select('id,user_id,status,field_id,created_at').eq('status','submitted').order('created_at',{ascending:false}).limit(300); (apr||[]).forEach(r=>{ if(!state.apSubmitted[r.user_id]) state.apSubmitted[r.user_id] = r; }); }catch(_){}
+  // 2026-10-21i: 새로 즉석으로 읽은 문장 수 → '설정' 메뉴 배지 (기다리지 않음)
+  try{ TcLive.refreshBadge(); }catch(_){}
   // 2026-10-16f: 최근 7일 면접 후기 수 (현황 할 일 · 메뉴 배지)
   state.raRecent = 0;
   try{ const since = new Date(Date.now()-7*86400000).toISOString(); const { data: rr } = await sb.from('interview_reports').select('id,created_at').gte('created_at', since).limit(500); state.raRecent = (rr||[]).length; const bd = document.getElementById('ra-nav-badge'); if(bd){ bd.textContent = state.raRecent; bd.style.display = state.raRecent ? '' : 'none'; } }catch(_){}
@@ -18913,14 +18953,17 @@ const StenoDialog = {
         { const chk = DocGuard.checkFollowup(data.followup, answer, question);
           if(!chk.ok){ DocGuard.log('doc_guard', { reason: chk.reason, detail: String(chk.detail || '').slice(0, 60), text: String(data.followup).slice(0, 140) }); throw new Error('서류 확인에서 걸러짐: ' + chk.reason); } }
         if(data.limit && typeof data.limit.daily_left === 'number') AiQuota.status = Object.assign({}, AiQuota.status||{}, data.limit);
+        try{ SpeechTag.set(data.followup, 'ai_followup'); }catch(_){}
         return { followup: data.followup, evaluation: data.evaluation || '', intent: data.intent || 'probe', model: data.model || '', source:'llm' };
       }catch(e){
         console.warn('[꼬리질문: LLM 실패 → 템플릿으로 대체]', e.message);
         const m = this.mockFollowup(answer, pressure, { question, rootQuestion, reference, followupsDone, fieldId, qid });
+        try{ if(m) SpeechTag.set(m.followup, 'rule_followup'); }catch(_){}
         return m ? Object.assign(m, { source:'mock', error: e.message }) : null;
       }
     }
     const m = this.mockFollowup(answer, pressure, { question, rootQuestion, reference, followupsDone, fieldId, qid });
+    try{ if(m) SpeechTag.set(m.followup, 'rule_followup'); }catch(_){}
     return m ? Object.assign(m, { source:'mock' }) : null;
   },
 
@@ -18982,8 +19025,20 @@ const StenoDialog = {
     const tagOf = txt=>{ const d = LF_DEMAND.find(x=>x.re.test(txt)); return d ? d.id : null; };
     const toneRank = l=>{ const tn = tone || 'normal'; if(l.tone === tn) return 0; if(tn === 'hard') return l.tone === 'normal' ? 1 : 2; return l.tone === 'hard' ? 9 : 1; };
     const MEMO = { persist:'원칙 일관성 확인', other:'다른 경험 확인', regret:'자기 성찰 확인', own:'담당자 역할 확인', cert:'실제 실무 경험 확인', concrete:'추상적 답 구체화', motive2:'지원 동기 진정성 확인', example:'구체 사례 보강 필요', role:'본인 역할이 흐림', result:'결과(숫자) 보강 필요', learning:'배운 점 확인', first:'첫 대응 확인', principle:'판단 기준 확인', reason:'근거 보강 필요', report:'보고 절차 확인', pressure:'원칙과 지시 사이 판단 확인', after:'사후 조치 확인', known:'아는 범위 확인', summary:'핵심 정리 필요', jobwhy:'직무 연결 확인', risk:'위험 인식 확인', counter:'다른 관점 확인', time:'기간·시간 관리 확인' };
+    // 2026-10-21h: '구체 사례'·'한 문장 정리'는 녹음 문장이 너무 일반적이라("조금 더 구체적인 사례를…"),
+    //   답변과 질문(모범답안)에 함께 나온 낱말이 있으면 그 낱말을 넣어 묻기. 질문 쪽에도 있는 낱말만 써서 잘못 들린 말은 인용하지 않음
+    const kw = this._safeKw(answer, [root, opt.question, opt.reference].join(' '));
+    const J = (w, p)=>DocQ._j(w, p);
+    const kwLine = tag=>{
+      if(!kw) return null;
+      const k = "'" + kw + "'";
+      if(tag === 'example') return pastOK ? `말씀하신 ${J(k, '과/와')} 관련해 실제로 겪으셨던 구체적인 사례를 하나만 들려주시겠어요?` : `말씀하신 ${J(k, '과/와')} 관련해, 실제 업무에서는 어떤 순서로 하실지 자세히 말씀해 주시겠어요?`;
+      if(tag === 'summary') return `말씀하신 내용 가운데 ${J(k, '이/가')} 왜 중요한지 한 문장으로 정리해 주시겠습니까?`;
+      return null;
+    };
     for(const tag of [...new Set(want)]){
       if(this._usedTags.has(tag)) continue;
+      { const kl = kwLine(tag); if(kl && !this._used.has(kl)){ this._used.add(kl); this._usedTags.add(tag); return { followup: kl, evaluation: MEMO[tag] || '', intent:'probe', model:'', rule: tag }; } }
       const pool = lines.filter(l=>tagOf(l.text) === tag && !this._used.has(l.text) && (pastOK || !isPast(l.text)) && toneRank(l) < 9).sort((a,b)=>toneRank(a)-toneRank(b));
       if(!pool.length) continue;
       const best = pool.filter(l=>toneRank(l) === toneRank(pool[0]));
@@ -18994,9 +19049,20 @@ const StenoDialog = {
     // 맞는 문장이 없으면: 유형에 어울리는 녹음 문장 아무거나 (가정 질문엔 과거 경험 질문 제외)
     const rest = lines.filter(l=>!this._used.has(l.text) && (pastOK || !isPast(l.text)) && toneRank(l) < 9);
     if(rest.length){ const pick = rest[Math.floor(Math.random()*rest.length)]; this._used.add(pick.text); return { followup: pick.text, evaluation:'', intent:'probe', model:'', audio_url: VoiceBank.urlFor(pick.text) }; }
-    const kws = tokens_for_followup(answer);
-    const q = kws.length ? `방금 답변에서 말씀하신 '${kws[0]}' 부분을 조금 더 구체적으로 설명해 주시겠어요?` : FOLLOWUP_TEMPLATES[Math.floor(Math.random()*FOLLOWUP_TEMPLATES.length)];
+    const kq = kw ? `말씀하신 ${J("'" + kw + "'", '과/와')} 관련해, 실제 업무 장면을 하나 들어 조금 더 자세히 설명해 주시겠어요?` : null;
+    const q = (kq && !this._used.has(kq)) ? kq : FOLLOWUP_TEMPLATES[Math.floor(Math.random()*FOLLOWUP_TEMPLATES.length)];
+    this._used.add(q);
     return { followup: q, evaluation: '', intent: 'probe', model: '' };
+  },
+  /** 답변 낱말 중 질문·모범답안에도 나오는 핵심 낱말 하나 (음성 인식 오류·말버릇을 인용하지 않도록) */
+  _safeKw(answer, ctx){
+    const c = String(ctx || '').replace(/\s/g, '');
+    if(!c) return null;
+    const seen = new Set();
+    const list = String(answer || '').replace(/[.,!?~()·'"\-“”‘’\[\]]/g, ' ').split(/\s+/).map(koKeyword)
+      .filter(w=>w && w.length >= 2 && !seen.has(w) && seen.add(w) && !/적$/.test(w) && !LF_WEAK.has(w) && c.includes(w));
+    list.sort((a, b)=>b.length - a.length);
+    return list[0] || null;
   },
 
   /* ④ 목소리로 읽기 */
@@ -19192,13 +19258,31 @@ function ttsEngineLabel(st){ return ttsUsesTypecast(st) ? `타입캐스트 ${st.
 function loadTtsSettings(){ try{ const v = JSON.parse(localStorage.getItem('stenotalk_tts')||'null'); return Object.assign({}, TTS_DEFAULTS, v||{}); }catch(_){ return Object.assign({}, TTS_DEFAULTS); } }
 function saveTtsSettings(v){ try{ localStorage.setItem('stenotalk_tts', JSON.stringify(v)); }catch(_){} }
 function ttsInstructionText(st){ return (st.preset==='custom' ? (st.custom||'') : (TTS_INSTRUCTION_PRESETS[st.preset]||TTS_INSTRUCTION_PRESETS.calm).text); }
-async function fetchSpeechBlob(text, voice, speed, model, instructions, engine){
+/* 2026-10-21i 즉석으로 읽는 문장이 무엇인지(AI 꼬리질문·기본 꼬리질문·질문) 서버 사용 기록에 함께 남기기 위한 꼬리표 */
+const SpeechTag = {
+  m: new Map(),
+  _k(t){ return String(t || '').replace(/[\s.,!?~'"‘’“”·]/g, ''); },
+  set(text, purpose){
+    if(!text) return;
+    [text, (()=>{ try{ return sanitizeForSpeech(text); }catch(_){ return ''; } })(), (()=>{ try{ return DocGuard.forSpeech(text); }catch(_){ return ''; } })()]
+      .forEach(t=>{ const k = this._k(t); if(k) this.m.set(k, purpose); });
+    while(this.m.size > 300) this.m.delete(this.m.keys().next().value);
+  },
+  of(text){
+    const k = this._k(text); if(!k) return 'other';
+    if(this.m.has(k)) return this.m.get(k);
+    try{ const qs = state.interviewQuestions || []; if(qs.some(q=>q && [q.q, q.spoken].some(x=>x && (this._k(x) === k || this._k(sanitizeForSpeech(x)) === k)))) return 'question'; }catch(_){}
+    return 'other';
+  },
+};
+async function fetchSpeechBlob(text, voice, speed, model, instructions, engine, meta){
   const { data: sess } = await sb.auth.getSession();
   const token = (sess && sess.session && sess.session.access_token) || SUPABASE_ANON_KEY;
+  const tag = engine && engine.provider === 'typecast' ? { purpose: (meta && meta.purpose) || SpeechTag.of(text), retry: !!(meta && meta.retry) } : {};
   const res = await fetch(SUPABASE_URL + '/functions/v1/speak-text', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + token, 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(Object.assign({ text, voice, speed, model: model || undefined, instructions: instructions || undefined }, engine || {})),
+    body: JSON.stringify(Object.assign({ text, voice, speed, model: model || undefined, instructions: instructions || undefined }, engine || {}, tag)),
   });
   // 2026-10-21b 타입캐스트가 안 돼 OpenAI로 대신 읽었는지 (서버가 알려 줌)
   try{ const pv = res.headers.get('X-Voice-Provider'); fetchSpeechBlob.last = pv || 'openai';
@@ -19432,7 +19516,7 @@ const StenoVoice = {
       const t0 = Date.now(); let best = blob, bs = await EndCheck.score(blob, text), tries = 0;
       while(bs > 0 && tries < 2 && Date.now() - t0 < 6000 && my === this._seq){
         tries++;
-        let b2; try{ b2 = await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine); }catch(_){ break; }
+        let b2; try{ b2 = await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine, { retry:true }); }catch(_){ break; }
         if(fetchSpeechBlob.last !== 'typecast') break;
         const s2 = await EndCheck.score(b2, text);
         if(s2 < bs){ best = b2; bs = s2; }
@@ -20595,7 +20679,7 @@ async function ttsPreview(useSaved){
   try{
     const t0 = Date.now();
     if(st.provider === 'typecast' && !ttsUsesTypecast(st)){ status.textContent = ''; showToast('타입캐스트 목소리를 먼저 골라 주세요 (아래 "타입캐스트와 나란히 듣기")'); return; }
-    const blob = await fetchSpeechBlob(sanitizeForSpeech(text), st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st));
+    const blob = await fetchSpeechBlob(sanitizeForSpeech(text), st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st), { purpose:'admin_test' });
     const url = URL.createObjectURL(blob); const a = new Audio(url); StenoVoice.audio = a;
     a.onended = ()=>{ URL.revokeObjectURL(url); if(StenoVoice.audio===a) StenoVoice.audio=null; };
     await a.play();
@@ -20771,7 +20855,7 @@ const VoiceSet = {
   async blobFor(st, text){
     const key = this.sig(st) + '|' + text;
     if(this.cache.has(key)) return { blob:this.cache.get(key), cached:true };
-    const blob = await fetchSpeechBlob(text, st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st));
+    const blob = await fetchSpeechBlob(text, st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st), { purpose:'admin_test' });
     const pv = fetchSpeechBlob.last, note = fetchSpeechBlob.lastNote || '';
     const fb = ttsUsesTypecast(st) && pv === 'openai-fallback';
     if(!fb) this.cache.set(key, blob);            // 대신 읽은 소리는 기억하지 않음 (다음에 다시 타입캐스트로 시도)
@@ -20933,12 +21017,13 @@ const TcCredit = {
     catch(e){ this.sub = null; this.err = e.code === 'no_key' ? 'no_key' : (e.message || String(e)); }
     try{
       const since = new Date(Date.now() - 30 * 86400000).toISOString();
-      const q = await sbAll(()=>sb.from('tts_usage').select('created_at,kind,chars').gte('created_at', since).order('created_at', { ascending:false }), 20000);
+      let q = await sbAll(()=>sb.from('tts_usage').select('created_at,kind,chars,user_id,text,purpose,retry').gte('created_at', since).order('created_at', { ascending:false }), 20000);
+      if(q.error) q = await sbAll(()=>sb.from('tts_usage').select('created_at,kind,chars').gte('created_at', since).order('created_at', { ascending:false }), 20000);   // step27 전
       this.usage = q.error ? null : (q.data || []);
     }catch(_){ this.usage = null; }
     this.at = Date.now(); this.loading = false;
     if(btn){ btn.disabled = false; btn.textContent = '새로고침'; }
-    this.render(); try{ pipeRenderStatus(); }catch(_){}
+    this.render(); try{ TcLive.render(); }catch(e){ console.warn('[즉석 문장 목록]', e); } try{ pipeRenderStatus(); }catch(_){}
   },
   sums(){
     const u = this.usage || []; const now = Date.now(); const today = new Date(); today.setHours(0,0,0,0);
@@ -20973,6 +21058,71 @@ const TcCredit = {
         <div class="pipe-hint" style="margin-top:6px;">최근 30일 기준 · 2026년 10월 21일부터 기록해요. 회사 전체 사용에서 이 숫자를 빼면 다른 프로그램이 쓴 양이에요.</div>`;
     }
     el.innerHTML = (top + mine) || '<div class="pipe-hint">표시할 내용이 없어요.</div>';
+  },
+};
+/* ---------------- 2026-10-21i 면접 중 즉석으로 읽은 문장 (관리자 알림 배지 + 목록) ----------------
+   speak-text가 tts_usage(kind='live')에 문장·종류·다시 읽음 여부를 남김. 같은 사람이 같은 문장을 1분 안에 다시 읽은 것(끝음 점검)은 한 줄로 묶어 크레딧을 합침.
+   배지: 이 브라우저에서 마지막으로 목록을 본 뒤 새로 생긴 문장 수 (localStorage stenotalk_tts_live_seen) */
+const TcLive = {
+  KEY:'stenotalk_tts_live_seen', show:30, filter:'all', prevSeen:null,
+  PURPOSE:{ ai_followup:['AI 꼬리질문','ai'], rule_followup:['기본 꼬리질문','rule'], question:['질문 (녹음본 없음)','q'], admin_test:['관리자 시험','other'], other:['기타 안내 문장','other'] },
+  seen(){ try{ return localStorage.getItem(this.KEY) || ''; }catch(_){ return ''; } },
+  markSeen(){ try{ localStorage.setItem(this.KEY, new Date().toISOString()); }catch(_){} this.setBadge(0); },
+  setBadge(n){ ['tts-nav-badge','tcl-new-badge'].forEach(id=>{ const b = document.getElementById(id); if(b){ b.textContent = n > 99 ? '99+' : String(n); b.style.display = n ? '' : 'none'; } }); },
+  /** 관리자 화면을 열 때: 새로 즉석으로 읽은 문장 수만 가볍게 세어 '설정' 메뉴에 배지 */
+  async refreshBadge(){
+    try{
+      let q = sb.from('tts_usage').select('id', { count:'exact', head:true }).eq('kind','live').eq('retry', false).not('text','is',null);
+      const s = this.seen(); if(s) q = q.gt('created_at', s);
+      const { count, error } = await q; if(error) throw error;
+      const onList = state.adminView === 'pipeline' && document.getElementById('tc-live-card') && document.getElementById('tc-live-card').offsetParent;
+      this.setBadge(onList ? 0 : (count || 0));
+    }catch(_){ this.setBadge(0); }
+  },
+  groups(){
+    const rows = (TcCredit.usage || []).filter(r=>r.kind === 'live' && r.text).slice().sort((a,b)=>new Date(a.created_at) - new Date(b.created_at));
+    const out = [];
+    rows.forEach(r=>{
+      const t = new Date(r.created_at).getTime();
+      const g = out.find(x=>x.user_id === r.user_id && x.text === r.text && t - x.last < 60000);
+      if(g){ g.count++; g.chars += Number(r.chars) || 0; g.last = t; if(r.retry) g.retries++; }
+      else out.push({ user_id:r.user_id, text:r.text, purpose:r.purpose || 'other', at:t, last:t, count:1, retries:r.retry ? 1 : 0, chars:Number(r.chars) || 0 });
+    });
+    return out.reverse();
+  },
+  setFilter(f){ this.filter = f; this.show = 30; this.render(true); },
+  more(){ this.show += 30; this.render(true); },
+  render(keepSeen){
+    const el = document.getElementById('tcl-body'); if(!el) return;
+    if(!TcCredit.usage){ el.innerHTML = '<div class="pipe-hint">사용 기록을 불러오지 못했어요.</div>'; return; }
+    if(!keepSeen || this.prevSeen == null) this.prevSeen = this.seen();
+    const prev = this.prevSeen ? new Date(this.prevSeen).getTime() : 0;
+    const all = this.groups(); const f = TcCredit.fmt.bind(TcCredit);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const tday = all.filter(g=>g.at >= today.getTime());
+    const sum = list=>list.reduce((a,g)=>a + g.chars, 0);
+    const newN = all.filter(g=>g.at > prev && g.retries < g.count).length;
+    const byP = {}; all.forEach(g=>{ byP[g.purpose] = (byP[g.purpose] || 0) + 1; });
+    const list = this.filter === 'all' ? all : all.filter(g=>g.purpose === this.filter);
+    const users = {}; (state.adminUsers || []).forEach(u=>{ users[u.id] = u; });
+    const nameOf = id=>{ const u = users[id]; if(u) return (u.name || u.username || '이름 없음') + (u.is_admin ? ' (관리자)' : ''); if(state.currentUser && state.currentUser.id === id) return (state.currentUser.name || '나') + ' (관리자)'; return '알 수 없음'; };
+    const when = t=>{ const d = new Date(t); const p = n=>String(n).padStart(2,'0'); return `<b>${d.getMonth()+1}월 ${d.getDate()}일 ${p(d.getHours())}:${p(d.getMinutes())}</b>`; };
+    const chips = [['all','전체', all.length]].concat(Object.keys(this.PURPOSE).filter(k=>byP[k]).map(k=>[k, this.PURPOSE[k][0], byP[k]]));
+    let html = `<div class="tcl-sum"><span>오늘 <b>${f(tday.length)}</b>문장 · <b>${f(sum(tday))}</b>크레딧</span><span>최근 30일 <b>${f(all.length)}</b>문장 · <b>${f(sum(all))}</b>크레딧</span>${newN ? `<span class="tcl-chip new">새로 ${f(newN)}개</span>` : ''}</div>`;
+    if(chips.length > 2) html += `<div class="tcl-filter">${chips.map(([k,l,n])=>`<button type="button" class="${this.filter===k?'on':''}" onclick="TcLive.setFilter('${k}')">${escapeHtml(l)} ${n}</button>`).join('')}</div>`;
+    if(!list.length){
+      html += `<div class="tcl-list"><div class="tcl-empty">${all.length ? '이 종류의 문장은 없어요.' : '아직 즉석으로 읽은 문장이 없어요. 2026년 10월 21일부터 기록해요.'}</div></div>`;
+    }else{
+      html += '<div class="tcl-list">' + list.slice(0, this.show).map(g=>{
+        const [pl, pc] = this.PURPOSE[g.purpose] || this.PURPOSE.other; const isNew = g.at > prev;
+        return `<div class="tcl-row${isNew ? ' new' : ''}">
+          <div class="tcl-when">${when(g.at)}<span>${escapeHtml(nameOf(g.user_id))}</span></div>
+          <div class="tcl-text"><div class="tcl-meta"><span class="tcl-chip ${pc}">${escapeHtml(pl)}</span>${isNew ? '<span class="tcl-chip new">새로</span>' : ''}${g.count > 1 ? `<span>끝음 점검으로 ${g.count}번 읽음</span>` : ''}</div>${escapeHtml(g.text)}</div>
+          <div class="tcl-cr"><b>${f(g.chars)}</b><small>크레딧${g.count > 1 ? ` (${f(Math.round(g.chars / g.count))}×${g.count})` : ''}</small></div>
+        </div>`; }).join('') + (list.length > this.show ? `<button type="button" class="tcl-more" onclick="TcLive.more()">${f(Math.min(30, list.length - this.show))}개 더 보기 (남은 ${f(list.length - this.show)}개)</button>` : '') + '</div>';
+    }
+    el.innerHTML = html;
+    if(!keepSeen){ const card = document.getElementById('tc-live-card'); if(card && card.offsetParent) this.markSeen(); }
   },
 };
 /* ---------------- 관리자: AI 기능 스위치 ---------------- */
