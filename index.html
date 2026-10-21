@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21q';
+var APP_VERSION = '2026-10-21r';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -13659,7 +13659,8 @@ const Activity = {
 const PracticeGuard = {
   on:false, _logT:{}, _toastT:0, _hideT:null, _bound:false,
   set(active){
-    const want = !!(active && state.currentUser && !state.currentUser.isAdmin);
+    const cu = state.currentUser; const staff = !!(cu && FIELDS.length && FIELDS.every(f=>(cu.allowed||[]).includes(f.id)));   // 직원(8개 분야 모두)도 제외
+    const want = !!(active && cu && !cu.isAdmin && !staff);
     this.on = want; document.body.classList.toggle('pq-guard', want);
     if(!want) this.show(true);
     if(want && !this._bound) this.bind();
