@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21a';
+var APP_VERSION = '2026-10-21c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -610,6 +610,104 @@ var APP_VERSION = '2026-10-21a';
   .pipe-btn{flex:0 0 auto;padding:9px 16px;font-size:13px;}
   /* 2026-10-20p 타입캐스트와 나란히 듣기 */
   #tc-card [hidden]{display:none!important;}
+  /* 2026-10-21c 면접관 목소리 (한 흐름 화면) */
+  .vs{--vs-ink:#1c1c1e;--vs-ink2:#45454a;--vs-ink3:#7c7c82;--vs-line:#e6e3dd;--vs-soft:#f6f5f3;--vs-acc:#e8532a;--vs-acc-soft:#fdf0eb;--vs-ok:#2f7a4a;--vs-ok-bg:#e6f4ec;
+    background:#fff;border:1px solid var(--vs-line);border-radius:16px;padding:22px 24px 24px;color:var(--vs-ink);font-size:14px;}
+  .vs [hidden]{display:none!important;}
+  .vs-now{display:flex;align-items:center;gap:16px;background:var(--vs-soft);border-radius:14px;padding:16px 18px;}
+  .vs-now-l{flex:1;min-width:0;} .vs-kicker{display:block;font-size:12.5px;font-weight:600;color:var(--vs-ink3);margin-bottom:6px;}
+  .vs-now-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;} .vs-now-name{font-size:20px;font-weight:800;letter-spacing:-.02em;}
+  .vs-now-meta{font-size:13px;color:var(--vs-ink2);margin-top:4px;}
+  .vs-badge{font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 9px;} .vs-badge.oa{background:#e9e8e4;color:#45454a;} .vs-badge.tc{background:var(--vs-acc);color:#fff;}
+  .vs-lead{margin:12px 2px 4px;font-size:13.5px;line-height:1.6;color:var(--vs-ink2);word-break:keep-all;}
+  .vs-step{border-top:1px solid var(--vs-line);margin-top:18px;padding-top:18px;}
+  .vs-h{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px;font-weight:800;letter-spacing:-.01em;}
+  .vs-h i{width:24px;height:24px;border-radius:50%;background:#1f1f21;color:#fff;font-style:normal;font-size:12.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none;}
+  .vs-engines{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .vs-eng{display:flex;flex-direction:column;gap:4px;text-align:left;border:1.5px solid var(--vs-line);background:#fff;border-radius:12px;padding:14px 16px;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s, background .15s;}
+  .vs-eng:hover{border-color:#cfcac2;} .vs-eng.on{border-color:#1f1f21;background:var(--vs-soft);box-shadow:inset 0 0 0 1px #1f1f21;}
+  .vs-eng-t{display:flex;align-items:center;gap:6px;} .vs-eng-t b{font-size:15.5px;} .vs-eng-t em{font-style:normal;font-size:11px;font-weight:700;color:var(--vs-acc);background:var(--vs-acc-soft);border-radius:999px;padding:2px 7px;}
+  .vs-eng-d{font-size:12.5px;color:var(--vs-ink3);line-height:1.5;word-break:keep-all;}
+  .vs-eng.on .vs-eng-t b::before{content:'✓ ';color:var(--vs-acc);}
+  .vs-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .vs-search{display:flex;align-items:center;gap:6px;flex:1 1 180px;min-width:0;border:1px solid var(--vs-line);border-radius:10px;padding:0 10px;height:38px;color:var(--vs-ink3);background:#fff;}
+  .vs-search input{border:0;outline:0;flex:1;min-width:0;font:inherit;font-size:14px;color:var(--vs-ink);background:none;height:100%;}
+  .vs-chips{display:inline-flex;background:var(--vs-soft);border-radius:10px;padding:3px;gap:2px;}
+  .vs-chips button{border:0;background:none;border-radius:7px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--vs-ink2);cursor:pointer;} .vs-chips button.on{background:#fff;color:var(--vs-ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  .vs-select{height:38px;border:1px solid var(--vs-line);border-radius:10px;padding:0 10px;font:inherit;font-size:13.5px;color:var(--vs-ink);background:#fff;max-width:100%;}
+  .vs-count{font-size:12.5px;color:var(--vs-ink3);margin-left:auto;white-space:nowrap;}
+  .vs-list{border:1px solid var(--vs-line);border-radius:12px;max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .vs-v{display:grid;grid-template-columns:36px minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:9px 14px 9px 10px;border-bottom:1px solid #f0eee9;cursor:pointer;}
+  .vs-v:last-of-type{border-bottom:none;} .vs-v:hover{background:#faf9f7;} .vs-v:focus-visible{outline:2px solid #1f1f21;outline-offset:-2px;}
+  .vs-v.on{background:var(--vs-acc-soft);}
+  .vs-v-play{width:34px;height:34px;border-radius:50%;border:1px solid var(--vs-line);background:#fff;color:var(--vs-ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+  .vs-v-play:hover{border-color:#1f1f21;} .vs-v-play svg{margin-left:2px;}
+  .vs-v-name{display:flex;flex-direction:column;min-width:0;} .vs-v-name b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .vs-v-name small{font-size:12px;color:var(--vs-ink3);margin-top:1px;}
+  .vs-v-free.none{visibility:hidden;padding:0;} .vs-v-free{font-size:11px;font-weight:700;color:var(--vs-ok);background:var(--vs-ok-bg);border-radius:999px;padding:2px 8px;white-space:nowrap;}
+  .vs-v-check{font-size:12.5px;font-weight:700;color:var(--vs-ink3);border:1px solid var(--vs-line);border-radius:8px;padding:5px 10px;white-space:nowrap;background:#fff;}
+  .vs-v.on .vs-v-check{background:var(--vs-acc);border-color:var(--vs-acc);color:#fff;}
+  .vs-more-btn{display:block;width:100%;border:0;border-top:1px solid #f0eee9;background:#faf9f7;padding:11px;font:inherit;font-size:13px;font-weight:600;color:var(--vs-ink2);cursor:pointer;}
+  .vs-empty{padding:22px 16px;text-align:center;font-size:13.5px;color:var(--vs-ink3);} .vs-empty.err{color:#b42318;}
+  .vs-note{font-size:12.5px;color:var(--vs-ink3);margin:8px 2px 0;}
+  .vs-tune{margin-top:14px;background:var(--vs-soft);border-radius:12px;padding:12px 14px;}
+  .vs-picked{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;} .vs-picked span{font-size:12px;font-weight:700;color:var(--vs-acc);} .vs-picked b{font-size:15px;} .vs-picked small{font-size:12.5px;color:var(--vs-ink3);}
+  .vs-tune-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;}
+  .vs-tune-row + .vs-tune-row{margin-top:10px;}
+  .vs-field{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--vs-ink2);min-width:0;}
+  .vs-field input[type=range]{width:130px;accent-color:#1f1f21;} .vs-field b{font-variant-numeric:tabular-nums;min-width:30px;text-align:right;color:var(--vs-ink);margin-right:-4px;}
+  .vs-oa .vs-select{max-width:260px;}
+  .vs-label{display:block;font-size:13.5px;font-weight:700;margin:0 0 6px;} .vs-label small{font-weight:500;color:var(--vs-ink3);margin-left:4px;}
+  .vs-input{width:100%;box-sizing:border-box;border:1px solid var(--vs-line);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;line-height:1.55;color:var(--vs-ink);resize:vertical;background:#fff;}
+  .vs-input:focus,.vs-select:focus,.vs-search:focus-within{outline:2px solid #1f1f21;outline-offset:-1px;}
+  #tts-custom{margin-top:10px;}
+  .vs-quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;} .vs-quick button{border:1px solid var(--vs-line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;color:var(--vs-ink2);cursor:pointer;} .vs-quick button:hover{border-color:#1f1f21;}
+  .vs-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .vs-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:42px;padding:0 16px;border-radius:10px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;white-space:nowrap;}
+  .vs-btn.sm{height:34px;padding:0 12px;font-size:13px;}
+  .vs-btn.dark{background:#1f1f21;color:#fff;} .vs-btn.dark:hover{background:#000;}
+  .vs-btn.line{background:#fff;border-color:#cfcac2;color:var(--vs-ink);} .vs-btn.line:hover{border-color:#1f1f21;}
+  .vs-btn.ghost{background:none;color:var(--vs-ink2);} .vs-btn.ghost:hover{background:var(--vs-soft);}
+  .vs-btn.primary{background:var(--vs-acc);color:#fff;height:48px;padding:0 22px;font-size:15px;} .vs-btn.primary:hover{background:#d4461f;}
+  .vs-btn:disabled{background:#e9e8e4!important;color:#9a9aa0!important;border-color:transparent!important;cursor:default;}
+  .vs-status{min-height:20px;margin-top:10px;font-size:13.5px;}
+  .vs-now-play{display:inline-flex;align-items:center;gap:8px;font-weight:600;} .vs-now-play small{font-weight:500;color:var(--vs-ink3);}
+  .vs-tag{font-style:normal;font-size:11px;font-weight:800;color:#fff;border-radius:6px;padding:2px 7px;} .vs-tag.a{background:#6b6b70;} .vs-tag.b{background:var(--vs-acc);}
+  .vs-err{color:#b42318;font-size:13px;margin-top:4px;}
+  .vs-cost{font-size:12.5px;color:var(--vs-ink3);margin-top:4px;}
+  .vs-save{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px dashed var(--vs-line);}
+  .vs-save-hint{font-size:13px;color:var(--vs-ink3);} .vs-save-hint.warn{color:var(--vs-acc);font-weight:600;}
+  .vs-after{margin-top:12px;background:var(--vs-acc-soft);border:1px solid #f3d9cc;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.6;color:var(--vs-ink2);word-break:keep-all;}
+  .vs-after .vs-btn{margin-top:8px;}
+  .vs-need{background:var(--vs-acc-soft);border:1px solid #f3d9cc;border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:var(--vs-ink2);}
+  .vs-need ol{margin:6px 0 10px 18px;padding:0;} .vs-need code{background:#fff;border:1px solid #eadfd8;border-radius:5px;padding:0 5px;font-size:12.5px;} .vs-need small{display:block;margin-top:8px;font-size:12px;color:#8a5a45;}
+  .vs-adv{margin-top:20px;border:1px solid var(--vs-line);border-radius:12px;}
+  .vs-adv summary{cursor:pointer;padding:13px 16px;font-size:14px;font-weight:700;list-style:none;display:flex;align-items:center;gap:8px;}
+  .vs-adv summary::-webkit-details-marker{display:none;} .vs-adv summary::before{content:'';width:7px;height:7px;border-right:2px solid #7c7c82;border-bottom:2px solid #7c7c82;transform:rotate(-45deg);transition:transform .15s;margin-right:2px;}
+  .vs-adv[open] summary::before{transform:rotate(45deg);} .vs-adv summary small{font-weight:500;color:var(--vs-ink3);font-size:12.5px;}
+  .vs-adv-body{padding:2px 16px 16px;} .vs-adv-body .vs-label{margin-top:12px;} #vs-adv-oa .vs-oa{background:var(--vs-soft);border-radius:12px;padding:12px 14px;}
+  @media (max-width:640px){
+    .vs{padding:16px 14px 18px;border-radius:14px;}
+    .vs-now{padding:14px;} .vs-now-name{font-size:18px;}
+    .vs-engines{grid-template-columns:1fr;}
+    .vs-v{grid-template-columns:34px minmax(0,1fr) auto;gap:10px;padding:9px 10px;} .vs-v-free{display:none;}
+    .vs-count{margin-left:0;} .vs-search{flex-basis:100%;}
+    .vs-field{flex:1 1 100%;} .vs-field input[type=range]{flex:1;width:auto;} .vs-field .vs-select{flex:1;}
+    .vs-oa .vs-select{max-width:none;}
+    .vs-actions .vs-btn{flex:1 1 100%;} .vs-save .vs-btn{flex:1 1 100%;}
+  }
+  /* 2026-10-21b 면접관 목소리 엔진 */
+  #tts-card .tts-engine-box{background:#f6f5f3;border-radius:12px;padding:14px 16px;margin:4px 0 14px;}
+  #tts-card .tts-seg{display:inline-flex;background:#fff;border:1px solid var(--slate-300,#d3d0ca);border-radius:10px;padding:3px;gap:2px;margin-top:6px;}
+  #tts-card .tts-seg button{border:0;background:none;border-radius:7px;padding:7px 18px;font:inherit;font-size:13.5px;font-weight:700;color:#55555b;cursor:pointer;}
+  #tts-card .tts-seg button.on{background:#1f1f21;color:#fff;}
+  #tts-card .tts-tc-sum{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;font-size:13px;color:#45454a;}
+  #tts-card .tts-tc-sum[hidden]{display:none;}
+  #tts-card .tts-tc-sum b{font-size:14px;color:#1c1c1e;}
+  #tts-card .tts-tc-badge{font-size:11.5px;font-weight:700;color:#fff;background:#e8532a;border-radius:999px;padding:2px 9px;} #tts-card .tts-tc-badge.warn{background:#fdf0eb;color:#c2401b;}
+  #tts-card .tts-tc-play{border:1px solid #1f1f21;background:#1f1f21;color:#fff;border-radius:8px;font:inherit;font-size:12.5px;font-weight:700;padding:5px 12px;cursor:pointer;}
+  #tts-card .tts-tc-change{border:0;background:none;font:inherit;font-size:12.5px;color:#55555b;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;}
+  #tts-card .ps-sub small{font-weight:500;color:#7c7c82;margin-left:4px;}
+  .rec-engine-note{margin-top:10px;background:#fdf6f2;border:1px solid #f3d9cc;border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.6;color:#45454a;} .rec-engine-note[hidden]{display:none;}
   #tc-card .tc-row{margin-top:10px;gap:10px 14px;font-size:12.5px;color:var(--slate-600);}
   #tc-card .tc-lab{display:flex;align-items:center;gap:6px;min-width:0;}
   #tc-card #tc-voice{flex:0 1 auto;width:auto;max-width:340px;padding:6px 8px;}
@@ -5435,75 +5533,115 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
 
         <!-- ② 면접관 목소리 -->
         <div class="ps-pane" id="ps-pane-voice">
-          <div class="ps-guide"><b>이 탭에서 하는 일</b> 면접관 목소리(음색·속도·말투)를 들어보고 고른 뒤 <b>저장</b>해요. 저장한 설정이 면접 화면과 ③ 질문 녹음에 똑같이 쓰여요. 목소리를 바꿨다면 ③에서 다시 녹음해야 면접에 반영돼요.</div>
-        <div class="pipe-card" id="tts-card">
-          <div class="ps-card-head">
-            <div><div class="subhead" style="margin:0;">면접관 목소리 고르기 <span class="help-tag">녹음 전 설정</span></div>
-            <div class="pipe-hint">목소리·속도·말투를 바꿔가며 같은 문장을 들어보고, 가장 또렷한 조합을 <b>저장</b>하면 면접 화면과 ③ 질문 녹음에 그대로 쓰여요. 듣기 한 번에 1원 안팎.</div></div>
-          </div>
-          <div class="ps-sub">들어볼 문장</div>
-          <textarea id="tts-text" class="pipe-input" rows="2" style="width:100%;resize:vertical;">국회 상임위원회 회의 중 발언자가 겹칠 경우, 속기록 작성 순서를 어떻게 정리하시겠습니까? 조서와 녹취록의 차이도 함께 설명해 주십시오.</textarea>
-          <div class="pipe-row" style="gap:12px;font-size:12.5px;color:var(--slate-600);margin-top:10px;">
-            <label>목소리 <select id="tts-voice" class="voice-select" style="flex:0;width:auto;padding:4px 8px;">
-              <option value="marin">marin (여성·자연스러움 · OpenAI 권장)</option><option value="cedar">cedar (남성·자연스러움 · OpenAI 권장)</option><option value="onyx">onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option><option value="ballad">ballad (남성·부드러움)</option><option value="verse">verse (남성·생기)</option></select></label>
-            <label>모델 <select id="tts-model" class="voice-select" style="flex:0;width:auto;padding:4px 8px;" onchange="ttsModelChanged()">
-              <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (말투 지시 가능)</option><option value="tts-1-hd">tts-1-hd (고음질, 지시 없음)</option><option value="tts-1">tts-1 (기본)</option></select></label>
-            <label style="display:flex;align-items:center;gap:6px;">속도 <input type="range" id="tts-speed" min="0.7" max="1.2" step="0.05" value="0.9" oninput="document.getElementById('tts-speed-val').textContent=this.value"> <b id="tts-speed-val" style="font-family:var(--font-mono);">0.9</b></label>
-          </div>
-          <div class="pipe-row" style="gap:12px;font-size:12.5px;color:var(--slate-600);margin-top:8px;" id="tts-instr-row">
-            <label>말투 지시 <select id="tts-preset" class="voice-select" style="flex:0;width:auto;padding:4px 8px;" onchange="ttsPresetChanged()"></select></label>
-            <textarea id="tts-custom" class="pipe-input" rows="2" style="flex:1;min-width:260px;display:none;" placeholder="직접 지시를 적어 보세요 (예: 40대 남성 면접관처럼 낮고 차분하게, 모든 받침을 또렷하게)"></textarea>
-          </div>
-          <div class="pipe-row" style="gap:12px;font-size:12.5px;color:var(--slate-600);margin-top:14px;align-items:flex-start;">
-            <label style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:260px;"><span class="ps-sub" style="margin:0;">발음 교정 <small>어색하게 읽는 단어를 "원래 단어=읽을 표기"로 한 줄에 하나씩. 듣기·녹음 모두에 적용돼요. (예: 노트북=노트 북)</small></span>
-              <textarea id="tts-fixes" class="pipe-input" rows="2" placeholder="노트북=노트 북&#10;속기록=속끼록" onchange="ttsSaveFixes()"></textarea></label>
-          </div>
-          <div class="pipe-row" style="gap:8px;margin-top:10px;">
-            <button class="btn btn-solid pipe-btn" onclick="ttsPreview()">▶ 이 설정으로 듣기</button>
-            <button class="btn btn-outline pipe-btn" onclick="ttsPreview(true)">저장된 설정으로 듣기</button>
-            <button class="btn btn-outline pipe-btn" onclick="ttsSave()">이 설정을 면접·녹음 기본값으로 저장</button>
-            <span class="pipe-hint" id="tts-status" style="margin-left:auto;"></span>
-          </div>
-          <div class="pipe-hint" id="tts-saved" style="margin-top:8px;"></div>
-        </div>
-
-        <!-- 2026-10-20p 타입캐스트와 나란히 듣기 (비교만, 면접 목소리는 안 바뀜) -->
-        <div class="pipe-card" id="tc-card">
-          <div class="ps-card-head">
-            <div><div class="subhead" style="margin:0;">타입캐스트와 나란히 듣기 <span class="help-tag">비교용</span></div>
-            <div class="pipe-hint">위 <b>들어볼 문장</b>을 OpenAI(위에서 고른 설정)와 타입캐스트로 이어서 들어 봐요. 여기서는 듣기만 하고, 면접 목소리는 바뀌지 않아요.</div></div>
-          </div>
-          <div class="tc-need" id="tc-need" hidden>
-            <b>타입캐스트 API 키가 아직 연결되지 않았어요</b>
-            <ol><li>타입캐스트 사이트 → <b>API</b> 메뉴에서 키를 복사해요 (가능하면 ZAVAPASS용 키를 따로 만들어 주세요).</li>
-            <li>Supabase → <b>Edge Functions → Secrets</b>에서 이름 <code>TYPECAST_API_KEY</code>, 값에 키를 붙여 넣고 저장해요.</li>
-            <li>이 화면에서 <b>목소리 목록 불러오기</b>를 다시 눌러요.</li></ol>
-            <span>키는 채팅이나 이 화면에 붙여 넣지 마세요.</span>
-          </div>
-          <div class="pipe-row tc-row" style="margin-top:4px;">
-            <button class="btn btn-outline pipe-btn" id="tc-load" onclick="TcCompare.load()">목소리 목록 불러오기</button>
-            <div class="tc-chips" id="tc-chips" hidden>
-              <button type="button" class="on" data-g="" onclick="TcCompare.setG('')">전체</button><button type="button" data-g="male" onclick="TcCompare.setG('male')">남성</button><button type="button" data-g="female" onclick="TcCompare.setG('female')">여성</button>
+        <!-- 2026-10-21c 면접관 목소리: 지금 쓰는 목소리 → 1 어떤 목소리 → 2 목소리 고르기 → 3 들어 보고 저장 -->
+        <div class="vs" id="tts-card">
+          <section class="vs-now" aria-label="지금 면접에 쓰는 목소리">
+            <div class="vs-now-l">
+              <span class="vs-kicker">지금 면접에 쓰는 목소리</span>
+              <div class="vs-now-row"><span class="vs-badge oa" id="vs-now-badge">OpenAI</span><b class="vs-now-name" id="vs-now-name">onyx</b></div>
+              <div class="vs-now-meta" id="vs-now-meta"></div>
             </div>
-            <span class="pipe-hint" id="tc-count"></span>
-          </div>
-          <div class="pipe-row tc-row" id="tc-pick-row" hidden>
-            <label class="tc-lab">목소리 <select id="tc-voice" class="voice-select" onchange="TcCompare.voiceChanged()"></select></label>
-            <button class="btn btn-outline pipe-btn" id="tc-sample" onclick="TcCompare.sample()" title="타입캐스트가 준비해 둔 샘플이라 크레딧이 들지 않아요">샘플 듣기 <small>(무료)</small></button>
-          </div>
-          <div class="pipe-row tc-row" id="tc-opt-row" hidden>
-            <label class="tc-lab">속도 <input type="range" id="tc-tempo" min="0.7" max="1.3" step="0.05" value="1" oninput="document.getElementById('tc-tempo-val').textContent=this.value"> <b id="tc-tempo-val" class="tc-num">1</b></label>
-            <label class="tc-lab">높낮이 <input type="range" id="tc-pitch" min="-6" max="6" step="1" value="0" oninput="document.getElementById('tc-pitch-val').textContent=this.value"> <b id="tc-pitch-val" class="tc-num">0</b></label>
-            <label class="tc-lab">말투 <select id="tc-emo" class="voice-select"></select></label>
-          </div>
-          <div class="pipe-row tc-row tc-btns">
-            <button class="btn btn-outline pipe-btn" onclick="TcCompare.play('openai')"><i class="tc-tag a">A</i> OpenAI로 듣기</button>
-            <button class="btn btn-outline pipe-btn" onclick="TcCompare.play('typecast')"><i class="tc-tag b">B</i> 타입캐스트로 듣기</button>
-            <button class="btn btn-solid pipe-btn" onclick="TcCompare.play('both')">A → B 이어서 듣기</button>
-            <button class="btn btn-outline pipe-btn" onclick="TcCompare.stop()">■ 멈추기</button>
-          </div>
-          <div class="tc-status" id="tc-status"></div>
-          <div class="pipe-hint" id="tc-cost" style="margin-top:6px;"></div>
+            <button type="button" class="vs-btn line" onclick="VoiceSet.play('saved')">▶ 들어 보기</button>
+          </section>
+          <p class="vs-lead">채점과 꼬리질문 <b>문장은 OpenAI</b>가 만들고, 여기서 고른 <b>목소리</b>가 그 문장을 읽어요. 바꾼 목소리는 <b>저장</b>해야 면접에 쓰여요.</p>
+
+          <section class="vs-step">
+            <h3 class="vs-h"><i>1</i>어떤 목소리를 쓸까요?</h3>
+            <div class="vs-engines" id="vs-engines" role="group" aria-label="목소리 종류">
+              <button type="button" class="vs-eng" data-v="typecast" aria-pressed="false" onclick="VoiceSet.setEngine('typecast')">
+                <span class="vs-eng-t"><b>타입캐스트</b><em>추천</em></span>
+                <span class="vs-eng-d">사람에 더 가까운 목소리 · 1글자에 1크레딧</span>
+              </button>
+              <button type="button" class="vs-eng" data-v="openai" aria-pressed="true" onclick="VoiceSet.setEngine('openai')">
+                <span class="vs-eng-t"><b>OpenAI</b></span>
+                <span class="vs-eng-d">지금까지 쓰던 목소리 · 한 번 듣기에 1원 안팎</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="vs-step">
+            <h3 class="vs-h"><i>2</i>목소리 고르기</h3>
+            <!-- 타입캐스트 -->
+            <div id="vs-panel-tc" hidden>
+              <div class="vs-need" id="tc-need" hidden>
+                <b>타입캐스트 키가 아직 연결되지 않았어요</b>
+                <ol><li>타입캐스트 사이트 → <b>API</b> 메뉴에서 키를 복사해요.</li>
+                <li>Supabase → <b>Edge Functions → Secrets</b>에 이름 <code>TYPECAST_API_KEY</code>로 붙여 넣고 저장해요.</li>
+                <li>아래 <b>다시 불러오기</b>를 눌러요.</li></ol>
+                <button type="button" class="vs-btn line sm" onclick="VoiceSet.load()">다시 불러오기</button>
+                <small>키는 채팅이나 이 화면에 붙여 넣지 마세요.</small>
+              </div>
+              <div class="vs-toolbar" id="vs-toolbar">
+                <div class="vs-search"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13.2 13.2L17 17"/></svg><input type="search" id="vs-q" placeholder="이름으로 찾기" oninput="VoiceSet.setQ(this.value)" aria-label="목소리 이름으로 찾기"></div>
+                <div class="vs-chips" id="tc-chips" role="group" aria-label="성별"><button type="button" class="on" data-g="" onclick="VoiceSet.setG('')">전체</button><button type="button" data-g="male" onclick="VoiceSet.setG('male')">남성</button><button type="button" data-g="female" onclick="VoiceSet.setG('female')">여성</button></div>
+                <select id="vs-age" class="vs-select" onchange="VoiceSet.setAge(this.value)" aria-label="나이"><option value="">나이 전체</option></select>
+                <span class="vs-count" id="tc-count"></span>
+              </div>
+              <div class="vs-list" id="vs-list" aria-label="타입캐스트 목소리 목록"></div>
+              <p class="vs-note" id="vs-list-note">▶를 누르면 미리 들어 볼 수 있어요. <b>샘플 무료</b> 표시가 있는 목소리는 크레딧이 들지 않아요.</p>
+              <div class="vs-tune" id="vs-tune" hidden>
+                <div class="vs-picked" id="vs-picked"></div>
+                <div class="vs-tune-row">
+                  <label class="vs-field">속도 <input type="range" id="tc-tempo" min="0.7" max="1.3" step="0.05" value="1" oninput="VoiceSet.tune()"><b id="tc-tempo-val">1</b>배</label>
+                  <label class="vs-field">높낮이 <input type="range" id="tc-pitch" min="-6" max="6" step="1" value="0" oninput="VoiceSet.tune()"><b id="tc-pitch-val">0</b></label>
+                  <label class="vs-field">말투 <select id="tc-emo" class="vs-select" onchange="VoiceSet.tune()"></select></label>
+                </div>
+              </div>
+            </div>
+            <!-- OpenAI (타입캐스트일 때는 이 묶음이 '고급 설정 → 대신 읽기용'으로 옮겨짐) -->
+            <div id="vs-panel-oa">
+              <div class="vs-oa" id="vs-oa">
+                <div class="vs-tune-row">
+                  <label class="vs-field">목소리 <select id="tts-voice" class="vs-select">
+                    <option value="marin">marin (여성·자연스러움 · 권장)</option><option value="cedar">cedar (남성·자연스러움 · 권장)</option><option value="onyx">onyx (남성·낮음)</option><option value="echo">echo (남성)</option><option value="ash">ash (남성·차분)</option><option value="sage">sage (여성·차분)</option><option value="nova">nova (여성)</option><option value="coral">coral (여성·또렷)</option><option value="ballad">ballad (남성·부드러움)</option><option value="verse">verse (남성·생기)</option></select></label>
+                  <label class="vs-field">속도 <input type="range" id="tts-speed" min="0.7" max="1.2" step="0.05" value="0.9" oninput="document.getElementById('tts-speed-val').textContent=this.value"><b id="tts-speed-val">0.9</b>배</label>
+                </div>
+                <div class="vs-tune-row">
+                  <label class="vs-field" id="tts-instr-row">말투 <select id="tts-preset" class="vs-select" onchange="ttsPresetChanged()"></select></label>
+                  <label class="vs-field">모델 <select id="tts-model" class="vs-select" onchange="ttsModelChanged()">
+                    <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (말투 지시 가능)</option><option value="tts-1-hd">tts-1-hd (고음질)</option><option value="tts-1">tts-1 (기본)</option></select></label>
+                </div>
+                <textarea id="tts-custom" class="vs-input" rows="2" style="display:none;" placeholder="직접 지시를 적어 보세요 (예: 40대 남성 면접관처럼 낮고 차분하게, 모든 받침을 또렷하게)"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="vs-step">
+            <h3 class="vs-h"><i>3</i>들어 보고 저장하기</h3>
+            <label class="vs-label" for="tts-text">들어볼 문장 <small>면접에서 나올 문장을 넣어 보세요</small></label>
+            <textarea id="tts-text" class="vs-input" rows="2">국회 상임위원회 회의 중 발언자가 겹칠 경우, 속기록 작성 순서를 어떻게 정리하시겠습니까? 조서와 녹취록의 차이도 함께 설명해 주십시오.</textarea>
+            <div class="vs-quick" role="group" aria-label="예시 문장">
+              <button type="button" onclick="VoiceSet.example(0)">면접 질문</button><button type="button" onclick="VoiceSet.example(1)">꼬리질문</button><button type="button" onclick="VoiceSet.example(2)">인사말</button>
+            </div>
+            <div class="vs-actions">
+              <button type="button" class="vs-btn dark" id="tts-play-btn" onclick="VoiceSet.play('new')">▶ 고른 목소리로 듣기</button>
+              <button type="button" class="vs-btn line" onclick="VoiceSet.play('compare')">⇄ 지금 목소리와 번갈아 듣기</button>
+              <button type="button" class="vs-btn ghost" onclick="VoiceSet.stop()">■ 멈추기</button>
+            </div>
+            <div class="vs-status" id="tts-status" aria-live="polite"></div>
+            <div class="vs-cost" id="tc-cost"></div>
+            <div class="vs-save">
+              <button type="button" class="vs-btn primary" id="vs-save" onclick="ttsSave()">이 목소리로 저장하기</button>
+              <span class="vs-save-hint" id="vs-save-hint"></span>
+            </div>
+            <div class="vs-after" id="vs-after" hidden>
+              <b>꼬리질문은 이제 새 목소리로 읽어요.</b> 미리 녹음해 둔 질문은 아직 예전 목소리예요. <b>③ 질문 녹음</b>에서 <b>전체 다시 녹음</b>을 하면 처음부터 끝까지 같은 목소리가 돼요.
+              <button type="button" class="vs-btn dark sm" onclick="showPipePane('rec')">③ 질문 녹음으로 가기 →</button>
+            </div>
+          </section>
+
+          <details class="vs-adv">
+            <summary>고급 설정 <small>발음 교정<span id="vs-adv-oa-sum"> · 대신 읽기용 OpenAI 목소리</span></small></summary>
+            <div class="vs-adv-body">
+              <label class="vs-label" for="tts-fixes">발음 교정 <small>어색하게 읽는 단어를 "원래 단어=읽을 표기"로 한 줄에 하나씩 (예: 노트북=노트 북)</small></label>
+              <textarea id="tts-fixes" class="vs-input" rows="2" placeholder="노트북=노트 북&#10;속기록=속끼록" onchange="ttsSaveFixes()"></textarea>
+              <div id="vs-adv-oa-wrap" hidden>
+                <label class="vs-label">대신 읽기용 OpenAI 목소리 <small>타입캐스트가 잠깐 안 될 때만 이 목소리로 읽어 면접이 멈추지 않아요</small></label>
+                <div id="vs-adv-oa"></div>
+              </div>
+            </div>
+          </details>
+          <div id="tts-saved" hidden></div>
         </div>
         </div>
 
@@ -5525,6 +5663,7 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
             <button class="btn btn-outline pipe-btn" id="rec-force-btn" onclick="recStart(true)" style="color:var(--danger);">전체 다시 녹음</button>
             <span class="pipe-hint" id="rec-setting" style="margin-left:auto;"></span>
           </div>
+          <div class="rec-engine-note" id="rec-engine-note" hidden></div>
           <div class="ps-sub" style="margin-top:16px;">일부만 다시 녹음 <small>발음 교정을 추가했거나 특정 문장만 고쳤을 때</small></div>
           <div class="pipe-row" style="gap:8px;font-size:12.5px;color:var(--slate-600);">
             <label style="display:flex;align-items:center;gap:6px;">이 단어가 들어간 문항만 <input type="text" id="rec-word" class="pipe-input" style="width:160px;" placeholder="예: 노트북"></label>
@@ -10911,9 +11050,9 @@ async function qmRecordChanged(){
   if(Qm.recRunning) return;
   const need = (Qm.rows||[]).filter(qmNeedRec).length; if(!need) return;
   const tts = loadTtsSettings();
-  if(!confirm(`바뀐 문항 ${need}개를 면접관 목소리(${tts.voice} · ${tts.speed}배)로 녹음할까요? OpenAI 크레딧이 조금 쓰여요(1개에 약 1원).`)) return;
+  if(!confirm(`바뀐 문항 ${need}개를 면접관 목소리(${ttsEngineLabel(tts)})로 녹음할까요? ${ttsUsesTypecast(tts) ? '타입캐스트 크레딧이 글자 수만큼 쓰여요.' : 'OpenAI 크레딧이 조금 쓰여요(1개에 약 1원).'}`)) return;
   Qm.recRunning = true; const btn = document.getElementById('qm-rec-btn'); btn.disabled = true;
-  const opts = { voice: tts.voice, model: tts.model, speed: tts.speed, instructions: ttsInstructionText(tts), limit: 20, fixes: loadSpeechFixes() };
+  const opts = recOpts(tts);
   let done = 0, fail = 0;
   try{
     for(let guard=0; guard<60; guard++){
@@ -19017,18 +19156,25 @@ const TTS_INSTRUCTION_PRESETS = {
   slow:   { label:'천천히 또렷하게', text:'한국어 채용 면접의 면접관입니다. 평소보다 조금 천천히, 단어 사이를 살짝 띄우며 또렷하게 읽습니다. 전문 용어는 한 글자씩 정확하게 발음합니다. 정중하고 차분합니다.' },
   strict: { label:'격식 있고 단호하게', text:'한국어 채용 면접의 면접관입니다. 격식 있고 단호한 어조로, 감정을 드러내지 않고 또렷하게 읽습니다. 서두르지 않습니다.' },
 };
-const TTS_DEFAULTS = { voice:'onyx', speed:1.0, model:'gpt-4o-mini-tts', preset:'natural', custom:'' };
+const TTS_DEFAULTS = { voice:'onyx', speed:1.0, model:'gpt-4o-mini-tts', preset:'natural', custom:'', provider:'openai', tc:null };   // 2026-10-21b provider: openai | typecast (tc: 타입캐스트 목소리)
+/** 2026-10-21b 지금 설정이 타입캐스트를 쓰는지 (목소리가 골라져 있어야 함) */
+function ttsUsesTypecast(st){ return !!(st && st.provider === 'typecast' && st.tc && st.tc.voice_id); }
+function ttsEngineOf(st){ return ttsUsesTypecast(st) ? { provider:'typecast', tc:{ voice_id:st.tc.voice_id, tempo:st.tc.tempo, pitch:st.tc.pitch, emotion:st.tc.emotion } } : null; }
+function ttsEngineLabel(st){ return ttsUsesTypecast(st) ? `타입캐스트 ${st.tc.name || st.tc.voice_id} · ${st.tc.tempo || 1}배` : `OpenAI ${st.voice} · ${st.model} · ${st.speed}배`; }
 function loadTtsSettings(){ try{ const v = JSON.parse(localStorage.getItem('stenotalk_tts')||'null'); return Object.assign({}, TTS_DEFAULTS, v||{}); }catch(_){ return Object.assign({}, TTS_DEFAULTS); } }
 function saveTtsSettings(v){ try{ localStorage.setItem('stenotalk_tts', JSON.stringify(v)); }catch(_){} }
 function ttsInstructionText(st){ return (st.preset==='custom' ? (st.custom||'') : (TTS_INSTRUCTION_PRESETS[st.preset]||TTS_INSTRUCTION_PRESETS.calm).text); }
-async function fetchSpeechBlob(text, voice, speed, model, instructions){
+async function fetchSpeechBlob(text, voice, speed, model, instructions, engine){
   const { data: sess } = await sb.auth.getSession();
   const token = (sess && sess.session && sess.session.access_token) || SUPABASE_ANON_KEY;
   const res = await fetch(SUPABASE_URL + '/functions/v1/speak-text', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + token, 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, voice, speed, model: model || undefined, instructions: instructions || undefined }),
+    body: JSON.stringify(Object.assign({ text, voice, speed, model: model || undefined, instructions: instructions || undefined }, engine || {})),
   });
+  // 2026-10-21b 타입캐스트가 안 돼 OpenAI로 대신 읽었는지 (서버가 알려 줌)
+  try{ const pv = res.headers.get('X-Voice-Provider'); fetchSpeechBlob.last = pv || 'openai';
+    if(pv === 'openai-fallback'){ const note = decodeURIComponent(res.headers.get('X-Voice-Note') || ''); fetchSpeechBlob.lastNote = note; console.warn('[타입캐스트 실패 → OpenAI로 대신 읽음]', note); } else fetchSpeechBlob.lastNote = ''; }catch(_){}
   if(!res.ok){
     let msg = 'HTTP ' + res.status;
     try{ const b = await res.json(); if(b && b.error) msg = b.error; }catch(_){ try{ msg = (await res.text()).slice(0,200) || msg; }catch(__){} }
@@ -19160,7 +19306,7 @@ async function playWithGate(a){
 const StenoVoice = {
   provider: 'browser', openaiVoice: 'onyx', speed: 0.9, ttsModel: 'gpt-4o-mini-tts', instructions: '', audio: null, _seq: 0,
   /** 관리자 목소리 비교 화면에서 저장한 설정을 적용 */
-  applySettings(st){ st = st || loadTtsSettings(); this.openaiVoice = st.voice; this.speed = st.speed; this.ttsModel = st.model; this.instructions = ttsInstructionText(st); },
+  applySettings(st){ st = st || loadTtsSettings(); this.openaiVoice = st.voice; this.speed = st.speed; this.ttsModel = st.model; this.instructions = ttsInstructionText(st); this.engine = ttsEngineOf(st); },
   async speak(text, onDone, opts){
     const my = ++this._seq;
     this.stop();
@@ -19219,7 +19365,7 @@ const StenoVoice = {
     const waits = [0, 1500, 3500, 7000]; let last = null;
     for(let i=0;i<waits.length;i++){
       if(waits[i]){ await new Promise(r=>setTimeout(r, waits[i])); if(my !== this._seq) throw new Error('취소됨'); }
-      try{ return await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions); }
+      try{ return await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine); }
       catch(e){ last = e; const m = String(e && e.message || ''); if(/HTTP 40[013]\b|invalid|unauthorized|권한/i.test(m)) break; console.warn('[면접관 목소리 '+(i+1)+'회 실패]', m); }
     }
     throw last || new Error('음성 생성 실패');
@@ -20339,19 +20485,25 @@ function ttsFillUI(){
   document.getElementById('tts-speed').value = st.speed; document.getElementById('tts-speed-val').textContent = st.speed;
   sel.value = st.preset; document.getElementById('tts-custom').value = st.custom || '';
   const fx = loadSpeechFixes(); document.getElementById('tts-fixes').value = Object.keys(fx).map(k=>k+'='+fx[k]).join('\n');
+  state.ttsEngineUI = { provider: st.provider === 'typecast' ? 'typecast' : 'openai', tc: st.tc || null }; ttsPaintEngine();
   ttsPresetChanged(); ttsModelChanged(); ttsShowSaved(); try{ TcCompare.cost(); }catch(_){}
 }
 function ttsSaveFixes(){ const o = parseSpeechFixes(document.getElementById('tts-fixes').value); saveSpeechFixes(o); showToast('발음 교정 '+Object.keys(o).length+'개를 저장했어요. 이미 녹음된 질문에 적용하려면 "전체 다시 녹음"이 필요해요.'); }
 function ttsReadUI(){
   return { voice: document.getElementById('tts-voice').value, model: document.getElementById('tts-model').value,
-    speed: parseFloat(document.getElementById('tts-speed').value), preset: document.getElementById('tts-preset').value, custom: document.getElementById('tts-custom').value.trim() };
+    speed: parseFloat(document.getElementById('tts-speed').value), preset: document.getElementById('tts-preset').value, custom: document.getElementById('tts-custom').value.trim(),
+    provider: (state.ttsEngineUI && state.ttsEngineUI.provider) || 'openai', tc: (state.ttsEngineUI && state.ttsEngineUI.tc) || null };
 }
+/* 2026-10-21b 면접관 목소리 엔진 (OpenAI / 타입캐스트) — 채점·꼬리질문 문장은 늘 OpenAI, 읽어 주는 목소리만 고름 */
+function ttsSetEngine(v){ VoiceSet.setEngine(v); }
+function ttsPaintEngine(){ VoiceSet.paint(); }
 function ttsPresetChanged(){ const custom = document.getElementById('tts-preset').value==='custom'; document.getElementById('tts-custom').style.display = custom ? '' : 'none'; }
 function ttsModelChanged(){ const m = document.getElementById('tts-model').value; document.getElementById('tts-instr-row').style.opacity = m==='gpt-4o-mini-tts' ? '1' : '.45'; document.getElementById('tts-instr-row').title = m==='gpt-4o-mini-tts' ? '' : '이 모델은 말투 지시를 받지 않아요'; }
 function ttsShowSaved(){
   const st = loadTtsSettings(); const el = document.getElementById('tts-saved'); if(!el) return;
   const instr = st.model==='gpt-4o-mini-tts' ? (st.preset==='custom' ? '직접 입력' : (TTS_INSTRUCTION_PRESETS[st.preset]||{}).label) : '(지시 없음)';
-  el.innerHTML = `현재 저장된 설정: <b>${escapeHtml(st.voice)}</b> · 모델 <b>${escapeHtml(st.model)}</b> · 속도 <b>${st.speed}</b> · 말투 <b>${escapeHtml(instr||'')}</b>`;
+  el.innerHTML = (ttsUsesTypecast(st) ? `현재 저장된 면접관 목소리: <b>타입캐스트 ${escapeHtml(st.tc.name || st.tc.voice_id)}</b> · ${st.tc.tempo || 1}배 · ${escapeHtml(TC_EMO[st.tc.emotion] || st.tc.emotion || '')}<br>대신 읽기용 OpenAI: ` : '현재 저장된 설정: ')
+    + `<b>${escapeHtml(st.voice)}</b> · 모델 <b>${escapeHtml(st.model)}</b> · 속도 <b>${st.speed}</b> · 말투 <b>${escapeHtml(instr||'')}</b>`;
   pipeRenderStatus();
 }
 async function ttsPreview(useSaved){
@@ -20361,25 +20513,33 @@ async function ttsPreview(useSaved){
   StenoVoice.stop();
   try{
     const t0 = Date.now();
-    const blob = await fetchSpeechBlob(sanitizeForSpeech(text), st.voice, st.speed, st.model, ttsInstructionText(st));
+    if(st.provider === 'typecast' && !ttsUsesTypecast(st)){ status.textContent = ''; showToast('타입캐스트 목소리를 먼저 골라 주세요 (아래 "타입캐스트와 나란히 듣기")'); return; }
+    const blob = await fetchSpeechBlob(sanitizeForSpeech(text), st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st));
     const url = URL.createObjectURL(blob); const a = new Audio(url); StenoVoice.audio = a;
     a.onended = ()=>{ URL.revokeObjectURL(url); if(StenoVoice.audio===a) StenoVoice.audio=null; };
     await a.play();
-    status.textContent = `재생 중 · ${st.voice} / ${st.model} / ${st.speed}배 (${((Date.now()-t0)/1000).toFixed(1)}초 만에 생성)`;
-  }catch(e){ status.textContent = ''; showToast('OpenAI 음성 실패: ' + e.message); }
+    const fb = fetchSpeechBlob.last === 'openai-fallback';
+    status.textContent = `재생 중 · ${fb ? 'OpenAI로 대신 읽음 (타입캐스트: ' + (fetchSpeechBlob.lastNote || '실패') + ')' : ttsEngineLabel(st)} (${((Date.now()-t0)/1000).toFixed(1)}초 만에 생성)`;
+  }catch(e){ status.textContent = ''; showToast('음성 실패: ' + e.message); }
 }
 function ttsSave(){
   const st = ttsReadUI();
   if(st.preset==='custom' && !st.custom){ showToast('직접 입력을 골랐다면 지시 문장을 적어 주세요'); return; }
-  saveTtsSettings(st); StenoVoice.applySettings(st); ttsShowSaved();
+  if(st.provider === 'typecast' && !ttsUsesTypecast(st)){ showToast('2단계에서 타입캐스트 목소리를 먼저 골라 주세요'); return; }
+  { const prev = loadTtsSettings(); const was = ttsUsesTypecast(prev) ? 'tc:' + prev.tc.voice_id + ':' + prev.tc.tempo + ':' + prev.tc.emotion : 'oa:' + prev.voice + ':' + prev.model + ':' + prev.speed;
+    const now = ttsUsesTypecast(st) ? 'tc:' + st.tc.voice_id + ':' + st.tc.tempo + ':' + st.tc.emotion : 'oa:' + st.voice + ':' + st.model + ':' + st.speed;
+    if(was !== now && !confirm(`면접관 목소리를 "${ttsEngineLabel(st)}"(으)로 저장해요.\n\n· 저장하는 순간부터 면접자의 꼬리질문은 이 목소리로 읽어요.\n· 미리 녹음해 둔 질문은 ③ 질문 녹음에서 "전체 다시 녹음"을 해야 바뀌어요. 그 전까지는 질문과 꼬리질문 목소리가 서로 달라요.\n\n저장할까요?`)) return;
+    state.ttsNeedRerecord = was !== now; }
+  saveTtsSettings(st); StenoVoice.applySettings(st); ttsShowSaved(); try{ VoiceSet.afterSave(); }catch(_){}
   // 모든 사용자에게 같은 목소리로 (꼬리질문 등 즉석 음성) — app_settings.tts_voice
   sb.from('app_settings').upsert({ key:'tts_voice', value: st, updated_at: new Date().toISOString() })
     .then(({ error })=>{ showToast(error ? '이 브라우저에는 저장했지만 공용 저장은 실패했어요: ' + error.message : '저장했어요. 모든 면접자의 면접 화면과 질문 녹음에 이 목소리 설정이 쓰여요.'); });
 }
 
-/* ---------------- 2026-10-20p 관리자: 타입캐스트와 나란히 듣기 (typecast-tts 함수, 관리자 전용) ----------------
-   같은 문장을 A(OpenAI, 위에서 고른 설정)와 B(타입캐스트)로 들어 보는 비교 전용. 면접 목소리 설정은 건드리지 않음.
-   한 번 만든 소리는 이 화면에 기억해 두고 다시 누르면 그대로 재생 → 같은 문장을 여러 번 들어도 크레딧이 더 들지 않음. */
+/* ---------------- 2026-10-21c 관리자: 면접관 목소리 고르기 ----------------
+   한 흐름으로: 지금 쓰는 목소리 → 1 어떤 목소리(타입캐스트/OpenAI) → 2 목소리 고르기 → 3 들어 보고 저장.
+   타입캐스트 목록·미리 듣기는 typecast-tts 함수(관리자 전용), 실제 면접과 같은 소리는 speak-text 함수로 들음.
+   한 번 만든 소리는 이 화면에 기억해 두고 다시 누르면 그대로 재생 → 같은 문장·설정은 크레딧이 더 들지 않음. */
 async function tcFetch(body){
   const { data: sess } = await sb.auth.getSession();
   const token = (sess && sess.session && sess.session.access_token) || SUPABASE_ANON_KEY;
@@ -20395,87 +20555,147 @@ async function tcFetch(body){
 }
 const TC_AGE = { child:'어린이', teenager:'10대', young_adult:'청년', middle_age:'중년', elder:'노년' };
 const TC_EMO = { smart:'문맥 따라 자동', normal:'보통', toneup:'톤 높게', tonedown:'톤 낮게', happy:'밝게', sad:'슬프게', angry:'화난', whisper:'속삭임', tender:'부드럽게', calm:'차분하게' };
-const TcCompare = {
-  voices:null, g:'', cache:new Map(), used:0, _seq:0, _sample:null,
-  pickKey:'stenotalk_tc_pick',
-  st(html){ const el = document.getElementById('tc-status'); if(el) el.innerHTML = html; },
-  need(on){ const el = document.getElementById('tc-need'); if(el) el.hidden = !on; },
+const VS_EXAMPLES = [
+  '국회 상임위원회 회의 중 발언자가 겹칠 경우, 속기록 작성 순서를 어떻게 정리하시겠습니까? 조서와 녹취록의 차이도 함께 설명해 주십시오.',
+  '방금 말씀하신 경험에서, 가장 어려웠던 순간은 언제였고 그때 어떻게 판단하셨나요?',
+  '안녕하세요. 지금부터 모의 면접을 시작하겠습니다. 편하게 답변해 주세요.',
+];
+const VS_SAMPLE_LINE = '안녕하세요, 면접을 시작하겠습니다.';
+const VoiceSet = {
+  voices:null, loading:false, err:'', g:'', age:'', q:'', shown:40, cache:new Map(), used:0, _seq:0, _sample:null,
+  ui(){ return state.ttsEngineUI || (state.ttsEngineUI = { provider:'openai', tc:null }); },
+  st(html){ const el = document.getElementById('tts-status'); if(el) el.innerHTML = html; },
+  sig(st){ return ttsUsesTypecast(st) ? ['tc', st.tc.voice_id, st.tc.tempo, st.tc.pitch, st.tc.emotion].join(':') : ['oa', st.voice, st.model, st.speed, st.preset, st.custom].join(':'); },
+  descOf(v){ const g = /^f/i.test(v.gender) ? '여성' : /^m/i.test(v.gender) ? '남성' : ''; return [g, TC_AGE[v.age] || v.age || ''].filter(Boolean).join(' · '); },
+
+  /* ---- 화면 그리기 ---- */
+  paint(){
+    const e = this.ui(); const tc = e.provider === 'typecast';
+    document.querySelectorAll('#vs-engines .vs-eng').forEach(b=>{ const on = b.dataset.v === e.provider; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    const ptc = document.getElementById('vs-panel-tc'), poa = document.getElementById('vs-panel-oa'), oa = document.getElementById('vs-oa'), adv = document.getElementById('vs-adv-oa');
+    if(ptc) ptc.hidden = !tc; if(poa) poa.hidden = tc;
+    if(oa){ const home = tc ? adv : poa; if(home && oa.parentNode !== home) home.appendChild(oa); }   // OpenAI 설정: 타입캐스트면 '고급 설정 → 대신 읽기용'으로
+    const aw = document.getElementById('vs-adv-oa-wrap'); if(aw) aw.hidden = !tc;
+    const asum = document.getElementById('vs-adv-oa-sum'); if(asum) asum.hidden = !tc;
+    if(tc && !this.voices && !this.loading && !this.err) this.load();
+    this.renderList(); this.paintPick(); this.paintNow(); this.cost();
+  },
+  paintNow(){
+    const st = loadTtsSettings(); const isTc = ttsUsesTypecast(st);
+    const n = document.getElementById('vs-now-name'), m = document.getElementById('vs-now-meta'), b = document.getElementById('vs-now-badge');
+    if(n) n.textContent = isTc ? (st.tc.name || st.tc.voice_id) : st.voice;
+    if(b){ b.textContent = isTc ? '타입캐스트' : 'OpenAI'; b.className = 'vs-badge ' + (isTc ? 'tc' : 'oa'); }
+    const instr = st.model === 'gpt-4o-mini-tts' ? (st.preset === 'custom' ? '직접 입력 말투' : ((TTS_INSTRUCTION_PRESETS[st.preset] || {}).label || '')) : '';
+    if(m) m.textContent = isTc ? [st.tc.desc, '속도 ' + (st.tc.tempo || 1) + '배', TC_EMO[st.tc.emotion] || st.tc.emotion].filter(Boolean).join(' · ') : [st.model, '속도 ' + st.speed + '배', instr].filter(Boolean).join(' · ');
+    // 저장 버튼: 바꾼 게 있을 때만
+    const e = this.ui(), cur = ttsReadUI(); const needPick = e.provider === 'typecast' && !(e.tc && e.tc.voice_id);
+    const dirty = !needPick && this.sig(cur) !== this.sig(st);
+    const sv = document.getElementById('vs-save'), hint = document.getElementById('vs-save-hint');
+    if(sv){ sv.disabled = !dirty; sv.textContent = dirty ? `${ttsUsesTypecast(cur) ? (cur.tc.name || '고른') : 'OpenAI ' + cur.voice} 목소리로 저장하기` : '이 목소리로 저장하기'; }
+    if(hint){ hint.className = 'vs-save-hint' + (dirty ? ' warn' : ''); hint.textContent = needPick ? '2단계에서 목소리를 골라 주세요.' : dirty ? '아직 저장 전이에요. 저장해야 면접에 쓰여요.' : '지금 면접에 쓰는 목소리와 같아요.'; }
+    const pb = document.getElementById('tts-play-btn');
+    if(pb) pb.textContent = '▶ ' + (e.provider === 'typecast' ? (e.tc && e.tc.voice_id ? `${e.tc.name || ''} 목소리로 듣기` : '고른 목소리로 듣기') : 'OpenAI 목소리로 듣기');
+  },
+
+  /* ---- 1단계 ---- */
+  setEngine(v){ this.ui().provider = v === 'typecast' ? 'typecast' : 'openai'; this.stop(); this.paint(); },
+
+  /* ---- 2단계: 타입캐스트 목록 ---- */
+  need(on){ const el = document.getElementById('tc-need'); if(el) el.hidden = !on; ['vs-toolbar','vs-list','vs-list-note'].forEach(id=>{ const x = document.getElementById(id); if(x) x.hidden = on; }); },
   async load(){
-    const btn = document.getElementById('tc-load'); if(btn){ btn.disabled = true; btn.textContent = '불러오는 중…'; }
-    this.st('');
-    try{
-      const res = await tcFetch({ action:'voices' }); const d = await res.json();
-      this.voices = (d.voices || []).filter(v=>v.voice_id);
-      this.need(false);
-      ['tc-chips','tc-pick-row','tc-opt-row'].forEach(id=>{ const el = document.getElementById(id); if(el) el.hidden = false; });
-      if(btn) btn.textContent = '목록 새로고침';
-      this.render();
-    }catch(e){
-      if(e.code === 'no_key'){ this.need(true); this.st(''); }
-      else this.st('<span style="color:#c2401b;">목소리 목록을 못 불러왔어요: ' + escapeHtml(e.message) + '</span>');
-      if(btn) btn.textContent = '목소리 목록 불러오기';
-    }finally{ if(btn) btn.disabled = false; }
+    this.loading = true; this.err = ''; this.need(false); this.renderList();
+    try{ const res = await tcFetch({ action:'voices' }); const d = await res.json(); this.voices = (d.voices || []).filter(v=>v.voice_id); }
+    catch(e){ this.voices = null; if(e.code === 'no_key') this.need(true); else this.err = e.message || String(e); }
+    finally{ this.loading = false; this.renderList(); this.paintPick(); }
   },
-  setG(g){ this.g = g; document.querySelectorAll('#tc-chips button').forEach(b=>b.classList.toggle('on', b.dataset.g === g)); this.render(); },
-  label(v){
-    const g = /^f/i.test(v.gender) ? '여' : /^m/i.test(v.gender) ? '남' : '';
-    const a = TC_AGE[v.age] || v.age || '';
-    const tail = [g, a].filter(Boolean).join(' ');
-    return v.name + (tail ? ' · ' + tail : '');
+  setG(g){ this.g = g; this.shown = 40; document.querySelectorAll('#tc-chips button').forEach(b=>b.classList.toggle('on', b.dataset.g === g)); this.renderList(); },
+  setAge(a){ this.age = a; this.shown = 40; this.renderList(); },
+  setQ(q){ this.q = String(q || '').trim().toLowerCase(); this.shown = 40; this.renderList(); },
+  more(){ this.shown += 40; this.renderList(); },
+  filtered(){ return (this.voices || []).filter(v=>(!this.g || String(v.gender).toLowerCase() === this.g) && (!this.age || v.age === this.age) && (!this.q || String(v.name).toLowerCase().includes(this.q) || String(v.voice_id).toLowerCase().includes(this.q))); },
+  renderList(){
+    const box = document.getElementById('vs-list'); if(!box) return; const cnt = document.getElementById('tc-count');
+    if(this.loading){ box.innerHTML = '<div class="vs-empty">목소리 목록을 불러오는 중…</div>'; if(cnt) cnt.textContent = ''; return; }
+    if(this.err){ box.innerHTML = `<div class="vs-empty err">목록을 못 불러왔어요: ${escapeHtml(this.err)} <button type="button" class="vs-btn line sm" onclick="VoiceSet.load()">다시 시도</button></div>`; return; }
+    if(!this.voices){ box.innerHTML = ''; if(cnt) cnt.textContent = ''; return; }
+    const ageSel = document.getElementById('vs-age');
+    if(ageSel && !ageSel.dataset.filled){ const order = Object.keys(TC_AGE); const ages = [...new Set(this.voices.map(v=>v.age).filter(Boolean))].sort((a,b)=>order.indexOf(a) - order.indexOf(b));
+      ageSel.innerHTML = '<option value="">나이 전체</option>' + ages.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(TC_AGE[a] || a)}</option>`).join(''); ageSel.dataset.filled = '1'; }
+    const list = this.filtered(); const sel = (this.ui().tc || {}).voice_id;
+    if(cnt) cnt.textContent = `${list.length}개` + (list.length !== this.voices.length ? ` / 전체 ${this.voices.length}개` : '');
+    const rows = list.slice(0, this.shown).map(v=>{
+      const on = v.voice_id === sel, id = escapeHtml(v.voice_id), nm = escapeHtml(v.name || v.voice_id);
+      return `<div class="vs-v${on ? ' on' : ''}" role="button" tabindex="0" aria-pressed="${on}" onclick="VoiceSet.pick('${id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();VoiceSet.pick('${id}')}">
+        <button type="button" class="vs-v-play" onclick="event.stopPropagation();VoiceSet.sample('${id}')" aria-label="${nm} 미리 듣기"><svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path d="M6 4.5v11l9-5.5z"/></svg></button>
+        <span class="vs-v-name"><b>${nm}</b><small>${escapeHtml(this.descOf(v))}</small></span>
+        ${v.preview_url ? '<span class="vs-v-free">샘플 무료</span>' : '<span class="vs-v-free none"></span>'}
+        <span class="vs-v-check">${on ? '✓ 선택됨' : '선택'}</span>
+      </div>`; }).join('');
+    box.innerHTML = rows || '<div class="vs-empty">조건에 맞는 목소리가 없어요.</div>';
+    if(list.length > this.shown) box.insertAdjacentHTML('beforeend', `<button type="button" class="vs-more-btn" onclick="VoiceSet.more()">더 보기 · ${list.length - this.shown}개 남음</button>`);
   },
-  render(){
-    const sel = document.getElementById('tc-voice'); if(!sel || !this.voices) return;
-    const list = this.voices.filter(v=>!this.g || String(v.gender).toLowerCase() === this.g);
-    let pick = ''; try{ pick = localStorage.getItem(this.pickKey) || ''; }catch(_){}
-    const prev = sel.value || pick;
-    sel.innerHTML = list.map(v=>`<option value="${escapeHtml(v.voice_id)}">${escapeHtml(this.label(v))}</option>`).join('') || '<option value="">(해당 목소리 없음)</option>';
-    if(prev && list.some(v=>v.voice_id === prev)) sel.value = prev;
-    const c = document.getElementById('tc-count'); if(c) c.textContent = `목소리 ${list.length}개` + (this.g ? ` (전체 ${this.voices.length}개)` : '');
-    this.voiceChanged(true);
+  pick(id){
+    const v = (this.voices || []).find(x=>x.voice_id === id); if(!v) return;
+    const e = this.ui(); const prev = e.tc || {};
+    const emos = ['smart'].concat(v.emotions && v.emotions.length ? v.emotions : ['normal']);
+    e.provider = 'typecast';
+    e.tc = { voice_id:id, name:v.name, desc:this.descOf(v), tempo: prev.tempo || 1, pitch: prev.pitch || 0, emotion: emos.includes(prev.emotion) ? prev.emotion : (emos.includes('normal') ? 'normal' : emos[0]) };
+    try{ localStorage.setItem('stenotalk_tc_pick', id); }catch(_){}
+    this.renderList(); this.paintPick(); this.paintNow(); this.cost();
   },
-  cur(){ const id = (document.getElementById('tc-voice')||{}).value; return (this.voices||[]).find(v=>v.voice_id === id) || null; },
-  voiceChanged(quiet){
-    const v = this.cur(); const emo = document.getElementById('tc-emo'); if(!emo) return;
-    if(v && !quiet){ try{ localStorage.setItem(this.pickKey, v.voice_id); }catch(_){} }
-    const keep = emo.value;
-    const list = ['smart'].concat((v && v.emotions && v.emotions.length ? v.emotions : ['normal']).filter(x=>x !== 'smart'));
-    emo.innerHTML = list.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(TC_EMO[x] || x)}</option>`).join('');
-    emo.value = list.includes(keep) ? keep : (list.includes('normal') ? 'normal' : list[0]);
-    const s = document.getElementById('tc-sample'); if(s) s.disabled = !(v && v.preview_url);
-    this.cost();
+  paintPick(){
+    const t = this.ui().tc; const row = document.getElementById('vs-tune'); if(row) row.hidden = !(t && t.voice_id) || this.ui().provider !== 'typecast';
+    if(!t || !t.voice_id) return;
+    const v = (this.voices || []).find(x=>x.voice_id === t.voice_id);
+    const emos = ['smart'].concat(((v && v.emotions && v.emotions.length) ? v.emotions : [t.emotion && t.emotion !== 'smart' ? t.emotion : 'normal']).filter(x=>x !== 'smart'));
+    const emo = document.getElementById('tc-emo'); if(emo){ emo.innerHTML = emos.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(TC_EMO[x] || x)}</option>`).join(''); emo.value = emos.includes(t.emotion) ? t.emotion : 'normal'; }
+    const tp = document.getElementById('tc-tempo'), ph = document.getElementById('tc-pitch');
+    if(tp){ tp.value = t.tempo || 1; document.getElementById('tc-tempo-val').textContent = t.tempo || 1; }
+    if(ph){ ph.value = t.pitch || 0; document.getElementById('tc-pitch-val').textContent = t.pitch || 0; }
+    const pk = document.getElementById('vs-picked'); if(pk) pk.innerHTML = `<span>고른 목소리</span><b>${escapeHtml(t.name || t.voice_id)}</b><small>${escapeHtml(t.desc || '')}</small>`;
   },
-  text(){ return sanitizeForSpeech(((document.getElementById('tts-text')||{}).value || '').trim()); },
+  tune(){
+    const t = this.ui().tc; if(!t) return;
+    t.tempo = parseFloat(document.getElementById('tc-tempo').value) || 1; t.pitch = parseInt(document.getElementById('tc-pitch').value, 10) || 0; t.emotion = document.getElementById('tc-emo').value || 'normal';
+    document.getElementById('tc-tempo-val').textContent = t.tempo; document.getElementById('tc-pitch-val').textContent = t.pitch;
+    this.paintNow();
+  },
+
+  /* ---- 3단계: 듣기 ---- */
+  text(){ return sanitizeForSpeech(((document.getElementById('tts-text') || {}).value || '').trim()); },
+  example(i){ const el = document.getElementById('tts-text'); if(el){ el.value = VS_EXAMPLES[i] || ''; this.cost(); } },
   cost(){
     const el = document.getElementById('tc-cost'); if(!el) return;
-    const full = this.text().length, n = Math.min(300, full);
-    el.innerHTML = `이 문장 <b>${n}자</b> → 타입캐스트로 처음 들을 때 <b>${n}크레딧</b> (같은 설정으로 다시 들으면 0) · 이 화면에서 쓴 크레딧 <b>${this.used}</b>` + (full > 300 ? ' · <span style="color:#c2401b;">300자까지만 읽어요</span>' : '');
+    const n = this.text().length; const tc = this.ui().provider === 'typecast';
+    el.innerHTML = (tc ? `이 문장 <b>${n}자</b> → 타입캐스트로 처음 들을 때 <b>${n}크레딧</b>, 같은 문장·설정으로 다시 들으면 0` : `OpenAI로 한 번 듣기에 1원 안팎`) + (this.used ? ` · 이 화면에서 쓴 타입캐스트 크레딧 <b>${this.used}</b>` : '');
   },
   stop(){ this._seq++; try{ StenoVoice.stop(); }catch(_){} if(this._sample){ try{ this._sample.pause(); }catch(_){} this._sample = null; } this.st(''); },
-  sample(){
-    const v = this.cur(); if(!v || !v.preview_url) return;
-    this.stop(); const a = new Audio(v.preview_url); this._sample = a;
-    a.onended = ()=>{ if(this._sample === a){ this._sample = null; this.st(''); } };
-    a.play().then(()=>this.st(`<span class="now"><i class="tc-tag b">B</i>${escapeHtml(v.name)} 샘플 재생 중 (무료, 타입캐스트가 준비한 문장)</span>`)).catch(e=>this.st('샘플을 재생하지 못했어요: ' + escapeHtml(e.message||'')));
+  async sample(id){
+    const v = (this.voices || []).find(x=>x.voice_id === id); if(!v) return;
+    this.stop(); const seq = this._seq;
+    if(v.preview_url){
+      const a = new Audio(v.preview_url); this._sample = a;
+      a.onended = ()=>{ if(this._sample === a){ this._sample = null; this.st(''); } };
+      a.play().then(()=>this.st(`<span class="vs-now-play">▶ ${escapeHtml(v.name)} 샘플 (무료, 타입캐스트가 준비한 문장)</span>`)).catch(e=>this.st('샘플을 재생하지 못했어요: ' + escapeHtml(e.message || '')));
+      return;
+    }
+    // 샘플 파일이 없는 목소리: 짧은 인사말로 들려줌 (글자 수만큼 크레딧)
+    const st = { provider:'typecast', tc:{ voice_id:id, name:v.name, tempo:1, pitch:0, emotion:'normal' }, voice:'onyx', model:'gpt-4o-mini-tts', speed:1, preset:'natural', custom:'' };
+    this.st('목소리 만드는 중…');
+    try{ const r = await this.blobFor(st, VS_SAMPLE_LINE); if(seq !== this._seq) return;
+      this.st(`<span class="vs-now-play">▶ ${escapeHtml(v.name)} · "${escapeHtml(VS_SAMPLE_LINE)}"${r.cached ? ' (다시 듣기 · 무료)' : ''}</span>` + (r.fb ? this.fbNote(r) : '')); await this.playBlob(r.blob, seq); if(seq === this._seq) this.st(''); }
+    catch(e){ if(seq === this._seq) this.st(`<span class="vs-err">${escapeHtml(e.message || '')}</span>`); }
   },
-  async blobA(text){
-    const st = ttsReadUI(); const label = `${st.voice} · ${st.model} · ${st.speed}배`;
-    const key = 'A|' + [text, st.voice, st.model, st.speed, ttsInstructionText(st)].join('|');
-    if(this.cache.has(key)) return { blob:this.cache.get(key), label, cached:true };
-    const blob = await fetchSpeechBlob(text, st.voice, st.speed, st.model, ttsInstructionText(st));
-    this.cache.set(key, blob); return { blob, label, cached:false };
-  },
-  async blobB(text){
-    const v = this.cur(); if(!v){ const e = new Error('먼저 "목소리 목록 불러오기"를 눌러 타입캐스트 목소리를 골라 주세요'); e.code = 'pick'; throw e; }
-    const tempo = parseFloat(document.getElementById('tc-tempo').value) || 1, pitch = parseInt(document.getElementById('tc-pitch').value, 10) || 0, emotion = document.getElementById('tc-emo').value || 'normal';
-    const t = text.slice(0, 300); const key = 'B|' + [t, v.voice_id, tempo, pitch, emotion].join('|');
-    const label = `${v.name} · ${tempo}배 · ${TC_EMO[emotion] || emotion}`;
-    if(this.cache.has(key)) return { blob:this.cache.get(key), label, cached:true };
-    const res = await tcFetch({ action:'tts', text:t, voice_id:v.voice_id, tempo, pitch, emotion });
-    let blob = await res.blob(); if(!blob || blob.size < 100) throw new Error('음성 데이터가 비어 있어요');
-    if(!(blob.type || '').startsWith('audio')) blob = new Blob([blob], { type:'audio/mpeg' });
-    this.cache.set(key, blob); this.used += Number(res.headers.get('X-Chars')) || t.length; this.cost();
-    try{ Activity.log('typecast_preview', { voice:v.voice_id, chars:t.length }); }catch(_){}
-    return { blob, label, cached:false };
+  fbNote(r){ return `<div class="vs-err">타입캐스트가 안 돼 OpenAI로 대신 읽었어요${r.note ? ' (' + escapeHtml(r.note) + ')' : ''}</div>`; },
+  async blobFor(st, text){
+    const key = this.sig(st) + '|' + text;
+    if(this.cache.has(key)) return { blob:this.cache.get(key), cached:true };
+    const blob = await fetchSpeechBlob(text, st.voice, st.speed, st.model, ttsInstructionText(st), ttsEngineOf(st));
+    const pv = fetchSpeechBlob.last, note = fetchSpeechBlob.lastNote || '';
+    const fb = ttsUsesTypecast(st) && pv === 'openai-fallback';
+    if(!fb) this.cache.set(key, blob);            // 대신 읽은 소리는 기억하지 않음 (다음에 다시 타입캐스트로 시도)
+    if(ttsUsesTypecast(st) && pv === 'typecast'){ this.used += text.length; this.cost(); }
+    return { blob, cached:false, fb, note };
   },
   playBlob(blob, seq){
     return new Promise((resolve, reject)=>{
@@ -20486,35 +20706,37 @@ const TcCompare = {
       a.play().catch(e=>{ fin = true; URL.revokeObjectURL(url); reject(e); });
     });
   },
+  /** which: 'new'(고른 목소리) | 'saved'(지금 쓰는 목소리) | 'compare'(지금 → 고른 목소리) */
   async play(which){
-    const text = this.text(); if(!text){ showToast('위 "들어볼 문장"을 적어 주세요'); return; }
-    this.stop(); const seq = this._seq;
-    this.st('음성 만드는 중…');
-    const wantA = which !== 'typecast', wantB = which !== 'openai';
-    const [ra, rb] = await Promise.all([
-      wantA ? this.blobA(text).catch(e=>({ err:e })) : null,
-      wantB ? this.blobB(text).catch(e=>({ err:e })) : null,
-    ]);
+    const text = this.text(); if(!text){ showToast('들어볼 문장을 적어 주세요'); return; }
+    const cur = ttsReadUI(), saved = loadTtsSettings();
+    if(which !== 'saved' && cur.provider === 'typecast' && !ttsUsesTypecast(cur)){ showToast('2단계에서 타입캐스트 목소리를 먼저 골라 주세요'); return; }
+    let list = which === 'saved' ? [['a', '지금 목소리', saved]] : which === 'new' ? [['b', '고른 목소리', cur]] : [['a', '지금 목소리', saved], ['b', '고른 목소리', cur]];
+    if(which === 'compare' && this.sig(cur) === this.sig(saved)){ list = [['a', '지금 목소리', saved]]; showToast('고른 목소리가 지금 목소리와 같아요. 2단계에서 다른 목소리를 골라 보세요.'); }
+    this.stop(); const seq = this._seq; this.st('목소리 만드는 중…');
+    const made = await Promise.all(list.map(([, , st])=>this.blobFor(st, text).catch(e=>({ err:e }))));
     if(seq !== this._seq) return;
-    const errs = [];
-    if(ra && ra.err) errs.push('A(OpenAI): ' + ra.err.message);
-    if(rb && rb.err){ if(rb.err.code === 'no_key') this.need(true); errs.push('B(타입캐스트): ' + (rb.err.code === 'no_key' ? 'API 키가 아직 연결되지 않았어요' : rb.err.message)); }
-    const errHtml = errs.length ? `<div style="color:#c2401b;margin-top:4px;">${errs.map(escapeHtml).join('<br>')}</div>` : '';
-    const seqList = [ra && !ra.err ? ['a', 'OpenAI', ra] : null, rb && !rb.err ? ['b', '타입캐스트', rb] : null].filter(Boolean);
-    if(!seqList.length){ this.st(errHtml); return; }
+    const errs = made.map((r, i)=>r.err ? `${list[i][1]}: ${r.err.message}` : '').filter(Boolean);
+    const errHtml = errs.length ? `<div class="vs-err">${errs.map(escapeHtml).join('<br>')}</div>` : '';
+    const ok = list.map((x, i)=>[...x, made[i]]).filter(x=>!x[3].err);
+    if(!ok.length){ this.st(errHtml); return; }
     try{
-      for(let i = 0; i < seqList.length; i++){
-        const [t, name, r] = seqList[i];
-        this.st(`<span class="now"><i class="tc-tag ${t}">${t.toUpperCase()}</i>${name} 재생 중 · ${escapeHtml(r.label)}${r.cached ? ' <small>(다시 듣기 · 무료)</small>' : ''}</span>` + errHtml);
-        const ok = await this.playBlob(r.blob, seq);
-        if(!ok || seq !== this._seq) return;
-        if(i < seqList.length - 1) await new Promise(r2=>setTimeout(r2, 700));
+      for(let i = 0; i < ok.length; i++){
+        const [t, nm, st, r] = ok[i];
+        this.st(`<span class="vs-now-play"><i class="vs-tag ${t}">${t === 'a' ? '지금' : '새'}</i>${nm} · ${escapeHtml(ttsEngineLabel(st))}${r.cached ? ' <small>(다시 듣기 · 무료)</small>' : ''}</span>` + (r.fb ? this.fbNote(r) : '') + errHtml);
+        const played = await this.playBlob(r.blob, seq);
+        if(!played || seq !== this._seq) return;
+        if(i < ok.length - 1) await new Promise(r2=>setTimeout(r2, 700));
       }
-      if(seq === this._seq) this.st((seqList.length > 1 ? '다 들었어요. 설정을 그대로 두고 다시 누르면 크레딧 없이 다시 들어요.' : '') + errHtml);
-    }catch(e){ this.st('재생하지 못했어요: ' + escapeHtml(e.message || '') + errHtml); }
+      if(seq === this._seq) this.st(errHtml);
+    }catch(e){ this.st(`<span class="vs-err">재생하지 못했어요: ${escapeHtml(e.message || '')}</span>` + errHtml); }
   },
+  afterSave(){ this.paintNow(); const a = document.getElementById('vs-after'); if(a) a.hidden = !state.ttsNeedRerecord; },
 };
-document.addEventListener('input', (e)=>{ if(e.target && e.target.id === 'tts-text') TcCompare.cost(); });
+const TcCompare = VoiceSet;   // 예전 이름 호환
+document.addEventListener('input', (e)=>{ if(e.target && e.target.id === 'tts-text') VoiceSet.cost(); });
+document.addEventListener('change', (e)=>{ const p = e.target && e.target.closest && e.target.closest('#ps-pane-voice'); if(p) VoiceSet.paintNow(); });
+document.addEventListener('input', (e)=>{ const p = e.target && e.target.closest && e.target.closest('#vs-oa'); if(p) VoiceSet.paintNow(); });
 
 /* ---------------- 관리자: 질문 음성 녹음 (generate-audio 함수를 20개씩 반복 호출) ---------------- */
 const Rec = { running:false, stopFlag:false, status:null };
@@ -20536,7 +20758,12 @@ function recRenderStats(st){
   const total = st.questions.total + st.lines.total, done = qd + ld;
   document.getElementById('rec-bar-fill').style.width = total ? Math.round(done/total*100)+'%' : '0%';
   const tts = loadTtsSettings();
-  document.getElementById('rec-setting').textContent = `녹음 설정: ${tts.voice} · ${tts.model} · ${tts.speed}배`;
+  document.getElementById('rec-setting').textContent = `녹음 목소리: ${ttsEngineLabel(tts)}`;
+  { const tcN = (st.questions.typecast || 0) + (st.lines.typecast || 0); const tcEl = document.getElementById('rec-engine-note');
+    if(tcEl){ const usesTc = ttsUsesTypecast(tts); const chars = (st.questions.chars || 0) + (st.lines.chars || 0);
+      tcEl.hidden = !(usesTc || tcN);
+      tcEl.innerHTML = usesTc ? (tcN >= total ? `<b>모두 타입캐스트 목소리로 녹음돼 있어요.</b>` : `<b>타입캐스트 목소리로 녹음된 것 ${tcN} / ${total}개.</b> 나머지는 예전 OpenAI 목소리라, 면접에서 질문과 꼬리질문 목소리가 다르게 들려요. <b>전체 다시 녹음</b>을 눌러 주세요` + (chars ? ` (약 ${chars.toLocaleString()}크레딧).` : '.'))
+        : `타입캐스트로 녹음된 것 ${tcN}개가 남아 있어요. 지금 면접관 목소리는 OpenAI라서, 맞추려면 <b>전체 다시 녹음</b>을 눌러 주세요.`; } }
   pipeRenderStatus();
 }
 async function recStatus(silent){
@@ -20545,15 +20772,19 @@ async function recStatus(silent){
   catch(e){ if(!silent) showToast('상태 확인 실패: '+e.message); recLog('상태 확인 실패: '+e.message); }
   btn.disabled = false;
 }
+/** 2026-10-21b 녹음 요청에 넣을 목소리 설정 (타입캐스트면 provider·tc 포함) */
+function recOpts(tts, extra){ return Object.assign({ voice: tts.voice, model: tts.model, speed: tts.speed, instructions: ttsInstructionText(tts), limit: 20, fixes: loadSpeechFixes() }, ttsEngineOf(tts) || {}, extra || {}); }
+function recCostWord(tts, chars){ return ttsUsesTypecast(tts) ? `타입캐스트 크레딧 ${chars ? '약 ' + Math.round(chars).toLocaleString() + '크레딧' : '1글자에 1크레딧'} (회사 다른 프로그램과 함께 쓰는 한 달 20만 크레딧에서 빠져요)` : `OpenAI 크레딧 ${chars ? '약 1~2달러' : '조금'}`; }
 async function recStart(force){
   if(Rec.running) return;
-  if(force && !confirm('이미 녹음된 것까지 전부 다시 만들어요 (약 1~2달러). 목소리 설정을 바꿨을 때만 사용하세요. 계속할까요?')) return;
   const tts = loadTtsSettings();
-  if(!force && !confirm(`저장된 목소리 설정(${tts.voice} · ${tts.model} · ${tts.speed}배)으로 아직 녹음되지 않은 항목을 만들어요. OpenAI 크레딧이 조금 쓰여요. 시작할까요?`)) return;
+  const allChars = Rec.status ? (Rec.status.questions.chars || 0) + (Rec.status.lines.chars || 0) : 0;
+  if(force && !confirm(`이미 녹음된 것까지 전부 "${ttsEngineLabel(tts)}" 목소리로 다시 만들어요.\n${recCostWord(tts, allChars || 43000)}\n목소리 설정을 바꿨을 때만 사용하세요. 계속할까요?`)) return;
+  if(!force && !confirm(`저장된 목소리(${ttsEngineLabel(tts)})로 아직 녹음되지 않은 항목을 만들어요. ${recCostWord(tts, 0)}이 조금 쓰여요. 시작할까요?`)) return;
   Rec.running = true; Rec.stopFlag = false;
   document.getElementById('rec-start-btn').style.display='none'; document.getElementById('rec-force-btn').style.display='none'; document.getElementById('rec-stop-btn').style.display='';
-  document.getElementById('rec-log').textContent=''; recLog('녹음 시작 · '+new Date().toLocaleTimeString());
-  const opts = { voice: tts.voice, model: tts.model, speed: tts.speed, instructions: ttsInstructionText(tts), limit: 20, fixes: loadSpeechFixes() };
+  document.getElementById('rec-log').textContent=''; recLog('녹음 시작 · ' + ttsEngineLabel(tts) + ' · ' + new Date().toLocaleTimeString());
+  const opts = recOpts(tts);
   let totalDone = 0, totalFail = 0, forceLeft = !!force;
   try{
     for(const target of ['lines','questions']){
@@ -20582,12 +20813,12 @@ async function recStartWord(){
   const word = document.getElementById('rec-word').value.trim();
   if(!word){ showToast('다시 녹음할 단어를 적어 주세요'); return; }
   const tts = loadTtsSettings();
-  if(!confirm(`${josa('"'+word+'"','이/가')} 들어간 질문·문장만 지금 설정(${tts.voice} · ${tts.model} · ${tts.speed}배)으로 다시 만들어요. 계속할까요?`)) return;
+  if(!confirm(`${josa('"'+word+'"','이/가')} 들어간 질문·문장만 지금 설정(${ttsEngineLabel(tts)})으로 다시 만들어요. 계속할까요?`)) return;
   Rec.running = true; Rec.stopFlag = false;
   document.getElementById('rec-start-btn').style.display='none'; document.getElementById('rec-force-btn').style.display='none'; document.getElementById('rec-stop-btn').style.display='';
   document.getElementById('rec-log').textContent=''; recLog(`"${word}" 포함 문항 다시 녹음 시작 · `+new Date().toLocaleTimeString());
   const since = new Date().toISOString();
-  const opts = { voice: tts.voice, model: tts.model, speed: tts.speed, instructions: ttsInstructionText(tts), limit: 20, fixes: loadSpeechFixes(), contains: word, since };
+  const opts = recOpts(tts, { contains: word, since });
   let done = 0, fail = 0;
   try{
     for(const target of ['lines','questions']){
@@ -20658,7 +20889,7 @@ function pipeRenderStatus(){
   const dot = cls => `<i class="d ${cls}"></i>`;
   ai.innerHTML = `<span class="nw">${dot(s.ai_followup?'on':'off')}꼬리질문 ${s.ai_followup?'켜짐':'꺼짐'}</span> <span class="nw">${dot(s.ai_grading?'on':'off')}채점 ${s.ai_grading?'켜짐':'꺼짐'}</span><br><span class="nw">한도 하루 ${lim.daily}회 · 총 ${lim.total}회</span>`;
   const tts = (typeof loadTtsSettings === 'function') ? loadTtsSettings() : null;
-  const vo = document.getElementById('ps-st-voice'); if(vo) vo.innerHTML = tts ? `${dot('on')}${escapeHtml(tts.voice)} · ${tts.speed}배 저장됨` : `${dot('off')}저장된 설정 없음`;
+  const vo = document.getElementById('ps-st-voice'); if(vo) vo.innerHTML = tts ? `${dot('on')}${escapeHtml(ttsUsesTypecast(tts) ? '타입캐스트 ' + (tts.tc.name || '') : tts.voice)} · ${ttsUsesTypecast(tts) ? (tts.tc.tempo || 1) : tts.speed}배 저장됨` : `${dot('off')}저장된 설정 없음`;
   const rs = (typeof Rec !== 'undefined' && Rec.status) ? Rec.status : null;
   const re = document.getElementById('ps-st-rec');
   if(re){
