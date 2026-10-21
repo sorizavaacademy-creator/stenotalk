@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-20o';
+var APP_VERSION = '2026-10-21a';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -608,6 +608,27 @@ var APP_VERSION = '2026-10-20o';
   .pipe-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .pipe-row .au-label{flex:0 0 auto;}
   .pipe-btn{flex:0 0 auto;padding:9px 16px;font-size:13px;}
+  /* 2026-10-20p 타입캐스트와 나란히 듣기 */
+  #tc-card [hidden]{display:none!important;}
+  #tc-card .tc-row{margin-top:10px;gap:10px 14px;font-size:12.5px;color:var(--slate-600);}
+  #tc-card .tc-lab{display:flex;align-items:center;gap:6px;min-width:0;}
+  #tc-card #tc-voice{flex:0 1 auto;width:auto;max-width:340px;padding:6px 8px;}
+  #tc-card #tc-emo{flex:0 0 auto;width:auto;padding:6px 8px;}
+  #tc-card .tc-num{font-family:var(--font-mono);min-width:22px;}
+  #tc-card .tc-chips{display:inline-flex;gap:4px;}
+  #tc-card .tc-chips button{border:1px solid var(--slate-300);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;color:var(--slate-600);cursor:pointer;}
+  #tc-card .tc-chips button.on{background:#1f1f21;border-color:#1f1f21;color:#fff;}
+  #tc-card .tc-tag{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;font-style:normal;font-size:11px;font-weight:700;color:#fff;margin-right:4px;}
+  #tc-card .tc-tag.a{background:#5b6472;} #tc-card .tc-tag.b{background:#e8532a;}
+  #tc-card .tc-status{margin-top:10px;font-size:13px;color:var(--slate-700,#333);min-height:18px;}
+  #tc-card .tc-status .now{display:inline-flex;align-items:center;gap:6px;font-weight:600;}
+  #tc-card .tc-need{margin:6px 0 4px;background:#fdf6f2;border:1px solid #f3d9cc;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;color:#45454a;}
+  #tc-card .tc-need ol{margin:6px 0 6px 18px;padding:0;} #tc-card .tc-need code{background:#fff;border:1px solid #eadfd8;border-radius:5px;padding:0 5px;font-size:12px;}
+  #tc-card .tc-need > span{font-size:12px;color:#8a5a45;}
+  @media (max-width:560px){
+    #tc-card #tc-voice{max-width:none;flex:1 1 auto;} #tc-card .tc-lab{flex:1 1 100%;} #tc-card .tc-lab input[type=range]{flex:1;}
+    #tc-card .tc-btns .pipe-btn{flex:1 1 calc(50% - 6px);padding:10px 8px;}
+  }
   .pipe-status{font-size:11.5px;color:var(--slate-400);margin-top:8px;}
   .pipe-question{margin-top:8px;font-size:15px;font-weight:600;line-height:1.55;color:var(--navy-900);word-break:keep-all;}
   .pipe-hint{font-size:12px;color:var(--slate-400);margin-top:4px;line-height:1.5;}
@@ -2253,6 +2274,24 @@ var APP_VERSION = '2026-10-20o';
   .fb-meta{margin-top:6px;font-size:11.5px;color:#7C879B;}
   .fb-detail{margin-top:6px;} .fb-detail summary{font-size:11.5px;color:#7C879B;cursor:pointer;} .fb-detail pre{margin:6px 0 0;font-size:11px;background:#F7F9FC;border-radius:8px;padding:8px 10px;max-height:180px;overflow:auto;white-space:pre-wrap;word-break:break-all;}
   .fb-note-row{display:flex;gap:8px;margin-top:10px;align-items:center;} .fb-note-row .pipe-input{flex:1;font-size:12.5px;} .fb-note-row .btn-delete-user{padding:7px 10px;font-size:12px;}
+  /* 2026-10-21a 질문 준비 화면 이용 */
+  .pv-card{margin-top:14px;}
+  .pv-seg{display:inline-flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
+  .pv-seg button{border:1px solid var(--c-line-strong,#d3d0ca);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;font-weight:600;color:var(--c-ink-2,#45454a);cursor:pointer;white-space:nowrap;}
+  .pv-seg button.on{background:#1f1f21;border-color:#1f1f21;color:#fff;} .pv-seg button b{font-weight:800;}
+  .pv-row{border-bottom:1px solid var(--slate-100,#f1f1ef);} .pv-row:last-child{border-bottom:none;}
+  .pv-head{display:grid;grid-template-columns:18px minmax(120px,1fr) auto auto;gap:12px;align-items:center;padding:12px 18px;cursor:pointer;}
+  .pv-head:hover{background:rgba(0,0,0,.018);}
+  .pv-head .person-caret{width:16px;height:16px;color:#9a9aa0;transition:transform .15s;} .pv-row.open .pv-head .person-caret{transform:rotate(90deg);}
+  .pv-who{display:flex;flex-direction:column;min-width:0;} .pv-who .admin-sub{margin:1px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pv-last{margin:0;white-space:nowrap;}
+  .pv-body{display:none;padding:2px 18px 14px 48px;} .pv-row.open .pv-body{display:block;}
+  .pv-visit{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:12.5px;padding:6px 0;border-top:1px dashed #ecebe7;color:var(--c-ink-2,#45454a);}
+  .pv-visit:first-child{border-top:none;} .pv-visit .t{font-variant-numeric:tabular-nums;color:var(--c-ink-3,#7c7c82);min-width:92px;} .pv-visit .f{font-weight:700;color:var(--c-ink,#1c1c1e);}
+  .pv-next{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#efeeea;color:#55555b;} .pv-next.setup{background:var(--c-ok-bg,#e6f4ec);color:var(--c-ok,#2f7a4a);} .pv-next.live{background:var(--c-info-bg,#eaf0ff);color:var(--c-info,#2c55d6);}
+  .pv-qs{margin-top:8px;font-size:12.5px;} .pv-qs summary{cursor:pointer;font-weight:700;color:var(--c-ink-2,#45454a);} .pv-qs ol{margin:6px 0 0 18px;padding:0;display:flex;flex-direction:column;gap:3px;color:var(--c-ink-2,#45454a);line-height:1.5;} .pv-qs small{color:#7c7c82;}
+  .ev-tag.prep, .tl-ev .ev-tag.prep, .tl-last .ev-tag.prep, .uf-legend .ev-tag.prep{background:#f3eefc !important;color:#6b46c1 !important;}
+  @media(max-width:760px){ .pv-head{grid-template-columns:18px minmax(0,1fr) auto;} .pv-head .tl-chips{grid-column:2 / -1;grid-row:2;} .pv-body{padding-left:18px;} .pv-seg{margin-left:0;} }
   .live-two{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start;margin-top:4px;}
   .live-card{background:#fff;border:1px solid #E1E9F4;border-radius:16px;box-shadow:0 6px 16px rgba(27,39,64,.05);overflow:hidden;}
   .live-card-head{display:flex;align-items:center;gap:8px;padding:12px 18px;border-bottom:1px solid #EEF2F7;font-size:13.5px;font-weight:800;color:#1B2740;background:#FAFBFD;flex-wrap:wrap;} .live-card-head small{font-weight:500;color:#7C879B;font-size:11.5px;word-break:keep-all;flex-basis:100%;}
@@ -5322,12 +5361,17 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
             <div class="live-card-body" id="live-inactive-list"></div>
           </div>
         </div>
+        <!-- 2026-10-21a 질문 준비 화면 이용 -->
+        <div class="live-card pv-card" id="pv-card">
+          <div class="live-card-head">질문 준비 화면 이용 <small>최근 30일 · 질문 의도·참고 문장을 펼쳐 본 기록 · 이름을 누르면 방문별로 펼쳐져요</small><span class="pv-seg" id="pv-seg"></span></div>
+          <div class="live-card-body" id="pv-list"></div>
+        </div>
         <div class="admin-toolbar" style="margin-top:22px;">
           <div class="subhead" style="margin:0;">사람별 접속·연습 기록 <span class="admin-sub">(최근 30일 · 이름을 누르면 날짜별로 펼쳐져요)</span></div>
           <input type="text" id="live-search" class="admin-search" placeholder="이름, 휴대폰 번호로 검색" oninput="renderLiveTimeline()" style="max-width:280px;margin-left:auto;">
         </div>
         <div class="admin-table" id="live-timeline"></div>
-        <div class="uf-legend lg-list"><b class="lg-t">기록 종류</b><span class="lg-i"><span class="ev-tag login">로그인</span>들어옴</span><span class="lg-i"><span class="ev-tag start">면접 시작</span>리허설·라이브 시작</span><span class="lg-i"><span class="ev-tag end">면접 종료</span>끝까지 마침(점수 있음)</span><span class="lg-i"><span class="ev-tag abort">면접 중단</span>중간에 나감</span></div>
+        <div class="uf-legend lg-list"><b class="lg-t">기록 종류</b><span class="lg-i"><span class="ev-tag login">로그인</span>들어옴</span><span class="lg-i"><span class="ev-tag start">면접 시작</span>리허설·라이브 시작</span><span class="lg-i"><span class="ev-tag end">면접 종료</span>끝까지 마침(점수 있음)</span><span class="lg-i"><span class="ev-tag abort">면접 중단</span>중간에 나감</span><span class="lg-i"><span class="ev-tag prep">질문 준비</span>질문 의도·참고 문장 화면</span></div>
       </div>
 
       <!-- AI·음성 설정 (예전 이름: 대화 파이프라인 테스트) — 탭 4개: AI 설정 / 면접관 목소리 / 질문 녹음 / 동작 점검 -->
@@ -5421,6 +5465,45 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
             <span class="pipe-hint" id="tts-status" style="margin-left:auto;"></span>
           </div>
           <div class="pipe-hint" id="tts-saved" style="margin-top:8px;"></div>
+        </div>
+
+        <!-- 2026-10-20p 타입캐스트와 나란히 듣기 (비교만, 면접 목소리는 안 바뀜) -->
+        <div class="pipe-card" id="tc-card">
+          <div class="ps-card-head">
+            <div><div class="subhead" style="margin:0;">타입캐스트와 나란히 듣기 <span class="help-tag">비교용</span></div>
+            <div class="pipe-hint">위 <b>들어볼 문장</b>을 OpenAI(위에서 고른 설정)와 타입캐스트로 이어서 들어 봐요. 여기서는 듣기만 하고, 면접 목소리는 바뀌지 않아요.</div></div>
+          </div>
+          <div class="tc-need" id="tc-need" hidden>
+            <b>타입캐스트 API 키가 아직 연결되지 않았어요</b>
+            <ol><li>타입캐스트 사이트 → <b>API</b> 메뉴에서 키를 복사해요 (가능하면 ZAVAPASS용 키를 따로 만들어 주세요).</li>
+            <li>Supabase → <b>Edge Functions → Secrets</b>에서 이름 <code>TYPECAST_API_KEY</code>, 값에 키를 붙여 넣고 저장해요.</li>
+            <li>이 화면에서 <b>목소리 목록 불러오기</b>를 다시 눌러요.</li></ol>
+            <span>키는 채팅이나 이 화면에 붙여 넣지 마세요.</span>
+          </div>
+          <div class="pipe-row tc-row" style="margin-top:4px;">
+            <button class="btn btn-outline pipe-btn" id="tc-load" onclick="TcCompare.load()">목소리 목록 불러오기</button>
+            <div class="tc-chips" id="tc-chips" hidden>
+              <button type="button" class="on" data-g="" onclick="TcCompare.setG('')">전체</button><button type="button" data-g="male" onclick="TcCompare.setG('male')">남성</button><button type="button" data-g="female" onclick="TcCompare.setG('female')">여성</button>
+            </div>
+            <span class="pipe-hint" id="tc-count"></span>
+          </div>
+          <div class="pipe-row tc-row" id="tc-pick-row" hidden>
+            <label class="tc-lab">목소리 <select id="tc-voice" class="voice-select" onchange="TcCompare.voiceChanged()"></select></label>
+            <button class="btn btn-outline pipe-btn" id="tc-sample" onclick="TcCompare.sample()" title="타입캐스트가 준비해 둔 샘플이라 크레딧이 들지 않아요">샘플 듣기 <small>(무료)</small></button>
+          </div>
+          <div class="pipe-row tc-row" id="tc-opt-row" hidden>
+            <label class="tc-lab">속도 <input type="range" id="tc-tempo" min="0.7" max="1.3" step="0.05" value="1" oninput="document.getElementById('tc-tempo-val').textContent=this.value"> <b id="tc-tempo-val" class="tc-num">1</b></label>
+            <label class="tc-lab">높낮이 <input type="range" id="tc-pitch" min="-6" max="6" step="1" value="0" oninput="document.getElementById('tc-pitch-val').textContent=this.value"> <b id="tc-pitch-val" class="tc-num">0</b></label>
+            <label class="tc-lab">말투 <select id="tc-emo" class="voice-select"></select></label>
+          </div>
+          <div class="pipe-row tc-row tc-btns">
+            <button class="btn btn-outline pipe-btn" onclick="TcCompare.play('openai')"><i class="tc-tag a">A</i> OpenAI로 듣기</button>
+            <button class="btn btn-outline pipe-btn" onclick="TcCompare.play('typecast')"><i class="tc-tag b">B</i> 타입캐스트로 듣기</button>
+            <button class="btn btn-solid pipe-btn" onclick="TcCompare.play('both')">A → B 이어서 듣기</button>
+            <button class="btn btn-outline pipe-btn" onclick="TcCompare.stop()">■ 멈추기</button>
+          </div>
+          <div class="tc-status" id="tc-status"></div>
+          <div class="pipe-hint" id="tc-cost" style="margin-top:6px;"></div>
         </div>
         </div>
 
@@ -9351,6 +9434,7 @@ function showScreen(id){
   try{ const now = Date.now(); document.querySelectorAll('#toast-container .toast').forEach(t=>{ if(now - (+t.dataset.t||0) > 1000 && !t.classList.contains('out')){ t.classList.add('out'); setTimeout(()=>t.remove(), 260); } }); }catch(_){}
   try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
   try{ if(id !== 'screen-dashboard' && typeof Tour !== 'undefined' && Tour.on){ Tour.on = false; const t = document.getElementById('tour'); if(t) t.hidden = true; document.body.classList.remove('tour-on'); } }catch(_){}
+  if(id !== 'screen-practice'){ try{ PracticeTrack.end(id === 'screen-dashboard' ? 'home' : 'other'); }catch(_){} }   // 2026-10-21a 질문 준비 방문 마무리
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
@@ -12229,6 +12313,8 @@ function openPractice(fieldId){
 
   updatePracticeProgress();
   showScreen('screen-practice');
+  // 2026-10-21a 관리자 '접속 현황'에서 질문 준비 화면 이용을 볼 수 있게
+  try{ PracticeTrack.start(field, document.querySelectorAll('#qa-public .qa-item, #qa-common .qa-item, #qa-exam .qa-item').length); Activity.setPresence('practice', { field: field.name }); }catch(_){}
 }
 function switchPracticeTab(tabKey){
   state.practiceTab = tabKey;
@@ -12322,6 +12408,7 @@ function toggleQA(id){
   if(el.classList.contains('open')){
     state.viewedQA.add(id);
     el.classList.add('seen');
+    try{ PracticeTrack.view(el.dataset.q || id); }catch(_){}
     updatePracticeProgress();
   }
 }
@@ -12339,6 +12426,7 @@ function updatePracticeProgress(){
   });
 }
 function startFromPractice(){
+  try{ PracticeTrack.wentSetup(); }catch(_){}
   openSetup(state.selectedField.id);
 }
 
@@ -13292,11 +13380,73 @@ const Activity = {
     else console.warn('[접속 기록 실패]', msg);
   },
 };
-const ACTIVITY_LABEL = { login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습' };
-const ACTIVITY_CLS = { login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end' };
+/* ---------------- 2026-10-21a 질문 준비 화면 이용 기록 (practice_visits) ----------------
+   면접자가 '질문 준비'(질문 의도·참고 문장)에 들어오면 방문 한 줄을 만들고, 머무는 동안 30초마다
+   실제로 본 시간(화면이 켜져 있고 5분 안에 손댄 시간)·펼쳐 본 질문을 갱신 → 관리자 '접속 현황'에서 확인.
+   관리자 계정은 기록하지 않음. 저장은 화면을 닫는 순간에도 가도록 keepalive 요청으로 보냄. */
+const PracticeTrack = {
+  v:null, off:false, _tick:null, _save:null, _last:0, lastAct:0, dirty:false, _tok:'', IDLE:5*60*1000,
+  can(){ return !!(state.currentUser && !state.currentUser.isAdmin && !this.off); },
+  newId(){
+    try{ if(crypto.randomUUID) return crypto.randomUUID(); }catch(_){}
+    const b = new Uint8Array(16); try{ crypto.getRandomValues(b); }catch(_){ for(let i=0;i<16;i++) b[i] = Math.floor(Math.random()*256); }
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128; const h = [...b].map(x=>x.toString(16).padStart(2,'0')).join('');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+  },
+  start(field, total){
+    if(this.v && this.v.field_id === field.id){ this.v.total = total; this.dirty = true; return; }   // 문항을 다 불러와 같은 화면을 다시 그린 경우
+    this.end('other');
+    if(!this.can()) return;
+    this.v = { id:this.newId(), field_id:field.id, field_name:field.name || '', started_at:new Date().toISOString(), secs:0, viewed:new Set(), total, next:null };
+    this._last = this.lastAct = Date.now(); this.dirty = true;
+    clearInterval(this._tick); clearInterval(this._save);
+    this._tick = setInterval(()=>this.tick(), 5000);
+    this._save = setInterval(()=>{ if(this.dirty) this.save(); }, 30000);
+    this.save();
+  },
+  act(){ if(this.v) this.lastAct = Date.now(); },
+  tick(){
+    if(!this.v) return; const now = Date.now(); const dt = Math.min(6000, now - this._last); this._last = now;
+    if(document.visibilityState === 'visible' && now - this.lastAct < this.IDLE){ this.v.secs += dt/1000; this.dirty = true; }
+  },
+  view(q){ if(!this.v || !q) return; this.act(); if(!this.v.viewed.has(q) && this.v.viewed.size < 1000){ this.v.viewed.add(q); this.dirty = true; } },
+  wentSetup(){ if(this.v){ this.v.next = 'setup'; this.dirty = true; this.save(); } },
+  row(){
+    const v = this.v; return { id:v.id, user_id:state.currentUser.id, field_id:v.field_id, field_name:v.field_name, started_at:v.started_at, updated_at:new Date().toISOString(),
+      active_secs:Math.min(86400, Math.round(v.secs)), viewed_count:v.viewed.size, viewed_q:[...v.viewed], total_q:v.total||0, next_step:v.next };
+  },
+  async token(){ try{ const { data } = await sb.auth.getSession(); const t = data && data.session && data.session.access_token; if(t) this._tok = t; }catch(_){} return this._tok; },
+  send(row, tok){
+    return fetch(SUPABASE_URL + '/rest/v1/practice_visits?on_conflict=id', { method:'POST', keepalive:true,
+      headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer ' + tok, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(row) });
+  },
+  async save(){
+    if(!this.v || !state.currentUser) return; this.dirty = false;
+    const row = this.row(); const tok = await this.token(); if(!tok) return;
+    try{
+      const r = await this.send(row, tok);
+      if(!r.ok){ const t = await r.text().catch(()=>''); if(/practice_visits|relation|schema cache/i.test(t)){ this.off = true; console.warn('[질문 준비 기록 꺼짐] step25 SQL이 필요해요'); } else console.warn('[질문 준비 기록 실패]', r.status, t.slice(0,160)); }
+    }catch(e){ this.dirty = true; console.warn('[질문 준비 기록 실패]', e.message || e); }
+  },
+  /** 화면을 떠날 때 — 마지막 한 번 저장 (닫히는 중에도 가도록 저장해 둔 토큰으로 바로 보냄) */
+  end(next){
+    if(!this.v) return;
+    this.tick(); if(!this.v.next) this.v.next = next || 'other';
+    const row = state.currentUser ? this.row() : null; const tok = this._tok;
+    clearInterval(this._tick); clearInterval(this._save); this._tick = this._save = null; this.v = null;
+    if(row && tok) try{ this.send(row, tok).catch(()=>{}); }catch(_){}
+  },
+};
+['click','keydown','scroll','touchstart','input'].forEach(ev=>document.addEventListener(ev, ()=>{ if(PracticeTrack.v) PracticeTrack.act(); }, { passive:true, capture:true }));
+document.addEventListener('visibilitychange', ()=>{ if(!PracticeTrack.v) return; if(document.visibilityState === 'hidden'){ PracticeTrack.tick(); PracticeTrack.save(); } else { PracticeTrack._last = Date.now(); PracticeTrack.act(); } });
+window.addEventListener('pagehide', ()=>{ try{ PracticeTrack.end('other'); }catch(_){} });
+const ACTIVITY_LABEL = { practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습' };
+const ACTIVITY_CLS = { practice_view:'prep', login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end' };
 function presenceLabel(p){
   if(!p) return '';
   if(p.screen==='interview') return `<b>${escapeHtml(p.field_name||'')}</b> ${p.mode==='rehearsal' ? '리허설' : 'AI 대화 면접'}${p.question_no ? ' · 질문 '+p.question_no : ''} 진행 중`;
+  if(p.screen==='practice') return `<b>${escapeHtml(p.field_name||'')}</b> 질문 준비 보는 중`;
   if(p.screen==='result') return '결과 화면 보는 중';
   if(p.screen==='admin') return '관리자 화면';
   if(p.screen==='dashboard') return '대시보드';
@@ -13328,6 +13478,12 @@ async function refreshLiveView(){
     const r2 = await sbAll(()=>sb.from('activity_log').select('*').gte('created_at', since).order('created_at', {ascending:false}), 20000);
     if(r2.error) throw r2.error; logs = (r2.data || []).slice().sort((a,b)=>new Date(b.created_at) - new Date(a.created_at));
   }catch(e){ tableMissing = true; console.warn('[접속 현황 읽기 실패]', e.message||e); }
+  // 2026-10-21a 질문 준비 화면 방문 (최근 30일)
+  try{
+    const since30 = new Date(Date.now() - 30*86400000).toISOString();
+    const r3 = await sbAll(()=>sb.from('practice_visits').select('id,user_id,field_id,field_name,started_at,updated_at,active_secs,viewed_count,viewed_q,total_q,next_step').gte('started_at', since30).order('started_at', {ascending:false}), 5000);
+    if(r3.error) throw r3.error; state.livePractice = r3.data || []; state.livePracticeMissing = false;
+  }catch(e){ state.livePractice = []; state.livePracticeMissing = /practice_visits|relation|schema cache/i.test((e && e.message) || ''); console.warn('[질문 준비 기록 읽기 실패]', (e && e.message) || e); }
   if(note){ note.style.display = tableMissing ? '' : 'none'; if(tableMissing) note.textContent = '접속 기록 표가 아직 없어요. supabase/sql/step5b_activity.sql 을 SQL Editor에서 실행하면 이 화면이 채워집니다.'; }
   state.liveLogs = logs;
   const now = Date.now();
@@ -13374,7 +13530,7 @@ async function refreshLiveView(){
     const idle = now - new Date(p.updated_at).getTime() > 45000;
     const nm = nameOf(p.user_id);
     const stateCls = p.screen==='interview' ? 'practice' : idle ? 'idle' : 'browse';
-    const stateTxt = p.screen==='interview' ? '면접 중' : idle ? '잠시 멈춤' : '둘러보는 중';
+    const stateTxt = p.screen==='interview' ? '면접 중' : idle ? '잠시 멈춤' : p.screen==='practice' ? '질문 보는 중' : '둘러보는 중';
     return `<div class="online-row">
       <span class="av ${stateCls}">${escapeHtml((nm||'?').slice(0,1))}<i class="online-dot${idle?' idle':''}${p.screen==='interview'?' practice':''}"></i></span>
       <span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)} <span class="st-pill ${stateCls}">${stateTxt}</span>${u && u.phone ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(u.phone)}</span>` : ''}</span>
@@ -13393,7 +13549,56 @@ async function refreshLiveView(){
         </div>`).join('')
       : `<div class="qa-empty ok" style="margin:12px;">${targets.length ? '모두 2일 안에 들어왔어요.' : '권한이 있고 이용 기간이 남은 면접자가 없어요.'}</div>`;
   }
+  renderPracticeVisits();
   renderLiveTimeline();
+}
+/* ---------------- 2026-10-21a 관리자: 질문 준비 화면 이용 (접속 현황) ---------------- */
+function pvMin(secs){ const m = Math.round((secs||0)/60); return secs < 60 ? (secs > 0 ? '1분 미만' : '0분') : m < 60 ? m + '분' : Math.floor(m/60) + '시간 ' + (m%60 ? (m%60) + '분' : ''); }
+function pvNextLabel(v){
+  const live = !v.next_step && Date.now() - new Date(v.updated_at).getTime() < 90000;
+  if(live) return '<span class="pv-next live">지금 보는 중</span>';
+  return v.next_step === 'setup' ? '<span class="pv-next setup">면접 준비실로 이동</span>' : v.next_step === 'home' ? '<span class="pv-next">홈으로 나감</span>' : '<span class="pv-next">화면을 닫음</span>';
+}
+/** 사람별로 묶기: 방문 수·머문 시간·펼쳐 본 질문(중복 빼고)·면접 시작 수 */
+function pvGroups(){
+  const users = state.adminUsers || []; const visits = state.livePractice || []; const logs = state.liveLogs || [];
+  const starts = {}; logs.forEach(l=>{ if(l.event === 'interview_start') starts[l.user_id] = (starts[l.user_id] || 0) + 1; });
+  const map = new Map();
+  visits.forEach(v=>{
+    const u = users.find(x=>x.id === v.user_id); if(!u || !isStudentAcct(u)) return;   // 관리자·직원·삭제 계정 제외
+    if(!map.has(v.user_id)) map.set(v.user_id, { u, visits:[], secs:0, qs:new Set(), fields:new Set(), last:v.updated_at, starts: starts[v.user_id] || 0 });
+    const g = map.get(v.user_id); g.visits.push(v); g.secs += v.active_secs || 0; (v.viewed_q || []).forEach(q=>g.qs.add(q)); if(v.field_name) g.fields.add(v.field_name);
+    if(new Date(v.updated_at) > new Date(g.last)) g.last = v.updated_at;
+  });
+  return [...map.values()].sort((a,b)=>new Date(b.last) - new Date(a.last));
+}
+function setPvFilter(v){ state.pvFilter = v; document.querySelectorAll('#pv-seg button').forEach(b=>b.classList.toggle('on', b.dataset.v === v)); renderPracticeVisits(); }
+function togglePvRow(uid){ state.pvOpen = state.pvOpen || new Set(); if(state.pvOpen.has(uid)) state.pvOpen.delete(uid); else state.pvOpen.add(uid); const r = document.querySelector(`#pv-list .pv-row[data-uid="${CSS.escape(uid)}"]`); if(r) r.classList.toggle('open', state.pvOpen.has(uid)); }
+function renderPracticeVisits(){
+  const box = document.getElementById('pv-list'); if(!box) return;
+  if(state.livePracticeMissing){ box.innerHTML = '<div class="qa-empty" style="margin:12px;">질문 준비 기록 표가 아직 없어요. supabase/sql/step25_practice_visits SQL을 실행하면 채워져요.</div>'; return; }
+  const all = pvGroups(); const only = all.filter(g=>!g.starts);
+  const f = state.pvFilter || 'all'; const list = f === 'only' ? only : all;
+  const seg = document.getElementById('pv-seg');
+  if(seg) seg.innerHTML = `<button type="button" data-v="all" class="${f==='all'?'on':''}" onclick="setPvFilter('all')">전체 <b>${all.length}</b>명</button><button type="button" data-v="only" class="${f==='only'?'on':''}" onclick="setPvFilter('only')">면접 없이 질문 준비만 <b>${only.length}</b>명</button>`;
+  state.pvOpen = state.pvOpen || new Set();
+  box.innerHTML = list.length ? list.map(g=>{
+    const u = g.u, uid = u.id;
+    const visits = g.visits.slice().sort((a,b)=>new Date(b.started_at) - new Date(a.started_at));
+    const qs = [...g.qs];
+    const body = visits.map(v=>`<div class="pv-visit"><span class="t">${formatDateShort(v.started_at)} ${new Date(v.started_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false})}</span>
+        <span class="f">${escapeHtml(v.field_name || '')}</span><span>${pvMin(v.active_secs)} 봄</span><span>질문 <b>${v.viewed_count||0}</b>${v.total_q ? ' / ' + v.total_q : ''}개 펼쳐 봄</span>${pvNextLabel(v)}</div>`).join('')
+      + (qs.length ? `<details class="pv-qs"><summary>펼쳐 본 질문 ${qs.length}개 보기</summary><ol>${qs.slice(0,80).map(q=>`<li>${escapeHtml(q)}</li>`).join('')}</ol>${qs.length > 80 ? `<small>외 ${qs.length - 80}개</small>` : ''}</details>` : '');
+    return `<div class="pv-row${state.pvOpen.has(uid) ? ' open' : ''}" data-uid="${escapeHtml(uid)}">
+      <div class="pv-head" onclick="togglePvRow('${escapeHtml(uid)}')">
+        <svg class="person-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        <span class="pv-who"><span class="admin-name">${escapeHtml(u.name || '')}</span><span class="admin-sub">${escapeHtml([...g.fields].join(' · '))}</span></span>
+        <span class="tl-chips"><span class="tl-chip"><b>${g.visits.length}</b>회 방문</span><span class="tl-chip"><b>${pvMin(g.secs)}</b> 봄</span><span class="tl-chip"><b>${qs.length}</b>개 질문</span>${g.starts ? `<span class="tl-chip ok">면접 <b>${g.starts}</b>회 시작</span>` : '<span class="tl-chip warn"><b>면접은 아직 안 함</b></span>'}</span>
+        <span class="pv-last admin-sub">${agoLabel(g.last)}</span>
+      </div>
+      <div class="pv-body">${body}</div>
+    </div>`;
+  }).join('') : `<div class="qa-empty${f==='only' ? ' ok' : ''}" style="margin:12px;">${f === 'only' ? '질문 준비만 보고 면접을 안 한 사람은 없어요.' : '최근 30일 동안 질문 준비 화면을 쓴 면접자가 없어요.'}</div>`;
 }
 function renderLiveTimeline(){
   const wrap = document.getElementById('live-timeline'); if(!wrap) return;
@@ -13401,7 +13606,9 @@ function renderLiveTimeline(){
   const q = normalizeSearch((document.getElementById('live-search')||{}).value || '');
   state.liveOpen = state.liveOpen || new Set();
   const groups = new Map();
-  logs.forEach(l=>{ if(!groups.has(l.user_id)) groups.set(l.user_id, []); groups.get(l.user_id).push(l); });
+  // 2026-10-21a 질문 준비 방문도 같은 줄에 (들어온 시각 기준)
+  const pvEv = (state.livePractice || []).map(v=>({ user_id:v.user_id, event:'practice_view', created_at:v.started_at, detail:{ field:v.field_name, secs:v.active_secs, viewed:v.viewed_count, total:v.total_q, next:v.next_step } }));
+  logs.concat(pvEv).sort((a,b)=>new Date(b.created_at) - new Date(a.created_at)).forEach(l=>{ if(!groups.has(l.user_id)) groups.set(l.user_id, []); groups.get(l.user_id).push(l); });
   const rows = [...groups.entries()].map(([uid, evs])=>{
     const u = users.find(x=>x.id===uid); const nm = u ? (u.name||'') : '(삭제된 계정)'; const ph = u ? (u.phone||'') : '';
     const search = (nm+' '+ph+' '+phoneDigits(ph)).toLowerCase();
@@ -13417,6 +13624,7 @@ function renderLiveTimeline(){
       else if(e.event==='interview_end') extra = `${dt.field||''}${dt.count!=null?' · '+dt.count+'문항':''}${dt.score!=null?' · '+dt.score+'점':''}${dt.duration?' · '+dt.duration:''}`;
       else if(e.event==='interview_abort') extra = `${dt.field||''}${dt.stage?' · '+dt.stage:''}`;
       else if(e.event==='login' && dt.restored) extra = '(자동 로그인)';
+      else if(e.event==='practice_view') extra = `${dt.field||''} · ${pvMin(dt.secs||0)} 봄 · 질문 ${dt.viewed||0}개 펼쳐 봄${dt.next==='setup' ? ' · 면접 준비실로 이동' : ''}`;
       else if(e.event==='intro_coach') extra = `${dt.field||''}${dt.chars?' · '+dt.chars+'자':''}`;
       else if(e.event==='intro_coach_practice') extra = `${dt.sec!=null?dt.sec+'초':''}${dt.cov!=null?' · 대본 '+dt.cov+'%':''}`;
       const t = new Date(e.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
@@ -13424,11 +13632,12 @@ function renderLiveTimeline(){
     }).join('')).join('');
     const activeDays = new Set(evs.map(e=>formatDateFull(e.created_at))).size;
     const aborts = evs.filter(e=>e.event==='interview_abort').length;
+    const preps = evs.filter(e=>e.event==='practice_view').length;
     return `<div class="tl-group${open}" data-uid="${escapeHtml(uid)}">
       <div class="tl-head" onclick="toggleLiveGroup('${escapeHtml(uid)}')">
         <svg class="person-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         <span class="tl-who"><span class="av">${escapeHtml((nm||'?').slice(0,1))}</span><span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span></span>
-        <span class="tl-chips tl-hide"><span class="tl-chip"><b>${activeDays}</b>일 활동</span><span class="tl-chip"><b>${logins}</b>회 접속</span><span class="tl-chip ok"><b>${ends}</b>회 면접 완료</span>${aborts?`<span class="tl-chip warn"><b>${aborts}</b>회 중단</span>`:''}</span>
+        <span class="tl-chips tl-hide"><span class="tl-chip"><b>${activeDays}</b>일 활동</span><span class="tl-chip"><b>${logins}</b>회 접속</span><span class="tl-chip ok"><b>${ends}</b>회 면접 완료</span>${aborts?`<span class="tl-chip warn"><b>${aborts}</b>회 중단</span>`:''}${preps?`<span class="tl-chip"><b>${preps}</b>회 질문 준비</span>`:''}</span>
         <span class="tl-last"><span class="ev-tag ${ACTIVITY_CLS[last.event]||''}">${ACTIVITY_LABEL[last.event]||escapeHtml(last.event)}</span><small>${agoLabel(last.created_at)}</small></span>
       </div>
       <div class="tl-body">${body}</div>
@@ -20130,7 +20339,7 @@ function ttsFillUI(){
   document.getElementById('tts-speed').value = st.speed; document.getElementById('tts-speed-val').textContent = st.speed;
   sel.value = st.preset; document.getElementById('tts-custom').value = st.custom || '';
   const fx = loadSpeechFixes(); document.getElementById('tts-fixes').value = Object.keys(fx).map(k=>k+'='+fx[k]).join('\n');
-  ttsPresetChanged(); ttsModelChanged(); ttsShowSaved();
+  ttsPresetChanged(); ttsModelChanged(); ttsShowSaved(); try{ TcCompare.cost(); }catch(_){}
 }
 function ttsSaveFixes(){ const o = parseSpeechFixes(document.getElementById('tts-fixes').value); saveSpeechFixes(o); showToast('발음 교정 '+Object.keys(o).length+'개를 저장했어요. 이미 녹음된 질문에 적용하려면 "전체 다시 녹음"이 필요해요.'); }
 function ttsReadUI(){
@@ -20167,6 +20376,145 @@ function ttsSave(){
   sb.from('app_settings').upsert({ key:'tts_voice', value: st, updated_at: new Date().toISOString() })
     .then(({ error })=>{ showToast(error ? '이 브라우저에는 저장했지만 공용 저장은 실패했어요: ' + error.message : '저장했어요. 모든 면접자의 면접 화면과 질문 녹음에 이 목소리 설정이 쓰여요.'); });
 }
+
+/* ---------------- 2026-10-20p 관리자: 타입캐스트와 나란히 듣기 (typecast-tts 함수, 관리자 전용) ----------------
+   같은 문장을 A(OpenAI, 위에서 고른 설정)와 B(타입캐스트)로 들어 보는 비교 전용. 면접 목소리 설정은 건드리지 않음.
+   한 번 만든 소리는 이 화면에 기억해 두고 다시 누르면 그대로 재생 → 같은 문장을 여러 번 들어도 크레딧이 더 들지 않음. */
+async function tcFetch(body){
+  const { data: sess } = await sb.auth.getSession();
+  const token = (sess && sess.session && sess.session.access_token) || SUPABASE_ANON_KEY;
+  const res = await fetch(SUPABASE_URL + '/functions/v1/typecast-tts', {
+    method:'POST', headers:{ 'Authorization':'Bearer ' + token, 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' }, body: JSON.stringify(body),
+  });
+  if(!res.ok){
+    let msg = 'HTTP ' + res.status, code = '';
+    try{ const b = await res.json(); if(b && b.error) msg = b.error; code = (b && b.code) || ''; }catch(_){}
+    const err = new Error(msg); err.code = code; err.status = res.status; throw err;
+  }
+  return res;
+}
+const TC_AGE = { child:'어린이', teenager:'10대', young_adult:'청년', middle_age:'중년', elder:'노년' };
+const TC_EMO = { smart:'문맥 따라 자동', normal:'보통', toneup:'톤 높게', tonedown:'톤 낮게', happy:'밝게', sad:'슬프게', angry:'화난', whisper:'속삭임', tender:'부드럽게', calm:'차분하게' };
+const TcCompare = {
+  voices:null, g:'', cache:new Map(), used:0, _seq:0, _sample:null,
+  pickKey:'stenotalk_tc_pick',
+  st(html){ const el = document.getElementById('tc-status'); if(el) el.innerHTML = html; },
+  need(on){ const el = document.getElementById('tc-need'); if(el) el.hidden = !on; },
+  async load(){
+    const btn = document.getElementById('tc-load'); if(btn){ btn.disabled = true; btn.textContent = '불러오는 중…'; }
+    this.st('');
+    try{
+      const res = await tcFetch({ action:'voices' }); const d = await res.json();
+      this.voices = (d.voices || []).filter(v=>v.voice_id);
+      this.need(false);
+      ['tc-chips','tc-pick-row','tc-opt-row'].forEach(id=>{ const el = document.getElementById(id); if(el) el.hidden = false; });
+      if(btn) btn.textContent = '목록 새로고침';
+      this.render();
+    }catch(e){
+      if(e.code === 'no_key'){ this.need(true); this.st(''); }
+      else this.st('<span style="color:#c2401b;">목소리 목록을 못 불러왔어요: ' + escapeHtml(e.message) + '</span>');
+      if(btn) btn.textContent = '목소리 목록 불러오기';
+    }finally{ if(btn) btn.disabled = false; }
+  },
+  setG(g){ this.g = g; document.querySelectorAll('#tc-chips button').forEach(b=>b.classList.toggle('on', b.dataset.g === g)); this.render(); },
+  label(v){
+    const g = /^f/i.test(v.gender) ? '여' : /^m/i.test(v.gender) ? '남' : '';
+    const a = TC_AGE[v.age] || v.age || '';
+    const tail = [g, a].filter(Boolean).join(' ');
+    return v.name + (tail ? ' · ' + tail : '');
+  },
+  render(){
+    const sel = document.getElementById('tc-voice'); if(!sel || !this.voices) return;
+    const list = this.voices.filter(v=>!this.g || String(v.gender).toLowerCase() === this.g);
+    let pick = ''; try{ pick = localStorage.getItem(this.pickKey) || ''; }catch(_){}
+    const prev = sel.value || pick;
+    sel.innerHTML = list.map(v=>`<option value="${escapeHtml(v.voice_id)}">${escapeHtml(this.label(v))}</option>`).join('') || '<option value="">(해당 목소리 없음)</option>';
+    if(prev && list.some(v=>v.voice_id === prev)) sel.value = prev;
+    const c = document.getElementById('tc-count'); if(c) c.textContent = `목소리 ${list.length}개` + (this.g ? ` (전체 ${this.voices.length}개)` : '');
+    this.voiceChanged(true);
+  },
+  cur(){ const id = (document.getElementById('tc-voice')||{}).value; return (this.voices||[]).find(v=>v.voice_id === id) || null; },
+  voiceChanged(quiet){
+    const v = this.cur(); const emo = document.getElementById('tc-emo'); if(!emo) return;
+    if(v && !quiet){ try{ localStorage.setItem(this.pickKey, v.voice_id); }catch(_){} }
+    const keep = emo.value;
+    const list = ['smart'].concat((v && v.emotions && v.emotions.length ? v.emotions : ['normal']).filter(x=>x !== 'smart'));
+    emo.innerHTML = list.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(TC_EMO[x] || x)}</option>`).join('');
+    emo.value = list.includes(keep) ? keep : (list.includes('normal') ? 'normal' : list[0]);
+    const s = document.getElementById('tc-sample'); if(s) s.disabled = !(v && v.preview_url);
+    this.cost();
+  },
+  text(){ return sanitizeForSpeech(((document.getElementById('tts-text')||{}).value || '').trim()); },
+  cost(){
+    const el = document.getElementById('tc-cost'); if(!el) return;
+    const full = this.text().length, n = Math.min(300, full);
+    el.innerHTML = `이 문장 <b>${n}자</b> → 타입캐스트로 처음 들을 때 <b>${n}크레딧</b> (같은 설정으로 다시 들으면 0) · 이 화면에서 쓴 크레딧 <b>${this.used}</b>` + (full > 300 ? ' · <span style="color:#c2401b;">300자까지만 읽어요</span>' : '');
+  },
+  stop(){ this._seq++; try{ StenoVoice.stop(); }catch(_){} if(this._sample){ try{ this._sample.pause(); }catch(_){} this._sample = null; } this.st(''); },
+  sample(){
+    const v = this.cur(); if(!v || !v.preview_url) return;
+    this.stop(); const a = new Audio(v.preview_url); this._sample = a;
+    a.onended = ()=>{ if(this._sample === a){ this._sample = null; this.st(''); } };
+    a.play().then(()=>this.st(`<span class="now"><i class="tc-tag b">B</i>${escapeHtml(v.name)} 샘플 재생 중 (무료, 타입캐스트가 준비한 문장)</span>`)).catch(e=>this.st('샘플을 재생하지 못했어요: ' + escapeHtml(e.message||'')));
+  },
+  async blobA(text){
+    const st = ttsReadUI(); const label = `${st.voice} · ${st.model} · ${st.speed}배`;
+    const key = 'A|' + [text, st.voice, st.model, st.speed, ttsInstructionText(st)].join('|');
+    if(this.cache.has(key)) return { blob:this.cache.get(key), label, cached:true };
+    const blob = await fetchSpeechBlob(text, st.voice, st.speed, st.model, ttsInstructionText(st));
+    this.cache.set(key, blob); return { blob, label, cached:false };
+  },
+  async blobB(text){
+    const v = this.cur(); if(!v){ const e = new Error('먼저 "목소리 목록 불러오기"를 눌러 타입캐스트 목소리를 골라 주세요'); e.code = 'pick'; throw e; }
+    const tempo = parseFloat(document.getElementById('tc-tempo').value) || 1, pitch = parseInt(document.getElementById('tc-pitch').value, 10) || 0, emotion = document.getElementById('tc-emo').value || 'normal';
+    const t = text.slice(0, 300); const key = 'B|' + [t, v.voice_id, tempo, pitch, emotion].join('|');
+    const label = `${v.name} · ${tempo}배 · ${TC_EMO[emotion] || emotion}`;
+    if(this.cache.has(key)) return { blob:this.cache.get(key), label, cached:true };
+    const res = await tcFetch({ action:'tts', text:t, voice_id:v.voice_id, tempo, pitch, emotion });
+    let blob = await res.blob(); if(!blob || blob.size < 100) throw new Error('음성 데이터가 비어 있어요');
+    if(!(blob.type || '').startsWith('audio')) blob = new Blob([blob], { type:'audio/mpeg' });
+    this.cache.set(key, blob); this.used += Number(res.headers.get('X-Chars')) || t.length; this.cost();
+    try{ Activity.log('typecast_preview', { voice:v.voice_id, chars:t.length }); }catch(_){}
+    return { blob, label, cached:false };
+  },
+  playBlob(blob, seq){
+    return new Promise((resolve, reject)=>{
+      if(seq !== this._seq) return resolve(false);
+      const url = URL.createObjectURL(blob); const a = new Audio(url); StenoVoice.audio = a;
+      let fin = false; const done = (ok)=>{ if(fin) return; fin = true; URL.revokeObjectURL(url); if(StenoVoice.audio === a) StenoVoice.audio = null; resolve(ok); };
+      a.onended = ()=>done(true); a.onerror = ()=>done(false); a.onpause = ()=>{ if(!a.ended) done(false); };
+      a.play().catch(e=>{ fin = true; URL.revokeObjectURL(url); reject(e); });
+    });
+  },
+  async play(which){
+    const text = this.text(); if(!text){ showToast('위 "들어볼 문장"을 적어 주세요'); return; }
+    this.stop(); const seq = this._seq;
+    this.st('음성 만드는 중…');
+    const wantA = which !== 'typecast', wantB = which !== 'openai';
+    const [ra, rb] = await Promise.all([
+      wantA ? this.blobA(text).catch(e=>({ err:e })) : null,
+      wantB ? this.blobB(text).catch(e=>({ err:e })) : null,
+    ]);
+    if(seq !== this._seq) return;
+    const errs = [];
+    if(ra && ra.err) errs.push('A(OpenAI): ' + ra.err.message);
+    if(rb && rb.err){ if(rb.err.code === 'no_key') this.need(true); errs.push('B(타입캐스트): ' + (rb.err.code === 'no_key' ? 'API 키가 아직 연결되지 않았어요' : rb.err.message)); }
+    const errHtml = errs.length ? `<div style="color:#c2401b;margin-top:4px;">${errs.map(escapeHtml).join('<br>')}</div>` : '';
+    const seqList = [ra && !ra.err ? ['a', 'OpenAI', ra] : null, rb && !rb.err ? ['b', '타입캐스트', rb] : null].filter(Boolean);
+    if(!seqList.length){ this.st(errHtml); return; }
+    try{
+      for(let i = 0; i < seqList.length; i++){
+        const [t, name, r] = seqList[i];
+        this.st(`<span class="now"><i class="tc-tag ${t}">${t.toUpperCase()}</i>${name} 재생 중 · ${escapeHtml(r.label)}${r.cached ? ' <small>(다시 듣기 · 무료)</small>' : ''}</span>` + errHtml);
+        const ok = await this.playBlob(r.blob, seq);
+        if(!ok || seq !== this._seq) return;
+        if(i < seqList.length - 1) await new Promise(r2=>setTimeout(r2, 700));
+      }
+      if(seq === this._seq) this.st((seqList.length > 1 ? '다 들었어요. 설정을 그대로 두고 다시 누르면 크레딧 없이 다시 들어요.' : '') + errHtml);
+    }catch(e){ this.st('재생하지 못했어요: ' + escapeHtml(e.message || '') + errHtml); }
+  },
+};
+document.addEventListener('input', (e)=>{ if(e.target && e.target.id === 'tts-text') TcCompare.cost(); });
 
 /* ---------------- 관리자: 질문 음성 녹음 (generate-audio 함수를 20개씩 반복 호출) ---------------- */
 const Rec = { running:false, stopFlag:false, status:null };
