@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21r';
+var APP_VERSION = '2026-10-21s';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5429,7 +5429,7 @@ body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
           </div>
           <div id="admin-list"></div>
         </div>
-        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-staff">직원</span>8개 분야를 모두 받은 직원 계정 · 통계에서 빠짐</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. <b>상태·분야</b> 칩으로 골라 본 뒤 맨 위 체크박스를 누르면 지금 보이는 사람만 모두 골라져요.</span></div>
+        <div class="uf-legend lg-list"><b class="lg-t">표시 설명</b><span class="lg-i"><span class="tag tag-ok">이용 중</span>권한 있고 기간이 남음</span><span class="lg-i"><span class="tag tag-warn">권한 대기</span>열어 준 분야 없음</span><span class="lg-i"><span class="tag tag-staff">직원</span>관리자가 직원으로 지정한 계정 · 통계에서 빠짐</span><span class="lg-i"><span class="tag tag-danger">기간 만료</span>연습 차단 · 질문 남기기만</span><span class="lg-i"><span class="status-chip until">~10/30</span>이용 기간</span><span class="lg-p">"준비 단계"는 상세에서 바꿀 수 있고, 체크박스로 여러 명을 골라 <b>분야·이용 기간·준비 단계를 한 번에</b> 바꿀 수 있어요. <b>상태·분야</b> 칩으로 골라 본 뒤 맨 위 체크박스를 누르면 지금 보이는 사람만 모두 골라져요.</span></div>
       </div>
 
       <!-- 승인 요청 (2026-10-16a) -->
@@ -10091,6 +10091,7 @@ async function handleLogin(){
     name: profile.name,
     note: profile.note,
     isAdmin: profile.is_admin,
+    isStaff: !profile.is_admin && !!profile.is_staff,
     allowed: profile.allowed_fields || [],
     status: profile.status || '준비 중',
     phone: profile.phone || '',
@@ -10238,6 +10239,7 @@ async function tryRestoreSession(){
     name: profile.name,
     note: profile.note,
     isAdmin: profile.is_admin,
+    isStaff: !profile.is_admin && !!profile.is_staff,
     allowed: profile.allowed_fields || [],
     status: profile.status || '준비 중',
     phone: profile.phone || '',
@@ -13659,7 +13661,7 @@ const Activity = {
 const PracticeGuard = {
   on:false, _logT:{}, _toastT:0, _hideT:null, _bound:false,
   set(active){
-    const cu = state.currentUser; const staff = !!(cu && FIELDS.length && FIELDS.every(f=>(cu.allowed||[]).includes(f.id)));   // 직원(8개 분야 모두)도 제외
+    const cu = state.currentUser; const staff = !!(cu && cu.isStaff);   // 직원 계정도 제외 (2026-10-21s profiles.is_staff)
     const want = !!(active && cu && !cu.isAdmin && !staff);
     this.on = want; document.body.classList.toggle('pq-guard', want);
     if(!want) this.show(true);
@@ -18729,7 +18731,7 @@ async function renderAdmin(){
         </div>
         ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
-        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="8개 분야를 모두 받은 직원 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
+        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
       <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
@@ -18909,9 +18911,9 @@ function fmtMD(ymd){ const [y,m,d] = ymd.split('-'); const w = ['일','월','화
 function scorePillClass(s){ s = Number(s)||0; return s >= 85 ? 'hi' : s >= 75 ? '' : s >= 60 ? 'mid' : 'low'; }
 /* 분야 배지 (면접자 관리 · 면접 기록): 아이콘 동그라미 + 짧은 이름. 4개 이상이면 아이콘만 + "n개 분야", 누르면 전체 이름이 펼쳐짐 */
 const FIELD_HUES = { assembly:'#2C55D6', council:'#0E7C5C', court:'#7A4D00', prosecution:'#5B3FD6', sunflower:'#D97706', education:'#0F766E', corporate:'#475569', freelance:'#BE185D' };
-/* 직원 계정 (2026-10-20j 사용자 결정): 관리자가 아니면서 8개 분야를 모두 받은 계정 = 직원·강사 테스트용
+/* 직원 계정: 2026-10-21s부터 profiles.is_staff로 표시(관리자가 지정, 분야는 골라서 엶). 칸이 없던 예전 데이터만 '8개 분야 모두'로 판단
  * → 면접자 관리에서 '직원'으로 따로 모으고, 현황·통계·분야별 인원·연락할 사람 등 면접자 숫자에서는 뺌 */
-function isStaffAcct(u){ if(!u || u.is_admin) return false; const a = u.allowed_fields || []; return FIELDS.length > 0 && FIELDS.every(f=>a.includes(f.id)); }
+function isStaffAcct(u){ if(!u || u.is_admin) return false; if(typeof u.is_staff === 'boolean') return u.is_staff; const a = u.allowed_fields || []; return FIELDS.length > 0 && FIELDS.every(f=>a.includes(f.id)); }
 function isStudentAcct(u){ return !!u && !u.is_admin && !isStaffAcct(u); }
 function acctChip(u){ return !u ? '' : u.is_admin ? ' <span class="perm-chip">관리자</span>' : isStaffAcct(u) ? ' <span class="perm-chip staff">직원</span>' : ''; }
 function fieldBadgesHtml(ids){
@@ -21916,10 +21918,10 @@ function readPermChecklist(containerId){
 
 /* ---------------- 관리자 지정 / 해제 ---------------- */
 
-/* 2026-10-21q 계정 구분 바꾸기: 면접자 / 직원 / 관리자
-   - 직원 = 관리자가 아니면서 8개 분야를 모두 받은 계정(isStaffAcct). 직원으로 바꾸면 8개 분야를 모두 열고 이용 기간을 '기한 없음'으로 둠
-   - 직원 → 면접자: 분야 권한을 모두 비움(권한 관리에서 다시 열어 줌)
-   - 관리자 → 면접자: 관리자 표시만 끔. 8개 분야를 다 갖고 있었으면 직원으로 보이지 않게 분야도 비움
+/* 2026-10-21q·s 계정 구분 바꾸기: 면접자 / 직원 / 관리자
+   - 21s: 직원은 profiles.is_staff로 표시하고, 분야는 관리자가 골라서 엶(직원으로 바꾸면 [권한 관리] 창을 바로 띄움). 모든 분야가 열리는 건 관리자뿐
+   - 직원 이용 기간은 '기한 없음'
+   - 다른 구분으로 바꿔도 열어 둔 분야는 그대로 둠
    - 본인 계정은 바꿀 수 없음 */
 function acctRoleOf(u){ return !u ? 'student' : u.is_admin ? 'admin' : isStaffAcct(u) ? 'staff' : 'student'; }
 const ACCT_ROLE_NAME = { student:'면접자', staff:'직원', admin:'관리자' };
@@ -21929,37 +21931,35 @@ function paintAcctRole(u){
   box.querySelectorAll('.chip').forEach(c=>{ c.classList.toggle('sel', c.dataset.role === cur); c.disabled = isSelf; });
   const hint = document.getElementById('au-role-hint');
   if(hint) hint.textContent = isSelf ? '본인 계정의 구분은 다른 관리자만 바꿀 수 있어요.'
-    : cur === 'admin' ? '관리자는 모든 면접자 정보와 기록을 보고 고칠 수 있어요.'
-    : cur === 'staff' ? '직원은 8개 분야를 모두 연습할 수 있고, 현황·통계에서는 빠져요.'
-    : '바꿀 구분을 누르면 확인 창이 떠요. 직원은 8개 분야를 모두 열고 통계에서 빠져요. 관리자는 관리자 화면을 쓸 수 있어요.';
+    : cur === 'admin' ? '관리자는 모든 분야를 연습할 수 있고, 모든 면접자 정보와 기록을 보고 고칠 수 있어요.'
+    : cur === 'staff' ? '직원은 [권한 관리]에서 골라 준 분야만 연습할 수 있고, 현황·통계에서는 빠져요.'
+    : '바꿀 구분을 누르면 확인 창이 떠요. 직원은 골라 준 분야만 열리고 통계에서 빠져요. 관리자는 모든 분야와 관리자 화면을 쓸 수 있어요.';
 }
 async function setAcctRole(userId, role){
   const u = (state.adminUsers||[]).find(x=>x.id===userId); if(!u) return;
   if(state.currentUser && userId === state.currentUser.id){ showToast('본인 계정의 구분은 여기서 바꿀 수 없어요 (다른 관리자에게 요청하세요)'); return; }
   const cur = acctRoleOf(u); if(cur === role) return;
   const nm = u.name || '이 계정';
-  const allIds = FIELDS.map(f=>f.id);
-  const hasAll = allIds.every(id=>(u.allowed_fields||[]).includes(id));
   let patch = {}, msg = '';
   if(role === 'admin'){
-    patch = { is_admin:true };
-    msg = `${nm}님을 관리자로 바꿀까요?\n\n관리자는 모든 면접자의 이름·연락처·기록을 보고, 권한·기간·메모를 고치고, 다른 사람을 관리자로 지정할 수 있어요. 믿을 수 있는 교육팀에게만 주세요.\n\n${nm}님은 다음에 로그인(또는 새로고침)하면 관리자 화면이 보여요.`;
+    patch = { is_admin:true, is_staff:false };
+    msg = `${nm}님을 관리자로 바꿀까요?\n\n관리자는 모든 분야를 연습할 수 있고, 모든 면접자의 이름·연락처·기록을 보고, 권한·기간·메모를 고치고, 다른 사람을 관리자로 지정할 수 있어요. 믿을 수 있는 교육팀에게만 주세요.\n\n${nm}님은 다음에 로그인(또는 새로고침)하면 관리자 화면이 보여요.`;
   } else if(role === 'staff'){
-    patch = { is_admin:false, allowed_fields: allIds, access_until: null };
-    msg = `${nm}님을 직원으로 바꿀까요?\n\n· 8개 분야를 모두 열고, 이용 기간은 '기한 없음'으로 바꿔요.\n· 현황·통계(면접자 수, 평균 점수 등)에서는 빠져요.${cur === 'admin' ? '\n· 관리자 권한은 없어져요.' : ''}`;
+    patch = { is_admin:false, is_staff:true, access_until: null };
+    msg = `${nm}님을 직원으로 바꿀까요?\n\n· 연습할 분야는 바꾼 뒤 뜨는 [권한 관리] 창에서 골라 주세요.\n· 이용 기간은 '기한 없음'으로 바꿔요.\n· 현황·통계(면접자 수, 평균 점수 등)에서는 빠져요.${cur === 'admin' ? '\n· 관리자 권한은 없어져요.' : ''}`;
   } else {
-    patch = { is_admin:false };
-    if(cur === 'staff' || hasAll) patch.allowed_fields = [];
-    msg = `${nm}님을 면접자로 바꿀까요?${cur === 'admin' ? '\n\n· 관리자 화면을 더 이상 쓸 수 없어요.' : ''}${patch.allowed_fields ? '\n· 열어 둔 분야 권한이 모두 빠져요. 바꾼 뒤 [권한 관리]에서 지원 분야를 다시 열어 주세요.' : ''}`;
+    patch = { is_admin:false, is_staff:false };
+    msg = `${nm}님을 면접자로 바꿀까요?${cur === 'admin' ? '\n\n· 관리자 화면을 더 이상 쓸 수 없어요.\n· 열어 둔 분야만 연습할 수 있어요. 필요하면 [권한 관리]에서 지원 분야를 열어 주세요.' : '\n\n· 열어 둔 분야는 그대로예요.\n· 다시 현황·통계에 포함돼요.'}`;
   }
   if(!confirm(msg)) return;
   let { error } = await sb.from('profiles').update(patch).eq('id', userId);
   if(error && 'access_until' in patch && /access_until/.test(error.message||'')){ const p2 = Object.assign({}, patch); delete p2.access_until; ({ error } = await sb.from('profiles').update(p2).eq('id', userId)); }
-  if(error){ showToast('바꾸지 못했어요: ' + (error.message||error)); return; }
+  if(error){ showToast('바꾸지 못했어요: ' + (/is_staff/.test(error.message||'') ? '직원 표시 칸이 아직 없어요 (SQL step31 필요)' : (error.message||error))); return; }
   Object.assign(u, patch);
-  showToast(`${nm}님을 ${ACCT_ROLE_NAME[role]}(으)로 바꿨어요.` + (role === 'admin' ? ' 다음 로그인부터 관리자 화면이 보여요.' : role === 'student' && patch.allowed_fields ? ' [권한 관리]에서 분야를 다시 열어 주세요.' : ''), 'ok');
+  showToast(`${nm}님을 ${ACCT_ROLE_NAME[role]}(으)로 바꿨어요.` + (role === 'admin' ? ' 다음 로그인부터 관리자 화면이 보여요.' : role === 'staff' ? ' 열어 줄 분야를 골라 주세요.' : ''), 'ok');
   const open = document.getElementById('modal-admin-user'); const wasOpen = open && open.classList.contains('active') && state.editingUserId === userId;
   try{ await renderAdmin(); }catch(_){}
+  if(role === 'staff'){ try{ closeAdminUserModal(); }catch(_){} try{ openPermissionModal(userId); }catch(_){} return; }
   if(wasOpen){ try{ openAdminUserDetail(userId); }catch(_){} }
 }
 async function toggleAdminRole(userId, makeAdmin){
