@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21n';
+var APP_VERSION = '2026-10-21o';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4685,6 +4685,36 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
 /* ④ 휴대폰을 가로로 눕혔을 때(높이가 낮을 때) 위쪽 메뉴가 화면을 덜 가리게 */
 @media (max-height: 500px) and (orientation: landscape){
   .d3-hdr, .a3-hdr{ position:static; }
+}
+
+/* ===== 2026-10-21o 휴대폰(아이폰·갤럭시) 점검 수정 ===== */
+@keyframes toastInTop{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
+/* 아이폰 사파리: 100vh가 아래 주소창 높이까지 포함해서, 창 아래쪽 버튼이 가려지던 곳은 실제 보이는 높이(dvh)로 */
+.hs-sheet{ max-height:calc(100dvh - 32px); }
+#screen-pending.pd-locked .pd-card{ max-height:calc(100dvh - 48px); }
+#screen-pending.pd-locked .pd{ min-height:100dvh; }
+/* '준비되셨나요?' 창: 안내가 길면 안내만 스크롤하고 '시작' 버튼은 항상 보이게 (작은 휴대폰에서 버튼이 잘리던 문제) */
+.modal-box > .ready-steps{ flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+/* 면접 준비 창: 마이크·카메라 이름이 길면(블루투스 이어폰 등) 칸이 창 밖으로 밀려나던 문제 */
+body.v3-ui #modal-setup .dev-card{ min-width:0; }
+@media (max-width:760px){
+  body.v3-ui #modal-setup .dev-grid{ grid-template-columns:minmax(0,1fr); }
+  /* 알림(토스트)은 위쪽에: 아래쪽에 뜨면 '리허설 시작' 같은 큰 버튼을 가렸음 */
+  #toast-container, body.v3-ui.fab-compact #toast-container{ top:calc(10px + env(safe-area-inset-top, 0px)); bottom:auto; }
+  #toast-container .toast{ animation:toastInTop .2s ease both; } #toast-container .toast.out{ transform:translateY(-8px); }
+  /* 의견·문제 보내기: 좁은 화면에서 '문제가 있어요'가 칸에 꽉 끼던 것 */
+  #fb-kind{ gap:6px; } #fb-kind .chip{ padding:9px 4px; font-size:13.5px; white-space:nowrap; min-height:42px; }
+  /* 누르기 쉽게: 작은 링크·버튼의 누르는 영역을 키움 (보이는 모양은 거의 그대로) */
+  #screen-login.v3 .lg-kakao{ height:38px; }
+  .consent-row a{ display:inline-block; padding:6px 2px; margin:-6px 0; }
+  .signup-login-link a{ display:inline-block; padding:8px 4px; margin:-8px 0; }
+  #screen-practice.v3 .p3-tips-toggle{ min-height:36px; }
+  body.v3-ui #modal-setup .dev-check{ min-height:36px; }
+  #screen-pending .pd-logout{ padding:10px 8px; }
+  /* 작은 글자 키우기 (10.5~11px → 12px) */
+  .pw-rules span{ font-size:12px; padding:3px 8px; }
+  .signup-step b{ font-size:11.5px; } .signup-step{ font-size:12.5px; } .signup-hint{ font-size:12.5px; }
+  .mp-info-lbl{ font-size:12px; }
 }
 </style>
 </head>
@@ -11489,7 +11519,7 @@ function selectDashField(fieldId){
   renderTrendLine(document.getElementById('trend-chart'), pool.slice(0,6).slice().reverse());
 }
 function startSelectedField(){ if(!state.dashField){ showToast('연습할 분야가 아직 없어요. 관리자에게 문의해 주세요.'); return; } openPractice(state.dashField); }
-function toggleUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('d3-user-menu'), b = document.getElementById('d3-user-btn'); if(!m) return; const open = m.style.display === 'none'; m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+function toggleUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('d3-user-menu'), b = document.getElementById('d3-user-btn'); if(!m) return; const open = m.style.display === 'none'; if(open){ try{ const nb = document.getElementById('nt-bubble'); if(nb && !nb.hidden){ nb.classList.remove('on'); nb.hidden = true; } }catch(_){} }   /* 2026-10-21o 메뉴를 열면 종 말풍선을 숨김 (휴대폰에서 메뉴를 가렸음). 다음 순서(합격 후기 팝업)는 말풍선 타이머가 그대로 이어감 */ m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 function toggleAdminUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('a3-user-menu'), b = document.getElementById('a3-user-btn'); if(!m) return; const open = m.style.display === 'none'; m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 function closeAdminUserMenu(){ const m = document.getElementById('a3-user-menu'), b = document.getElementById('a3-user-btn'); if(m) m.style.display = 'none'; if(b) b.setAttribute('aria-expanded','false'); }
 document.addEventListener('click', (e)=>{ const u = document.querySelector('#screen-admin .d3-user'); if(u && !u.contains(e.target)) closeAdminUserMenu(); });
