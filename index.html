@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21o';
+var APP_VERSION = '2026-10-21q';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -490,7 +490,7 @@ var APP_VERSION = '2026-10-21o';
   .au-hint{margin:6px 0 0;font-size:11.5px;color:var(--slate-400);}
   .au-edit-actions{display:flex;justify-content:flex-end;margin-top:2px;}
   .au-edit-actions .btn{flex:0 0 auto;padding:8px 22px;font-size:13px;}
-  @media(max-width:480px){.au-edit-row{flex-direction:column;align-items:stretch;gap:6px;}.au-edit-row-top .au-label{padding-top:0;}.au-status,.au-phone{flex:1 1 auto;width:100%;}}
+  @media(max-width:480px){.au-edit-row{flex-direction:column;align-items:stretch;gap:6px;}.au-edit-row-top .au-label{padding-top:0;}.au-label{flex:0 0 auto;}.au-status,.au-phone{flex:1 1 auto;width:100%;}}
   /* 복습 모드 */
   .review-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--slate-100);font-size:13px;}
   .review-row:last-child{border-bottom:none;}
@@ -4716,6 +4716,24 @@ body.v3-ui #modal-setup .dev-card{ min-width:0; }
   .signup-step b{ font-size:11.5px; } .signup-step{ font-size:12.5px; } .signup-hint{ font-size:12.5px; }
   .mp-info-lbl{ font-size:12px; }
 }
+
+/* ===== 2026-10-21p 질문 준비 화면 보호: 복사·인쇄 막기, PC 캡처 방해 (관리자 제외) ===== */
+body.pq-guard #screen-practice{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+body.pq-guard #screen-practice input, body.pq-guard #screen-practice textarea{ -webkit-user-select:text; user-select:text; -webkit-touch-callout:default; }
+body.pq-guard #screen-practice img{ -webkit-user-drag:none; }
+#pq-shield{ position:fixed; inset:0; z-index:190; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(246,245,243,.72); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+body.pq-guard.pq-hide #pq-shield{ display:flex; }
+body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
+#pq-shield p{ margin:0; max-width:320px; padding:16px 20px; border-radius:14px; background:#1f1f21; color:#fff; font-size:14.5px; font-weight:600; line-height:1.55; text-align:center; word-break:keep-all; box-shadow:0 14px 34px rgba(0,0,0,.25); }
+#pq-print-msg{ display:none; }
+@media print{
+  body.pq-guard #screen-practice, body.pq-guard .modal-overlay, body.pq-guard #pq-shield{ display:none !important; }
+  body.pq-guard #pq-print-msg{ display:block !important; padding:60px 20px; font-size:18px; text-align:center; }
+}
+
+/* 2026-10-21q 상세 창 '계정 구분' */
+.au-role{ max-width:360px; } .au-role .chip{ min-height:38px; font-weight:600; } .au-role .chip:disabled{ opacity:.55; cursor:not-allowed; }
+.au-role .chip.sel{ background:var(--c-ink,#1c1c1e); border-color:var(--c-ink,#1c1c1e); color:#fff; }
 </style>
 </head>
 <body>
@@ -4887,6 +4905,8 @@ body.v3-ui #modal-setup .dev-card{ min-width:0; }
   </div>
 </div>
 <div id="toast-container"></div>
+<div id="pq-shield" aria-hidden="true"><p>질문 준비 화면은 다른 창으로 나가거나 캡처하려고 하면 내용을 가려 둬요.<br>화면을 누르면 다시 보여요.</p></div>
+<div id="pq-print-msg">질문 준비 화면은 인쇄하거나 PDF로 저장할 수 없어요.</div>
 <div id="update-bar" class="update-bar" hidden role="status" aria-live="polite">
   <span class="ub-dot" aria-hidden="true"></span>
   <div class="ub-txt"><b>새 버전이 나왔어요</b><span>새로고침하면 바로 적용돼요. 저장된 기록은 그대로예요.</span></div>
@@ -6839,6 +6859,17 @@ body.v3-ui #modal-setup .dev-card{ min-width:0; }
     </div>
     <div class="modal-body modal-scroll">
       <div class="au-edit-card">
+        <div class="au-edit-row au-edit-row-top" id="au-role-row">
+          <span class="au-label">계정 구분</span>
+          <div style="flex:1;min-width:0;">
+            <div class="chip-row au-role" id="au-role">
+              <button type="button" class="chip" data-role="student" onclick="setAcctRole(state.editingUserId, 'student')">면접자</button>
+              <button type="button" class="chip" data-role="staff" onclick="setAcctRole(state.editingUserId, 'staff')">직원</button>
+              <button type="button" class="chip" data-role="admin" onclick="setAcctRole(state.editingUserId, 'admin')">관리자</button>
+            </div>
+            <p class="au-hint" id="au-role-hint"></p>
+          </div>
+        </div>
         <div class="au-edit-row">
           <label class="au-label" for="au-phone">휴대폰</label>
           <input id="au-phone" type="tel" inputmode="numeric" class="au-phone" placeholder="010-1234-5678" maxlength="13" oninput="this.value=formatPhone(this.value)">
@@ -9666,6 +9697,7 @@ function showScreen(id){
   try{ if(id !== 'screen-result' && typeof AnswerAudio !== 'undefined') AnswerAudio.stop(); }catch(_){}
   try{ if(id !== 'screen-dashboard' && typeof Tour !== 'undefined' && Tour.on){ Tour.on = false; const t = document.getElementById('tour'); if(t) t.hidden = true; document.body.classList.remove('tour-on'); } }catch(_){}
   if(id !== 'screen-practice'){ try{ PracticeTrack.end(id === 'screen-dashboard' ? 'home' : 'other'); }catch(_){} }   // 2026-10-21a 질문 준비 방문 마무리
+  try{ PracticeGuard.set(id === 'screen-practice'); }catch(_){}   // 2026-10-21p 질문 준비 화면 보호
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
@@ -13618,6 +13650,63 @@ const Activity = {
    면접자가 '질문 준비'(질문 의도·참고 문장)에 들어오면 방문 한 줄을 만들고, 머무는 동안 30초마다
    실제로 본 시간(화면이 켜져 있고 5분 안에 손댄 시간)·펼쳐 본 질문을 갱신 → 관리자 '접속 현황'에서 확인.
    관리자 계정은 기록하지 않음. 저장은 화면을 닫는 순간에도 가도록 keepalive 요청으로 보냄. */
+
+/* 2026-10-21p 질문 준비 화면 보호 (면접자만, 관리자는 제외)
+   - 글자 선택·복사·잘라내기·오른쪽 클릭·끌기·인쇄(PDF 저장)·Ctrl/Cmd+C·A·P·S·U 막기
+   - PC 캡처 방해: PrintScreen을 누르면 클립보드를 비우고 잠깐 가림, Windows/⌘ 키(캡처 단축키의 시작)나 창을 벗어나면 내용을 흐리게 가림
+   - 시도는 activity_log 'capture_try'로 남김(같은 방법은 1분에 한 번) → 관리자 접속 현황·현황 요약에 보임
+   ※ 휴대폰 자체 캡처·화면 녹화는 웹페이지가 막을 수 없음 */
+const PracticeGuard = {
+  on:false, _logT:{}, _toastT:0, _hideT:null, _bound:false,
+  set(active){
+    const want = !!(active && state.currentUser && !state.currentUser.isAdmin);
+    this.on = want; document.body.classList.toggle('pq-guard', want);
+    if(!want) this.show(true);
+    if(want && !this._bound) this.bind();
+  },
+  inPractice(el){ return !!(el && el.closest && el.closest('#screen-practice')); },
+  isField(el){ return !!(el && el.closest && el.closest('input, textarea, select, [contenteditable="true"]')); },
+  note(how, toast){
+    const now = Date.now();
+    if(toast !== false && now - this._toastT > 2500){ this._toastT = now; try{ showToast('질문 준비 화면의 내용은 복사·캡처할 수 없어요.', 'warn'); }catch(_){} }
+    if(this._logT[how] && now - this._logT[how] < 60000) return; this._logT[how] = now;
+    try{ Activity.log('capture_try', { how, field: state.selectedField ? state.selectedField.name : null }); }catch(_){}
+  },
+  hide(ms){ if(!this.on) return; clearTimeout(this._hideT); document.body.classList.add('pq-hide'); if(ms) this._hideT = setTimeout(()=>this.show(), ms); },
+  show(force){ clearTimeout(this._hideT); if(force || document.hasFocus()) document.body.classList.remove('pq-hide'); },
+  clearClip(){ try{ if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('').catch(()=>{}); }catch(_){} },
+  bind(){
+    this._bound = true; const G = this;
+    const block = (how, toast)=>(e)=>{ if(!G.on) return; const t = e.target; if(!G.inPractice(t) && !(how==='복사' && G.selInPractice())) return; if(G.isField(t)) return; e.preventDefault(); G.note(how, toast); };
+    document.addEventListener('copy', block('복사'), true);
+    document.addEventListener('cut', block('복사'), true);
+    document.addEventListener('contextmenu', block('오른쪽 클릭·길게 누르기'), true);
+    document.addEventListener('dragstart', block('끌어서 옮기기', false), true);
+    document.addEventListener('selectstart', (e)=>{ if(G.on && G.inPractice(e.target) && !G.isField(e.target)) e.preventDefault(); }, true);
+    document.addEventListener('keydown', (e)=>{
+      if(!G.on) return;
+      if(e.key === 'PrintScreen'){ G.clearClip(); G.hide(1800); G.note('PrintScreen'); return; }
+      if(e.key === 'Meta' || e.key === 'OS'){ G.hide(); return; }   // Windows 키(+Shift+S)·Mac ⌘(+Shift+3/4/5) 캡처의 시작
+      if(e.metaKey && e.shiftKey && /^[345sS]$/.test(e.key)){ G.hide(2500); G.note('캡처 단축키'); return; }
+      const mod = e.ctrlKey || e.metaKey; if(!mod) return;
+      const k = String(e.key||'').toLowerCase();
+      if(k === 'a' && G.isField(document.activeElement)) return;
+      if(k === 'c' || k === 'x'){ if(G.isField(document.activeElement)) return; e.preventDefault(); G.note('복사'); return; }
+      if(k === 'a' || k === 'p' || k === 's' || k === 'u'){ e.preventDefault(); G.note(k==='p' ? '인쇄' : k==='s' ? '페이지 저장' : k==='u' ? '소스 보기' : '전체 선택'); }
+    }, true);
+    document.addEventListener('keyup', (e)=>{
+      if(!G.on) return;
+      if(e.key === 'PrintScreen'){ G.clearClip(); G.hide(1800); G.note('PrintScreen'); return; }
+      if(e.key === 'Meta' || e.key === 'OS') setTimeout(()=>G.show(), 400);
+    }, true);
+    window.addEventListener('beforeprint', ()=>{ if(G.on) G.note('인쇄', false); });
+    window.addEventListener('blur', ()=>{ if(G.on) G.hide(); });
+    window.addEventListener('focus', ()=>{ if(G.on) setTimeout(()=>G.show(), 150); });
+    document.addEventListener('visibilitychange', ()=>{ if(!G.on) return; if(document.visibilityState === 'hidden') G.hide(); else setTimeout(()=>G.show(), 150); });
+    const sh = document.getElementById('pq-shield'); if(sh) sh.addEventListener('pointerdown', ()=>{ try{ window.focus(); }catch(_){} G.show(true); });
+  },
+  selInPractice(){ try{ const s = window.getSelection(); return !!(s && s.anchorNode && this.inPractice(s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement)); }catch(_){ return false; } },
+};
 const PracticeTrack = {
   v:null, off:false, _tick:null, _save:null, _last:0, lastAct:0, dirty:false, _tok:'', IDLE:5*60*1000,
   can(){ return !!(state.currentUser && !state.currentUser.isAdmin && !this.off); },
@@ -13675,8 +13764,8 @@ const PracticeTrack = {
 ['click','keydown','scroll','touchstart','input'].forEach(ev=>document.addEventListener(ev, ()=>{ if(PracticeTrack.v) PracticeTrack.act(); }, { passive:true, capture:true }));
 document.addEventListener('visibilitychange', ()=>{ if(!PracticeTrack.v) return; if(document.visibilityState === 'hidden'){ PracticeTrack.tick(); PracticeTrack.save(); } else { PracticeTrack._last = Date.now(); PracticeTrack.act(); } });
 window.addEventListener('pagehide', ()=>{ try{ PracticeTrack.end('other'); }catch(_){} });
-const ACTIVITY_LABEL = { practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습' };
-const ACTIVITY_CLS = { practice_view:'prep', login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end' };
+const ACTIVITY_LABEL = { practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습', capture_try:'복사·캡처 시도' };
+const ACTIVITY_CLS = { practice_view:'prep', login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end', capture_try:'abort' };
 function presenceLabel(p){
   if(!p) return '';
   if(p.screen==='interview') return `<b>${escapeHtml(p.field_name||'')}</b> ${p.mode==='rehearsal' ? '리허설' : 'AI 대화 면접'}${p.question_no ? ' · 질문 '+p.question_no : ''} 진행 중`;
@@ -13860,6 +13949,7 @@ function renderLiveTimeline(){
       else if(e.event==='login' && dt.restored) extra = '(자동 로그인)';
       else if(e.event==='practice_view') extra = `${dt.field||''} · ${pvMin(dt.secs||0)} 봄 · 질문 ${dt.viewed||0}개 펼쳐 봄${dt.next==='setup' ? ' · 면접 준비실로 이동' : ''}`;
       else if(e.event==='intro_coach') extra = `${dt.field||''}${dt.chars?' · '+dt.chars+'자':''}`;
+      else if(e.event==='capture_try') extra = `${dt.field ? dt.field + ' 질문 준비 · ' : '질문 준비 · '}${dt.how||''}`;
       else if(e.event==='intro_coach_practice') extra = `${dt.sec!=null?dt.sec+'초':''}${dt.cov!=null?' · 대본 '+dt.cov+'%':''}`;
       const t = new Date(e.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
       return `<div class="tl-ev"><span class="t">${t}</span><span class="ev-tag ${ACTIVITY_CLS[e.event]||''}">${ACTIVITY_LABEL[e.event]||escapeHtml(e.event)}</span><span>${escapeHtml(extra)}</span></div>`;
@@ -18472,6 +18562,7 @@ async function renderAdmin(){
     (usage||[]).forEach(u=>{ state.adminAiUsage[u.user_id] = u; });
     await AiSwitch.load();
   }catch(e){ console.warn('[AI 사용량 조회 실패 — step7_ai_usage_limit.sql 실행 여부 확인]', e.message||e); }
+  try{ const { data: ct } = await sb.from('activity_log').select('user_id,created_at').eq('event','capture_try').gte('created_at', new Date(Date.now()-7*86400000).toISOString()).limit(1000); state.captureTries = ct || []; }catch(_){ state.captureTries = []; }   // 2026-10-21p 질문 준비 화면 복사·캡처 시도
   try{ const { data: fbRows } = await sb.from('feedback').select('id,status,auto,message,created_at').order('created_at',{ascending:false}).limit(500); if(fbRows){ state.feedbackRows = state.feedbackRows && state.feedbackRows.length && state.feedbackRows[0].detail !== undefined ? state.feedbackRows : fbRows; const badge = document.getElementById('fb-nav-badge'); if(badge){ const n = fbRows.filter(fbAlert).length; badge.textContent = n; badge.style.display = n ? '' : 'none'; try{ AdminFb.set(n); }catch(_){} } } }catch(_){}
   // 2026-10-16a: 서류 합격 증빙(승인 요청) — 확인 대기 건수와 사람별 표시
   state.apSubmitted = {};
@@ -18553,6 +18644,7 @@ async function renderAdmin(){
     const nearCap = Object.entries(state.adminAiUsage||{}).filter(([id,u])=>{ const p = users.find(x=>x.id===id); if(!p || !isStudentAcct(p)) return false; const lim = AiSwitch.limits.total + (p.ai_bonus||0); return lim && u.used_total >= lim*0.8; }).length;
     if(nearCap) items.push({ cls:'', txt:`<b>${nearCap}명</b>이 AI 면접 총 한도의 80% 이상을 썼어요`, go:"adminGo('users','')", btn:'횟수 추가' });
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn); if(dw.length) items.push({ cls:'warn', txt:`<b>${dw.length}명</b>이 최근 7일 동안 여러 기기를 번갈아 썼어요 <small>(${dw.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${dw.length>4?' 외':''} · 계정 공유 의심)</small>`, go:"adminGo('users','__devwarn')", btn:'확인' }); }
+    { const ct = state.captureTries || []; const ids = [...new Set(ct.map(x=>x.user_id))]; if(ids.length){ const nm = ids.map(id=>{ const u = users.find(x=>x.id===id); return u ? escapeHtml(u.name||'') : ''; }).filter(Boolean); items.push({ cls:'', txt:`<b>${ids.length}명</b>이 최근 7일 동안 질문 준비 화면을 복사·캡처하려 했어요 <small>(${nm.slice(0,4).join(', ')}${nm.length>4?' 외':''} · ${ct.length}번)</small>`, go:"adminGo('live')", btn:'접속 현황 보기' }); } }
     const fbNew = (state.feedbackRows||[]).filter(fbAlert).length;
     if(fbNew) items.push({ cls:'warn', txt:`아직 안 읽은 <b>의견·문제 ${fbNew}건</b>이 있어요${(state.feedbackRows||[]).some(r=>fbAlert(r) && r.auto) ? ' <small>(자동 기록된 오류 포함)</small>' : ''}`, go:"adminGo('feedback')", btn:'읽으러 가기' });
     todoEl.innerHTML = `<div class="ov-todo-title"><span>확인이 필요한 것</span><small>${items.length ? items.length+'개 항목' : '0개 항목'}</small></div>` + (items.length
@@ -18645,7 +18737,7 @@ async function renderAdmin(){
         <button class="btn-manage" onclick="openAdminUserDetail('${u.id}')">상세</button>
         <button class="btn-manage${isPending ? ' primary' : ''}" onclick="openPermissionModal('${u.id}')">권한 관리</button>
         ${isSelf ? '' : `<details class="row-more"><summary class="btn-manage" title="더 보기">⋯</summary><div class="row-menu">
-          ${u.is_admin ? `<button onclick="toggleAdminRole('${u.id}', false)">관리자 해제</button>` : `<button onclick="toggleAdminRole('${u.id}', true)">관리자로 지정</button>`}
+          ${u.is_admin ? `<button onclick="setAcctRole('${u.id}', 'student')">관리자 해제 (면접자로)</button>` : isStaff ? `<button onclick="setAcctRole('${u.id}', 'student')">직원 해제 (면접자로)</button><button onclick="setAcctRole('${u.id}', 'admin')">관리자로 지정</button>` : `<button onclick="setAcctRole('${u.id}', 'staff')">직원으로 지정</button><button onclick="setAcctRole('${u.id}', 'admin')">관리자로 지정</button>`}
           <button class="danger" onclick="deleteUserProfile('${u.id}')">이 사람 삭제</button>
         </div></details>`}
       </div>
@@ -21667,7 +21759,8 @@ function openAdminUserDetail(userId){
 
   const roleBtn = document.getElementById('au-admin-role-btn');
   const isSelf = !!(state.currentUser && u.id === state.currentUser.id);
-  roleBtn.style.display = isSelf ? 'none' : '';
+  roleBtn.style.display = 'none';   // 2026-10-21q 위쪽 '계정 구분'으로 옮김
+  paintAcctRole(u);
   roleBtn.textContent = u.is_admin ? '관리자 해제' : '관리자 지정';
   roleBtn.classList.toggle('danger-outline', !!u.is_admin);
 
@@ -21821,6 +21914,53 @@ function readPermChecklist(containerId){
 }
 
 /* ---------------- 관리자 지정 / 해제 ---------------- */
+
+/* 2026-10-21q 계정 구분 바꾸기: 면접자 / 직원 / 관리자
+   - 직원 = 관리자가 아니면서 8개 분야를 모두 받은 계정(isStaffAcct). 직원으로 바꾸면 8개 분야를 모두 열고 이용 기간을 '기한 없음'으로 둠
+   - 직원 → 면접자: 분야 권한을 모두 비움(권한 관리에서 다시 열어 줌)
+   - 관리자 → 면접자: 관리자 표시만 끔. 8개 분야를 다 갖고 있었으면 직원으로 보이지 않게 분야도 비움
+   - 본인 계정은 바꿀 수 없음 */
+function acctRoleOf(u){ return !u ? 'student' : u.is_admin ? 'admin' : isStaffAcct(u) ? 'staff' : 'student'; }
+const ACCT_ROLE_NAME = { student:'면접자', staff:'직원', admin:'관리자' };
+function paintAcctRole(u){
+  const box = document.getElementById('au-role'); if(!box || !u) return;
+  const cur = acctRoleOf(u); const isSelf = !!(state.currentUser && u.id === state.currentUser.id);
+  box.querySelectorAll('.chip').forEach(c=>{ c.classList.toggle('sel', c.dataset.role === cur); c.disabled = isSelf; });
+  const hint = document.getElementById('au-role-hint');
+  if(hint) hint.textContent = isSelf ? '본인 계정의 구분은 다른 관리자만 바꿀 수 있어요.'
+    : cur === 'admin' ? '관리자는 모든 면접자 정보와 기록을 보고 고칠 수 있어요.'
+    : cur === 'staff' ? '직원은 8개 분야를 모두 연습할 수 있고, 현황·통계에서는 빠져요.'
+    : '바꿀 구분을 누르면 확인 창이 떠요. 직원은 8개 분야를 모두 열고 통계에서 빠져요. 관리자는 관리자 화면을 쓸 수 있어요.';
+}
+async function setAcctRole(userId, role){
+  const u = (state.adminUsers||[]).find(x=>x.id===userId); if(!u) return;
+  if(state.currentUser && userId === state.currentUser.id){ showToast('본인 계정의 구분은 여기서 바꿀 수 없어요 (다른 관리자에게 요청하세요)'); return; }
+  const cur = acctRoleOf(u); if(cur === role) return;
+  const nm = u.name || '이 계정';
+  const allIds = FIELDS.map(f=>f.id);
+  const hasAll = allIds.every(id=>(u.allowed_fields||[]).includes(id));
+  let patch = {}, msg = '';
+  if(role === 'admin'){
+    patch = { is_admin:true };
+    msg = `${nm}님을 관리자로 바꿀까요?\n\n관리자는 모든 면접자의 이름·연락처·기록을 보고, 권한·기간·메모를 고치고, 다른 사람을 관리자로 지정할 수 있어요. 믿을 수 있는 교육팀에게만 주세요.\n\n${nm}님은 다음에 로그인(또는 새로고침)하면 관리자 화면이 보여요.`;
+  } else if(role === 'staff'){
+    patch = { is_admin:false, allowed_fields: allIds, access_until: null };
+    msg = `${nm}님을 직원으로 바꿀까요?\n\n· 8개 분야를 모두 열고, 이용 기간은 '기한 없음'으로 바꿔요.\n· 현황·통계(면접자 수, 평균 점수 등)에서는 빠져요.${cur === 'admin' ? '\n· 관리자 권한은 없어져요.' : ''}`;
+  } else {
+    patch = { is_admin:false };
+    if(cur === 'staff' || hasAll) patch.allowed_fields = [];
+    msg = `${nm}님을 면접자로 바꿀까요?${cur === 'admin' ? '\n\n· 관리자 화면을 더 이상 쓸 수 없어요.' : ''}${patch.allowed_fields ? '\n· 열어 둔 분야 권한이 모두 빠져요. 바꾼 뒤 [권한 관리]에서 지원 분야를 다시 열어 주세요.' : ''}`;
+  }
+  if(!confirm(msg)) return;
+  let { error } = await sb.from('profiles').update(patch).eq('id', userId);
+  if(error && 'access_until' in patch && /access_until/.test(error.message||'')){ const p2 = Object.assign({}, patch); delete p2.access_until; ({ error } = await sb.from('profiles').update(p2).eq('id', userId)); }
+  if(error){ showToast('바꾸지 못했어요: ' + (error.message||error)); return; }
+  Object.assign(u, patch);
+  showToast(`${nm}님을 ${ACCT_ROLE_NAME[role]}(으)로 바꿨어요.` + (role === 'admin' ? ' 다음 로그인부터 관리자 화면이 보여요.' : role === 'student' && patch.allowed_fields ? ' [권한 관리]에서 분야를 다시 열어 주세요.' : ''), 'ok');
+  const open = document.getElementById('modal-admin-user'); const wasOpen = open && open.classList.contains('active') && state.editingUserId === userId;
+  try{ await renderAdmin(); }catch(_){}
+  if(wasOpen){ try{ openAdminUserDetail(userId); }catch(_){} }
+}
 async function toggleAdminRole(userId, makeAdmin){
   if(state.currentUser && userId === state.currentUser.id){
     showToast('본인의 관리자 권한은 여기서 바꿀 수 없어요 (다른 관리자에게 요청하세요)');
