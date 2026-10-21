@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21j';
+var APP_VERSION = '2026-10-21k';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -15432,7 +15432,7 @@ const Rubric = {
     if(/(경험|해 본 적|했던|겪었|극복|성취|실패|어려웠던|힘들었던|보람|기억에 남는|이전 직장|업무를 했)/.test(s)) return 'experience';
     if(/(앞으로|계획|자기\s*계발|입사 후|목표|포부|년 후|노력하고 있는)/.test(s)) return 'plan';
     if(/(이란|란 무엇|무엇인가요|무엇입니까|무엇인지|뜻은|정의|차이|구성되|절차는|제도|종류|어떻게 다른|설명해)/.test(s) && !/(전략|방법|비결)/.test(s)) return 'knowledge';
-    if(/(생각하(나요|십니까|는가|는지|세요)|어떻게 생각|중요하다고|중요한 것|태도|자세|가치|덕목|필요한 (자질|역량)|해야 한다고|지켜야|왜 중요|중요한가)/.test(s)) return 'value';
+    if(/(생각하(나요|십니까|는가|는지|세요)|생각하시(는지|나요)|어떻게 생각|중요하다고|중요한 것|태도|자세|가치|덕목|필요한 (자질|역량)|해야 한다고|지켜야|왜 중요|중요한가)/.test(s)) return 'value';
     if(/(전략|방법|비결|노하우|어떤 노력|어떻게\s*(줄|최소화|관리|극복|유지|높|향상|지키|교정|준비))/.test(s)) return 'method';
     return 'general';
   },
