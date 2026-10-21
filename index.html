@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21f';
+var APP_VERSION = '2026-10-21g';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -610,6 +610,23 @@ var APP_VERSION = '2026-10-21f';
   .pipe-btn{flex:0 0 auto;padding:9px 16px;font-size:13px;}
   /* 2026-10-20p 타입캐스트와 나란히 듣기 */
   #tc-card [hidden]{display:none!important;}
+  /* 2026-10-21g 타입캐스트 크레딧 카드 */
+  .tcc-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;}
+  .tcc-left{display:flex;flex-direction:column;gap:2px;} .tcc-k{font-size:12.5px;font-weight:600;color:#7c7c82;}
+  .tcc-big{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums;color:#1c1c1e;}
+  .tcc-of{font-size:13px;color:#55555b;}
+  .tcc-right{display:flex;flex-direction:column;gap:3px;font-size:13px;color:#45454a;text-align:right;} .tcc-right b{color:#1c1c1e;font-variant-numeric:tabular-nums;}
+  .tcc-top.warn .tcc-big{color:#b45309;} .tcc-top.bad .tcc-big{color:#b42318;}
+  .tcc-bar{height:10px;border-radius:999px;background:#ecebe7;overflow:hidden;margin:12px 0 4px;} .tcc-bar i{display:block;height:100%;background:#1f1f21;border-radius:999px;}
+  .tcc-bar.warn i{background:#d97706;} .tcc-bar.bad i{background:#dc2626;}
+  .tcc-warn{margin-top:8px;background:#fdf6ec;border:1px solid #f3dfc1;border-radius:10px;padding:9px 12px;font-size:13px;color:#7a4b10;}
+  .tcc-err{background:#fdf0eb;border:1px solid #f3d9cc;border-radius:10px;padding:10px 12px;font-size:13px;color:#8a3a1c;}
+  .tcc-sub{font-size:13.5px;font-weight:700;margin:16px 0 8px;padding-top:14px;border-top:1px dashed #e6e3dd;}
+  .tcc-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .tcc-tiles > div{background:#f6f5f3;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;} .tcc-tiles span{font-size:12px;color:#7c7c82;font-weight:600;} .tcc-tiles b{font-size:18px;font-variant-numeric:tabular-nums;}
+  .tcc-break{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:13px;color:#45454a;} .tcc-break b{color:#1c1c1e;font-variant-numeric:tabular-nums;}
+  .tcc-break .k{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle;} .tcc-break .k.live{background:#e8532a;} .tcc-break .k.rec{background:#1f1f21;} .tcc-break .k.pre{background:#a3a3a8;}
+  @media (max-width:560px){ .tcc-right{text-align:left;} .tcc-big{font-size:26px;} .tcc-tiles b{font-size:16px;} }
   /* 2026-10-21c 면접관 목소리 (한 흐름 화면) */
   .vs{--vs-ink:#1c1c1e;--vs-ink2:#45454a;--vs-ink3:#7c7c82;--vs-line:#e6e3dd;--vs-soft:#f6f5f3;--vs-acc:#e8532a;--vs-acc-soft:#fdf0eb;--vs-ok:#2f7a4a;--vs-ok-bg:#e6f4ec;
     background:#fff;border:1px solid var(--vs-line);border-radius:16px;padding:22px 24px 24px;color:var(--vs-ink);font-size:14px;}
@@ -5511,6 +5528,16 @@ body.rr-drawer-open #fb-fab, body.rr-drawer-open #help-fab{ display:none !import
           </div>
           <div class="ps-cost" id="ai-cost-table"></div>
           <div class="pipe-hint" style="margin-top:10px;">특정 사람만 다르게 하려면 <b>면접자 관리 → 상세 → "AI 예외"</b>에서 그 사람만 켜거나 끌 수 있어요.</div>
+        </div>
+
+        <!-- 2026-10-21g 타입캐스트 크레딧 -->
+        <div class="pipe-card" id="tc-credit-card">
+          <div class="ps-card-head">
+            <div><div class="subhead" style="margin:0;">타입캐스트 크레딧 <span class="help-tag">면접관 목소리</span></div>
+            <div class="pipe-hint">면접관 목소리(타입캐스트)에 쓰는 크레딧이에요. <b>1글자 = 1크레딧</b>이고, 회사 다른 프로그램과 한 요금제를 함께 써요.</div></div>
+            <button class="btn btn-outline pipe-btn" id="tcc-refresh" onclick="TcCredit.load(true)">새로고침</button>
+          </div>
+          <div class="tcc" id="tcc-body"><div class="pipe-hint">불러오는 중…</div></div>
         </div>
 
         <div class="pipe-card" id="ai-limit-card">
@@ -20893,6 +20920,61 @@ async function recStartWord(){
   document.getElementById('rec-start-btn').style.display=''; document.getElementById('rec-force-btn').style.display=''; document.getElementById('rec-stop-btn').style.display='none';
 }
 
+/* ---------------- 2026-10-21g 관리자: 타입캐스트 크레딧 (AI 설정 탭) ----------------
+   위: 타입캐스트가 알려 주는 이번 달 요금제 크레딧(회사 전체). 아래: ZAVAPASS가 쓴 글자 수(tts_usage, 서버 함수가 남김) */
+const TcCredit = {
+  sub:null, usage:null, at:0, loading:false, err:'',
+  fmt(n){ return Math.round(Number(n) || 0).toLocaleString('ko-KR'); },
+  async load(force){
+    if(this.loading) return; if(!force && this.at && Date.now() - this.at < 60000){ this.render(); return; }
+    this.loading = true; const btn = document.getElementById('tcc-refresh'); if(btn){ btn.disabled = true; btn.textContent = '불러오는 중…'; }
+    this.err = '';
+    try{ const r = await tcFetch({ action:'subscription' }); this.sub = await r.json(); }
+    catch(e){ this.sub = null; this.err = e.code === 'no_key' ? 'no_key' : (e.message || String(e)); }
+    try{
+      const since = new Date(Date.now() - 30 * 86400000).toISOString();
+      const q = await sbAll(()=>sb.from('tts_usage').select('created_at,kind,chars').gte('created_at', since).order('created_at', { ascending:false }), 20000);
+      this.usage = q.error ? null : (q.data || []);
+    }catch(_){ this.usage = null; }
+    this.at = Date.now(); this.loading = false;
+    if(btn){ btn.disabled = false; btn.textContent = '새로고침'; }
+    this.render(); try{ pipeRenderStatus(); }catch(_){}
+  },
+  sums(){
+    const u = this.usage || []; const now = Date.now(); const today = new Date(); today.setHours(0,0,0,0);
+    const out = { today:0, d7:0, d30:0, live:0, record:0, preview:0 };
+    u.forEach(r=>{ const t = new Date(r.created_at).getTime(), c = Number(r.chars) || 0; out.d30 += c; if(out[r.kind] != null) out[r.kind] += c; if(t >= now - 7*86400000) out.d7 += c; if(t >= today.getTime()) out.today += c; });
+    return out;
+  },
+  render(){
+    const el = document.getElementById('tcc-body'); if(!el) return;
+    const f = this.fmt.bind(this); let top = '';
+    if(this.sub && this.sub.plan_credits){
+      const plan = this.sub.plan_credits, used = Math.min(plan, this.sub.used_credits), left = Math.max(0, plan - used), pct = Math.round(used / plan * 100);
+      const lvl = left / plan < 0.05 ? 'bad' : left / plan < 0.2 ? 'warn' : '';
+      const PLAN = { free:'무료', lite:'라이트', plus:'플러스', custom:'맞춤' };
+      top = `<div class="tcc-top ${lvl}">
+          <div class="tcc-left"><span class="tcc-k">이번 달 남은 크레딧</span><b class="tcc-big">${f(left)}</b><span class="tcc-of">/ ${f(plan)} · ${escapeHtml(PLAN[this.sub.plan] || this.sub.plan || '')} 요금제</span></div>
+          <div class="tcc-right"><span>회사 전체 사용 <b>${f(used)}</b> (${pct}%)</span><span>동시 처리 ${this.sub.concurrency_limit || '-'}건</span><span>꼬리질문으로 약 <b>${f(left / 40)}</b>개 더 (1개 40자 기준)</span></div>
+        </div>
+        <div class="tcc-bar ${lvl}"><i style="width:${pct}%"></i></div>
+        ${lvl ? `<div class="tcc-warn">${lvl === 'bad' ? '크레딧이 거의 다 떨어졌어요. 떨어지면 면접관 목소리는 OpenAI 목소리로 대신 읽어요.' : '크레딧이 20% 아래로 남았어요. 전체 다시 녹음은 다음 달로 미루는 게 좋아요.'}</div>` : ''}`;
+    }else if(this.err === 'no_key'){
+      top = '<div class="tcc-err">타입캐스트 키(TYPECAST_API_KEY)가 아직 연결되지 않았어요.</div>';
+    }else if(this.err){
+      top = `<div class="tcc-err">타입캐스트 요금제를 불러오지 못했어요: ${escapeHtml(this.err)}</div>`;
+    }
+    let mine = '';
+    if(this.usage){
+      const s = this.sums();
+      mine = `<div class="tcc-sub">ZAVAPASS가 쓴 크레딧</div>
+        <div class="tcc-tiles"><div><span>오늘</span><b>${f(s.today)}</b></div><div><span>최근 7일</span><b>${f(s.d7)}</b></div><div><span>최근 30일</span><b>${f(s.d30)}</b></div></div>
+        <div class="tcc-break"><span><i class="k live"></i>면접 중 목소리 <b>${f(s.live)}</b></span><span><i class="k rec"></i>질문 녹음 <b>${f(s.record)}</b></span><span><i class="k pre"></i>관리자 미리 듣기 <b>${f(s.preview)}</b></span></div>
+        <div class="pipe-hint" style="margin-top:6px;">최근 30일 기준 · 2026년 10월 21일부터 기록해요. 회사 전체 사용에서 이 숫자를 빼면 다른 프로그램이 쓴 양이에요.</div>`;
+    }
+    el.innerHTML = (top + mine) || '<div class="pipe-hint">표시할 내용이 없어요.</div>';
+  },
+};
 /* ---------------- 관리자: AI 기능 스위치 ---------------- */
 async function aiFillUI(){
   await AiSwitch.load();
@@ -20907,6 +20989,7 @@ async function aiFillUI(){
     st.className = 'ps-ai-state ' + (AiSwitch.loaded ? (on ? 'on' : 'off') : 'err');
   }
   aiRenderCost();
+  try{ TcCredit.load(); }catch(_){}
   const ld = document.getElementById('ai-limit-daily'), lt = document.getElementById('ai-limit-total');
   if(ld && document.activeElement !== ld) ld.value = AiSwitch.limits.daily; if(lt && document.activeElement !== lt) lt.value = AiSwitch.limits.total;
   const lc = document.getElementById('ai-limit-cost');
@@ -20941,7 +21024,9 @@ function pipeRenderStatus(){
   const ai = document.getElementById('ps-st-ai'); if(!ai) return;
   const s = AiSwitch.settings || {}, lim = AiSwitch.limits || {};
   const dot = cls => `<i class="d ${cls}"></i>`;
-  ai.innerHTML = `<span class="nw">${dot(s.ai_followup?'on':'off')}꼬리질문 ${s.ai_followup?'켜짐':'꺼짐'}</span> <span class="nw">${dot(s.ai_grading?'on':'off')}채점 ${s.ai_grading?'켜짐':'꺼짐'}</span><br><span class="nw">한도 하루 ${lim.daily}회 · 총 ${lim.total}회</span>`;
+  const tcs = (typeof TcCredit !== 'undefined' && TcCredit.sub && TcCredit.sub.plan_credits) ? TcCredit.sub : null;
+  ai.innerHTML = `<span class="nw">${dot(s.ai_followup?'on':'off')}꼬리질문 ${s.ai_followup?'켜짐':'꺼짐'}</span> <span class="nw">${dot(s.ai_grading?'on':'off')}채점 ${s.ai_grading?'켜짐':'꺼짐'}</span><br><span class="nw">한도 하루 ${lim.daily}회 · 총 ${lim.total}회</span>`
+    + (tcs ? `<br><span class="nw">타입캐스트 남은 ${Math.max(0, tcs.plan_credits - tcs.used_credits).toLocaleString('ko-KR')}</span>` : '');
   const tts = (typeof loadTtsSettings === 'function') ? loadTtsSettings() : null;
   const vo = document.getElementById('ps-st-voice'); if(vo) vo.innerHTML = tts ? `${dot('on')}${escapeHtml(ttsUsesTypecast(tts) ? '타입캐스트 ' + (tts.tc.name || '') : tts.voice)} · ${ttsUsesTypecast(tts) ? (tts.tc.tempo || 1) : tts.speed}배 저장됨` : `${dot('off')}저장된 설정 없음`;
   const rs = (typeof Rec !== 'undefined' && Rec.status) ? Rec.status : null;
