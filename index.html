@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22m';
+var APP_VERSION = '2026-10-22n';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4823,6 +4823,42 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 @media (max-width:900px){ .tcu-num{ white-space:normal; } }
 @media (max-width:640px){ .tcu-row{ grid-template-columns:1fr; gap:5px; } .tcu-name{ order:1; } .tcu-num{ order:2; } .tcu-bar{ order:3; } }
 </style>
+<style id="admin-menu-color">
+/* 2026-10-22n 관리자 메뉴를 더 잘 보이게: 메뉴마다 색 · 굵은 글자 · 아이콘 칸 */
+#screen-admin{--ag:#E5531A;--ag-soft:#FDE9DF;--ag-ink:#B8400F;}
+#screen-admin .admin-menu-btn[data-group="today"],#screen-admin[data-ag="today"]{--g:#E5531A;--g-soft:#FDE9DF;--g-ink:#A93A0C;}
+#screen-admin .admin-menu-btn[data-group="users"],#screen-admin[data-ag="users"]{--g:#2563EB;--g-soft:#E4EDFD;--g-ink:#1D4ED8;}
+#screen-admin .admin-menu-btn[data-group="results"],#screen-admin[data-ag="results"]{--g:#16A34A;--g-soft:#E2F5E8;--g-ink:#15803D;}
+#screen-admin .admin-menu-btn[data-group="questions"],#screen-admin[data-ag="questions"]{--g:#7C3AED;--g-soft:#EFE7FD;--g-ink:#6D28D9;}
+#screen-admin .admin-menu-btn[data-group="talk"],#screen-admin[data-ag="talk"]{--g:#0891B2;--g-soft:#DDF3F8;--g-ink:#0E7490;}
+#screen-admin .admin-menu-btn[data-group="settings"],#screen-admin[data-ag="settings"]{--g:#D97706;--g-soft:#FCF0DA;--g-ink:#B45309;}
+#screen-admin.v3 .admin-sidebar{padding:10px;}
+#screen-admin.v3 .admin-sidebar-title{font-size:12.5px;font-weight:700;color:#55555b;letter-spacing:.02em;}
+#screen-admin.v3 .admin-menu-btn{gap:12px;margin:2px 0;padding:9px 10px !important;border-radius:12px;color:#1c1c1e;}
+#screen-admin.v3 .admin-menu-btn svg{width:34px;height:34px;padding:8px;box-sizing:border-box;border-radius:10px;background:var(--g-soft);color:var(--g) !important;flex:none;stroke-width:2.1;}
+#screen-admin.v3 .admin-menu-btn .amb-name{font-size:16px;font-weight:800;color:#1c1c1e;letter-spacing:-.01em;}
+#screen-admin.v3 .admin-menu-btn .amb-desc{font-size:12px;color:#6b6b72;margin-top:3px;font-weight:500;white-space:normal;overflow:visible;line-height:1.35;word-break:keep-all;}
+#screen-admin.v3 .admin-menu-btn:hover{background:var(--g-soft);}
+#screen-admin.v3 .admin-menu-btn.active{background:var(--g-soft) !important;box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--g) 35%, transparent) !important;}
+#screen-admin.v3 .admin-menu-btn.active::before{background:var(--g) !important;top:10px;bottom:10px;width:4px;}
+#screen-admin.v3 .admin-menu-btn.active svg{background:var(--g);color:#fff !important;}
+#screen-admin.v3 .admin-menu-btn.active .amb-name{color:var(--g-ink);}
+#screen-admin.v3 .admin-menu-btn.active .amb-desc{color:color-mix(in srgb, var(--g-ink) 75%, #555);}
+/* 안쪽 탭: 지금 메뉴 색으로 */
+#screen-admin .admin-subtabs button{font-size:14.5px;font-weight:700;height:40px;padding:0 16px;color:#2c2c30;border-color:#d9d6d0;}
+#screen-admin .admin-subtabs button:hover{border-color:var(--g,#1c1c1e);color:var(--g-ink,#1c1c1e);}
+#screen-admin .admin-subtabs button.on{background:var(--g,#1c1c1e);border-color:var(--g,#1c1c1e);color:#fff;box-shadow:0 4px 12px color-mix(in srgb, var(--g,#000) 28%, transparent);}
+#screen-admin .admin-view.active > .admin-view-head h2{color:#1c1c1e;}
+#screen-admin .admin-view.active > .admin-view-head h2::before{content:'';display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--g,#E5531A);margin-right:10px;vertical-align:middle;position:relative;top:-3px;}
+@media(max-width:860px){
+  #screen-admin.v3 .admin-sidebar{padding:6px;gap:6px;}
+  #screen-admin.v3 .admin-menu-btn{padding:6px 12px 6px 6px !important;margin:0;gap:8px;border-radius:999px;}
+  #screen-admin.v3 .admin-menu-btn svg{width:28px;height:28px;padding:6px;border-radius:999px;}
+  #screen-admin.v3 .admin-menu-btn .amb-name{font-size:14.5px;}
+  #screen-admin.v3 .admin-menu-btn.active::before{display:none;}
+  #screen-admin .admin-subtabs button{font-size:14px;height:38px;padding:0 14px;}
+}
+</style>
 </head>
 <body>
 
@@ -5401,7 +5437,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <div class="admin-sidebar-title">관리자 메뉴</div>
       <button class="admin-menu-btn active" data-group="today" onclick="showAdminView('overview')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4"/></svg>
-        <span class="amb-txt"><span class="amb-name">오늘 할 일 <span class="live-dot-nav" id="live-nav-dot" style="display:none;"></span></span><small class="amb-desc">처리할 일 · 요약 · 지금 접속</small></span>
+        <span class="amb-txt"><span class="amb-name">오늘 할 일 <span class="live-dot-nav" id="live-nav-dot" style="display:none;"></span></span><small class="amb-desc">할 일 · 요약 · 접속</small></span>
       </button>
       <button class="admin-menu-btn" data-group="users" onclick="showAdminView('users')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5a5 5 0 0 1 6 5"/></svg>
@@ -5417,7 +5453,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       </button>
       <button class="admin-menu-btn" data-group="talk" onclick="showAdminView('feedback')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
-        <span class="amb-txt"><span class="amb-name">소통 <span class="menu-badge" id="fb-nav-badge" style="display:none;"></span></span><small class="amb-desc">의견·오류 신고 · 공지 보내기</small></span>
+        <span class="amb-txt"><span class="amb-name">소통 <span class="menu-badge" id="fb-nav-badge" style="display:none;"></span></span><small class="amb-desc">의견·오류 · 공지</small></span>
       </button>
       <button class="admin-menu-btn" data-group="settings" onclick="showAdminView('pipeline')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
@@ -12280,8 +12316,9 @@ function pipeApplyView(view){
 }
 function adminGroupOf(view){ for(const [g,o] of Object.entries(ADMIN_GROUPS)){ if(o.views.some(v=>v[0]===view)) return g; } return 'today'; }
 function renderAdminSubtabs(view){
-  const g = adminGroupOf(view); const box = document.getElementById('admin-subtabs'); if(!box) return;
+  const g = adminGroupOf(view); try{ const sc = document.getElementById('screen-admin'); if(sc) sc.dataset.ag = g; }catch(_){} const box = document.getElementById('admin-subtabs'); if(!box) return;   // 2026-10-22n 메뉴 색
   document.querySelectorAll('.admin-menu-btn[data-group]').forEach(b=>b.classList.toggle('active', b.dataset.group === g));
+  try{ const sbar = document.querySelector('#screen-admin .admin-sidebar'), ab = document.querySelector('.admin-menu-btn.active[data-group]'); if(sbar && ab && sbar.scrollWidth > sbar.clientWidth + 4) sbar.scrollTo({ left: Math.max(0, ab.offsetLeft - (sbar.clientWidth - ab.offsetWidth) / 2), behavior:'smooth' }); }catch(_){}   // 2026-10-22n 휴대폰: 지금 메뉴가 보이게
   const vs = ADMIN_GROUPS[g].views;
   box.innerHTML = vs.length > 1 ? vs.map(([v,l])=>`<button type="button" class="${v===view?'on':''}" onclick="showAdminView('${v}')">${l}${v==='feedback'?'<span class="menu-badge" id="fb-tab-badge" style="display:none;"></span>':''}${v==='live'?'<span class="live-dot-nav" id="live-tab-dot" style="display:none;"></span>':''}</button>`).join('') : '';
   try{ const fb = document.getElementById('fb-nav-badge'), fb2 = document.getElementById('fb-tab-badge'); if(fb && fb2){ fb2.textContent = fb.textContent; fb2.style.display = fb.style.display; } const ld = document.getElementById('live-nav-dot'), ld2 = document.getElementById('live-tab-dot'); if(ld && ld2) ld2.style.display = ld.style.display; }catch(_){}
