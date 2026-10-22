@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22k';
+var APP_VERSION = '2026-10-22l';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -830,6 +830,19 @@ var APP_VERSION = '2026-10-22k';
   }
   .au-stats{margin:0 0 12px;grid-template-columns:repeat(3,1fr);gap:10px;}
   .au-stats .admin-stat{padding:14px 12px;}
+  /* 2026-10-22l 면접자 상세: 이용 빈도 (관리자만) */
+  .au-freq:empty{display:none;}
+  .au-freq{margin:10px 0 4px;border:1px solid var(--slate-100);border-radius:var(--radius-m);padding:12px 14px;background:#fff;}
+  .auf-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:14px;} .auf-head small{color:var(--slate-400);font-size:12px;}
+  .auf-sum{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--slate-600);margin-bottom:10px;} .auf-sum b{color:var(--slate-700);}
+  .auf-sum .warn b{color:#B8400F;}
+  .auf-grid{display:grid;grid-template-columns:30px repeat(14,minmax(0,1fr));gap:2px;font-size:11px;text-align:center;align-items:center;}
+  .auf-grid .lb{text-align:left;color:var(--slate-600);font-weight:600;white-space:nowrap;}
+  .auf-grid .d{color:var(--slate-400);font-size:10px;} .auf-grid .d.today{color:#E5531A;font-weight:700;}
+  .auf-c{height:22px;line-height:22px;border-radius:5px;background:#f3f2ef;color:var(--slate-300);font-variant-numeric:tabular-nums;}
+  .auf-c.on{background:#FDE7DC;color:#B8400F;font-weight:700;} .auf-c.full{background:#E5531A;color:#fff;font-weight:700;}
+  .auf-c.p.on{background:#E6EEF9;color:#1D4E89;}
+  .auf-note{margin-top:8px;font-size:11.5px;color:var(--slate-400);}
   .au-stats .admin-stat .num{font-size:19px;}
   .au-trend{margin-bottom:8px;}
   .admin-stat{background:#fff;border:1px solid var(--slate-100);border-radius:var(--radius-m);
@@ -6131,7 +6144,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
         <div class="rh3-setbox" id="rh3-setbox" hidden><div class="sb-top"><span class="sb-lbl">실전 세트 · 남은 시간</span><b id="rh3-setclock">15:00</b></div><div class="sb-track"><i id="rh3-setfill"></i></div><span class="sb-sub" id="rh3-setsub">전체 15분 중 0분 지남</span></div>
         <button type="button" class="rh3-exit" onclick="openConfirmEnd()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>나가기</button>
       </div>
-      <p class="rh3-bar-sub" id="rh3-bar-sub">짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않고 AI 면접 이용 횟수에도 포함되지 않아요.</p>
+      <p class="rh3-bar-sub" id="rh3-bar-sub">짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않아요.</p>
       <div class="rh3-prog"><i id="rh3-prog-fill"></i></div><div class="lv3-segs lv3-only" id="lv3-segs"></div>
     </div>
     <div class="interview-top">
@@ -6986,6 +6999,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 
       <div class="subhead">연습 현황</div>
       <div class="admin-stats au-stats" id="au-stats"></div>
+      <div class="au-freq" id="au-freq"></div>
         <div class="au-devices" id="au-devices"></div>
       <div class="trend-chart au-trend" id="au-trend"></div>
 
@@ -11439,9 +11453,7 @@ async function renderDashboard(){
   const quotaChip = document.getElementById('ai-quota-chip');
   if(quotaChip){
     quotaChip.style.display = 'none';
-    if(!isAdmin && !expired && AiSwitch.anyOn()){
-      AiQuota.refresh().then(st=>{ const t = AiQuota.chipText(); if(t){ quotaChip.textContent = t; quotaChip.className = 'access-banner quota' + ((st.daily_left<=0||st.total_left<=0) ? ' warn' : ''); quotaChip.style.display=''; } }).catch(()=>{});
-    }
+    // 2026-10-22l: 1인당 AI 면접 한도(하루·전체 남은 횟수)는 관리자만 보고 조절 → 면접자 홈에는 보여 주지 않음
   }
 
   // 분야 선택 (기본: 마지막 연습 분야 → 첫 허용 분야)
@@ -16386,7 +16398,7 @@ function rh3Apply(on){
   const sec = document.getElementById('screen-interview'); if(sec) sec.classList.toggle('rh3', !!on);
   if(!on){ if(rh3Iv){ clearInterval(rh3Iv); rh3Iv = null; } return; }
   const t = document.getElementById('rh3-title'); if(t && state.selectedField) t.textContent = `${state.selectedField.name} 면접 리허설`;
-  { const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않고 AI 면접 이용 횟수에도 포함되지 않아요.'; }
+  { const sub = document.getElementById('rh3-bar-sub'); if(sub) sub.textContent = '짧은 리허설로 목소리와 답변 흐름을 확인해보세요. 채점하지 않아요.'; }
   if(state.currentUser){ const n = document.getElementById('nav-username-rh3'); if(n) n.textContent = state.currentUser.name || ''; const av = document.getElementById('rh3-avatar'); if(av) av.textContent = (state.currentUser.name||'?').slice(0,1); }
   const panel = document.getElementById('rh-panel'); if(panel) panel.classList.remove('open');
 }
@@ -19233,13 +19245,13 @@ const AiQuota = {
   resetForInterview(){ this.noticed = false; },
   message(st){
     const d = st && st.reason === 'daily';
-    const lim = st ? (d ? st.daily_limit : st.total_limit) : '';
-    return d ? `오늘 AI 면접 횟수(${lim}회)를 모두 사용했어요. 이번 면접은 AI 없이(문제은행 꼬리질문·규칙 채점) 진행돼요. 내일 다시 사용할 수 있어요.`
-             : `AI 면접 총 횟수(${lim}회)를 모두 사용했어요. 이번 면접은 AI 없이 진행돼요. 추가 횟수는 관리자에게 문의해 주세요.`;
+    // 2026-10-22l: 한도 숫자(하루 n회·총 n회)는 면접자에게 보여 주지 않음
+    return d ? '오늘은 AI 꼬리질문을 모두 사용해서, 이번 면접은 기본 꼬리질문과 기본 채점으로 진행돼요. 내일 다시 AI 꼬리질문으로 연습할 수 있어요.'
+             : 'AI 꼬리질문을 모두 사용해서, 이번 면접은 기본 꼬리질문과 기본 채점으로 진행돼요. 더 필요하면 관리자에게 문의해 주세요.';
   },
   chipText(){
     const st = this.status; if(!st || st.admin) return '';
-    return `AI 면접 오늘 ${st.daily_left}회 · 총 ${st.total_left}회 남음`;
+    return '';   // 2026-10-22l 남은 횟수는 면접자에게 보여 주지 않음
   },
 };
 const STEP1 = {
@@ -21945,6 +21957,55 @@ async function adminResetPassword(){
     btn.textContent = '임시 비밀번호 만들기';
   }finally{ btn.disabled = false; }
 }
+/* 2026-10-22l: 면접자 상세 → 이용 빈도. AI 면접 한도는 면접자 화면에서 뺐으니, 얼마나 자주 쓰는지는 관리자가 여기서 봄 */
+const AuFreq = {
+  key(d){ return new Date(new Date(d).getTime() + 9*3600000).toISOString().slice(0,10); },   // 한국 날짜
+  async load(userId, u){
+    const box = document.getElementById('au-freq'); if(!box) return;
+    if(!u || u.is_admin){ box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="auf-head"><b>이용 빈도</b><small>불러오는 중…</small></div>';
+    let ai = null;
+    try{
+      const since = new Date(Date.now() - 31*86400000).toISOString();
+      const { data, error } = await sb.from('ai_usage').select('used_on,used_at').eq('user_id', userId).gte('used_at', since).limit(2000);
+      if(error) throw error; ai = data || [];
+    }catch(e){ console.warn('[이용 빈도 조회 실패]', e.message||e); }
+    if(state.editingUserId !== userId) return;
+    box.innerHTML = this.html(ai, (state.adminRecordsByUser||{})[userId] || [], u);
+  },
+  html(ai, recs, u){
+    const DAY = 86400000, now = Date.now(), lim = Number((AiSwitch.limits||{}).daily) || 0;
+    const days = []; for(let i=13;i>=0;i--) days.push(this.key(now - i*DAY));
+    const in30 = new Set(); for(let i=0;i<30;i++) in30.add(this.key(now - i*DAY));
+    const in7 = new Set(days.slice(-7));
+    const aiBy = {}; (ai||[]).forEach(r=>{ const k = r.used_on ? String(r.used_on).slice(0,10) : this.key(r.used_at); aiBy[k] = (aiBy[k]||0) + 1; });
+    const recBy = {}; recs.forEach(r=>{ if(!r.created_at) return; const k = this.key(r.created_at); recBy[k] = (recBy[k]||0) + 1; });
+    const sum = (by, set)=>Object.entries(by).filter(([k])=>set.has(k)).reduce((t,[,n])=>t+n, 0);
+    const daysUsed = (by, set)=>Object.entries(by).filter(([k,n])=>set.has(k) && n>0).length;
+    const ai7 = sum(aiBy, in7), ai30 = sum(aiBy, in30), aiD7 = daysUsed(aiBy, in7), aiD30 = daysUsed(aiBy, in30);
+    const full30 = lim ? Object.entries(aiBy).filter(([k,n])=>in30.has(k) && n >= lim).length : 0;
+    const rec7 = sum(recBy, in7);
+    const lastAi = (ai||[]).reduce((m,r)=>{ const t = new Date(r.used_at||r.used_on).getTime(); return t > m ? t : m; }, 0);
+    const lastTxt = !lastAi ? '없음' : (this.key(lastAi) === this.key(now) ? '오늘' : `${Math.max(1, Math.round((new Date(this.key(now)) - new Date(this.key(lastAi))) / DAY))}일 전`);
+    const avg = aiD30 ? (ai30 / aiD30) : 0;
+    const today = this.key(now), wk = ['일','월','화','수','목','금','토'];
+    const head = days.map(k=>{ const d = new Date(k + 'T00:00:00+09:00'); return `<span class="d${k===today?' today':''}" title="${k}${k===today?' (오늘)':''} ${wk[d.getDay()]}요일">${d.getDate()}</span>`; }).join('');
+    const md = k=>{ const d = new Date(k + 'T00:00:00+09:00'); return (d.getMonth()+1) + '/' + d.getDate(); };
+    const rowAi = ai ? days.map(k=>{ const n = aiBy[k]||0; return `<span class="auf-c${n ? ' on' : ''}${lim && n >= lim ? ' full' : ''}" title="${k} AI 면접 ${n}번${lim && n >= lim ? ' (하루 한도까지 씀)' : ''}">${n || '·'}</span>`; }).join('') : `<span style="grid-column:2 / -1;color:var(--slate-400);text-align:left;">AI 면접 기록을 불러오지 못했어요</span>`;
+    const rowRec = days.map(k=>{ const n = recBy[k]||0; return `<span class="auf-c p${n ? ' on' : ''}" title="${k} 끝까지 마친 면접 ${n}번">${n || '·'}</span>`; }).join('');
+    const f = n=>Number(n).toLocaleString();
+    return `<div class="auf-head"><b>이용 빈도</b><small>관리자만 보여요 · 면접자 화면에는 남은 횟수가 나오지 않아요</small></div>
+      <div class="auf-sum">
+        <span>최근 7일 AI 면접 <b>${f(ai7)}</b>번 · <b>${aiD7}</b>일 사용</span>
+        <span>최근 30일 <b>${f(ai30)}</b>번${aiD30 ? ` · 쓴 날 하루 평균 <b>${avg.toFixed(1).replace(/\.0$/,'')}</b>번` : ''}</span>
+        ${lim ? `<span class="${full30 ? 'warn' : ''}">하루 한도(${lim}번)까지 쓴 날 <b>${full30}</b>일</span>` : ''}
+        <span>마지막 AI 면접 <b>${lastTxt}</b></span>
+        <span>최근 7일 끝까지 마친 면접 <b>${f(rec7)}</b>번</span>
+      </div>
+      <div class="auf-grid"><span></span>${head}<span class="lb">AI</span>${rowAi}<span class="lb">완료</span>${rowRec}</div>
+      <div class="auf-note">최근 14일(${md(days[0])}~${md(today)}, 주황 날짜가 오늘) · AI = 그날 시작한 AI 면접 수(주황이 진할수록 하루 한도에 가까움) · 완료 = 끝까지 마쳐 기록이 남은 면접 수</div>`;
+  },
+};
 function openAdminUserDetail(userId){
   const u = (state.adminUsers || []).find(x=>x.id===userId);
   if(!u) return;
@@ -21979,6 +22040,8 @@ function openAdminUserDetail(userId){
     ${u.is_admin ? '' : `<div class="admin-stat ai"><div class="num">${usg.used_total}<i>/${totalCap}회</i></div><div class="lbl">AI 면접 사용 · 오늘 ${usg.used_today}/${AiSwitch.limits.daily}${u.ai_bonus ? ` · 추가 +${u.ai_bonus}` : ''}</div>
       <div class="au-ai-actions"><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 10)">횟수 +10</button><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 30)">+30</button><button class="btn-manage" onclick="adminResetAiUsage('${userId}')" title="이 사람의 AI 면접 사용 기록을 0으로 되돌려요">사용 기록 초기화</button></div></div>`}
   `;
+
+  try{ AuFreq.load(userId, u); }catch(_){}   // 2026-10-22l 이용 빈도 (관리자만 봄)
 
   // 2026-10-12: 기기 정보 (한 계정 한 기기)
   { const box = document.getElementById('au-devices');
