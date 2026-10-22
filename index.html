@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22e';
+var APP_VERSION = '2026-10-22g';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4738,6 +4738,19 @@ body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
 /* 2026-10-22d 관리자 홈 작은 칸 4개(7일간 연습·면접자 접속·직원·관리자 접속·만료)를 2줄로 */
 #d3-stats .as-mini{ grid-template-columns:repeat(2,1fr); }
 #d3-stats .as-mini > .staff.live .as-dot{ background:#8fb6ff; box-shadow:0 0 0 3px rgba(143,182,255,.25); }
+
+/* 2026-10-22g 면접 기록: 점수 색·AI 대화 표시 설명을 목록 위(건수 옆)로 */
+/* 점수 색이 설명과 맞게: 60점 미만은 빨강, 75~84는 회색 (예전엔 v3 규칙이 모두 초록으로 덮었음) */
+body.v3-ui .score-pill.low{ background:var(--c-danger-bg,#FDECEC) !important; color:var(--c-danger,#B42318) !important; }
+body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .rec-legend-top .score-pill:not(.hi):not(.mid):not(.low){ background:#efeeea !important; color:var(--c-ink,#1c1c1e) !important; }
+@media (max-width:760px){
+  .rec-count-line{ flex-direction:column; align-items:flex-start; }
+  .rec-count-line .rec-legend-top{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; }
+  .rec-count-line .rec-legend-top .lg-t{ width:100%; margin:0 !important; }
+  .rec-count-line .rec-legend-top .lg-i{ display:inline-flex !important; margin:0 !important; }
+}
+.rec-count-line{ display:flex; align-items:center; justify-content:space-between; gap:10px 16px; flex-wrap:wrap; }
+.rec-count-line .rec-legend-top{ margin:0 !important; padding:0 !important; border:0 !important; background:none !important; }
 </style>
 </head>
 <body>
@@ -5491,15 +5504,21 @@ body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
             <button type="button" class="seg-btn" data-view="list" onclick="setRecordsView('list')">전체 목록</button>
           </div>
           <select id="rec-field-select" class="voice-select admin-filter" onchange="setRecordsField(this.value)"><option value="">모든 분야</option></select>
+          <select id="rec-sort-select" class="voice-select admin-filter" onchange="setRecordsSort(this.value)" aria-label="사람 순서">
+            <option value="count">많이 연습한 순</option>
+            <option value="recent">최근 연습한 순</option>
+            <option value="avgHigh">평균 점수 높은 순</option>
+            <option value="avgLow">평균 점수 낮은 순</option>
+          </select>
         </div>
-        <div class="admin-count-line"><span class="admin-toolbar-count" id="admin-record-count"></span><span class="admin-count-note">점수 구간: 85+ 우수 · 75–84 양호 · 60–74 보완 필요 · 60 미만 집중 관리</span></div>
+        <div class="admin-count-line rec-count-line"><span class="admin-toolbar-count" id="admin-record-count"></span><div class="uf-legend lg-list rec-legend-top"><b class="lg-t">점수 색</b><span class="lg-i"><span class="score-pill hi">85점↑</span>우수</span><span class="lg-i"><span class="score-pill">75~84</span>양호</span><span class="lg-i"><span class="score-pill mid">60~74</span>보완 필요</span><span class="lg-i"><span class="score-pill low">60점↓</span>집중 관리</span><span class="lg-i"><span class="perm-chip" style="font-size:10.5px;padding:1px 7px;">AI 대화</span>AI 면접관과 대화한 라이브 면접</span></div></div>
         <div class="admin-table">
           <div class="admin-row head rec" id="admin-records-head">
             <span>일시</span><span>이름</span><span>분야</span><span>문항 · 소요</span><span>점수</span>
           </div>
           <div id="admin-records-list"></div>
         </div>
-        <div class="uf-legend lg-list"><b class="lg-t">점수 색</b><span class="lg-i"><span class="score-pill hi">85점↑</span>우수</span><span class="lg-i"><span class="score-pill">75~84</span>양호</span><span class="lg-i"><span class="score-pill mid">60~74</span>보완 필요</span><span class="lg-i"><span class="score-pill low">60점↓</span>집중 관리</span><span class="lg-i"><span class="perm-chip" style="font-size:10.5px;padding:1px 7px;">AI 대화</span>AI 면접관과 대화한 라이브 면접</span></div>
+        
       </div>
 
       <!-- 어려운 문항 TOP 10 (2026-10-12) -->
@@ -5896,6 +5915,7 @@ body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
           <div class="uf-chips" id="fb-chips"></div>
           <input type="text" id="fb-search" class="admin-search" placeholder="이름, 내용으로 검색" oninput="renderFeedback()">
           <label class="pipe-check" style="margin:0;"><input type="checkbox" id="fb-hide-done" checked onchange="renderFeedback()"> 처리 완료는 숨기기</label>
+          <label class="pipe-check" style="margin:0;"><input type="checkbox" id="fb-hide-perm" checked onchange="renderFeedback()"> 권한 차단은 숨기기</label>
         </div>
         <div class="admin-count-line"><span class="admin-toolbar-count" id="fb-count"></span></div>
         <div class="fb-list" id="fb-list"></div>
@@ -12189,6 +12209,9 @@ function resetUserFilters(){ state.userChip = ''; state.userField = ''; const se
 document.addEventListener('click', (e)=>{ document.querySelectorAll('details.row-more[open]').forEach(d=>{ if(!d.contains(e.target)) d.removeAttribute('open'); }); });
 /* ---------------- 관리자 면접 기록: 사람별 묶음 / 전체 목록 ---------------- */
 function getRecordsView(){ if(!state.recordsView){ try{ state.recordsView = localStorage.getItem('stenotalk_records_view') || 'person'; }catch(_){ state.recordsView = 'person'; } } return state.recordsView; }
+/* 2026-10-22g 면접 기록 '사람별' 순서: 기본은 많이 연습한 순 (같으면 최근 순). 고른 순서는 이 브라우저에 기억 */
+function getRecordsSort(){ if(!state.recordsSort){ try{ state.recordsSort = localStorage.getItem('stenotalk_records_sort') || 'count'; }catch(_){ state.recordsSort = 'count'; } } return state.recordsSort; }
+function setRecordsSort(v){ state.recordsSort = v || 'count'; try{ localStorage.setItem('stenotalk_records_sort', state.recordsSort); }catch(_){} renderAdminRecordsView(); }
 function setRecordsView(v){
   state.recordsView = v; try{ localStorage.setItem('stenotalk_records_view', v); }catch(_){}
   document.querySelectorAll('#records-view-seg .seg-btn').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
@@ -12262,14 +12285,25 @@ function renderAdminRecordsView(){
   const head = document.getElementById('admin-records-head'); if(head) head.style.display = view==='list' ? '' : 'none';
   if(!allRecords.length){ recList.innerHTML = '<div class="qa-empty" style="margin:12px;">아직 면접 기록이 없어요.</div>'; document.getElementById('admin-record-count').textContent='0건'; return; }
   if(view === 'list'){
+    { const ss = document.getElementById('rec-sort-select'); if(ss) ss.style.display = 'none'; }
     recList.innerHTML = allRecords.map(r=>recordRowHtml(r, true)).join('');
     filterAdminRecords(); return;
   }
-  // 사람별: 최근 기록 순으로 사람 정렬, 각 사람 안은 최신순
+  // 사람별: 고른 순서(기본 많이 연습한 순)로 사람 정렬, 각 사람 안은 최신순
   state.recordsOpen = state.recordsOpen || new Set();
   const groups = new Map();
   allRecords.forEach(r=>{ const k = r.user_id || '_none'; if(!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
-  const order = [...groups.entries()].sort((a,b)=>new Date(b[1][0].created_at) - new Date(a[1][0].created_at));
+  const sortKey = getRecordsSort();
+  { const ss = document.getElementById('rec-sort-select'); if(ss){ ss.value = sortKey; ss.style.display = ''; } }
+  const lastT = recs=>new Date(recs[0].created_at).getTime();
+  const avgOf = recs=>recs.reduce((s2,r)=>s2+(r.score||0),0)/recs.length;
+  const order = [...groups.entries()].sort((a,b)=>{
+    const byRecent = lastT(b[1]) - lastT(a[1]);
+    if(sortKey === 'recent') return byRecent;
+    if(sortKey === 'avgHigh') return (avgOf(b[1]) - avgOf(a[1])) || byRecent;
+    if(sortKey === 'avgLow') return (avgOf(a[1]) - avgOf(b[1])) || byRecent;
+    return (b[1].length - a[1].length) || byRecent;   // 많이 연습한 순
+  });
   recList.innerHTML = order.map(([uid, recs])=>{
     const u = (state.adminUsers||[]).find(x=>x.id===uid);
     const nm = u ? (u.name||'') : '(삭제된 계정)'; const ph = u ? (u.phone||'') : '';
@@ -13344,7 +13378,7 @@ function setFeedbackFilter(v){ state.feedbackFilter = v; renderFeedback(); }
 function renderFeedback(){
   const rows = state.feedbackRows || [];
   const stats = document.getElementById('fb-stats');
-  const newN = rows.filter(fbAlert).length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제').length;
+  const newN = rows.filter(fbAlert).length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto && !fbIsPerm(r)).length, permN = rows.filter(fbIsPerm).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제').length;
   const weekAgo = Date.now() - 7*86400000; const weekN = rows.filter(r=>new Date(r.created_at).getTime() >= weekAgo).length;
   const checkingN = rows.filter(r=>r.status==='확인 중').length, doneN = rows.filter(r=>r.status==='처리 완료').length;
   if(stats) stats.innerHTML = statTile(`${newN}<i>건</i>`, '새 글', {scope:'처리 상태', cls: newN?'warn':'', foot:'아직 확인하지 않은 글 · 메뉴 배지와 같은 기준 (권한 차단 기록 제외)'})
@@ -13352,7 +13386,7 @@ function renderFeedback(){
     + statTile(`${doneN}<i>건</i>`, '처리 완료', {scope:'처리 상태', foot:`최근 7일 들어온 글 ${weekN}건`});
   const chips = document.getElementById('fb-chips');
   const cur = state.feedbackFilter || '';
-  if(chips){ const defs = [['', '전체', rows.length], ['new', '새 글', newN], ['bug', '문제', bugN], ['idea', '의견·질문', ideaN], ['err', '자동 오류', errN]];
+  if(chips){ const defs = [['', '전체', rows.length], ['new', '새 글', newN], ['bug', '문제', bugN], ['idea', '의견·질문', ideaN], ['err', '자동 오류', errN], ['perm', '권한 차단', permN]];
     chips.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setFeedbackFilter('${v}')">${l} <b>${n}</b></button>`).join(''); }
   const q = ((document.getElementById('fb-search')||{}).value || '').trim().toLowerCase();
   const hideDone = !!(document.getElementById('fb-hide-done')||{}).checked;
@@ -13361,7 +13395,9 @@ function renderFeedback(){
     if(cur==='new' && !fbAlert(r)) return false;
     if(cur==='bug' && (r.auto || r.kind!=='문제')) return false;
     if(cur==='idea' && (r.auto || r.kind==='문제')) return false;
-    if(cur==='err' && !r.auto) return false;
+    if(cur==='err' && (!r.auto || fbIsPerm(r))) return false;
+    if(cur==='perm' && !fbIsPerm(r)) return false;
+    if(cur!=='perm' && fbIsPerm(r) && (document.getElementById('fb-hide-perm')||{}).checked) return false;   // 2026-10-22f 권한 차단 기록은 기본으로 숨김 ('권한 차단' 칩으로 보기)
     if(hideDone && r.status==='처리 완료' && cur!=='') return false;
     if(hideDone && r.status==='처리 완료' && cur==='') return false;
     if(q && !((fbUserName(r.user_id)+' '+(r.message||'')+' '+(r.admin_note||'')).toLowerCase().includes(q))) return false;
@@ -13380,7 +13416,7 @@ function renderFeedback(){
         <span class="fb-kind ${cls}">${escapeHtml(kindLabel)}</span>
         <span class="fb-who"><b>${escapeHtml(fbUserName(r.user_id))}</b>${fbUserPhone(r.user_id) ? `<small>${escapeHtml(fbUserPhone(r.user_id))}</small>` : ''}</span>
         <span class="fb-when">${formatDateFull(r.created_at)} ${new Date(r.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false})} · ${agoLabel(r.created_at)}</span>
-        <span class="fb-state-badge ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':'new'}">${escapeHtml(r.status)}</span>
+        <span class="fb-state-badge ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':(isPerm?'mid':'new')}">${isPerm && r.status==='새 글' ? '알림 제외' : escapeHtml(r.status)}</span>
       </div>
       <div class="fb-msg">${escapeHtml(r.message||'')}</div>
       ${isPerm ? `<div class="fb-hint">면접자 기기·브라우저 설정 문제예요(프로그램 오류 아님). 면접자 화면에 푸는 방법이 함께 떴어요.${permCause ? ' ' + escapeHtml(permCause) + '.' : ''} 계속 안 되면 다른 브라우저(크롬)나 휴대폰으로 열도록 안내해 주세요. 관리자 알림 숫자에는 세지 않아요.</div>` : ''}
@@ -13862,9 +13898,15 @@ async function refreshLiveView(){
       .filter(x=>x.t === null || x.days >= 2).sort((a,b)=>(b.days==null?999:b.days)-(a.days==null?999:a.days));
     return { rows, targets };
   })();
+  // 2026-10-22f 관리자 홈처럼 면접자와 직원·관리자를 나눠 셈 (관리자 본인은 직원·관리자에서도 뺌)
+  const uById = {}; users.forEach(u=>{ uById[u.id] = u; });
+  const meId = state.currentUser && state.currentUser.id;
+  const onStu = online.filter(p=>isStudentAcct(uById[p.user_id]));
+  const onStaff = online.filter(p=>uById[p.user_id] && !isStudentAcct(uById[p.user_id]) && p.user_id !== meId);
+  const practStu = practicing.filter(p=>isStudentAcct(uById[p.user_id]));
   document.getElementById('live-stats').innerHTML =
-      statTile(`${online.length}<i>명</i>`, '현재 접속', {cls: online.length?'live':'', foot:'최근 2분 안에 신호가 온 사람'})
-    + statTile(`${practicing.length}<i>명</i>`, '현재 면접 진행', {cls: practicing.length?'live':'', foot:'현재 접속 중 면접 화면에 있는 사람'})
+      statTile(`${onStu.length}<i>명</i>`, '면접자 접속', {cls: onStu.length?'live':'', foot: `직원·관리자 접속 ${onStaff.length}명 (나 빼고)`})
+    + statTile(`${practStu.length}<i>명</i>`, '면접 진행 중', {cls: practStu.length?'live':'', foot:'면접자 중 지금 면접 화면에 있는 사람'})
     + statTile(`${todayLogins}<i>명</i>`, '오늘 활동', {foot:`오늘 로그인한 사람 · 완료 면접 ${todayPractice}건 · 최근 7일 ${weekLogins}명`})
     + statTile(`${inactiveRows.rows.length}<i>명</i>`, '장기 미접속', {cls: inactiveRows.rows.length?'warn':'', foot:'이용 중인데 2일 이상 접속 없음'});
   // 최근 7일 · 날짜별 들어온 사람 수 / 끝낸 면접 수 (두 색 막대)
@@ -18702,7 +18744,7 @@ async function renderAdmin(){
   const activeCount = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length;
   if(elP) elP.innerHTML =
       tile(students.length+'<i>명</i>', '등록 면접자', {scope:'전체', foot: (adminCount || staffCount) ? [adminCount ? `관리자 ${adminCount}명` : '', staffCount ? `직원 ${staffCount}명` : ''].filter(Boolean).join(' · ') + ' 별도' : '관리자 계정 제외', go:"adminGo('users','')"})
-    + tile(activeCount+'<i>명</i>', '이용 중', {scope:'현재', foot:'권한 있고 기간이 남은 면접자', go:"adminGo('users','__active')"})
+    + tile(activeCount+'<i>명</i>', '이용 중', {scope:'현재', cls: expiredCount ? 'warn' : '', foot: (expiredCount || soonCount) ? [soonCount ? `3일 안 만료 ${soonCount}명` : '', expiredCount ? `기간 끝남 ${expiredCount}명` : ''].filter(Boolean).join(' · ') : '권한 있고 기간이 남은 면접자', go: (expiredCount || soonCount) ? "adminGo('users','__expired')" : "adminGo('users','__active')"})
     + tile(pendingCount+'<i>명</i>', '권한 대기', {scope:'현재', cls: pendingCount ? 'warn' : '', foot:'열어준 분야가 없는 면접자', go:"adminGo('users','__pending')"})
     + tile(activeUsers+'<i>명</i>', '최근 연습한 사람', {scope:'최근 7일', foot:`이번 달 완료 ${thisMonth}회 · 전체 ${statRecords.length}회`, go:"adminGo('live')"});
   const elR = document.getElementById('ov-stats-practice');
@@ -18712,9 +18754,7 @@ async function renderAdmin(){
     + tile(`${AiSwitch.limits.daily}<i>회/일</i>`, '1인당 이용 한도', {scope:'AI 면접', foot:`전체 기간 ${AiSwitch.limits.total}회`, go:"adminGo('pipeline')"})
     + tile((aiTotalUsed*AI_COST.interview('basic').total).toLocaleString()+'<i>원</i>', '예상 비용', {scope:'누적 · 추정', foot:'기본 설정 1회 기준 · 실제 청구액 아님', go:"adminGo('pipeline')"});
   const elA = document.getElementById('ov-stats-ai');
-  if(elA) elA.innerHTML = expiredCount || soonCount
-    ? tile(expiredCount+'<i>명</i>', '이용 기간 만료', {scope:'현재', cls:'warn', foot: soonCount ? `3일 안에 끝나는 사람 ${soonCount}명` : '기간이 지나면 연습 불가', go:"adminGo('users','__expired')"})
-    : '';
+  if(elA) elA.innerHTML = '';   // 2026-10-22f 혼자 한 줄을 차지하던 '이용 기간 만료' 칸은 '이용 중' 칸 아래 글로 옮김
 
   // 확인이 필요한 것
   const todoEl = document.getElementById('ov-todo');
@@ -18723,8 +18763,10 @@ async function renderAdmin(){
     { const apN = Object.keys(state.apSubmitted||{}).length; if(apN) items.push({ cls:'warn', txt:`<b>${apN}명</b>이 서류 합격 증빙을 올리고 승인을 기다려요`, go:"adminGo('approvals')", btn:'증빙 보기' }); }
     if(state.raRecent) items.push({ cls:'', txt:`최근 7일 동안 면접 후기 <b>${state.raRecent}건</b>이 들어왔어요 <small>(받은 질문은 연습 문항에 바로 들어가요)</small>`, go:"adminGo('reports')", btn:'후기 보기' });
     if(pendingCount) items.push({ cls:'warn', txt:`<b>${pendingCount}명</b>이 분야 권한을 기다리고 있어요`, go:"adminGo('users','__pending')", btn:'권한 주기' });
-    if(expiredCount) items.push({ cls:'warn', txt:`<b>${expiredCount}명</b>의 이용 기간이 끝났어요 <small>(연습은 막히고, 로그인하면 면접 질문 남기기만 보여요)</small>`, go:"adminGo('users','__expired')", btn:'확인' });
-    if(soonCount) items.push({ cls:'warn', txt:`<b>${soonCount}명</b>의 이용 기간이 3일 안에 끝나요`, go:"adminGo('users','__expired')", btn:'기간 늘리기' });
+    if(expiredCount){ const ex = students.filter(u=>accessInfo(u.access_until).expired);
+      items.push({ cls:'warn', txt:`<b>${expiredCount}명</b>의 이용 기간이 끝났어요 <small>(${ex.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${ex.length>4?' 외':''} · 연습은 막히고, 로그인하면 면접 질문 남기기만 보여요)</small>`, go:"adminGo('users','__expired')", btn:'확인' }); }
+    if(soonCount){ const soon = students.map(u=>({ u, a: accessInfo(u.access_until) })).filter(x=>x.a.until && !x.a.expired && x.a.daysLeft <= 3).sort((a,b)=>a.a.daysLeft-b.a.daysLeft);
+      items.push({ cls:'warn', txt:`<b>${soonCount}명</b>의 이용 기간이 3일 안에 끝나요 <small>(${soon.slice(0,4).map(x=>escapeHtml(x.u.name||'') + ' ' + String(x.u.access_until).slice(5,10).replace('-','/')).join(', ')}${soon.length>4?' 외':''})</small>`, go:"adminGo('users','__expired')", btn:'기간 늘리기' }); }
     const activeStudents = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired);
     const idle = activeStudents.filter(u=>{ const recs = byUser[u.id]||[]; return !recs.length || (now - new Date(recs[0].created_at).getTime()) > 3*86400000; });
     if(activeStudents.length && idle.length) items.push({ cls:'', txt:`<b>${idle.length}명</b>이 3일 넘게 연습이 없어요 <small>(${idle.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${idle.length>4?' 외':''})</small>`, go:"adminGo('live')", btn:'접속 현황' });
