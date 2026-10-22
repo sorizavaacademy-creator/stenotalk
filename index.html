@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-21s';
+var APP_VERSION = '2026-10-22a';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -14313,6 +14313,12 @@ const DocQ = {
     return 'general';
   },
   _sentences(body){
+    // 2026-10-22a: PDF 줄바꿈이 낱말 가운데서 끊긴 경우 붙임 (예: '만들었습\n니다' → '만들었습니다'. 예전엔 띄어서 '만들었습 다'로 인용됐음)
+    body = body.replace(/([가-힣])\n(?=(?:습니다|읍니다|니다|니까)(?:[.!?,]|\s|$))/g, '$1').replace(/(니)\n(?=다(?:[.!?,]|\s|$))/g, '$1');
+    // 다음 줄이 조사·어미 한 글자로 시작하면 앞 낱말에 붙임 (역량\n을 → 역량을, 꼼꼼하\n게 → 꼼꼼하게, 각\n종 → 각종). 그·이·더처럼 혼자 쓰는 말은 제외
+    body = body.replace(/([가-힣])\n(?=([가-힣])(?:[\s,.!?]|$))/g, (m, a, b)=> /[그이저더잘또꼭늘및등약총첫한두세네몇안못좀제내수]/.test(b) ? a + '\n' : a);
+    // 그 밖에 한글과 한글 사이 줄바꿈은 낱말이 끊긴 것인지 알 수 없어 표시(\u2063)해 두고, 인용할 때 이 표시가 든 절은 뒤로 미룸
+    body = body.replace(/([가-힣])\n(?=[가-힣])/g, '$1\u2063');
     return body.replace(/\n/g, ' ').split(/(?<=[다요])\.\s+|(?<=[.!?])\s+(?=[가-힣A-Z"'‘“])/).map(s=>s.trim()).filter(s=>s.length >= 12);
   },
   _feat(s){
@@ -14325,6 +14331,17 @@ const DocQ = {
       plan: /(되겠|하겠|싶습니다|기여|노력하겠|성장)/.test(s),
       belief: /(생각합니다|생각했습니다|믿습니다|라고 봅니다)$/.test(s.replace(/[.!?]+$/, '')),
     };
+  },
+  /** 2026-10-22a: 깨진 인용 거르기 — 낱말이 잘려 띄어진 끝(습 다), 날짜·기호 조각('30. ~'), 한글이 거의 없는 조각은 질문에 쓰지 않음 */
+  _quoteOk(q){
+    const t = String(q || '').trim();
+    if(t.length < 4) return false;
+    if(/(습|었|았|였|겠|했|됐|있|없|합|됩|입|니)\s+(다|니다|니까)$/.test(t)) return false;
+    if(/^[\d\s.~∼～\-–—/·,)]+/.test(t) && /^\d/.test(t)) return false;
+    if(/[~∼～]/.test(t)) return false;
+    if((t.match(/[가-힣]/g) || []).length < 2) return false;
+    if(/(^|\s)[가-힣](\s[가-힣]){2,}(\s|$)/.test(t)) return false;   // '자 기 소 개'처럼 한 글자씩 끊긴 조각
+    return true;
   },
   // 문장에서 인용할 절 하나 고르기 (너무 길면 쉼표·연결어미로 자른 뒤 동작이 있는 마지막 절)
   _quote(s){
@@ -14409,10 +14426,12 @@ const DocQ = {
         if(!kind) return;
         const quote = this._quote(s);
         if(!quote) return;
-        const q = this._q(sec, kind, quote);
+        if(!this._quoteOk(typeof quote === 'object' ? quote.np : quote)) return;
+        { const qs = typeof quote === 'object' ? quote.np : quote; if(/\u2063/.test(qs)) score -= 3; }   // 줄바꿈에서 낱말이 끊겼을 수 있는 인용은 뒤로
+        const q = this._q(sec, kind, quote).replace(/\u2063/g, ' ');
         if(q.length > 190) return;
         const quoteCore = typeof quote === 'object' ? quote.np : quote.slice(0, Math.max(6, Math.min(16, quote.length - 3)));
-        out.push({ q, ref:null, custom:true, doc:'resume', section: sec.title || '', src: s, kind, score, quoteCore,
+        out.push({ q, ref:null, custom:true, doc:'resume', section: sec.title || '', src: s.replace(/\u2063/g, ' '), kind, score, quoteCore: String(quoteCore).replace(/\u2063/g, ' '),
                    follow: [this._follow(kind, quote)].filter(Boolean),
                    hint: '자기소개서에 쓴 내용과 같은 사실(언제·어디서·내가 한 일·결과)로 답해 보세요.' });
       });
@@ -14421,7 +14440,10 @@ const DocQ = {
   },
   _cvLabel: /(학력|자격증|자격 사항|자격사항|자격|면허|어학|속기 속도|경력 및 실무 경험|경력사항|경력 사항|경력|실무 경험|대외활동|활동 사항|활동|봉사활동|봉사|교육 및 수상|교육 사항|교육|수상 경력|수상|기타|인적 사항|인적사항|병역|컴퓨터 활용)/,
   fromCv(raw){
-    const text = this.clean(raw).replace(/\n/g, ' ');
+    // 2026-10-22a: '2023. 05. 30.'처럼 날짜까지 적힌 경우 일(日)을 떼고 연·월만 남김 (예전엔 '30. ~'이 경력 이름으로 인용됐음)
+    const text = this.clean(raw).replace(/\n/g, ' ')
+      .replace(/(\d{4}\s*[.\-/]\s*\d{1,2})\s*[.\-/]\s*\d{1,2}\s*\.?(?=\s|[~∼～–—-]|$)/g, '$1.')
+      .replace(/(\d{4}\s*년\s*\d{1,2}\s*월)\s*\d{1,2}\s*일/g, '$1');
     if(!text) return [];
     // 2024.03 / 2024-03 / 2024/03 / 2024년 3월 (+ ~ 현재 / ~ 2025.02)
     const D = String.raw`(\d{4})\s*(?:[.\-/]\s*|년\s*)(\d{1,2})(?:\s*월)?\.?`;
@@ -14436,6 +14458,8 @@ const DocQ = {
       let body = text.slice(mk.end, i + 1 < marks.length ? marks[i+1].at : text.length).trim();
       const lab = body.search(LABEL);
       if(lab > 0) body = body.slice(0, lab).trim();
+      { const bl = body.search(/\s*[￭■◆●▶□◇※]/); if(bl > 0) body = body.slice(0, bl).trim(); }
+      { const ol = body.search(/\s(개인\s?능력|외국어\s?능력|어학\s?능력|컴퓨터\s?능력|보유\s?역량|특기\s?사항|병역\s?사항)/); if(ol > 0) body = body.slice(0, ol).trim(); }   // 표 밖의 다른 칸 이름 앞에서 자름   // 2026-10-22a 다음 항목 머리표(￭ 자격 및 면허 등) 앞에서 자름
       // 2026-10-21h: '○○대학교 장애학생지원센터 문자통역 봉사'처럼 학교에서 한 일은 학력으로 보지 않음
       const eduWord = /(졸업|입학|재학|학점|휴학|편입|전공)/.test(body) || (/(대학교|대학원|고등학교|중학교)/.test(body) && !/(봉사|근무|보조|센터|인턴|아르바이트|조교|통역|속기|기록|담당)/.test(body));
       if(eduWord || this._skip(body)) return;
@@ -14458,6 +14482,8 @@ const DocQ = {
         else if(main.length > 46){ main = main.slice(0, 46).replace(/\s\S*$/, ''); }
       }
       if(kind === 'training') main = main.replace(/\s*(수료|이수)$/, '');
+      main = main.replace(/\s*\/\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();   // '송무팀 / 주임' → '송무팀 주임' (읽을 때 빗금이 어색함)
+      if(!this._quoteOk(main)) return;   // 2026-10-22a 깨진 조각은 질문에서 뺌
       const until = mk.until ? (/현재|재직|진행/.test(mk.until) ? '부터 지금까지' : (()=>{ const u = mk.until.match(/(\d{4})\D+(\d{1,2})/); return u ? `부터 ${+u[1]}년 ${+u[2]}월까지` : ''; })()) : '';
       const when = `${mk.y}년 ${mk.mo}월${until}`;
       out.push({ kind, when, main, paren, extra, raw: body, y: mk.y });
