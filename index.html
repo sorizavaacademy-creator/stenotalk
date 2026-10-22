@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22q';
+var APP_VERSION = '2026-10-22r';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -7079,6 +7079,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
     <div class="modal-body modal-scroll" id="record-modal-body"></div>
     <div class="modal-foot">
       <button class="btn btn-outline" id="record-back-btn" onclick="recordGoBack()" style="display:none;">목록으로</button>
+      <button class="btn btn-outline" id="record-pdf-btn" onclick="RecordPdf.save(this)" style="display:none;" title="이 면접 기록을 PDF 파일로 내려받아요 (관리자만)">PDF로 받기</button>
       <button class="btn btn-outline" onclick="closeRecordModal()">닫기</button>
     </div>
   </div>
@@ -12760,6 +12761,8 @@ async function openRecordDetail(recordId, fromList){
     ? `${rec.dateLabel}${rec.durationLabel ? ' · 소요 '+durText(rec.durationLabel) : ''} · 종합 ${rec.score}점`
     : '';
   document.getElementById('record-back-btn').style.display = fromList ? '' : 'none';
+  { const pb = document.getElementById('record-pdf-btn'); if(pb){ pb.style.display = 'none'; pb.disabled = false; pb.textContent = 'PDF로 받기'; } }   // 2026-10-22r 관리자만, 답변이 다 불러와진 뒤에 보임
+  RecordPdf.ctx = { recordId, title: document.getElementById('record-modal-title').textContent, desc: document.getElementById('record-modal-desc').textContent, name: RecordPdf.nameOf(recordId) };
   body.innerHTML = '<div class="qa-empty">답변 기록을 불러오는 중…</div>';
   document.getElementById('modal-record').classList.add('active');
 
@@ -12793,7 +12796,95 @@ async function openRecordDetail(recordId, fromList){
         ${a.feedback ? renderFeedbackBlock(a.feedback) : ''}
       </div>`;
   }).join('');
+  { const pb = document.getElementById('record-pdf-btn'); if(pb && state.currentUser && state.currentUser.isAdmin) pb.style.display = ''; }
 }
+/* 2026-10-22r: 관리자 — 면접 기록 상세를 PDF로 내려받기.
+   html2pdf(html2canvas + jsPDF)로 화면에 보이는 그대로 A4에 담음(한글 글꼴 걱정 없음). 라이브러리를 못 불러오면 인쇄 창(PDF로 저장)으로 대신함 */
+const RecordPdf = {
+  ctx: null,
+  SRC: ['https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js', 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js'],
+  nameOf(recordId){
+    try{
+      const r = (state.adminRecords || []).find(x=>String(x.id) === String(recordId));
+      const u = r && (state.adminUsers || []).find(x=>x.id === r.user_id);
+      if(u) return u.name || '';
+      const me = state.currentUser; return me && !me.isAdmin ? (me.name || '') : '';
+    }catch(_){ return ''; }
+  },
+  _load(){
+    if(window.html2pdf) return Promise.resolve(window.html2pdf);
+    if(this._p) return this._p;
+    const one = src=>new Promise((res, rej)=>{ const sc = document.createElement('script'); sc.src = src; sc.async = true; const t = setTimeout(()=>{ sc.remove(); rej(new Error('timeout')); }, 15000); sc.onload = ()=>{ clearTimeout(t); window.html2pdf ? res(window.html2pdf) : rej(new Error('no html2pdf')); }; sc.onerror = ()=>{ clearTimeout(t); sc.remove(); rej(new Error('load')); }; document.head.appendChild(sc); });
+    this._p = one(this.SRC[0]).catch(()=>one(this.SRC[1])).catch(e=>{ this._p = null; throw e; });
+    return this._p;
+  },
+  /** #modal-record 안에서만 걸리던 꾸밈을 PDF용 상자(.rec-pdf)에도 똑같이 적용 */
+  _css(){
+    if(document.getElementById('rec-pdf-style')) return;
+    let out = '';
+    for(const sh of document.styleSheets){ let rules; try{ rules = sh.cssRules; }catch(_){ continue; } if(!rules) continue;
+      for(const r of rules){ if(r.selectorText && r.selectorText.includes('#modal-record')) out += r.cssText.split('#modal-record').join('.rec-pdf') + '\n'; } }
+    out += `.rec-pdf{width:100%;max-width:100%;box-sizing:border-box;padding:4px 6px;background:#fff;color:#1c1c1e;font-family:Pretendard,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
+.rec-pdf-head{border-bottom:2px solid #1c1c1e;padding:0 0 12px;margin:0 0 16px;}
+.rec-pdf-head .brand{font-size:12px;font-weight:700;color:#E5531A;letter-spacing:.04em;}
+.rec-pdf-head h1{font-size:22px;margin:4px 0 4px;font-weight:800;}
+.rec-pdf-head .meta{font-size:13px;color:#45454a;}
+.rec-pdf-head .meta b{color:#1c1c1e;}
+.rec-pdf .record-item{break-inside:avoid;page-break-inside:avoid;}
+.rec-pdf *{box-sizing:border-box;max-width:100%;} .rec-pdf .record-a,.rec-pdf .record-q span{overflow-wrap:anywhere;word-break:keep-all;}
+.rec-pdf details{display:none;}
+.rec-pdf-foot{margin-top:14px;font-size:11px;color:#8a8a90;text-align:right;}`;
+    const st = document.createElement('style'); st.id = 'rec-pdf-style'; st.textContent = out; document.head.appendChild(st);
+  },
+  _build(){
+    const c = this.ctx || {}, body = document.getElementById('record-modal-body');
+    const box = document.createElement('div'); box.className = 'rec-pdf';
+    const today = new Date(); const ds = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+    box.innerHTML = `<div class="rec-pdf-head"><div class="brand">ZAVAPASS · 면접 기록</div><h1>${escapeHtml(c.name ? c.name + ' · ' : '')}${escapeHtml(c.title || '면접 기록')}</h1><div class="meta">${escapeHtml(c.desc || '')}</div></div>`
+      + (body ? body.innerHTML : '')
+      + `<div class="rec-pdf-foot">${ds} · 한국AI속기사협회 ZAVAPASS</div>`;
+    box.querySelectorAll('button').forEach(b=>b.remove());
+    return box;
+  },
+  fileName(){
+    const c = this.ctx || {}; const d = (String(c.desc || '').match(/(\d{4})\.\s?(\d{1,2})\.\s?(\d{1,2})/) || []);
+    const date = d.length ? d[1] + String(d[2]).padStart(2,'0') + String(d[3]).padStart(2,'0') : new Date().toISOString().slice(0,10).replace(/-/g,'');
+    const safe = x=>String(x || '').replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_').slice(0, 30);
+    return ['ZAVAPASS', safe(c.name), safe((c.title || '면접기록').replace(/\s*모의면접$/, '')), date].filter(Boolean).join('_') + '.pdf';
+  },
+  async save(btn){
+    if(!(state.currentUser && state.currentUser.isAdmin)) return;
+    const body = document.getElementById('record-modal-body'); if(!body || !body.querySelector('.record-item')){ showToast('답변 기록을 다 불러온 뒤에 눌러 주세요.'); return; }
+    const old = btn ? btn.textContent : ''; if(btn){ btn.disabled = true; btn.textContent = 'PDF 만드는 중…'; }
+    try{
+      this._css();
+      const h2p = await this._load();
+      const el = this._build();
+      await h2p().set({
+        margin: [12, 10, 14, 10], filename: this.fileName(),
+        image: { type:'jpeg', quality:0.92 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.record-item', '.rec-pdf-head'] },
+      }).from(el).save();
+      showToast('PDF를 내려받았어요.', 'ok');
+    }catch(e){
+      console.warn('[PDF 만들기 실패 → 인쇄 창으로]', e);
+      this.printFallback();
+    }finally{ if(btn){ btn.disabled = false; btn.textContent = old || 'PDF로 받기'; } }
+  },
+  /** 라이브러리를 못 불러올 때: 새 창에 같은 내용을 띄우고 인쇄 → 'PDF로 저장' */
+  printFallback(){
+    try{
+      this._css();
+      const css = [...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
+      const w = window.open('', '_blank'); if(!w){ showToast('팝업이 막혀 PDF를 만들지 못했어요. 팝업을 허용해 주세요.'); return; }
+      w.document.write(`<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>${escapeHtml(this.fileName().replace(/\.pdf$/,''))}</title><style>${css}\n@page{size:A4;margin:12mm 10mm;} body{background:#fff;margin:0;} .rec-pdf{width:auto;}</style></head><body>${this._build().outerHTML}<script>setTimeout(()=>{ window.print(); }, 400);<\/script></body></html>`);
+      w.document.close();
+      showToast('인쇄 창에서 "PDF로 저장"을 골라 주세요.', 'info');
+    }catch(e){ showToast('PDF를 만들지 못했어요: ' + (e.message || e)); }
+  },
+};
 /* 저장된 피드백 문자열 → 본문 + [리포트 등급 · 축 점수] 줄을 등급/축 칩으로 */
 function renderFeedbackBlock(fb){
   // 리포트 줄이 끝에 있든(현재 저장 형식) 앞에 있든(예전 기록) 본문에서 떼어 내 칩으로 보여 줌
