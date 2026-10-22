@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22l';
+var APP_VERSION = '2026-10-22m';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -2412,6 +2412,20 @@ var APP_VERSION = '2026-10-22l';
   .fb-box{max-width:560px;} .fb-box #fb-text{width:100%;margin-top:12px;font-size:14px;line-height:1.6;}
   .fb-auto{margin-top:10px;font-size:11.5px;color:#66738A;line-height:1.6;background:#F7F9FC;border-radius:10px;padding:8px 12px;word-break:keep-all;} .fb-auto b{color:#2B3650;margin-right:4px;}
   .menu-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#E39B19;color:#fff;font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
+  /* 2026-10-22m 메뉴 이름 밑 한 줄 안내 */
+  .amb-txt{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.25;} .amb-name{display:flex;align-items:center;gap:6px;}
+  .amb-desc{font-size:11.5px;font-weight:400;color:var(--c-ink-3,#7a7a80);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #screen-admin.v3 .admin-menu-btn{height:auto !important;min-height:44px;padding-top:8px !important;padding-bottom:8px !important;}
+  #admin-view-pipeline .ps-tabs{display:none !important;}
+  .afind{position:relative;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--c-line,#E6E4DF);border-radius:12px;padding:0 12px;height:44px;margin:0 0 14px;color:var(--c-ink-3,#7a7a80);}
+  .afind:focus-within{border-color:var(--c-accent,#E5531A);box-shadow:0 0 0 3px rgba(229,83,26,.12);}
+  .afind input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--c-ink,#1c1c1e);height:100%;}
+  .afind-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--c-line,#E6E4DF);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:6px;z-index:60;max-height:min(420px,60vh);overflow:auto;}
+  .afind-it{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;border:0;background:none;border-radius:8px;padding:9px 10px;cursor:pointer;font:inherit;color:var(--c-ink,#1c1c1e);}
+  .afind-it b{font-size:14.5px;font-weight:700;} .afind-it small{font-size:12px;color:var(--c-ink-3,#7a7a80);}
+  .afind-it.on,.afind-it:hover{background:var(--c-accent-soft,#FDE7DC);}
+  .afind-none{padding:12px 10px;font-size:13px;color:var(--c-ink-3,#7a7a80);}
+  @media(max-width:860px){ .amb-desc{display:none;} #screen-admin.v3 .admin-menu-btn{min-height:0;} }
   .admin-menu-btn.active .menu-badge{background:#fff;color:#2C55D6;}
   .fb-stats{grid-template-columns:repeat(5,1fr) !important;margin:0 0 12px !important;} @media(max-width:860px){ .fb-stats{grid-template-columns:repeat(2,1fr) !important;} }
   .fb-list{display:grid;gap:10px;}
@@ -5385,38 +5399,43 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
   <div class="admin-layout">
     <aside class="admin-sidebar">
       <div class="admin-sidebar-title">관리자 메뉴</div>
-      <button class="admin-menu-btn active" data-group="status" onclick="showAdminView('overview')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-        현황 <span class="live-dot-nav" id="live-nav-dot" style="display:none;"></span><span class="menu-badge" id="fb-nav-badge" style="display:none;"></span>
+      <button class="admin-menu-btn active" data-group="today" onclick="showAdminView('overview')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4"/></svg>
+        <span class="amb-txt"><span class="amb-name">오늘 할 일 <span class="live-dot-nav" id="live-nav-dot" style="display:none;"></span></span><small class="amb-desc">처리할 일 · 요약 · 지금 접속</small></span>
       </button>
       <button class="admin-menu-btn" data-group="users" onclick="showAdminView('users')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5a5 5 0 0 1 6 5"/></svg>
-        면접자
+        <span class="amb-txt"><span class="amb-name">면접자</span><small class="amb-desc">권한 · 기간 · 진행표 · 승인</small></span>
       </button>
-      <button class="admin-menu-btn" data-group="reviews" onclick="try{ ReportAdmin.view = 'overview'; }catch(_){} showAdminView('reports')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
-        면접 후기 <span class="menu-badge" id="ra-nav-badge" style="display:none;"></span>
+      <button class="admin-menu-btn" data-group="results" onclick="showAdminView('records')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <span class="amb-txt"><span class="amb-name">연습 결과</span><small class="amb-desc">기록 · 실전 세트 · 엑셀</small></span>
       </button>
       <button class="admin-menu-btn" data-group="questions" onclick="showAdminView('questions')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
-        문항
+        <span class="amb-txt"><span class="amb-name">질문 <span class="menu-badge" id="ra-nav-badge" style="display:none;"></span></span><small class="amb-desc">질문 · 녹음 · 실제 후기</small></span>
       </button>
-      <button class="admin-menu-btn" data-group="records" onclick="showAdminView('records')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 4v5h5M8 13h8M8 17h5"/></svg>
-        기록
+      <button class="admin-menu-btn" data-group="talk" onclick="showAdminView('feedback')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
+        <span class="amb-txt"><span class="amb-name">소통 <span class="menu-badge" id="fb-nav-badge" style="display:none;"></span></span><small class="amb-desc">의견·오류 신고 · 공지 보내기</small></span>
       </button>
       <button class="admin-menu-btn" data-group="settings" onclick="showAdminView('pipeline')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        설정 <span class="menu-badge" id="tts-nav-badge" style="display:none;" title="새로 즉석으로 읽은 문장"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        <span class="amb-txt"><span class="amb-name">AI · 비용 <span class="menu-badge" id="tts-nav-badge" style="display:none;" title="새로 즉석으로 읽은 문장"></span></span><small class="amb-desc">AI 켜기 · 크레딧 · 목소리</small></span>
       </button>
     </aside>
 
     <main class="admin-content">
+      <div class="afind" id="afind">
+        <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="5.5"/><path d="M13.2 13.2L17 17"/></svg>
+        <input id="afind-input" type="search" placeholder="찾기 — 크레딧, 승인, 후기, 면접자 이름…" autocomplete="off" aria-label="관리자 화면 찾기" oninput="AdminFind.run(this.value)" onfocus="AdminFind.run(this.value)" onkeydown="AdminFind.key(event)">
+        <div class="afind-list" id="afind-list" hidden></div>
+      </div>
       <div class="admin-subtabs" id="admin-subtabs"></div>
       <!-- 현황 요약 -->
       <div class="admin-view active" id="admin-view-overview">
         <div class="admin-view-head">
-          <div><h2>현황 요약</h2>
+          <div><h2>할 일 · 요약</h2>
           <p>전체 면접자와 모의면접 진행 상황을 한눈에 봅니다. 숫자 칸을 누르면 해당 화면으로 바로 이동해요.</p></div>
           <button class="btn-manage demo-report-btn" onclick="openDemoReport()" title="면접을 본 것처럼 채워진 결과 화면을 엽니다 (저장 안 됨)">시연용 샘플 리포트 열기</button>
         </div>
@@ -5439,7 +5458,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 문항 관리 (2026-10-07) -->
       <div class="admin-view" id="admin-view-questions">
         <div class="admin-view-head">
-          <div><h2>문항 관리</h2>
+          <div><h2>질문 · 모범답안</h2>
           <p>질문 준비 화면과 리허설·라이브 면접에 나오는 질문과 모범답안을 여기서 고쳐요. 저장하면 면접자가 다음에 화면을 열 때 바로 반영돼요. 질문 문장을 바꾸면 녹음된 면접관 목소리는 <b>녹음 필요</b>로 바뀌고, 다시 녹음하기 전까지는 즉석 음성으로 읽어요. 지우는 대신 <b>숨기기</b>를 쓰면 언제든 되돌릴 수 있어요.</p></div>
           <div class="beta-head-btns"><button class="btn-manage" id="qm-rec-btn" onclick="qmRecordChanged()">바뀐 문항 녹음</button><button class="btn-manage qm-add" onclick="qmOpenEdit(null)">+ 문항 추가</button></div>
         </div>
@@ -5457,8 +5476,8 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 베타 현황 (2026-10-07) -->
       <div class="admin-view" id="admin-view-beta">
         <div class="admin-view-head">
-          <div><h2>베타 현황</h2>
-          <p>베타테스터(관리자 제외)마다 마지막 접속, 연습 횟수, 점수, 오류·의견을 한 표로 봅니다. 아직 시작하지 않았거나 2일 이상 안 들어온 사람은 위로 올라와요. 이름을 누르면 면접자 상세가 열려요.</p></div>
+          <div><h2>연습 진행표</h2>
+          <p>면접자(관리자·직원 제외)마다 마지막 접속, 연습 횟수, 점수, 오류·의견을 한 표로 봅니다. 아직 시작하지 않았거나 2일 이상 안 들어온 사람은 위로 올라와요. 이름을 누르면 면접자 상세가 열려요.</p></div>
           <div class="beta-head-btns"><button class="btn-manage" onclick="copyBetaNudgeList()">독려 대상 연락처 복사</button><button class="btn-manage" onclick="loadBetaView(true)">새로 고침</button></div>
         </div>
         <div class="live-note" id="beta-note" style="display:none;"></div>
@@ -5474,7 +5493,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <div class="admin-view" id="admin-view-users">
         <div class="admin-view-head">
           <div>
-            <h2>면접자 관리</h2>
+            <h2>면접자 목록</h2>
             <p>가입한 사람에게 <b>권한 관리</b>로 분야(국회·법원 등)를 열어 주면 그때부터 모의면접을 볼 수 있어요. 이름이나 <b>상세</b>를 누르면 연락처·메모·이용 기간·AI 횟수를 한 곳에서 고칠 수 있어요.</p>
           </div>
           <button class="btn-add-user" onclick="openAddUser()">지원자 등록 안내</button>
@@ -5509,7 +5528,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 승인 요청 (2026-10-16a) -->
       <div class="admin-view" id="admin-view-approvals">
         <div class="admin-view-head">
-          <div><h2>승인 요청</h2>
+          <div><h2>서류 합격 승인</h2>
           <p>승인 대기 화면에서 면접자가 보낸 승인 요청이에요. 분야·기관을 확인하고(캡처가 있으면 함께 보고) <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요. 확인이 끝난 캡처는 <b>캡처 지우기</b>로 지워 주세요.</p></div>
           <button class="btn-manage" onclick="ApprovalAdmin.load(true)">새로 고침</button>
         </div>
@@ -5540,7 +5559,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 연락할 사람 (2026-10-16g: 면접 후기에서 분리) -->
       <div class="admin-view" id="admin-view-reportcall">
         <div class="admin-view-head">
-          <div><h2>연락할 사람</h2>
+          <div><h2>후기 부탁할 사람</h2>
           <p>분야가 열린 면접자 중 아직 후기를 남기지 않은 사람이 위에 와요. 국회처럼 전화로 직접 물어본 내용은 <b>후기 입력</b>으로 넣으면 면접 후기에 모여요.</p></div>
           <button class="btn-manage" onclick="ReportAdmin.load(true)">새로 고침</button>
         </div>
@@ -5581,7 +5600,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 어려운 문항 TOP 10 (2026-10-12) -->
       <div class="admin-view" id="admin-view-hardq">
         <div class="admin-view-head">
-          <div><h2>어려운 문항</h2>
+          <div><h2>점수 낮은 질문</h2>
           <p>모든 면접자의 답변 점수를 문항별로 모아 <b>평균이 낮은 문항</b>부터 보여 줘요. 수업이나 모범답안을 보강할 곳을 찾을 때 써요. 줄을 누르면 실제 답변과 모범답안이 열려요. (AI 꼬리질문은 문항마다 달라서 빼고 계산해요)</p></div>
           <div class="beta-head-btns"><button class="btn-manage" onclick="loadHardQ(true)">새로 고침</button></div>
         </div>
@@ -5599,7 +5618,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 실전 세트 · 자기소개 코치 (2026-10-08) -->
       <div class="admin-view" id="admin-view-realset">
         <div class="admin-view-head">
-          <div><h2>실전 세트 · 자기소개 코치</h2>
+          <div><h2>실전 세트 · 자기소개</h2>
           <p>수강생(관리자 제외)마다 <b>실전 세트</b>(분야별)를 몇 번 봤는지, 최근 점수와 15분 초과 여부, 면접관 종합 의견을 한눈에 봐요. <b>1분 자기소개 코치</b>로 대본을 몇 번 만들고 따라 말했는지도 함께 보여요. 줄을 누르면 그 사람의 실전 세트 기록이 펼쳐져요.</p></div>
           <div class="beta-head-btns"><button class="btn-manage" onclick="loadRealSetView(true)">새로 고침</button></div>
         </div>
@@ -5616,7 +5635,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 접속 현황: 지금 접속 중 + 접속·연습 기록 -->
       <div class="admin-view" id="admin-view-live">
         <div class="admin-view-head">
-          <div><h2>접속 현황</h2>
+          <div><h2>지금 접속 · 접속 기록</h2>
           <p>지금 누가 들어와 있는지, 누가 한동안 안 들어왔는지, 사람별로 언제 접속해 무엇을 했는지 봅니다. 화면이 열려 있는 동안 15초마다 자동으로 새로 고쳐요.</p></div>
         </div>
         <div class="live-note" id="live-note" style="display:none;"></div>
@@ -5818,7 +5837,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
             </div>
             <div class="vs-after" id="vs-after" hidden>
               <b>꼬리질문은 이제 새 목소리로 읽어요.</b> 미리 녹음해 둔 질문은 아직 예전 목소리예요. <b>③ 질문 녹음</b>에서 <b>전체 다시 녹음</b>을 하면 처음부터 끝까지 같은 목소리가 돼요.
-              <button type="button" class="vs-btn dark sm" onclick="showPipePane('rec')">③ 질문 녹음으로 가기 →</button>
+              <button type="button" class="vs-btn dark sm" onclick="showAdminView('qrecord')">질문 음성 녹음으로 가기 →</button>
             </div>
           </section>
 
@@ -5839,7 +5858,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 
         <!-- ③ 질문 녹음 -->
         <div class="ps-pane" id="ps-pane-rec">
-          <div class="ps-guide"><b>이 탭에서 하는 일</b> 모든 질문·인사말을 ②에서 저장한 목소리로 한 번 녹음해 둬요. 녹음해 두면 면접 중 음성 재생에 비용이 들지 않아요. 보통 처음 한 번, 그리고 목소리나 문장을 바꿨을 때만 눌러요.</div>
+          <div class="ps-guide"><b>이 탭에서 하는 일</b> 모든 질문·인사말을 'AI · 비용 › 면접관 목소리'에서 저장한 목소리로 한 번 녹음해 둬요. 녹음해 두면 면접 중 음성 재생에 비용이 들지 않아요. 보통 처음 한 번, 그리고 목소리나 문장을 바꿨을 때만 눌러요.</div>
         <div class="pipe-card" id="rec-card">
           <div class="ps-card-head">
             <div><div class="subhead" style="margin:0;">질문 음성 녹음 <span class="help-tag">무료 운영 모드</span></div>
@@ -5962,7 +5981,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 의견·문제 (feedback 표) -->
       <div class="admin-view" id="admin-view-feedback">
         <div class="admin-view-head">
-          <div><h2>의견 · 문제</h2>
+          <div><h2>의견 · 오류 신고</h2>
           <p>면접자가 "의견·문제 보내기" 버튼으로 보낸 글과, 프로그램이 자동으로 기록한 오류(마이크·음성 인식·화면 오류)예요. 읽었으면 <b>확인 중</b>, 고쳤으면 <b>처리 완료</b>로 바꿔 두면 새 글만 골라 볼 수 있어요. <b>처리 완료</b>로 바꾸면 보낸 사람 화면의 종(알림)에 <b>'해결됐어요'</b>가 떠요. 면접자 기기의 카메라·마이크 권한이 막혀서 생긴 자동 기록(<b>권한 차단</b>)은 프로그램 문제가 아니라서 알림 숫자에 세지 않아요.</p></div>
           <button class="btn-manage" onclick="loadFeedback(true)">새로 고침</button>
         </div>
@@ -5981,7 +6000,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 공지사항 (2026-10-20f) -->
       <div class="admin-view" id="admin-view-notices">
         <div class="admin-view-head">
-          <div><h2>공지사항</h2>
+          <div><h2>공지 보내기</h2>
           <p>쓰고 게시하면 면접자 화면 위쪽 <b>종(알림)</b>에 숫자가 붙고, 로그인 직후 종 아래에 <b>"새 공지" 말풍선</b>이 잠깐 떠요. 종을 눌러 읽으면 숫자가 사라져요. 면접자가 보낸 글은 <b>의견 · 문제</b>에서 '처리 완료'로 바꾸면 보낸 사람에게 '해결됐어요' 알림이 자동으로 가요.</p></div>
           <button class="btn-manage" onclick="NoticeAdmin.load(true)">새로 고침</button>
         </div>
@@ -6003,7 +6022,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <!-- 데이터 내보내기 -->
       <div class="admin-view" id="admin-view-export">
         <div class="admin-view-head">
-          <div><h2>데이터 내보내기</h2>
+          <div><h2>엑셀로 내려받기</h2>
           <p>엑셀에서 바로 열 수 있는 CSV 파일로 내려받아요. 한글·전화번호·날짜가 깨지거나 숫자로 바뀌지 않도록 처리돼요.</p></div>
         </div>
         <div class="export-grid">
@@ -12175,15 +12194,91 @@ async function hardQOpenQm(fieldId, q){
 }
 
 /* 관리자 메뉴 5개 묶음 (2026-10-14): 화면(view) → 묶음(group) · 묶음 안 탭 */
-const ADMIN_GROUPS = {
-  status:   { label:'현황', views:[['overview','현황 요약'],['beta','베타 현황'],['live','접속 현황'],['feedback','의견 · 문제'],['notices','공지사항']] },
-  users:    { label:'면접자', views:[['users','면접자 관리'],['approvals','승인 요청']] },
-  reviews:  { label:'면접 후기', views:[['reports','면접 후기'],['reportcall','연락할 사람']] },
-  questions:{ label:'문항', views:[['questions','문항 관리'],['hardq','어려운 문항'],['realset','실전 세트 · 코치']] },
-  records:  { label:'기록', views:[['records','면접 기록'],['export','데이터 내보내기']] },
-  settings: { label:'설정', views:[['pipeline','AI · 음성 설정']] },
+const ADMIN_GROUPS = {   // 2026-10-22m 하는 일별로 다시 묶음 (화면 id는 그대로)
+  today:    { label:'오늘 할 일', views:[['overview','할 일 · 요약'],['live','지금 접속 · 접속 기록']] },
+  users:    { label:'면접자', views:[['users','면접자 목록'],['beta','연습 진행표'],['approvals','서류 합격 승인']] },
+  results:  { label:'연습 결과', views:[['records','면접 기록'],['realset','실전 세트 · 자기소개'],['hardq','점수 낮은 질문'],['export','엑셀로 내려받기']] },
+  questions:{ label:'질문', views:[['questions','질문 · 모범답안'],['qrecord','질문 음성 녹음'],['reports','실제 면접 후기'],['reportcall','후기 부탁할 사람']] },
+  talk:     { label:'소통', views:[['feedback','의견 · 오류 신고'],['notices','공지 보내기']] },
+  settings: { label:'AI · 비용', views:[['pipeline','AI 켜기 · 횟수'],['tccredit','타입캐스트 크레딧'],['ttslive','즉석으로 읽은 문장'],['voice','면접관 목소리'],['devtest','문제 확인 (개발용)']] },
 };
-function adminGroupOf(view){ for(const [g,o] of Object.entries(ADMIN_GROUPS)){ if(o.views.some(v=>v[0]===view)) return g; } return 'status'; }
+/* 2026-10-22m: 'AI · 비용' 안의 탭은 한 화면(admin-view-pipeline)의 칸을 나눠 보여 줌 */
+const PIPE_VIEWS = {
+  pipeline: { pane:'ai', show:'main', title:'AI 켜기 · 횟수 한도', desc:'AI 즉석 꼬리질문·채점을 켜고 끄고, 1인당 AI 면접 횟수(하루·전체)를 정해요. 면접자 화면에는 남은 횟수가 보이지 않아요.' },
+  tccredit: { pane:'ai', show:'tc', title:'타입캐스트 크레딧', desc:'면접관 목소리에 쓰는 타입캐스트 크레딧의 남은 양, 회사 전체 안전장치, 1인당 한 달 한도를 봐요.' },
+  ttslive:  { pane:'ai', show:'live', title:'면접 중 즉석으로 읽은 문장', desc:'AI 꼬리질문처럼 녹음본 없이 면접 중에 바로 읽은 문장이에요. 자주 나오는 문장은 녹음본으로 저장하면 크레딧이 들지 않아요.' },
+  voice:    { pane:'voice', title:'면접관 목소리', desc:'면접관 목소리를 고르고 들어 본 뒤 저장해요. 처음 세팅할 때만 쓰면 돼요.' },
+  qrecord:  { pane:'rec', title:'질문 음성 녹음', desc:'질문을 고른 목소리로 미리 녹음해 두는 곳이에요. 질문을 고치면 여기서 다시 녹음해요.' },
+  devtest:  { pane:'test', title:'문제 확인 (개발용)', desc:'면접 흐름을 직접 돌려 보며 문제를 확인하는 곳이에요. 평소 운영에는 쓰지 않아요.' },
+};
+/* 2026-10-22m: 관리자 '찾기' — 메뉴 이름이 기억나지 않아도 생각나는 말로 화면이나 사람을 찾음 */
+const AdminFind = {
+  keys: {
+    overview:'할일 확인 요약 현황 오늘 만료 임박 기간 연습없음 독려 통계 평균점수 등록 이용중 비용 분야별',
+    live:'접속 지금 온라인 누가 들어와 접속기록 미접속 출석 진행중',
+    users:'면접자 목록 권한 분야 열기 기간 연장 비밀번호 초기화 직원 관리자 계정 구분 기기 AI 횟수 추가 +10 이용빈도 사용량 메모 연락처',
+    beta:'진행표 베타 독려 시작안함 미접속 활발 연락처 복사',
+    approvals:'승인 서류 합격 증빙 확인 대기 반려 요청',
+    records:'면접 기록 점수 사람별 많이 연습 순위 정렬 그래프 흐름 AI대화 결과 평균',
+    realset:'실전 세트 자기소개 코치 15분 초과 대본',
+    hardq:'어려운 점수 낮은 질문 약한 부분 문항',
+    export:'엑셀 내보내기 다운로드 CSV 내려받기 파일',
+    questions:'질문 문항 모범답안 수정 추가 숨기기 기출 분야질문',
+    qrecord:'녹음 질문 음성 파일 다시녹음 mp3 바뀐문항',
+    reports:'후기 실제 면접 시험 기출 자주나온 질문 전화후기',
+    reportcall:'후기 부탁 연락 연락처 전화',
+    feedback:'의견 오류 문제 신고 버그 캡처 권한차단 답장 자동오류 마이크',
+    notices:'공지 알림 게시 안내 보내기 공지사항',
+    pipeline:'AI 켜기 끄기 꼬리질문 채점 횟수 한도 하루 5회 전체 OpenAI 오픈에이아이 비용 요금',
+    tccredit:'타입캐스트 크레딧 남은 요금제 충전 안전장치 1인 한도 사람별 사용량 typecast',
+    ttslive:'즉석 읽은 문장 꼬리질문 음성 녹음본 저장 대신읽음 새문장',
+    voice:'목소리 면접관 음성 타입캐스트 OpenAI 속도 발음 교정',
+    devtest:'문제 확인 개발 점검 테스트 동작',
+  },
+  pages(){
+    const out = [];
+    Object.values(ADMIN_GROUPS).forEach(g=>g.views.forEach(([v,l])=>out.push({ kind:'page', v, t:l, path:g.label + ' › ' + l, hay:(g.label + ' ' + l + ' ' + (this.keys[v]||'')).toLowerCase().replace(/\s+/g,' ') })));
+    return out;
+  },
+  run(q){
+    const box = document.getElementById('afind-list'); if(!box) return;
+    q = String(q||'').trim().toLowerCase(); this.sel = 0;
+    if(!q){ box.hidden = true; box.innerHTML = ''; this.hits = []; return; }
+    const words = q.split(/\s+/).filter(Boolean), qd = q.replace(/\D/g,'');
+    const pages = this.pages().map(p=>{ let sc = 0; for(const w of words){ const nw = w.replace(/\s/g,''); if(p.t.toLowerCase().replace(/\s/g,'').includes(nw)) sc += 3; else if(p.hay.replace(/\s/g,'').includes(nw)) sc += 1; else return null; } return Object.assign({ sc }, p); }).filter(Boolean).sort((a,b)=>b.sc-a.sc).slice(0,6);
+    const people = (state.adminUsers||[]).filter(u=>{ const nm = String(u.name||'').toLowerCase(); return (nm && nm.includes(q.replace(/\s/g,''))) || (qd.length >= 4 && String(u.phone||'').replace(/\D/g,'').includes(qd)); }).slice(0,5)
+      .map(u=>({ kind:'person', id:u.id, t:u.name || '(이름 없음)', path:'면접자 상세' + (u.is_admin ? ' · 관리자' : isStaffAcct(u) ? ' · 직원' : '') }));
+    this.hits = people.concat(pages);
+    box.innerHTML = this.hits.length ? this.hits.map((h,i)=>`<button type="button" class="afind-it${i===0?' on':''}" onmousedown="event.preventDefault()" onclick="AdminFind.go(${i})"><b>${escapeHtml(h.t)}</b><small>${escapeHtml(h.path)}</small></button>`).join('')
+      : `<div class="afind-none">'${escapeHtml(q)}'에 맞는 화면이 없어요. 다른 말로 찾아 보세요 (예: 크레딧, 승인, 후기, 점수)</div>`;
+    box.hidden = false;
+  },
+  key(e){
+    const box = document.getElementById('afind-list'); const n = (this.hits||[]).length;
+    if(e.key === 'Escape'){ e.target.value = ''; this.run(''); e.target.blur(); return; }
+    if(!n) return;
+    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); this.sel = (this.sel + (e.key === 'ArrowDown' ? 1 : n - 1)) % n; box.querySelectorAll('.afind-it').forEach((b,i)=>b.classList.toggle('on', i === this.sel)); }
+    if(e.key === 'Enter'){ e.preventDefault(); this.go(this.sel || 0); }
+  },
+  go(i){
+    const h = (this.hits||[])[i]; if(!h) return;
+    const inp = document.getElementById('afind-input'); if(inp){ inp.value = ''; inp.blur(); } this.run('');
+    if(h.kind === 'person'){ showAdminView('users'); try{ openAdminUserDetail(h.id); }catch(_){} return; }
+    if(h.v === 'reports'){ try{ ReportAdmin.view = 'overview'; }catch(_){} }
+    showAdminView(h.v);
+  },
+};
+document.addEventListener('click', e=>{ const f = document.getElementById('afind'); if(f && !f.contains(e.target)){ const b = document.getElementById('afind-list'); if(b) b.hidden = true; } });
+document.addEventListener('keydown', e=>{ if((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')){ const sc = document.getElementById('screen-admin'); if(sc && sc.classList.contains('active')){ e.preventDefault(); const i = document.getElementById('afind-input'); if(i) i.focus(); } } });
+function pipeApplyView(view){
+  const pv = PIPE_VIEWS[view]; if(!pv) return;
+  const map = { 'ai-card':'main', 'ai-limit-card':'main', 'tc-credit-card':'tc', 'tc-live-card':'live' };
+  Object.entries(map).forEach(([id,k])=>{ const el = document.getElementById(id); if(el) el.style.display = (k === pv.show) ? '' : 'none'; });
+  document.querySelectorAll('#ps-pane-ai .ps-guide').forEach(el=>{ el.style.display = pv.show === 'main' ? '' : 'none'; });
+  const head = document.querySelector('#admin-view-pipeline .admin-view-head');
+  if(head){ const h = head.querySelector('h2'), d = head.querySelector('p'); if(h) h.textContent = pv.title; if(d) d.textContent = pv.desc; }
+}
+function adminGroupOf(view){ for(const [g,o] of Object.entries(ADMIN_GROUPS)){ if(o.views.some(v=>v[0]===view)) return g; } return 'today'; }
 function renderAdminSubtabs(view){
   const g = adminGroupOf(view); const box = document.getElementById('admin-subtabs'); if(!box) return;
   document.querySelectorAll('.admin-menu-btn[data-group]').forEach(b=>b.classList.toggle('active', b.dataset.group === g));
@@ -12207,7 +12302,8 @@ function renderOverviewHardQ(){
 }
 function showAdminView(view){
   state.adminView = view;
-  if(view === 'pipeline') pipeInit();
+  const pv = PIPE_VIEWS[view];   // 2026-10-22m AI · 비용 / 질문 음성 녹음 탭은 같은 화면의 칸
+  if(pv){ state.pipePane = pv.pane; pipeInit(); showPipePane(pv.pane); pipeApplyView(view); }
   if(view === 'feedback') loadFeedback();
   if(view === 'notices') NoticeAdmin.load(true);
   else { if(StenoLoop.running) StenoLoop.stop(); else if(StenoListener.active) StenoListener.stop('manual'); }
@@ -12218,7 +12314,7 @@ function showAdminView(view){
   if(view === 'hardq') loadHardQ();
   if(view === 'approvals') ApprovalAdmin.load(true);
   if(view === 'reports' || view === 'reportcall') ReportAdmin.load(true);
-  document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+view));
+  document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+(pv ? 'pipeline' : view)));
   try{ renderAdminSubtabs(view); }catch(e){ console.warn('[관리자 탭]', e); }
   window.scrollTo({top:0});
 }
@@ -13434,7 +13530,7 @@ function renderBetaView(){
   const active = all.filter(r=>r.st!=='expired');
   const cnt = k => active.filter(r=>r.st===k).length;
   document.getElementById('beta-stats').innerHTML =
-      statTile(`${active.length}<i>명</i>`, '베타테스터', {foot:`이용 기간이 남은 면접자 · 권한 없는 사람 ${active.filter(r=>!r.hasPerm).length}명`})
+      statTile(`${active.length}<i>명</i>`, '면접자', {foot:`이용 기간이 남은 면접자 · 권한 없는 사람 ${active.filter(r=>!r.hasPerm).length}명`})
     + statTile(`${todayPeople}<i>명</i>`, '오늘 연습한 사람', {cls: todayPeople?'live':'', foot:`최근 3일 연습 ${active.reduce((s,r)=>s+r.recent,0)}회`})
     + statTile(`${cnt('none')}<i>명</i>`, '아직 시작 안 함', {cls: cnt('none')?'warn':'', foot:'면접을 한 번도 안 한 사람'})
     + statTile(`${cnt('idle')}<i>명</i>`, '2일 이상 미접속', {cls: cnt('idle')?'warn':'', foot:'연습은 했지만 이틀 넘게 안 들어옴'});
@@ -18877,6 +18973,7 @@ async function renderAdmin(){
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn); if(dw.length) items.push({ cls:'warn', txt:`<b>${dw.length}명</b>이 최근 7일 동안 여러 기기를 번갈아 썼어요 <small>(${dw.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${dw.length>4?' 외':''} · 계정 공유 의심)</small>`, go:"adminGo('users','__devwarn')", btn:'확인' }); }
     { const ct = state.captureTries || []; const ids = [...new Set(ct.map(x=>x.user_id))]; if(ids.length){ const nm = ids.map(id=>{ const u = users.find(x=>x.id===id); return u ? escapeHtml(u.name||'') : ''; }).filter(Boolean); items.push({ cls:'', txt:`<b>${ids.length}명</b>이 최근 7일 동안 질문 준비 화면을 복사·캡처하려 했어요 <small>(${nm.slice(0,4).join(', ')}${nm.length>4?' 외':''} · ${ct.length}번)</small>`, go:"adminGo('live')", btn:'접속 현황 보기' }); } }
     const fbNew = (state.feedbackRows||[]).filter(fbAlert).length;
+    { const tc = (typeof TcCredit !== 'undefined') ? TcCredit.sub : null; if(tc && tc.plan_credits){ const left = Math.max(0, tc.plan_credits - tc.used_credits), pct = Math.round(left / tc.plan_credits * 100); if(pct < 20) items.push({ cls:'warn', txt:`타입캐스트 크레딧이 <b>${pct}%</b>(${left.toLocaleString('ko-KR')}) 남았어요 <small>(회사 다른 프로그램과 함께 써요)</small>`, go:"showAdminView('tccredit')", btn:'크레딧 보기' }); } }   // 2026-10-22m
     if(fbNew) items.push({ cls:'warn', txt:`아직 안 읽은 <b>의견·문제 ${fbNew}건</b>이 있어요${(state.feedbackRows||[]).some(r=>fbAlert(r) && r.auto) ? ' <small>(자동 기록된 오류 포함)</small>' : ''}`, go:"adminGo('feedback')", btn:'읽으러 가기' });
     todoEl.innerHTML = `<div class="ov-todo-title"><span>확인이 필요한 것</span><small>${items.length ? items.length+'개 항목' : '0개 항목'}</small></div>` + (items.length
       ? `<ul class="ov-todo-list">` + items.map(it=>{ const m = it.txt.match(/<b>(\d+)[^<]*<\/b>/); const n = m ? m[1] : ''; return `<li><button type="button" class="ov-todo-item ${it.cls}" onclick="${it.go}"><span class="n">${n || '!'}</span><span class="tx">${it.txt}</span><span class="go">${it.btn} <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></span></button></li>`; }).join('') + `</ul>`
@@ -19163,7 +19260,6 @@ function fieldBadgesHtml(ids){
 function adminGo(view, filter){
   showAdminView(view);
   if(view === 'users' && filter !== undefined){ try{ setUserFilter(filter, false); }catch(_){} }
-  if(view === 'pipeline') showPipePane('ai');
 }
 /* AI 비용 추정 모델 (원, 추정치 · 1달러 1,400원 기준 · 2026-10-01)
    - 꼬리질문은 면접 전체 최대 n개(기본 3, 최대 5)를 랜덤한 질문에 1개씩 배치 (2026-10-01, 이전엔 질문마다 1~2개)
@@ -21539,7 +21635,7 @@ const TcLive = {
       let q = sb.from('tts_usage').select('id', { count:'exact', head:true }).eq('kind','live').eq('retry', false).not('text','is',null);
       const s = this.seen(); if(s) q = q.gt('created_at', s);
       const { count, error } = await q; if(error) throw error;
-      const onList = state.adminView === 'pipeline' && document.getElementById('tc-live-card') && document.getElementById('tc-live-card').offsetParent;
+      const onList = !!PIPE_VIEWS[state.adminView] && document.getElementById('tc-live-card') && document.getElementById('tc-live-card').offsetParent;
       this.setBadge(onList ? 0 : (count || 0));
     }catch(_){ this.setBadge(0); }
   },
