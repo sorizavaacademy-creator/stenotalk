@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22d';
+var APP_VERSION = '2026-10-22e';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -18624,9 +18624,9 @@ async function renderAdmin(){
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
   let { data: records, error: recErr } = await sbAll(()=>sb
     .from('interview_records')
-    .select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at, set_kind, set_overtime, set_review')
+    .select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at, mode, set_kind, set_overtime, set_review')   // 2026-10-22e mode 추가 ('AI 대화 면접' 건수가 늘 0이던 문제)
     .order('created_at', {ascending:false}));
-  if(recErr && /set_/i.test(recErr.message||'')){   // step16 SQL 전이면 실전 세트 칸 없이
+  if(recErr && /set_|mode/i.test(recErr.message||'')){   // step16 SQL 전이면 실전 세트 칸 없이
     ({ data: records, error: recErr } = await sbAll(()=>sb.from('interview_records').select('id, user_id, field_id, field_name, score, question_count, duration_label, created_at').order('created_at', {ascending:false})));
   }
   if(recErr){ showToast('면접 기록을 불러오지 못했습니다: '+recErr.message); }
