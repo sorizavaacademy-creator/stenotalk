@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22b';
+var APP_VERSION = '2026-10-22c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4734,6 +4734,9 @@ body.pq-guard.pq-hide #screen-practice{ filter:blur(14px); }
 /* 2026-10-21q 상세 창 '계정 구분' */
 .au-role{ max-width:360px; } .au-role .chip{ min-height:38px; font-weight:600; } .au-role .chip:disabled{ opacity:.55; cursor:not-allowed; }
 .au-role .chip.sel{ background:var(--c-ink,#1c1c1e); border-color:var(--c-ink,#1c1c1e); color:#fff; }
+
+/* 2026-10-22c 관리자 홈 '지금 접속' 아래 직원 별도 표시 */
+.as-mini .as-sub{ display:block; margin-top:4px; font-size:12px; color:rgba(255,255,255,.6); font-weight:500; }
 </style>
 </head>
 <body>
@@ -9721,6 +9724,29 @@ async function attachAdminEmails(list){
 }
 /** 2026-10-20c: 관리자 계정이면 모든 머리줄의 이름 아래에 아이디(로그인 이메일)를 표시 */
 
+
+/* 2026-10-22c 관리자 홈 '면접자 현황'의 '지금 접속'을 30초마다 다시 셈 (예전엔 홈을 열 때 한 번만 세서, 그 뒤에 들어온 사람이 안 보였음)
+   - 면접자 수는 예전 결정대로 직원·관리자를 빼고 셈. 직원이 접속해 있으면 '직원 n명 별도'로 따로 보여 줌 */
+const AdminHomeLive = {
+  t:null, sIds:null, staffIds:null,
+  cell(n, staffN){
+    const v = n==null ? '<span class="as-k muted">–</span>' : `<span class="as-k">${n}</span><span class="as-u">명</span>`;
+    return `<p>${n?'<i class="as-dot"></i>':''}지금 접속</p><div>${v}</div>${staffN ? `<small class="as-sub">직원 ${staffN}명 별도</small>` : ''}`;
+  },
+  start(sIds, staffIds){ this.sIds = sIds; this.staffIds = staffIds; clearInterval(this.t); this.t = setInterval(()=>this.tick(), 30000); },
+  stop(){ clearInterval(this.t); this.t = null; },
+  async tick(){
+    const el = document.getElementById('as-online'); const sc = document.querySelector('.screen.active');
+    if(!el || !sc || sc.id !== 'screen-dashboard' || !(state.currentUser && state.currentUser.isAdmin)){ this.stop(); return; }
+    if(document.visibilityState !== 'visible') return;
+    try{
+      const r = await sb.from('user_presence').select('user_id,screen,updated_at'); if(r.error || !r.data) return;
+      const now = Date.now(); const on = x=>x.screen!=='offline' && now - new Date(x.updated_at).getTime() < 90000;
+      const n = r.data.filter(x=>this.sIds.has(x.user_id) && on(x)).length, sn = r.data.filter(x=>this.staffIds.has(x.user_id) && on(x)).length;
+      el.className = n ? 'live' : ''; el.innerHTML = this.cell(n, sn);
+    }catch(_){}
+  },
+};
 /* 관리자 머리줄 '의견·문제' 버튼 (2026-10-20n): 새 글 수를 숫자로 보여 주고 누르면 바로 의견·문제 화면
    (예전에는 이름 메뉴나 현황 → 의견·문제로 들어가야 해서 놓치기 쉬웠음) */
 const AdminFb = {
@@ -11399,6 +11425,8 @@ async function renderDashboard(){
       ]);
       const sIds = new Set(students.map(u=>u.id));
       const onlineN = (pr && !pr.error && pr.data) ? pr.data.filter(x=>sIds.has(x.user_id) && x.screen!=='offline' && now - new Date(x.updated_at).getTime() < 90000).length : null;
+      const staffIds = new Set(list.filter(u=>isStaffAcct(u)).map(u=>u.id));
+      const staffOnN = (pr && !pr.error && pr.data) ? pr.data.filter(x=>staffIds.has(x.user_id) && x.screen!=='offline' && now - new Date(x.updated_at).getTime() < 90000).length : 0;
       const weekN = (rr && !rr.error && rr.data) ? new Set(rr.data.filter(x=>sIds.has(x.user_id)).map(x=>x.user_id)).size : null;
       const soonN = students.filter(u=>{ const a = accessInfo(u.access_until); return a.until && !a.expired && a.daysLeft <= 3; }).length;
       const expN = students.filter(u=>accessInfo(u.access_until).expired).length;
@@ -11413,10 +11441,11 @@ async function renderDashboard(){
         <div class="as-legend"><span><i class="dot open"></i>분야 열어 줌 <b>${opened}</b></span><span><i class="dot wait"></i>권한 대기 <b>${waiting}</b></span></div>
         <div class="as-mini">
           <div><p>7일간 연습</p><div>${kv(weekN,'명')}</div></div>
-          <div class="${onlineN?'live':''}"><p>${onlineN?'<i class="as-dot"></i>':''}지금 접속</p><div>${kv(onlineN,'명')}</div></div>
+          <div id="as-online" class="${onlineN?'live':''}">${AdminHomeLive.cell(onlineN, staffOnN)}</div>
           <div class="${(soonN||expN)?'warn':''}"><p>${expN ? '기간 만료' : '3일 안 만료'}</p><div>${kv(expN||soonN,'명')}</div></div>
         </div>
         <button type="button" class="as-go" onclick="dashAdminGo('')">면접자 관리 열기 <span aria-hidden="true">→</span></button>`;
+      try{ AdminHomeLive.start(sIds, staffIds); }catch(_){}
     }else{
       const now = Date.now(), DAY = 86400000;
       const inRange = (r, from, to) => r.timestamp > now - from*DAY && r.timestamp <= now - to*DAY;
