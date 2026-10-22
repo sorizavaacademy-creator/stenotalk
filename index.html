@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22s';
+var APP_VERSION = '2026-10-22t';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -2417,6 +2417,51 @@ var APP_VERSION = '2026-10-22s';
   .amb-desc{font-size:11.5px;font-weight:400;color:var(--c-ink-3,#7a7a80);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   #screen-admin.v3 .admin-menu-btn{height:auto !important;min-height:44px;padding-top:8px !important;padding-bottom:8px !important;}
   #admin-view-pipeline .ps-tabs{display:none !important;}
+  /* 2026-10-22t 체크한 질문·내 답변 */
+  .qa-q-row{display:flex;align-items:center;gap:4px;}
+  .qa-q-row .qa-question{flex:1;min-width:0;}
+  .qa-star{flex:none;width:36px;height:36px;border:0;background:none;border-radius:999px;font-size:20px;line-height:1;color:#b9b6ae;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+  .qa-star:hover{background:#FFF4DB;color:#D99A00;} .qa-star.on{color:#E5A100;}
+  .qa-item.starred .qa-q-text{font-weight:700;}
+  .qa-my{margin-top:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;}
+  .qa-my-btn{border:1px solid #EAD9AE;background:#FFF8E8;color:#7A4E00;border-radius:999px;font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;cursor:pointer;}
+  .qa-my-btn:hover{background:#FFF0CC;}
+  .qa-my-prev{display:none;width:100%;box-sizing:border-box;font-size:14px;line-height:1.6;color:#45454a;background:#FFFCF4;border:1px solid #F1E6C8;border-radius:10px;padding:8px 12px;cursor:pointer;white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .qa-my-prev:empty{display:none;}
+  #screen-practice.star-mode .qa-my-prev{-webkit-line-clamp:unset;display:block;}
+  #screen-practice.star-mode .qa-my-prev:empty{display:none;}
+  /* 내 답변 팝업 (휴대폰은 아래에서 올라오는 창) */
+  .mn-overlay .mn-box{width:min(640px,100%);display:flex;flex-direction:column;max-height:min(86vh,760px);padding:0;overflow:hidden;}
+  .mn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 10px;}
+  .mn-kicker{font-size:12px;font-weight:800;color:#B07800;letter-spacing:.02em;} .mn-head h3{margin:4px 0 0;font-size:17px;line-height:1.45;font-weight:800;color:#1c1c1e;}
+  .mn-x{border:0;background:#f3f2ef;width:34px;height:34px;border-radius:999px;font-size:15px;cursor:pointer;flex:none;}
+  .mn-body{padding:4px 20px 8px;overflow:auto;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;}
+  .mn-ref{border:1px solid #ecebe7;border-radius:10px;padding:8px 12px;background:#faf9f7;font-size:14px;} .mn-ref summary{cursor:pointer;font-weight:700;color:#45454a;} .mn-ref p{margin:8px 0 2px;line-height:1.65;color:#45454a;-webkit-user-select:none;user-select:none;}
+  .mn-ta{width:100%;box-sizing:border-box;min-height:220px;flex:1;border:1px solid #E2DDD0;border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;line-height:1.65;resize:vertical;background:#fff;}
+  .mn-ta:focus{outline:none;border-color:#E5A100;box-shadow:0 0 0 3px rgba(229,161,0,.15);}
+  .mn-meta{display:flex;justify-content:space-between;font-size:12px;color:#8a8a90;}
+  .mn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px 16px;border-top:1px solid #f0eee9;}
+  .mn-star{border:1px solid #EAD9AE;background:#fff;color:#7A4E00;border-radius:999px;font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;cursor:pointer;} .mn-star.on{background:#FFF6E0;}
+  .mn-done{min-width:96px;}
+  body.pq-guard.pq-hide #modal-mynote .mn-box{filter:blur(14px);}
+  @media(max-width:640px){
+    .mn-overlay.active{align-items:flex-end;padding:0 !important;}
+    .mn-overlay .mn-box{width:100%;max-width:100%;border-radius:18px 18px 0 0;max-height:92vh;}
+    .mn-ta{min-height:180px;}
+  }
+  .p3-star-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 14px;border-radius:12px;background:#FFF6E0;border:1px solid #F3DFA8;font-size:14px;}
+  .p3-star-bar[hidden]{display:none;}
+  .p3-star-quick{display:block;margin:10px auto 0;border:1px solid #F3DFA8;background:#FFF6E0;color:#7A4E00;border-radius:999px;font:inherit;font-size:14px;font-weight:700;padding:9px 16px;cursor:pointer;} .p3-star-quick[hidden]{display:none;}
+  .p3-star-go{border:0;border-radius:999px;background:#E5531A;color:#fff;font:inherit;font-weight:700;font-size:14px;padding:9px 16px;cursor:pointer;}
+  #p3-seen button[data-v="star"] b{font-weight:800;}
+  .au-notes:empty{display:none;}
+  .au-notes-box{margin:10px 0 4px;border:1px solid var(--slate-100);border-radius:var(--radius-m);padding:10px 14px;background:#fff;}
+  .au-notes-box summary{cursor:pointer;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;} .au-notes-box summary small{color:var(--slate-400);font-size:12px;}
+  .au-notes-box .au-note{padding:10px 0 !important;margin:0 !important;border:0 !important;border-top:1px solid #f0eee9 !important;border-radius:0 !important;box-shadow:none !important;background:none !important;} .au-notes-box summary + .au-note{border-top:0 !important;}
+  .au-note-q{font-weight:700;font-size:13.5px;} .au-note-q small{font-weight:500;color:var(--slate-400);} .au-note-star{color:#E5A100;margin-right:4px;}
+  .au-note-a{margin-top:4px;font-size:13px;line-height:1.6;white-space:pre-line;color:var(--slate-700);background:#FFFCF4;border-radius:8px;padding:8px 10px;} .au-note-a.empty{background:none;padding:0;color:var(--slate-400);}
+  .au-note-t{font-size:11.5px;color:var(--slate-400);margin-top:2px;}
+  @media(max-width:640px){ #p3-seen{flex-wrap:wrap;} .qa-star{width:40px;height:40px;} }
   .afind{position:relative;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--c-line,#E6E4DF);border-radius:12px;padding:0 12px;height:44px;margin:0 0 14px;color:var(--c-ink-3,#7a7a80);}
   .afind:focus-within{border-color:var(--c-accent,#E5531A);box-shadow:0 0 0 3px rgba(229,83,26,.12);}
   .afind input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--c-ink,#1c1c1e);height:100%;}
@@ -6134,6 +6179,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
           <p class="p3-note">질문을 펼치면 열람한 것으로 기록돼요. 면접 실력과는 무관해요.</p>
           <button type="button" class="p3-start" onclick="startFromPractice()">면접 준비실로 이동<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></button>
           <p class="p3-note center">질문을 다 보지 않아도 바로 이동할 수 있어요.</p>
+          <button type="button" class="p3-star-quick" id="p3-star-quick" onclick="PNotes.showStarred()" hidden>★ 체크한 질문 <b id="p3-star-qn">0</b>개 · 내 답변 다시 보기</button>
         </section>
         <section class="p3-card p3-tips" id="p3-tips">
           <b>이렇게 준비해보세요</b>
@@ -6158,9 +6204,10 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
         <div class="p3-tools">
           <label class="p3-search"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5.5"/><path d="M13.5 13.5L17 17"/></svg><input type="text" id="p3-search" placeholder="질문 검색" oninput="filterPracticeQA()" autocomplete="off"></label>
           <div class="p3-seg" id="p3-scope"><button type="button" class="on" data-v="tab" onclick="setPracticeScope('tab')">현재 탭</button><button type="button" data-v="all" onclick="setPracticeScope('all')">전체 질문</button></div>
-          <div class="p3-seg" id="p3-seen"><button type="button" class="on" data-v="all" onclick="setPracticeSeen('all')">전체</button><button type="button" data-v="unseen" onclick="setPracticeSeen('unseen')">안 본 질문</button><button type="button" data-v="seen" onclick="setPracticeSeen('seen')">열람한 질문</button></div>
+          <div class="p3-seg" id="p3-seen"><button type="button" class="on" data-v="all" onclick="setPracticeSeen('all')">전체</button><button type="button" data-v="unseen" onclick="setPracticeSeen('unseen')">안 본 질문</button><button type="button" data-v="seen" onclick="setPracticeSeen('seen')">열람한 질문</button><button type="button" data-v="star" onclick="setPracticeSeen('star')">★ 체크한 질문 <b id="p3-star-n">0</b></button></div>
         </div>
 
+        <div class="p3-star-bar" id="p3-star-bar" hidden><span id="p3-star-txt">체크한 질문만 보고 있어요.</span><button type="button" class="p3-star-go" onclick="PNotes.practice()">체크한 질문으로 면접 연습</button></div>
         <div id="qa-panel-public" class="qa-panel" data-tab="public"><div class="p3-panel-title"></div><div class="qa-list" id="qa-public"></div></div>
         <div id="qa-panel-common" class="qa-panel" data-tab="common"><div class="p3-panel-title"></div><div class="qa-list" id="qa-common"></div></div>
         <div id="qa-panel-exam" class="qa-panel" data-tab="exam"><div class="p3-panel-title"></div><div class="qa-list" id="qa-exam"></div></div>
@@ -7055,6 +7102,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <div class="subhead">연습 현황</div>
       <div class="admin-stats au-stats" id="au-stats"></div>
       <div class="au-freq" id="au-freq"></div>
+      <div class="au-notes" id="au-notes"></div>
         <div class="au-devices" id="au-devices"></div>
       <div class="trend-chart au-trend" id="au-trend"></div>
 
@@ -12972,6 +13020,7 @@ function openPractice(fieldId){
 
   updatePracticeProgress();
   showScreen('screen-practice');
+  try{ PNotes.paint(); PNotes.load().then(()=>PNotes.paint()); }catch(_){}   // 2026-10-22t 체크한 질문·내 답변
   // 2026-10-21a 관리자 '접속 현황'에서 질문 준비 화면 이용을 볼 수 있게
   try{ PracticeTrack.start(field, document.querySelectorAll('#qa-public .qa-item, #qa-common .qa-item, #qa-exam .qa-item').length); Activity.setPresence('practice', { field: field.name }); }catch(_){}
 }
@@ -12984,7 +13033,7 @@ function switchPracticeTab(tabKey){
   filterPracticeQA();
 }
 function setPracticeScope(v){ state.practiceScope = v; document.querySelectorAll('#p3-scope button').forEach(b=>b.classList.toggle('on', b.dataset.v===v)); filterPracticeQA(); }
-function setPracticeSeen(v){ state.practiceSeen = v; document.querySelectorAll('#p3-seen button').forEach(b=>b.classList.toggle('on', b.dataset.v===v)); filterPracticeQA(); }
+function setPracticeSeen(v){ { const sc = document.getElementById('screen-practice'); if(sc) sc.classList.toggle('star-mode', v === 'star'); } if(v === 'star' && state.practiceScope !== 'all'){ state.practiceScope = 'all'; document.querySelectorAll('#p3-scope button').forEach(b=>b.classList.toggle('on', b.dataset.v==='all')); } state.practiceSeen = v; document.querySelectorAll('#p3-seen button').forEach(b=>b.classList.toggle('on', b.dataset.v===v)); filterPracticeQA(); }
 /* 검색어 · 현재 탭/전체 · 열람 여부 조건으로 질문 보이기/숨기기 */
 function filterPracticeQA(){
   const q = ((document.getElementById('p3-search')||{}).value || '').trim().toLowerCase();
@@ -13005,7 +13054,7 @@ function filterPracticeQA(){
         const id = item.id.replace(/^qa-/, '');
         const viewed = state.viewedQA.has(id);
         const text = (item.dataset.q || '').toLowerCase();
-        const ok = (!q || text.includes(q)) && (seen==='all' || (seen==='seen' ? viewed : !viewed));
+        const ok = (!q || text.includes(q)) && (seen==='all' || (seen==='star' ? PNotes.isStarred(item.dataset.q) : seen==='seen' ? viewed : !viewed));
         item.classList.toggle('hidden', !ok); if(ok) n++;
       });
       block.classList.toggle('hidden', n===0);
@@ -13014,7 +13063,8 @@ function filterPracticeQA(){
     });
     panel.classList.toggle('none', shownInPanel===0 && scope==='all');
   });
-  const empty = document.getElementById('p3-empty'); if(empty) empty.style.display = shownTotal ? 'none' : '';
+  const empty = document.getElementById('p3-empty'); if(empty){ empty.style.display = shownTotal ? 'none' : ''; empty.textContent = (seen === 'star' && !shownTotal) ? '아직 체크한 질문이 없어요. 질문 왼쪽의 ☆를 눌러 취약한 질문을 체크해 두세요.' : '조건에 맞는 질문이 없어요. 검색어나 필터를 바꿔보세요.'; }
+  try{ PNotes.paintBar(); }catch(_){}
 }
 function togglePracticeTips(){ const el = document.getElementById('p3-tips'); if(!el) return; el.classList.toggle('open'); const sp = el.querySelector('.p3-tips-toggle span'); if(sp) sp.textContent = el.classList.contains('open') ? '팁 접기' : '답변 연습 팁 더 보기'; }
 function togglePracticeUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('p3-user-menu'), b = document.getElementById('p3-user-btn'); if(!m) return; const open = m.style.display === 'none'; m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
@@ -13032,13 +13082,18 @@ function renderQAList(list, prefix){
     const diffBadge = (item.cat === '합격자 제보' ? '<span class="rr-badge">합격자 제보</span>' : '') + (item.diff ? `<span class="diff-badge diff-${escapeHtml(item.diff)}">${escapeHtml(item.diff)}</span>` : '');
     const ref = item.ref ? `<button type="button" class="qa-ref-toggle" onclick="toggleQARef(this)"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l4 4 4-4"/></svg><span>참고 문장 접기</span></button>
         <div class="qa-ref"><b>참고 문장</b><p>${escapeHtml(item.ref)}</p><small>참고용 예시예요. 그대로 외우기보다 내 경험과 상황에 맞게 바꿔 말해보세요.</small></div>` : '';
+    try{ (state.pQAMap = state.pQAMap || new Map()).set(PNotes.key(item.q), item); }catch(_){}
     return `<div class="qa-item" id="qa-${id}" data-q="${escapeHtml(item.q)}">
+      <div class="qa-q-row"><button type="button" class="qa-star" onclick="PNotes.toggleStar(this)" aria-pressed="false" title="취약한 질문으로 체크해 두기">☆</button>
       <button type="button" class="qa-question" onclick="toggleQA('${id}')">
         <span class="qa-q-text">${diffBadge}${escapeHtml(item.q)}</span>
         <span class="qa-seen-mark"><svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l3.5 3.5L15 7"/></svg>열람함</span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="qa-answer"><div class="qa-answer-inner"><span class="qa-label">${item.cat === '합격자 제보' ? '어디서 나온 질문인가요' : '질문 의도'}</span><p>${escapeHtml(item.hint||'')}</p>${ref}</div></div>
+      </div>
+      <div class="qa-answer"><div class="qa-answer-inner"><span class="qa-label">${item.cat === '합격자 제보' ? '어디서 나온 질문인가요' : '질문 의도'}</span><p>${escapeHtml(item.hint||'')}</p>${ref}
+        <div class="qa-my"><button type="button" class="qa-my-btn" onclick="PNotes.openEditor(this)">✎ 내 답변 쓰기</button><div class="qa-my-prev" onclick="PNotes.openEditor(this)"></div></div>
+      </div></div>
     </div>`;
   }).join('');
 }
@@ -14062,7 +14117,7 @@ const PracticeGuard = {
     if(!want) this.show(true);
     if(want && !this._bound) this.bind();
   },
-  inPractice(el){ return !!(el && el.closest && el.closest('#screen-practice')); },
+  inPractice(el){ return !!(el && el.closest && el.closest('#screen-practice, #modal-mynote')); },
   isField(el){ return !!(el && el.closest && el.closest('input, textarea, select, [contenteditable="true"]')); },
   note(how, toast){
     const now = Date.now();
@@ -14104,6 +14159,144 @@ const PracticeGuard = {
     const sh = document.getElementById('pq-shield'); if(sh) sh.addEventListener('pointerdown', ()=>{ try{ window.focus(); }catch(_){} G.show(true); });
   },
   selInPractice(){ try{ const s = window.getSelection(); return !!(s && s.anchorNode && this.inPractice(s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement)); }catch(_){ return false; } },
+};
+/* 2026-10-22t: 질문 준비 화면 — 취약한 질문 체크(★)와 질문별 '내 답변' (직원 의견)
+   DB practice_notes(step33)에 저장해 PC·휴대폰 어디서나 같게 보이고, 안 되면 이 기기에만 저장했다가 다음에 올림.
+   관리자는 면접자 상세에서 읽기만 함(면접자 화면에는 표시 없음). */
+const PNotes = {
+  map: new Map(), uid: null, loaded: false, timers: {},
+  key(q){ return String(q || '').replace(/\s+/g, ' ').trim().slice(0, 300); },
+  _lk(){ return 'stenotalk_pnotes_' + (this.uid || 'guest'); },
+  _saveLocal(){ try{ localStorage.setItem(this._lk(), JSON.stringify([...this.map.values()])); }catch(_){} },
+  _ensureUser(){ const u = state.currentUser; if(!u) return false; if(this.uid !== u.id){ this.uid = u.id; this.map = new Map(); this.loaded = false; try{ (JSON.parse(localStorage.getItem(this._lk()) || '[]') || []).forEach(r=>{ if(r && r.q_key) this.map.set(r.q_key, r); }); }catch(_){} } return true; },
+  async load(){
+    if(!this._ensureUser() || this.loaded) return;
+    try{
+      const { data, error } = await sb.from('practice_notes').select('q_key,q_text,field_id,starred,my_answer,updated_at').eq('user_id', this.uid);
+      if(error) throw error;
+      (data || []).forEach(r=>{ const loc = this.map.get(r.q_key); if(!loc || !loc.dirty || String(loc.updated_at || '') <= String(r.updated_at || '')) this.map.set(r.q_key, Object.assign({}, r, { dirty:false })); });
+      this.loaded = true; this._saveLocal();
+      [...this.map.values()].filter(r=>r.dirty).forEach(r=>this.push(r.q_key));
+    }catch(e){ console.warn('[내 답변 불러오기 실패 → 이 기기 기록 사용]', e.message || e); this.loaded = true; }
+  },
+  get(q){ this._ensureUser(); return this.map.get(this.key(q)); },
+  isStarred(q){ const r = this.get(q); return !!(r && r.starred); },
+  starred(){ this._ensureUser(); return [...this.map.values()].filter(r=>r.starred); },
+  set(q, patch){
+    this._ensureUser(); const k = this.key(q); if(!k) return null;
+    const r = Object.assign({ q_key:k, q_text:String(q).slice(0, 500), field_id:(state.selectedField && state.selectedField.id) || '', starred:false, my_answer:'' }, this.map.get(k) || {}, patch, { updated_at:new Date().toISOString(), dirty:true });
+    this.map.set(k, r); this._saveLocal(); return r;
+  },
+  async push(k){
+    const r = this.map.get(k); if(!r || !this.uid) return false;
+    try{
+      const { error } = await sb.from('practice_notes').upsert({ user_id:this.uid, q_key:r.q_key, q_text:r.q_text, field_id:r.field_id || '', starred:!!r.starred, my_answer:String(r.my_answer || '').slice(0, 3000), updated_at:r.updated_at }, { onConflict:'user_id,q_key' });
+      if(error) throw error;
+      r.dirty = false; this._saveLocal(); return true;
+    }catch(e){ console.warn('[내 답변 저장 실패 → 이 기기에만 저장]', e.message || e); return false; }
+  },
+  toggleStar(btn){
+    const it = btn.closest('.qa-item'); if(!it) return;
+    const on = !this.isStarred(it.dataset.q);
+    this.set(it.dataset.q, { starred:on }); this.push(this.key(it.dataset.q));
+    this.paintItem(it);
+    try{ showToast(on ? '취약한 질문으로 체크했어요. 위쪽 "★ 체크한 질문"에서 모아 볼 수 있어요.' : '체크를 풀었어요.', on ? 'ok' : 'info'); }catch(_){}
+    if(state.practiceSeen === 'star') filterPracticeQA(); else this.paintBar();
+  },
+  /** 2026-10-22t: 내 답변은 카드 안에 큰 칸을 두지 않고 팝업(휴대폰은 아래에서 올라오는 창)에서 씀. 카드에는 버튼과 두 줄 미리 보기만 */
+  _editQ: null,
+  _modal(){
+    let m = document.getElementById('modal-mynote'); if(m) return m;
+    m = document.createElement('div'); m.className = 'modal-overlay mn-overlay'; m.id = 'modal-mynote';
+    m.innerHTML = `<div class="modal-box mn-box" role="dialog" aria-modal="true" aria-labelledby="mn-q">
+      <div class="mn-head"><div><span class="mn-kicker">내 답변</span><h3 id="mn-q"></h3></div><button type="button" class="mn-x" onclick="PNotes.closeEditor()" aria-label="닫기">✕</button></div>
+      <div class="mn-body">
+        <details class="mn-ref" id="mn-ref"><summary>참고 문장 보기</summary><p id="mn-ref-text"></p></details>
+        <textarea id="mn-ta" class="mn-ta" maxlength="3000" placeholder="면접에서 말할 내 답변을 적어 두세요. 적는 대로 저장돼요.&#10;예) 결론 한 문장 → 이유 → 내 경험 순서로" oninput="PNotes.onInput(this)"></textarea>
+        <div class="mn-meta"><span id="mn-st"></span><span id="mn-n">0 / 3000</span></div>
+      </div>
+      <div class="mn-foot"><button type="button" class="mn-star" id="mn-star" onclick="PNotes.toggleStarEditor()">☆ 취약 질문 체크</button><button type="button" class="btn btn-solid mn-done" onclick="PNotes.closeEditor()">완료</button></div>
+    </div>`;
+    m.addEventListener('click', e=>{ if(e.target === m) this.closeEditor(); });
+    document.body.appendChild(m); return m;
+  },
+  openEditor(el){
+    const it = el.closest('.qa-item'); if(!it) return;
+    const q = it.dataset.q; this._editQ = q; this._editItem = it;
+    const m = this._modal(), r = this.get(q), src = (state.pQAMap && state.pQAMap.get(this.key(q))) || {};
+    document.getElementById('mn-q').textContent = q;
+    const ref = document.getElementById('mn-ref'); ref.style.display = src.ref ? '' : 'none'; ref.open = false; document.getElementById('mn-ref-text').textContent = src.ref || '';
+    const ta = document.getElementById('mn-ta'); ta.value = (r && r.my_answer) || '';
+    document.getElementById('mn-st').textContent = r && r.my_answer ? '저장됨' : '';
+    document.getElementById('mn-n').textContent = `${ta.value.length} / 3000`;
+    this._paintEditorStar();
+    m.classList.add('active'); document.body.classList.add('mn-open');
+    setTimeout(()=>{ try{ ta.focus({ preventScroll:true }); const L = ta.value.length; ta.setSelectionRange(L, L); }catch(_){} }, 60);
+  },
+  closeEditor(){
+    const m = document.getElementById('modal-mynote'); if(!m) return;
+    const k = this.key(this._editQ || ''); if(this.timers[k]){ clearTimeout(this.timers[k]); this.timers[k] = null; this.push(k); }
+    m.classList.remove('active'); document.body.classList.remove('mn-open');
+    if(this._editItem) this.paintItem(this._editItem);
+    this.paintBar();
+  },
+  _paintEditorStar(){ const b = document.getElementById('mn-star'); if(!b) return; const on = this.isStarred(this._editQ); b.textContent = on ? '★ 취약 질문으로 체크됨' : '☆ 취약 질문 체크'; b.classList.toggle('on', on); },
+  toggleStarEditor(){ if(!this._editQ) return; const on = !this.isStarred(this._editQ); this.set(this._editQ, { starred:on }); this.push(this.key(this._editQ)); this._paintEditorStar(); if(this._editItem) this.paintItem(this._editItem); },
+  onInput(ta){
+    const q = this._editQ; if(!q) return; const k = this.key(q); this.set(q, { my_answer: ta.value });
+    const st = document.getElementById('mn-st'), n = document.getElementById('mn-n'); if(st) st.textContent = '저장 중…'; if(n) n.textContent = `${ta.value.length} / 3000`;
+    clearTimeout(this.timers[k]);
+    this.timers[k] = setTimeout(async ()=>{ this.timers[k] = null; const ok = await this.push(k); if(st && this._editQ === q) st.textContent = ok ? '저장됨' : '이 기기에 저장됨'; }, 900);
+  },
+  paintItem(it){
+    const r = this.get(it.dataset.q), on = !!(r && r.starred);
+    const b = it.querySelector('.qa-star'); if(b){ b.textContent = on ? '★' : '☆'; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+    it.classList.toggle('starred', on);
+    const has = !!(r && r.my_answer && r.my_answer.trim());
+    const btn = it.querySelector('.qa-my-btn'); if(btn) btn.textContent = has ? '✎ 내 답변 고치기' : '✎ 내 답변 쓰기';
+    const pv = it.querySelector('.qa-my-prev'); if(pv) pv.textContent = has ? r.my_answer.trim() : '';
+    it.classList.toggle('has-my', has);
+  },
+  paint(){ document.querySelectorAll('#screen-practice .qa-item').forEach(it=>this.paintItem(it)); this.paintBar(); },
+  paintBar(){
+    const items = [...document.querySelectorAll('#screen-practice .qa-item')].filter(it=>this.isStarred(it.dataset.q));
+    const n = items.length, nEl = document.getElementById('p3-star-n'); if(nEl) nEl.textContent = n;
+    { const qb = document.getElementById('p3-star-quick'), qn = document.getElementById('p3-star-qn'); if(qb) qb.hidden = !n; if(qn) qn.textContent = n; }
+    const bar = document.getElementById('p3-star-bar'), txt = document.getElementById('p3-star-txt');
+    if(bar){ bar.hidden = !(state.practiceSeen === 'star' && n > 0); if(txt) txt.innerHTML = `체크한 질문 <b>${n}</b>개 · 내 답변 ${items.filter(it=>{ const r = this.get(it.dataset.q); return r && r.my_answer; }).length}개 작성`; }
+  },
+  /** 휴대폰에서 면접 직전 바로: 체크한 질문만 펼쳐 보기 */
+  showStarred(){
+    setPracticeSeen('star');
+    document.querySelectorAll('#screen-practice .qa-item.starred').forEach(it=>{ const b = it.closest('.qa-cat-block'); if(b) b.classList.add('open'); });
+    const t = document.getElementById('p3-seen'); if(t){ const y = t.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo({ top: Math.max(0, y), behavior:'smooth' }); }
+  },
+  /** 체크한 질문으로 복습 면접 (최대 10개) */
+  practice(){
+    const items = [...document.querySelectorAll('#screen-practice .qa-item')].filter(it=>this.isStarred(it.dataset.q)).map(it=>(state.pQAMap && state.pQAMap.get(this.key(it.dataset.q))) || { q: it.dataset.q });
+    const uniq = []; const seen = new Set(); items.forEach(x=>{ const k = this.key(x.q); if(!seen.has(k)){ seen.add(k); uniq.push(x); } });
+    if(!uniq.length){ showToast('먼저 질문 왼쪽의 ☆를 눌러 체크해 주세요.', 'info'); return; }
+    const pick = uniq.slice().sort(()=>Math.random() - 0.5).slice(0, 10);
+    state.reviewOverride = pick.map(x=>({ q:x.q, ref:x.ref || null, hint:x.hint, diff:x.diff, review:true })); state.reviewLabel = '체크해 둔 질문';
+    try{ Activity.log('star_practice', { count: pick.length }); }catch(_){}
+    if(uniq.length > 10) showToast(`체크한 질문 ${uniq.length}개 중 10개를 골라 연습해요.`, 'info');
+    showScreen('screen-dashboard'); renderDashboard();
+    openSetup('review');
+  },
+  /** 관리자: 면접자 상세에 체크한 질문·내 답변 */
+  async adminHtml(userId){
+    try{
+      const { data, error } = await sb.from('practice_notes').select('q_text,field_id,starred,my_answer,updated_at').eq('user_id', userId).order('updated_at', { ascending:false }).limit(200);
+      if(error) throw error;
+      const rows = (data || []).filter(r=>r.starred || (r.my_answer && r.my_answer.trim()));
+      if(!rows.length) return '';
+      const fname = id=>{ const f = (typeof FIELDS !== 'undefined' ? FIELDS : []).find(x=>x.id === id); return f ? f.name : ''; };
+      const nStar = rows.filter(r=>r.starred).length, nAns = rows.filter(r=>r.my_answer && r.my_answer.trim()).length;
+      return `<details class="au-notes-box"><summary><b>체크한 질문 · 내 답변</b><small>체크 ${nStar}개 · 답변 ${nAns}개 · 면접자가 질문 준비 화면에 적어 둔 것</small></summary>`
+        + rows.map(r=>`<div class="au-note"><div class="au-note-q">${r.starred ? '<span class="au-note-star">★</span>' : ''}${escapeHtml(r.q_text || '')}${r.field_id ? ` <small>${escapeHtml(fname(r.field_id))}</small>` : ''}</div>${r.my_answer && r.my_answer.trim() ? `<div class="au-note-a">${escapeHtml(r.my_answer)}</div>` : '<div class="au-note-a empty">내 답변은 아직 없어요</div>'}<div class="au-note-t">${formatDateShort(r.updated_at)}</div></div>`).join('')
+        + `</details>`;
+    }catch(e){ console.warn('[내 답변 불러오기 실패]', e.message || e); return ''; }
+  },
 };
 const PracticeTrack = {
   v:null, off:false, _tick:null, _save:null, _last:0, lastAct:0, dirty:false, _tok:'', IDLE:5*60*1000,
@@ -22297,6 +22490,7 @@ function openAdminUserDetail(userId){
   `;
 
   try{ AuFreq.load(userId, u); }catch(_){}   // 2026-10-22l 이용 빈도 (관리자만 봄)
+  { const nb = document.getElementById('au-notes'); if(nb){ nb.innerHTML = ''; if(!u.is_admin) PNotes.adminHtml(userId).then(h=>{ if(state.editingUserId === userId) nb.innerHTML = h; }); } }   // 2026-10-22t 체크한 질문·내 답변
 
   // 2026-10-12: 기기 정보 (한 계정 한 기기)
   { const box = document.getElementById('au-devices');
