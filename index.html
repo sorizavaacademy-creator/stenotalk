@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22a';
+var APP_VERSION = '2026-10-22b';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -14821,8 +14821,14 @@ function micErrorMessage(err){
     return {kind:'err', text:'연결된 마이크를 찾지 못했어요. 마이크(헤드셋) 연결과 윈도우 마이크 설정을 확인해 주세요.', help:true};
   if(name==='NotReadableError' || name==='AbortError')
     return {kind:'err', text:'마이크를 열 수 없어요. 줌·팀즈 등 다른 프로그램이 마이크를 쓰고 있는지 확인해 주세요.', help:true};
-  if(name==='network')
-    return {kind:'err', text:'음성 인식 서버에 연결하지 못했어요. 인터넷 연결을 확인하거나 엣지 브라우저를 사용해 주세요.', help:true};
+  if(name==='network'){
+    // 2026-10-22b: 엣지 사용자에게 '엣지를 쓰라'고 하던 문구를 브라우저에 맞게
+    const ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+    const off = typeof navigator !== 'undefined' && navigator.onLine === false;
+    if(off) return {kind:'err', text:'인터넷 연결이 끊겨 음성 인식이 멈췄어요. 연결되면 자동으로 다시 들어요. 그동안 답변은 직접 입력할 수 있어요.', help:true};
+    const who = /Edg\//.test(ua) ? '마이크로소프트' : /Chrome\//.test(ua) ? '구글' : '음성 인식';
+    return {kind:'err', text:`${who} 음성 인식 서버와 연결이 끊겼어요. 인터넷(와이파이)을 확인해 주세요. 회사 보안 프로그램·VPN이 막는 경우도 있어요. 답변은 직접 입력할 수도 있어요.`, help:true};
+  }
   return {kind:'err', text:'마이크 오류가 발생했어요 ('+(name||'알 수 없음')+'). "마이크가 안 되나요?"를 눌러 확인해 주세요.', help:true};
 }
 async function startMicLevelAnim(){
@@ -17272,7 +17278,7 @@ function initSpeechRecognition(){
         interim = joinSpeech(interim, transcript);
       }
     }
-    state.sttGotResult = true; state.sttLastResultAt = Date.now();
+    state.sttGotResult = true; state.sttLastResultAt = Date.now(); state.sttNetworkErrors = 0;   // 2026-10-22b 잘 들리면 끊김 횟수 초기화
     markSpeech(true);
     hideSttAlert();
     const ta = document.getElementById('steno-input');
@@ -17288,8 +17294,13 @@ function initSpeechRecognition(){
     if(state.sttViaTrack && ['audio-capture','not-allowed','service-not-allowed','network'].includes(e.error) && !state.sttTrackFailed){ state.sttTrackFailed = true; console.warn('[음성 인식] 트랙 시작 실패 → 기본 마이크로 재시도', e.error); return; }
     const fatal = ['not-allowed','service-not-allowed','audio-capture'].includes(e.error);
     if(e.error === 'network'){
+      // 2026-10-22b: 오래 켜 둔 화면에서 띄엄띄엄 난 끊김이 쌓여 멈추던 문제 → 2분 안에 5번 연속일 때만 멈춤
+      const nowT = Date.now();
+      if(nowT - (state.sttNetErrAt||0) > 120000) state.sttNetworkErrors = 0;
+      state.sttNetErrAt = nowT;
       state.sttNetworkErrors = (state.sttNetworkErrors||0) + 1;
-      if(state.sttNetworkErrors < 3) return;  // 일시적인 끊김은 몇 번 재시도 (간격을 늘려 가며)
+      if(navigator.onLine === false){ state.sttWaitOnline = true; showSttAlert(micErrorMessage(e).text); return; }   // 인터넷이 돌아오면 자동으로 다시 들음
+      if(state.sttNetworkErrors < 5) return;  // 일시적인 끊김은 간격을 늘려 가며 다시 시도
     }
     const m = micErrorMessage(e);
     showSttAlert(m.text);
@@ -17314,7 +17325,8 @@ function initSpeechRecognition(){
         showSttAlert('음성 인식이 계속 끊겨요. 마이크 설정을 확인하거나 엣지 브라우저를 사용해 주세요. 답변은 직접 입력할 수도 있어요.');
         return;
       }
-      const delay = state.sttNetworkErrors ? 800 * state.sttNetworkErrors : (quick ? 400 : 0);
+      if(state.sttWaitOnline) return;   // 2026-10-22b 인터넷이 끊긴 동안은 기다렸다가 'online'에서 다시 시작
+      const delay = state.sttNetworkErrors ? Math.min(6000, 800 * state.sttNetworkErrors) : (quick ? 400 : 0);
       setTimeout(()=>{ if(state.recognitionShouldRun){ try{ srStart(rec); }catch(err){} } }, delay);
     }else{
       updateListeningUI(false);
@@ -17524,9 +17536,22 @@ function joinSpeech(a, b){
 function showSttAlert(text){
   const el = document.getElementById('stt-alert');
   if(!el) { showToast(text); return; }
-  el.innerHTML = escapeHtml(text) + ' <a onclick="openMicHelp()">해결 방법 보기</a>';
+  const canRetry = !!(state.speechSupported && state.recognition && /(서버|끊겼|끊겨|멈췄)/.test(text) && document.querySelector('#screen-interview.active'));
+  el.innerHTML = escapeHtml(text) + (canRetry ? ' <a onclick="sttRetryNow()">다시 듣기</a> ·' : '') + ' <a onclick="openMicHelp()">해결 방법 보기</a>';
   el.classList.add('show');
 }
+/** 2026-10-22b: 음성 인식이 끊겨 멈췄을 때 '다시 듣기' — 지금까지 받아 적은 글은 그대로 두고 이어서 들음 */
+function sttRetryNow(){
+  try{
+    state.sttWaitOnline = false; state.sttNetworkErrors = 0; state.sttQuickEnds = 0;
+    if(!state.recognition) return;
+    state.finalTranscript = (document.getElementById('steno-input')||{}).value ? document.getElementById('steno-input').value.trim() : (state.finalTranscript||'');
+    state.recognitionShouldRun = true; hideSttAlert(); updateListeningUI(true);
+    const ws = document.getElementById('wave-state'); if(ws) ws.textContent = '듣는 중';
+    try{ srStart(state.recognition); }catch(e){ if(!(e && e.name === 'InvalidStateError')) throw e; }
+  }catch(e){ console.warn('[다시 듣기 실패]', e); showToast('음성 인식을 다시 시작하지 못했어요. 답변은 직접 입력해 주세요.', 'warn'); }
+}
+window.addEventListener('online', ()=>{ try{ if(state.sttWaitOnline && state.recognitionShouldRun){ state.sttWaitOnline = false; state.sttNetworkErrors = 0; hideSttAlert(); srStart(state.recognition); } }catch(_){} });
 function hideSttAlert(){ const el = document.getElementById('stt-alert'); if(el) el.classList.remove('show'); }
 function startRecognition(){
   if(!state.speechSupported || !state.recognition) return;
@@ -19309,7 +19334,7 @@ const StenoListener = {
         if(e.results[i].isFinal) this.transcript = joinSpeech(this.transcript, t); else interim = joinSpeech(interim, t);
       }
       this.interim = interim;
-      const now = Date.now(); this.spokeAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; this.lastVoiceAt = Math.max(this.lastVoiceAt, now);
+      const now = Date.now(); this.spokeAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; this.lastVoiceAt = Math.max(this.lastVoiceAt, now); this.timers.netErr = 0;
       this._state('speaking');
       if(this.cb.onInterim) this.cb.onInterim(joinSpeech(this.transcript, this.interim));
     };
@@ -19317,11 +19342,11 @@ const StenoListener = {
       if(e.error==='no-speech' || e.error==='aborted') return;
       if(e.error==='phrases-not-supported'){ try{ rec.phrases = []; }catch(_){} return; }   // 용어 힌트를 못 쓰는 브라우저 → 힌트 없이 다시 시작
       if(this._srTrack && e.error !== 'network'){ console.warn('[StenoListener] 트랙으로 음성 인식 실패 → 기본 마이크로 다시 시도', e.error); this._srTrack = null; return; }   // onend가 기본 마이크로 다시 시작
-      if(e.error==='network'){ this.timers.netErr = (this.timers.netErr||0)+1; if(this.timers.netErr<3) return; }
+      if(e.error==='network'){ const t = Date.now(); if(t - (this.timers.netAt||0) > 120000) this.timers.netErr = 0; this.timers.netAt = t; this.timers.netErr = (this.timers.netErr||0)+1; if(this.timers.netErr<5) return; }   // 2026-10-22b 2분 안에 5번일 때만 멈춤
       this.failKind = e.error || 'error';
       this._fail(micErrorMessage(e).text);
     };
-    rec.onend = ()=>{ if(this.active){ const d = this.timers.netErr ? 800 * this.timers.netErr : 300; setTimeout(()=>{ if(!this.active) return;
+    rec.onend = ()=>{ if(this.active){ const d = this.timers.netErr ? Math.min(6000, 800 * this.timers.netErr) : 300; setTimeout(()=>{ if(!this.active) return;
       if(this._srTrack && this._srTrack.readyState !== 'live') this._srTrack = null;   // 트랙이 끝났으면(권한 만료·장치 분리) 기본 마이크로
       try{ this._srTrack ? rec.start(this._srTrack) : rec.start(); }
       catch(e){ if(this._srTrack){ this._srTrack = null; try{ rec.start(); return; }catch(_){} } this.timers.restartFail = (this.timers.restartFail||0) + 1; if(this.timers.restartFail >= 2){ this.failKind = 'restart'; this._fail('음성 인식을 다시 시작하지 못했어요. 답변을 직접 입력해 주세요.'); } } }, d); } };
