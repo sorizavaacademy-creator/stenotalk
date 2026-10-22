@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22p';
+var APP_VERSION = '2026-10-22q';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -1921,7 +1921,7 @@ var APP_VERSION = '2026-10-22p';
   #modal-record .record-a{border-radius:10px;}
   .record-fb{background:#F0F5FF !important;white-space:pre-line;}
   .record-fb b{color:#2C55D6;}
-  .record-fb-text{display:block;}
+  .record-fb-text{display:block;white-space:pre-line;} .q-fb-text{white-space:pre-line;}
   .rec-rubric{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;white-space:normal;}
   .rec-rubric .q-grade{font-size:15px;margin-right:4px;}
   .rec-rubric .axis-chip b{display:inline;margin:0 3px 0 0;font-size:inherit;color:inherit;}
@@ -5733,7 +5733,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
             </label>
             <label class="ps-switch" for="ai-grading-toggle">
               <span class="ps-sw-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg></span>
-              <span class="ps-sw-body"><b>AI 채점</b><small>답변마다 점수·피드백·"이렇게 말해 보세요"를 만들어요. 꺼지면 규칙 기반 6축 채점만 해요.</small><span class="ps-sw-cost" id="ai-cost-grading"></span></span>
+              <span class="ps-sw-body"><b>AI 채점</b><small>답변마다 점수와 예시 문장이 들어간 피드백을 만들어요. 꺼지면 규칙 기반 6축 채점만 해요.</small><span class="ps-sw-cost" id="ai-cost-grading"></span></span>
               <span class="sw"><input type="checkbox" id="ai-grading-toggle" onchange="aiToggle('ai_grading', this)"><i></i></span>
             </label>
           </div>
@@ -12801,7 +12801,7 @@ function renderFeedbackBlock(fb){
   const m = src.match(/\[리포트\s+([A-D]\+?)\s*·\s*([^\]]+)\]/);
   let body = (m ? src.replace(m[0], '') : src);
   const dm = body.match(/\[전달력\s*(\d+)\s*점\][^\n]*/); if(dm) body = body.replace(dm[0], '');
-  body = body.replace(/\n{2,}/g, '\n').trim();
+  body = body.replace(/\n?▶\s*이렇게 말해 보세요:[^\n]*/g, '').replace(/\n{3,}/g, '\n\n').trim();   // 2026-10-22q 예전 기록의 '이렇게 말해 보세요' 줄은 숨기고, 문단(빈 줄)은 살림
   let chips = '';
   if(m){
     const grade = m[1];
@@ -15525,7 +15525,7 @@ function buildFeedbackText(analysis){
     parts.push(`특히 '${matched.slice(0,2).join("', '")}' 같은 부분을 잘 짚어 답변하셨습니다.`);
   }
   if(missed.length){
-    parts.push(`다만 '${missed.slice(0,2).join("', '")}' 같은 내용은 답변에 없었는데, 다음엔 이 부분도 함께 언급해 보시면 더 좋은 답변이 될 거예요.`);
+    parts.push(`'${missed.slice(0,2).join("', '")}' 같은 내용은 답변에 없었는데, 다음엔 이 부분도 함께 언급해 보시면 더 좋은 답변이 될 거예요.`);
   }
   return parts.join(' ');
 }
@@ -15608,7 +15608,7 @@ const LF = {
   /** 모범답안 구절 → 따옴표 안에 넣기 좋은 짧은 평서형 ("하겠습니다" → "하겠다") */
   plain(s, max){
     let t = String(s||'').replace(/\s+/g,' ').trim().replace(/[.!?]+$/,'').replace(/^(그래서|그리고|또한|다만|특히|그래도|하지만|따라서|그러므로|먼저|우선|이를 위해)\s+/,'');
-    t = t.replace(/하겠습니다$/,'하겠다').replace(/겠습니다$/,'겠다').replace(/했습니다$/,'했다').replace(/었습니다$/,'었다').replace(/았습니다$/,'았다').replace(/생각합니다$/,'생각한다').replace(/합니다$/,'한다').replace(/입니다$/,'이다').replace(/됩니다$/,'된다').replace(/습니다$/,'다');
+    t = t.replace(/하겠습니다$/,'하겠다').replace(/겠습니다$/,'겠다').replace(/했습니다$/,'했다').replace(/었습니다$/,'었다').replace(/았습니다$/,'았다').replace(/생각합니다$/,'생각한다').replace(/(중요|필요|가능|분명|명확|정확|확실|당연|소중|적합|적절|충분|부족|익숙|유용|신중|성실|꼼꼼|정직|투명|공정|원활|신속|철저|필수적|기본적|핵심적)합니다$/,'$1하다').replace(/합니다$/,'한다').replace(/입니다$/,'이다').replace(/됩니다$/,'된다').replace(/습니다$/,'다');
     max = max || 36;
     if(t.length > max){ const cut = t.lastIndexOf(' ', max); t = t.slice(0, cut > max*0.5 ? cut : max) + '…'; }
     return t;
@@ -16214,11 +16214,11 @@ const Rubric = {
     if(missPts.length && usePts){
       const a = LF.plain(missPts[0].text, 38);
       if(low) S.push(`"${a}"` + (missPts[1] ? `, "${LF.plain(missPts[1].text, 30)}"` : '') + ' 같은 내용이 들어가야 해요.');
-      else if(missPts.length >= 2 && rb.total < 75) S.push(`다만 "${a}", "${LF.plain(missPts[1].text, 30)}" 같은 내용이 빠져 있어요.`);
-      else S.push(`다만 "${a}" 같은 내용이 빠졌어요.` + (rb.total >= 60 ? ' 이 한 문장만 더하면 훨씬 단단해집니다.' : ''));
+      else if(missPts.length >= 2 && rb.total < 75) S.push(`"${a}", "${LF.plain(missPts[1].text, 30)}" 같은 내용은 답변에서 빠져 있어요.`);
+      else S.push(`"${a}" 같은 내용은 답변에서 빠졌어요.` + (rb.total >= 60 ? ' 이 한 문장만 더하면 훨씬 단단해집니다.' : ''));
     }else if(failed.length){
       const names = failed.slice(0,2).map(x=>x.label);
-      S.push(low ? `${names.join(', ')}${LF.josa(names[names.length-1],'이','가')} 들어가야 해요.` : `다만 ${names.join(', ')} 부분이 보이지 않아요.`);
+      S.push(low ? `${names.join(', ')}${LF.josa(names[names.length-1],'이','가')} 들어가야 해요.` : `${names.join(', ')} 부분은 아직 보이지 않아요.`);
     }else if(rb.total >= 75 && demand){
       S.push(`면접관이 물은 "${demand.label}"${LF.josa(demand.label,'을','를')} 첫 문장에서 바로 답해 설득력이 높아요.`);
     }else if(rb.total >= 80){
@@ -16278,6 +16278,9 @@ const Rubric = {
     const loc = rb.local || this.compose({}, '', rb);
     let t = loc.feedback;
     if(analysis && analysis.followup && analysis.evaluation) t += ` 면접관 메모: ${analysis.evaluation}`;
+    // 2026-10-22q: '이렇게 말해 보세요' 칸 대신 예시 문장을 피드백 안에 이어 씀
+    const rw = String((analysis && analysis.rewrite) || '').trim();
+    if(rw && !analysis.ai) t += `\n\n예를 들어 이렇게 말해 볼 수 있어요. "${rw.replace(/["“”]/g, '')}"`;
     return t;
   },
   /** 면접 전체 요약: 축 평균·등급·강점·보완·추천 유형 */
@@ -16287,7 +16290,7 @@ const Rubric = {
     const avg = {}; keys.forEach(k=>{ const v = rbs.map(r=>r.axes[k].score).filter(x=>typeof x==='number'); avg[k] = v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length) : null; });
     const total = rbs.length ? Math.round(rbs.reduce((a,r)=>a+r.total,0)/rbs.length) : 0;
     const S = { content:'질문마다 핵심 내용을 대부분 짚어 답했어요.', structure:'결론을 먼저 말하고 이유·예시를 붙이는 구조가 안정적이에요.', detail:'숫자·기관명·직무 용어로 구체적으로 말했어요.', length:'답변 분량이 질문에 맞게 적당했어요.', attitude:'격식 있는 말투와 긍정적인 표현이 좋았어요.', delivery:'말하기 속도·군말·답변 시간이 안정적이었어요.' };
-    const I = { content:'모범답안의 핵심 요점이 빠진 답변이 있어요. 문항별 "이렇게 말해 보세요"를 소리 내어 따라 해 보세요.', structure:'첫 문장에 결론을 말하고 이유·예시를 붙이는 순서를 연습해 보세요.', detail:'기간·횟수·자격 같은 숫자와 실제 업무 장면을 넣어 말해 보세요.', length:'질문 유형에 맞는 분량(대체로 30초~1분)을 맞춰 보세요.', attitude:'반말·군말·"성실·열심히" 같은 상투어를 줄이고 "~습니다"로 맺어 보세요.', delivery:'말하기 속도와 군말, 답변 시간을 의식하면서 연습해 보세요.' };
+    const I = { content:'모범답안의 핵심 요점이 빠진 답변이 있어요. 문항별 피드백에 있는 예시 문장을 소리 내어 따라 해 보세요.', structure:'첫 문장에 결론을 말하고 이유·예시를 붙이는 순서를 연습해 보세요.', detail:'기간·횟수·자격 같은 숫자와 실제 업무 장면을 넣어 말해 보세요.', length:'질문 유형에 맞는 분량(대체로 30초~1분)을 맞춰 보세요.', attitude:'반말·군말·"성실·열심히" 같은 상투어를 줄이고 "~습니다"로 맺어 보세요.', delivery:'말하기 속도와 군말, 답변 시간을 의식하면서 연습해 보세요.' };
     const ranked = keys.filter(k=>avg[k]!=null).sort((a,b)=>avg[b]-avg[a]);
     const strengths = ranked.filter(k=>avg[k]>=75).slice(0,3).map(k=>S[k]);
     const weak = ranked.slice().reverse().filter(k=>avg[k]<65).slice(0,3);
@@ -18334,7 +18337,6 @@ function buildSavePayload(durationLabel){
     score: (state.answerScores[i] != null) ? state.answerScores[i] : null,
     kind: item.followup ? 'followup' : 'question',
     feedback: (state.answerFeedback[i] ? buildFeedbackText(state.answerFeedback[i]) : '')
-      + ((state.answerFeedback[i] && state.answerFeedback[i].rewrite) ? '\n▶ 이렇게 말해 보세요: ' + state.answerFeedback[i].rewrite : '')
       + ((state.answerFeedback[i] && state.answerFeedback[i].rubric && !state.answerFeedback[i].rubric.empty) ? '\n[리포트 '+state.answerFeedback[i].rubric.grade+' · '+['content','structure','detail','length','attitude'].map(k=>Rubric.AXIS_LABELS[k]+' '+state.answerFeedback[i].rubric.axes[k].score).join(' · ')+']' : '')
       + ((state.answerDelivery && state.answerDelivery[i] && state.answerDelivery[i].measured) ? '\n[전달력 '+state.answerDelivery[i].score+'점] '+state.answerDelivery[i].summary : '') || null,
   }));
@@ -18514,7 +18516,7 @@ function renderResultBars(){
       const im = (analysis.improvements||[]).filter(Boolean).map(escapeHtml);
       if(s.length)  extraHtml += `<p style="margin-top:6px;"><strong style="color:var(--success);">잘한 점</strong> · ${s.join(' · ')}</p>`;
       if(im.length) extraHtml += `<p style="margin-top:4px;"><strong style="color:var(--amber-600);">보완할 점</strong> · ${im.join(' · ')}</p>`;
-      if(analysis.rewrite) extraHtml += `<p class="q-rewrite"><strong>이렇게 말해 보세요</strong>${escapeHtml(analysis.rewrite)}</p>`;
+      // 2026-10-22q: '이렇게 말해 보세요' 칸 없앰 (예시는 피드백 본문 안에)
     }
     if(analysis && analysis.docNotes && analysis.docNotes.length) extraHtml += `<p class="q-docnote"><strong>서류와 맞춰 보세요</strong> · ${analysis.docNotes.map(escapeHtml).join(' ')}</p>`;
     const item = state.interviewQuestions[i-1];
@@ -18568,7 +18570,7 @@ function renderResultBars(){
         </div>
         <div class="qfeedback">
           <span class="qfeedback-label">${feedbackLabel}</span>
-          <p>${feedbackText}</p>${extraHtml}
+          <p class="q-fb-text">${feedbackText}</p>${extraHtml}
         </div>
         </div>
       </div>`;
@@ -21816,7 +21818,7 @@ function aiRenderCost(){
   if(!fu || !gr || !tb) return;
   const b = AI_COST.presets.basic;
   fu.innerHTML = `<i>비용</i> 꼬리질문 1개당 약 <b>${AI_COST.won(AI_COST.perFollowup())}</b> <small>(답변 분석 ${AI_COST.followupText}원 + 질문 목소리 ${AI_COST.followupVoice}원)</small> → 기본 면접 최대 ${b.fu}개 ≈ <b>${AI_COST.won(b.fu*AI_COST.perFollowup())}</b>`;
-  gr.innerHTML = `<i>비용</i> 답변 1개당 약 <b>${AI_COST.won(AI_COST.grade)}</b> <small>(점수·피드백·이렇게 말해 보세요)</small> → 기본 면접 답변 ${b.q+b.fu}개 ≈ <b>${AI_COST.won((b.q+b.fu)*AI_COST.grade)}</b>`;
+  gr.innerHTML = `<i>비용</i> 답변 1개당 약 <b>${AI_COST.won(AI_COST.grade)}</b> <small>(점수·예시가 든 피드백)</small> → 기본 면접 답변 ${b.q+b.fu}개 ≈ <b>${AI_COST.won((b.q+b.fu)*AI_COST.grade)}</b>`;
   const onMap = { followup: !!AiSwitch.settings.ai_followup, grading: !!AiSwitch.settings.ai_grading };
   const row = (key) => { const p = AI_COST.presets[key], all = AI_COST.interview(key), now = AI_COST.interview(key, onMap);
     const cell = (v, isOn) => `<td class="${isOn?'':'dim'}">${AI_COST.won(v)}</td>`;
