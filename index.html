@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22g';
+var APP_VERSION = '2026-10-22i';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4751,6 +4751,36 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 }
 .rec-count-line{ display:flex; align-items:center; justify-content:space-between; gap:10px 16px; flex-wrap:wrap; }
 .rec-count-line .rec-legend-top{ margin:0 !important; padding:0 !important; border:0 !important; background:none !important; }
+
+/* 2026-10-22h 점수 흐름 그래프 다시 만듦 */
+.score-chart{ padding:14px 16px 8px !important; }
+.score-chart-head{ display:flex; align-items:center; gap:8px 10px; flex-wrap:wrap; margin-bottom:6px; }
+.score-chart-head .sc-sub{ font-size:12px; color:var(--c-ink-3,#66666c); }
+.sc-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-left:auto; }
+.sc-chip{ display:inline-flex !important; flex-direction:row !important; align-items:baseline; gap:5px; padding:4px 10px; border-radius:999px; background:var(--c-surface,#f6f5f3); font-size:12px; line-height:1.4; }
+.sc-chip em, .sc-chip b{ display:inline !important; margin:0 !important; font-size:12px !important; }
+.sc-chip em{ font-style:normal; color:var(--c-ink-3,#66666c); } .sc-chip b{ font-weight:700; color:var(--c-ink,#1c1c1e); }
+.sc-chip.last b{ color:#c2401b; } .sc-chip.up b{ color:#0E7C5C; } .sc-chip.down b{ color:#B42318; }
+.sc-plot{ width:100%; min-height:180px; }
+.sc-plot .score-chart-svg{ display:block; width:100%; height:auto; overflow:visible; }
+.score-chart-svg .b{ stroke:none; } .score-chart-svg .b.low{ fill:#FDECEC; opacity:.55; } .score-chart-svg .b.mid{ fill:#FFF4DB; opacity:.7; } .score-chart-svg .b.hi{ fill:#E3F4EC; opacity:.7; }
+#screen-admin .score-chart-svg .g{ stroke:#e6e4e0; stroke-width:1; } #screen-admin .score-chart-svg .g.base{ stroke:#9aa0a8; stroke-dasharray:4 4; }
+#screen-admin .score-chart-svg .gl{ font-size:10.5px; fill:#9a9aa0; text-anchor:end; font-family:inherit; }
+#screen-admin .score-chart-svg .ar{ fill:rgba(28,28,30,.06); }
+#screen-admin .score-chart-svg .ln{ fill:none; stroke:var(--c-ink,#1c1c1e); stroke-width:2.2; stroke-linejoin:round; stroke-linecap:round; }
+#screen-admin .score-chart-svg circle{ stroke:#fff; stroke-width:2; fill:var(--c-ink,#1c1c1e); }
+#screen-admin .score-chart-svg circle.hi{ fill:#0E7C5C; } #screen-admin .score-chart-svg circle.mid{ fill:#D98A0B; } #screen-admin .score-chart-svg circle.low{ fill:#D92D20; }
+#screen-admin .score-chart-svg circle.last{ stroke:#e8532a; stroke-width:3; }
+#screen-admin .score-chart-svg .v{ font-size:12px; font-weight:700; fill:var(--c-ink,#1c1c1e); text-anchor:middle; font-family:inherit; }
+#screen-admin .score-chart-svg .v.last{ font-size:13.5px; fill:#c2401b; }
+#screen-admin .score-chart-svg .d{ font-size:11px; fill:#8a8a90; text-anchor:middle; font-family:inherit; }
+.person-who-name{ display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px 8px; }
+.sc-spark{ display:inline-flex; vertical-align:middle; margin-left:4px; }
+.sc-spark svg path{ fill:none; stroke:var(--c-ink,#1c1c1e); stroke-width:1.6; stroke-linejoin:round; stroke-linecap:round; opacity:.75; }
+.sc-spark svg circle{ fill:#e8532a; }
+.sc-open-hint{ font-size:11.5px; font-weight:600; color:#c2401b; white-space:nowrap; }
+.person-group.open .sc-open-hint{ display:none; }
+@media (max-width:760px){ .sc-chips{ margin-left:0; } }
 </style>
 </head>
 <body>
@@ -12238,23 +12268,68 @@ function scoreTrendHtml(recs){
   return `<span class="trend ${cls}" title="최근 점수 ${latest}점 vs 그 전 평균 ${Math.round(prevAvg)}점">${cls==='up'?'▲':cls==='down'?'▼':'●'} ${diff>0?'+':''}${diff}</span>`;
 }
 /** 사람별 점수 흐름 차트 (펼쳤을 때 맨 위): 최근 10회, 날짜·점수 표시, 면적 그라데이션, 75점 기준선 */
+/* 2026-10-22h 점수 흐름 그래프 다시 만듦
+   - 예전: 고정 크기(640×190) 그림을 칸 너비에 맞춰 늘려서(preserveAspectRatio none) 글자·점이 옆으로 찌그러지고, 눈금 숫자(70·75·80)가 겹쳤음
+   - 지금: 칸의 실제 너비를 재서 그 크기로 그림(늘리지 않음). 칸이 열리거나 화면 크기가 바뀌면 다시 그림
+   - 세로축은 0~100 고정, 점수 구간(60 미만·60~74·75~84·85 이상)을 옅은 색 띠로 깔고 기준선(60·75·85)만 표시
+   - 같은 날 여러 번이면 아래 날짜는 처음 한 번만 쓰고, 점에 마우스를 올리면 날짜·시간·분야·점수가 보임 */
 function scoreChartHtml(recs){
   const list = recs.slice(0,10).reverse(); if(list.length < 2) return '';
-  const W = 640, H = 190, padL = 34, padR = 18, padT = 24, padB = 30;
-  const sMin = Math.min(...list.map(r=>r.score||0)), sMax = Math.max(...list.map(r=>r.score||0));
-  const lo = Math.max(0, Math.floor((sMin-8)/10)*10), hi = Math.min(100, Math.ceil((Math.max(sMax, 76)+8)/10)*10);
-  const x = i => padL + (list.length === 1 ? 0 : i/(list.length-1)*(W-padL-padR));
-  const y = v => padT + (1 - (v-lo)/(hi-lo))*(H-padT-padB);
-  const pts = list.map((r,i)=>[x(i), y(r.score||0)]);
-  const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-  const area = line + ` L${pts[pts.length-1][0].toFixed(1)} ${(H-padB).toFixed(1)} L${pts[0][0].toFixed(1)} ${(H-padB).toFixed(1)} Z`;
-  const gv = []; for(let v = lo; v <= hi; v += 10) gv.push(v); if(!gv.includes(75) && 75 > lo && 75 < hi) gv.push(75);
-  const grid = gv.filter(v=>v>lo && v<hi).map(v=>`<line x1="${padL}" x2="${W-padR}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" class="g${v===75?' base':''}"/><text x="${padL-6}" y="${(y(v)+4).toFixed(1)}" class="gl">${v}</text>`).join('');
-  const dots = pts.map((p,i)=>{ const r = list[i]; const last = i===pts.length-1; return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${last?5:3.5}" class="${scorePillClass(r.score)||'ok'}${last?' last':''}"/><text x="${(p[0] + (i===0 ? 10 : 0)).toFixed(1)}" y="${(p[1]-10).toFixed(1)}" class="v${last?' last':''}">${r.score}</text><text x="${p[0].toFixed(1)}" y="${H-10}" class="d">${formatDateShort(r.created_at)}</text>`; }).join('');
   const first = list[0].score||0, lastV = list[list.length-1].score||0, d = lastV-first;
-  const gid = 'scg' + String(recs[0].id||'').replace(/[^a-zA-Z0-9]/g,'') + list.length;
-  return `<div class="score-chart"><div class="score-chart-head"><b>점수 흐름</b><small>최근 ${list.length}회 · 처음 ${first}점 → 최근 ${lastV}점 (${d>=0?'+':''}${d}) · 점선은 75점(양호 기준)</small></div>
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="score-chart-svg"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D6BF0" stop-opacity=".18"/><stop offset="1" stop-color="#3D6BF0" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#${gid})"/><path d="${line}" class="ln"/>${dots}</svg></div>`;
+  const avg = Math.round(list.reduce((t,r)=>t+(r.score||0),0)/list.length), best = Math.max(...list.map(r=>r.score||0));
+  const data = list.map(r=>({ s: r.score||0, t: r.created_at, f: r.field_name||'' }));
+  const chip = (lbl, val, cls)=>`<span class="sc-chip${cls?' '+cls:''}"><em>${lbl}</em><b>${val}</b></span>`;
+  return `<div class="score-chart"><div class="score-chart-head"><b>점수 흐름</b><span class="sc-sub">최근 ${list.length}회</span>
+      <span class="sc-chips">${chip('처음', first+'점')}${chip('최근', lastV+'점', 'last')}${chip('변화', (d>=0?'+':'')+d+'점', d>0?'up':d<0?'down':'')}${chip('평균', avg+'점')}${chip('최고', best+'점')}</span></div>
+    <div class="sc-plot" data-scores="${escapeHtml(JSON.stringify(data))}"></div></div>`;
+}
+const ScoreChart = {
+  ro: null,
+  observe(root){
+    const els = (root || document).querySelectorAll('.sc-plot');
+    if(!this.ro && typeof ResizeObserver !== 'undefined') this.ro = new ResizeObserver(es=>es.forEach(e=>this.draw(e.target)));
+    els.forEach(el=>{ if(this.ro) this.ro.observe(el); else this.draw(el); });
+  },
+  draw(el){
+    const W = Math.round(el.clientWidth); if(!W) return;
+    if(el.dataset.w === String(W)) return; el.dataset.w = String(W);
+    let data; try{ data = JSON.parse(el.dataset.scores || '[]'); }catch(_){ return; }
+    if(data.length < 2) return;
+    const narrow = W < 420;
+    const H = narrow ? 180 : 210, padL = 30, padR = 16, padT = 26, padB = 30;
+    const iw = W - padL - padR, ih = H - padT - padB;
+    const x = i => padL + (data.length === 1 ? iw/2 : i/(data.length-1)*iw);
+    const y = v => padT + (1 - Math.max(0, Math.min(100, v))/100)*ih;
+    const band = (from, to, cls)=>`<rect x="${padL}" width="${iw}" y="${y(to).toFixed(1)}" height="${(y(from)-y(to)).toFixed(1)}" class="b ${cls}"/>`;
+    const bands = band(0,60,'low') + band(60,75,'mid') + band(85,100,'hi');
+    const lines = [0,60,75,85,100].map(v=>`<line x1="${padL}" x2="${W-padR}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" class="g${v===75?' base':''}"/><text x="${padL-6}" y="${(y(v)+3.5).toFixed(1)}" class="gl">${v}</text>`).join('');
+    const pts = data.map((r,i)=>[x(i), y(r.s)]);
+    const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const area = line + ` L${pts[pts.length-1][0].toFixed(1)} ${y(0).toFixed(1)} L${pts[0][0].toFixed(1)} ${y(0).toFixed(1)} Z`;
+    const md = t=>{ const dt = new Date(t); return (dt.getMonth()+1) + '/' + dt.getDate(); };
+    const hm = t=>new Date(t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
+    const showVal = i => !narrow || data.length <= 6 || i === 0 || i === data.length-1 || i % 2 === 0;
+    const dots = pts.map((p,i)=>{
+      const r = data[i]; const last = i === pts.length-1; const cls = scorePillClass(r.s) || 'ok';
+      const above = r.s < 88; const ty = above ? p[1] - 10 : p[1] + 18;
+      const dayLbl = (i === 0 || md(r.t) !== md(data[i-1].t)) ? md(r.t) : '';
+      return `<g class="pt${last?' last':''}"><title>${md(r.t)} ${hm(r.t)} · ${escapeHtml(r.f)} · ${r.s}점</title>`
+        + `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${last?6:4.5}" class="${cls}${last?' last':''}"/>`
+        + (showVal(i) || last ? `<text x="${p[0].toFixed(1)}" y="${ty.toFixed(1)}" class="v${last?' last':''}">${r.s}</text>` : '')
+        + `<text x="${p[0].toFixed(1)}" y="${(H-10).toFixed(1)}" class="d">${dayLbl || (narrow ? '' : (i+1)+'회')}</text></g>`;
+    }).join('');
+    el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="score-chart-svg" role="img" aria-label="점수 흐름 그래프">${bands}${lines}<path d="${area}" class="ar"/><path d="${line}" class="ln"/>${dots}</svg>`;
+  },
+};
+window.addEventListener('resize', ()=>{ document.querySelectorAll('.sc-plot').forEach(el=>{ delete el.dataset.w; ScoreChart.draw(el); }); });
+/** 사람 줄에 넣는 작은 점수 흐름 (눌러서 크게 보기) */
+function scoreSparkHtml(recs){
+  const list = recs.slice(0,10).reverse(); if(list.length < 2) return '';
+  const W = 72, H = 24, p = 3;
+  const pts = list.map((r,i)=>[p + i/(list.length-1)*(W-2*p), p + (1-(Math.max(0,Math.min(100,r.score||0)))/100)*(H-2*p)]);
+  const d = pts.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' ');
+  const l = pts[pts.length-1];
+  return `<span class="sc-spark" title="눌러서 점수 흐름 보기"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${d}"/><circle cx="${l[0].toFixed(1)}" cy="${l[1].toFixed(1)}" r="2.6"/></svg></span>`;
 }
 function renderAdminRecordsView(){
   const recList = document.getElementById('admin-records-list'); if(!recList) return;
@@ -12315,7 +12390,7 @@ function renderAdminRecordsView(){
     return `<div class="person-group${open}" data-uid="${escapeHtml(uid)}" data-search="${escapeHtml(search)}">
       <div class="person-head" onclick="togglePersonGroup('${escapeHtml(uid)}')">
         <svg class="person-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-        <span><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)}${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span>
+        <span class="person-who"><span class="person-who-name"><span class="admin-name">${escapeHtml(nm)}</span>${acctChip(u)}${recs.length >= 2 ? scoreSparkHtml(recs) + '<span class="sc-open-hint">점수 흐름 보기</span>' : ''}</span>${ph ? `<span class="admin-sub admin-phone" style="display:block;margin:1px 0 0;">${escapeHtml(ph)}</span>` : ''}</span>
         <span class="person-fields">${fieldBadgesHtml(fields.map(n=>{ const f = FIELDS.find(x=>x.name===n); return f ? f.id : null; }).filter(Boolean))}</span>
         <span class="person-scores"><b>${recs.length}회</b> · 평균 ${avg}점 · 최고 ${best}점 ${scoreTrendHtml(recs)}</span>
         <span class="admin-sub" style="margin:0;white-space:nowrap;">최근 ${formatDateFull(recs[0].created_at)}</span>
@@ -12328,12 +12403,13 @@ function renderAdminRecordsView(){
     </div>`;
   }).join('');
   filterAdminRecords();
+  try{ ScoreChart.observe(recList); }catch(_){}
 }
 function togglePersonGroup(uid){
   state.recordsOpen = state.recordsOpen || new Set();
   if(state.recordsOpen.has(uid)) state.recordsOpen.delete(uid); else state.recordsOpen.add(uid);
   const g = document.querySelector(`#admin-records-list .person-group[data-uid="${CSS.escape(uid)}"]`);
-  if(g) g.classList.toggle('open', state.recordsOpen.has(uid));
+  if(g){ g.classList.toggle('open', state.recordsOpen.has(uid)); if(g.classList.contains('open')) try{ ScoreChart.observe(g); }catch(_){} }
 }
 function setRecordsField(v){ state.recordsField = v || ''; const s = document.getElementById('rec-field-select'); if(s && s.value !== state.recordsField) s.value = state.recordsField; filterAdminRecords(); }
 function filterAdminRecords(){
