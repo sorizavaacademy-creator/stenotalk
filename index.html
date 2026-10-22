@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22j';
+var APP_VERSION = '2026-10-22k';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4792,7 +4792,9 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 .tcu-bar{ height:6px; border-radius:999px; background:#e6e4e0; overflow:hidden; } .tcu-bar i{ display:block; height:100%; background:var(--c-ink,#1c1c1e); }
 .tcu-row.near .tcu-bar i{ background:#D98A0B; } .tcu-row.hit .tcu-bar i{ background:#D92D20; }
 .tcu-num{ white-space:nowrap; color:var(--c-ink-2,#45454a); } .tcu-num b{ color:var(--c-ink,#1c1c1e); } .tcu-fb{ color:#B42318; font-weight:600; }
-@media (max-width:640px){ .tcu-row{ grid-template-columns:1fr auto; } .tcu-bar{ grid-column:1 / -1; order:3; } }
+.tcu-left{ font-weight:600; color:var(--c-ink,#1c1c1e); } .tcu-left b{ font-size:14px; } .tcu-left.hit{ color:#B42318; }
+@media (max-width:900px){ .tcu-num{ white-space:normal; } }
+@media (max-width:640px){ .tcu-row{ grid-template-columns:1fr; gap:5px; } .tcu-name{ order:1; } .tcu-num{ order:2; } .tcu-bar{ order:3; } }
 </style>
 </head>
 <body>
@@ -21471,11 +21473,19 @@ const TcGuard = {
     const f = TcCredit.fmt.bind(TcCredit); const cap = Number((AiSwitch.guard || {}).user_cap) || 0;
     const rows = this.userRows(); const k = new Date(Date.now() + 9 * 3600000);
     const hitN = cap ? rows.filter(x=>!x.exempt && x.used >= cap).length : 0;
+    // 2026-10-22k: 그 사람이 지금까지 한 번 읽을 때 쓴 평균 크레딧으로 '남은 크레딧으로 질문 몇 개 더'를 셈 (3번 미만이면 전체 평균을 씀)
+    const allUsed = rows.reduce((t,x)=>t+x.used, 0), allLines = rows.reduce((t,x)=>t+x.lines, 0);
+    const avgAll = allLines ? allUsed / allLines : 75;
     const list = rows.length ? rows.slice(0, 30).map(x=>{
       const pct = cap ? Math.min(100, Math.round(x.used / cap * 100)) : 0; const hit = cap && !x.exempt && x.used >= cap; const near = cap && !x.exempt && !hit && x.used >= cap * 0.8;
-      return `<div class="tcu-row${hit ? ' hit' : near ? ' near' : ''}"><span class="tcu-name">${escapeHtml(x.name)}${x.exempt ? ' <em>제외</em>' : ''}</span>
+      const avg = x.lines >= 3 ? x.used / x.lines : avgAll; const left = cap ? Math.max(0, cap - x.used) : 0; const more = avg ? Math.floor(left / avg) : 0;
+      const right = x.exempt ? `<span class="tcu-left">한도 없음</span> · 이번 달 <b>${f(x.used)}</b>크레딧`
+        : !cap ? `이번 달 <b>${f(x.used)}</b>크레딧`
+        : hit ? `<span class="tcu-left hit">한도 도달 · OpenAI 목소리로 읽는 중</span> · <b>${f(x.used)}</b> / ${f(cap)}`
+        : `<span class="tcu-left">질문 약 <b>${f(more)}</b>개 더</span> · 남은 ${f(left)} / ${f(cap)}크레딧`;
+      return `<div class="tcu-row${hit ? ' hit' : near ? ' near' : ''}" title="이번 달 즉석 읽기 ${f(x.lines)}번 · 한 번에 평균 ${Math.round(x.lines ? x.used / x.lines : 0)}크레딧${x.fb ? ` · 한도 때문에 OpenAI로 ${f(x.fb)}번` : ''}"><span class="tcu-name">${escapeHtml(x.name)}${x.exempt ? ' <em>제외</em>' : ''}</span>
         <span class="tcu-bar">${cap && !x.exempt ? `<i style="width:${pct}%"></i>` : ''}</span>
-        <span class="tcu-num"><b>${f(x.used)}</b>${cap && !x.exempt ? ` / ${f(cap)}` : ''} · ${f(x.lines)}문장${x.fb ? ` · <span class="tcu-fb">OpenAI로 ${f(x.fb)}문장</span>` : ''}</span></div>`;
+        <span class="tcu-num">${right}${x.fb ? ` · <span class="tcu-fb">OpenAI로 ${f(x.fb)}번</span>` : ''}</span></div>`;
     }).join('') : '<div class="pipe-hint">이번 달에는 아직 면접 중 목소리를 쓴 사람이 없어요.</div>';
     return `<div class="tcg tcu">
       <div class="tcg-head"><b>1인당 한 달 한도</b><span class="tcg-state ${!cap ? 'off' : hitN ? 'hit' : ''}">${!cap ? '꺼짐' : hitN ? `${hitN}명 한도 도달 · 그 사람만 OpenAI 목소리` : `켜짐 · 1인 ${f(cap)}크레딧`}</span></div>
@@ -21484,8 +21494,8 @@ const TcGuard = {
         <label>1인당 한 달 최대 <input type="number" id="tg-ucap" class="pipe-input" min="0" max="100000" step="100" value="${cap}"> 크레딧</label>
         <button class="btn btn-solid pipe-btn" onclick="TcGuard.save(this)" style="flex:0 0 auto;padding:7px 16px;">저장</button>
       </div>
-      <div class="pipe-hint" style="margin-top:6px;">AI 대화 면접 1번에 보통 200~300크레딧이에요. 1,500이면 약 5~7번이에요. 0으로 두면 끔. 저장하면 1분 안에 적용돼요.</div>
-      <div class="tcu-head">${k.getUTCMonth() + 1}월 면접자별 사용량 <small>(많이 쓴 순)</small></div>
+      <div class="pipe-hint" style="margin-top:6px;">AI 대화 면접 1번에 보통 200~300크레딧이에요.${cap ? ` ${f(cap)}이면 한 사람이 한 달에 약 ${f(Math.floor(cap/300))}~${f(Math.floor(cap/200))}번이에요.` : ''} 0으로 두면 끔. 저장하면 1분 안에 적용돼요.</div>
+      <div class="tcu-head">${k.getUTCMonth() + 1}월 면접자별 사용량 <small>(많이 쓴 순 · '질문 약 n개 더'는 그 사람이 한 번 읽을 때 쓴 평균 크레딧으로 계산했어요)</small></div>
       <div class="tcu-list">${list}</div>
     </div>`;
   },
