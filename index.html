@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-22n';
+var APP_VERSION = '2026-10-22o';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -14675,26 +14675,30 @@ const DocQ = {
     if(np) return { np: np[1].trim().replace(/^(또한|특히|그리고)\s+/, '') };
     return null;
   },
+  /** 2026-10-22o: 같은 서류 문장이라도 매번 조금씩 다르게 묻기 (오전·오후에 토씨 하나 안 틀리고 같은 질문이 나왔던 문제) */
+  _pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; },
+  ASK: {
+    result: ['그 결과를 얻기까지 본인이 직접 바꾼 것을 말씀해 주세요.', '그 결과가 나오기까지 본인이 맡은 역할을 구체적으로 말씀해 주세요.', '그 결과를 만들기 위해 가장 먼저 손댄 부분이 무엇이었는지 말씀해 주세요.'],
+    conflict: ['그 의견 차이를 어떻게 좁히셨는지 말씀해 주세요.', '서로 생각이 달랐을 때 어떤 순서로 풀어 가셨는지 말씀해 주세요.'],
+    conflictAct: ['상대방이 그 방법을 받아들이도록 어떻게 설명하셨는지 말씀해 주세요.', '그 방법을 제안할 때 상대방을 어떻게 설득하셨는지 말씀해 주세요.'],
+    skill: ['그 실력을 갖추기까지 어떻게 연습하셨는지 말씀해 주세요.', '그 수준에 이르기까지 어떤 방법으로 준비하셨는지 말씀해 주세요.', '그 과정에서 가장 효과가 있었던 연습 방법을 말씀해 주세요.', '그 실력을 유지하려고 지금은 어떻게 연습하고 계신지 말씀해 주세요.'],
+    motive: ['그렇게 느끼게 된 장면을 하나 말씀해 주세요.', '그 마음이 생긴 구체적인 순간을 말씀해 주세요.'],
+    plan: ['그 다짐을 위해 입사 후 첫 1년 동안 무엇을 하실 계획인지 말씀해 주세요.', '그 목표를 위해 지금 준비하고 있는 것을 말씀해 주세요.'],
+    belief: ['그렇게 생각하게 된 계기를 말씀해 주세요.', '그 생각을 갖게 된 경험을 하나 말씀해 주세요.'],
+    learn: ['그렇게 느끼게 된 장면을 하나 말씀해 주세요.', '그 깨달음을 얻은 순간을 구체적으로 말씀해 주세요.'],
+    decide: ['그렇게 마음먹게 된 결정적인 계기를 말씀해 주세요.', '그 결심을 하게 된 상황을 말씀해 주세요.'],
+    trait: ['그런 성향이 드러났던 일을 하나 말씀해 주세요.', '그 성향이 실제로 도움이 됐던 일을 말씀해 주세요.'],
+    action: ['실제로 어떤 상황에서 어떻게 하셨는지 말씀해 주세요.', '그때 본인이 맡은 일과 결과를 말씀해 주세요.', '그 일을 하면서 가장 신경 쓴 부분을 말씀해 주세요.'],
+  },
   _q(sec, kind, quote){
     // 2026-10-21h: 한 번에 하나만 묻도록 짧게 (나머지는 꼬리질문으로)
     const where = sec && sec.title ? `자기소개서 '${sec.title}'에` : '자기소개서에';
     if(quote && typeof quote === 'object'){
-      return `${where} ${this._j("'" + quote.np + "'", '을/를')} 적으셨는데요, 어떤 경험이었는지 말씀해 주세요.`;
+      const it = this._j("'" + quote.np + "'", '을/를');
+      return this._pick([`${where} ${it} 적으셨는데요, 어떤 경험이었는지 말씀해 주세요.`, `${where} 적으신 '${quote.np}'에서 본인이 맡은 일을 말씀해 주세요.`]);
     }
-    const said = `${where} '${quote}'고 쓰셨는데요,`;
-    switch(kind){
-      case 'result': return `${said} 그 결과를 얻기까지 본인이 직접 바꾼 것을 말씀해 주세요.`;
-      case 'conflict': return `${said} 그 의견 차이를 어떻게 좁히셨는지 말씀해 주세요.`;
-      case 'conflictAct': return `${said} 상대방이 그 방법을 받아들이도록 어떻게 설명하셨는지 말씀해 주세요.`;
-      case 'skill': return `${said} 그 실력을 갖추기까지 어떻게 연습하셨는지 말씀해 주세요.`;
-      case 'motive': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주세요.`;
-      case 'plan': return `${said} 그 다짐을 위해 입사 후 첫 1년 동안 무엇을 하실 계획인지 말씀해 주세요.`;
-      case 'belief': return `${said} 그렇게 생각하게 된 계기를 말씀해 주세요.`;
-      case 'learn': return `${said} 그렇게 느끼게 된 장면을 하나 말씀해 주세요.`;
-      case 'decide': return `${said} 그렇게 마음먹게 된 결정적인 계기를 말씀해 주세요.`;
-      case 'trait': return `${said} 그런 성향이 드러났던 일을 하나 말씀해 주세요.`;
-      default: return `${said} 실제로 어떤 상황에서 어떻게 하셨는지 말씀해 주세요.`;
-    }
+    const said = this._pick([`${where} '${quote}'고 쓰셨는데요,`, `${where} '${quote}'고 적어 주셨는데요,`, `${where} '${quote}'는 내용이 있는데요,`]);
+    return `${said} ${this._pick(this.ASK[kind] || this.ASK.action)}`;
   },
   _follow(kind, quote){
     // 같은 문장에 대해 한 번 더 들어가는 꼬리질문 (서류 내용 범위 안에서)
@@ -14768,6 +14772,7 @@ const DocQ = {
       let body = text.slice(mk.end, i + 1 < marks.length ? marks[i+1].at : text.length).trim();
       const lab = body.search(LABEL);
       if(lab > 0) body = body.slice(0, lab).trim();
+      body = body.replace(/\s+(경력|교육|자격|자격증|수상|활동|봉사|어학|학력|기타|면허)$/, '').trim();   // 2026-10-22o '경력 2023.03 … 교육 2022.05 …'처럼 다음 칸 이름이 끝에 붙으면 뗌 (그 말 때문에 경력이 '수료'로 잘못 분류됐음)
       { const bl = body.search(/\s*[￭■◆●▶□◇※]/); if(bl > 0) body = body.slice(0, bl).trim(); }
       { const ol = body.search(/\s(개인\s?능력|외국어\s?능력|어학\s?능력|컴퓨터\s?능력|보유\s?역량|특기\s?사항|병역\s?사항)/); if(ol > 0) body = body.slice(0, ol).trim(); }   // 표 밖의 다른 칸 이름 앞에서 자름   // 2026-10-22a 다음 항목 머리표(￭ 자격 및 면허 등) 앞에서 자름
       // 2026-10-21h: '○○대학교 장애학생지원센터 문자통역 봉사'처럼 학교에서 한 일은 학력으로 보지 않음
@@ -14808,16 +14813,16 @@ const DocQ = {
       let q, follow = [];
       if(x.kind === 'award'){
         q = /(대회|경진|경연|공모전|올림피아드)/.test(x.main)
-          ? `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회를 어떻게 준비하셨는지 말씀해 주세요.`
-          : `이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨는지 말씀해 주세요.`;
+          ? this._pick([`이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 그 대회를 어떻게 준비하셨는지 말씀해 주세요.`, `이력서에 적으신 ${x.y}년 ${item} 수상에 대해, 준비 과정에서 가장 힘들었던 점을 말씀해 주세요.`])
+          : this._pick([`이력서에 ${x.y}년 ${J(item, '을/를')} 받으셨다고 적으셨는데요, 어떤 일로 받으셨는지 말씀해 주세요.`, `이력서에 적으신 ${x.y}년 ${item} 수상에 대해, 어떤 노력이 인정받은 것인지 말씀해 주세요.`]);
         follow.push('그 경험에서 얻은 것이 실제 속기 업무에 어떻게 도움이 되는지 말씀해 주세요.');
       }else if(x.kind === 'training'){
-        q = `이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것을 말씀해 주세요.`;
+        q = this._pick([`이력서에 ${J(item, '을/를')} 수료하셨다고 적으셨는데요, 그 과정에서 가장 크게 배운 것을 말씀해 주세요.`, `이력서에 적으신 ${item}에서 배운 것 가운데, 실무에 바로 쓸 수 있었던 내용을 말씀해 주세요.`]);
         follow.push('배운 내용을 실제 업무에 어떻게 쓰고 계신지 말씀해 주세요.', '배운 내용 중 실무에서 생각처럼 잘 되지 않았던 부분이 있으면 말씀해 주세요.');
       }else if(x.kind === 'cert'){
-        q = `이력서에 ${item} 자격을 적으셨는데요, 준비하며 가장 힘들었던 점을 어떻게 넘기셨는지 말씀해 주세요.`;
+        q = this._pick([`이력서에 ${item} 자격을 적으셨는데요, 준비하며 가장 힘들었던 점을 어떻게 넘기셨는지 말씀해 주세요.`, `이력서에 적으신 ${item} 자격을 준비하실 때, 가장 효과가 있었던 공부 방법을 말씀해 주세요.`]);
       }else{
-        q = `이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할을 말씀해 주세요.`;
+        q = this._pick([`이력서에 ${x.when} ${item} 경력을 적으셨는데요, 그 일에서 맡으신 역할을 말씀해 주세요.`, `이력서에 적으신 ${item} 경력에서, 가장 많이 하신 업무를 말씀해 주세요.`, `이력서를 보니 ${x.when} ${item} 일을 하셨는데요, 그때 가장 어려웠던 일을 어떻게 해결하셨는지 말씀해 주세요.`]);
         // 2026-10-21h: 괄호 안 내용의 뜻(분량·계약 형태·업무 설명)에 맞춰 묻기 ("그만큼의 일을 하면서"처럼 어색한 말 없애기)
         if(x.paren){
           const pq = J("'" + x.paren.slice(0, 40) + "'", '이라고/라고');
@@ -14837,9 +14842,13 @@ const DocQ = {
     max = max || 2;
     const r = this.fromResume(resumeRaw || ''), c = this.fromCv(cvRaw || '');
     // 각 서류에서: 상위 3개 중 하나를 무작위로 먼저, 나머지는 점수 순 (같은 항목·같은 유형은 뒤로)
+    // 2026-10-22o: 최근 면접에서 물어본 서류 문장은 뒤로 미룸 (같은 사람에게 같은 내용이 연달아 나오지 않게)
+    const recent = this.recent();
     const order = list=>{
       if(!list.length) return [];
-      const top = list.slice(0, 3), first = top[Math.floor(Math.random() * top.length)];
+      const fresh = list.filter(x=>!recent.includes(this.keyOf(x))), pool = fresh.length ? fresh : list.slice().sort((a,b)=>recent.indexOf(this.keyOf(a)) - recent.indexOf(this.keyOf(b)));
+      list = pool.concat(list.filter(x=>!pool.includes(x)));
+      const top = pool.slice(0, 3), first = top[Math.floor(Math.random() * top.length)];
       const rest = list.filter(x=>x !== first);
       const diverse = rest.filter(x=>!(x.section === first.section && x.kind === first.kind));
       const same = rest.filter(x=>x.section === first.section && x.kind === first.kind);
@@ -14855,6 +14864,11 @@ const DocQ = {
     return out.slice(0, max);
   },
   followMap: new Map(),
+  keyOf(x){ return String((x && (x.src || x.quoteCore || x.q)) || '').replace(/\s+/g, '').slice(0, 60); },
+  _rk(){ const u = state.currentUser; return 'stenotalk_docq_recent_' + (u && u.id ? u.id : 'guest'); },
+  recent(){ try{ return JSON.parse(localStorage.getItem(this._rk()) || '[]') || []; }catch(_){ return []; } },
+  /** 면접에 실제로 넣은 서류 질문의 근거 문장을 기억 (최근 6개, 오래된 것부터 다시 나옴) */
+  remember(list){ try{ const keys = (list || []).map(x=>this.keyOf(x)).filter(Boolean); if(!keys.length) return; const r = this.recent().filter(k=>!keys.includes(k)); localStorage.setItem(this._rk(), JSON.stringify(keys.concat(r).slice(0, 6))); }catch(_){} },
   /** 규칙 꼬리질문(AI 꺼짐)에서: 이 서류 질문에 붙여 둔 꼬리질문을 먼저 사용 */
   nextFollow(root, used){
     const list = this.followMap.get(root);
@@ -17403,6 +17417,9 @@ async function runDialogInterview(){
   else tipOnce('dialog', '다 말씀하신 뒤 "답변 완료"를 누르면 다음으로 넘어가요. 말이 잠깐 멈춰도 넘어가지 않으니 천천히 답해도 돼요.');
   // 복습 모드는 정해진 문항으로, 그 외에는 DB에서 뽑되 자기소개서 맞춤 질문이 있으면 2번째 자리부터 끼워 넣음
   // (실전 세트는 자기소개서 맞춤 질문 1개를 6번 "경험" 자리에 넣음)
+  // 2026-10-22o: 면접을 시작할 때마다 서류 질문을 새로 골라(최근에 물은 문장은 뒤로, 말투도 바꿔) 같은 질문이 그대로 반복되지 않게 함
+  if(!resume && !(state.selectedField.id === 'review' && state.reviewQuestions) && (state.resumeFull || state.resumeText || state.cvFull || state.cvText)){ try{ refreshDocQuestions(); }catch(_){} }
+  if(!resume && state.customQuestions && state.customQuestions.length){ try{ DocQ.remember(realSet ? state.customQuestions.slice(0, 1) : state.customQuestions); }catch(_){} }
   if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
   else if(realSet){ if(state.customQuestions && state.customQuestions.length) opt.docQuestion = Object.assign({}, state.customQuestions[0]); }
   else if(state.customQuestions && state.customQuestions.length){ opt.extraQuestions = state.customQuestions.map(x=>Object.assign({}, x)); }
