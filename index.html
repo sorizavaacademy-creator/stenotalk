@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23i';
+var APP_VERSION = '2026-10-23j';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4444,6 +4444,12 @@ body.is-admin-ui #d3-user-menu #nt-menu-item, body.is-admin-ui #d3-user-menu #na
 #screen-pending .pd-sent-d{ margin:0 0 8px; font-size:14.5px; line-height:1.6; color:var(--rr-ink); } #screen-pending .pd-sent-d small{ color:var(--rr-ink3); }
 #screen-pending .pd-sent-n{ margin:0 0 4px; font-size:13.5px; line-height:1.6; color:var(--rr-ink2); }
 #screen-pending .pd-sent{ margin-bottom:10px; }
+/* 2026-10-23j 문항별 표정·시선 한 줄 */
+.q-fb-nv{ margin:10px 0 0; padding:8px 12px; border-radius:8px; background:#f4f7f5; font-size:13.5px; line-height:1.55; color:#2f5a3e; word-break:keep-all; }
+.q-fb-nv b{ display:inline-block; margin-right:8px; font-size:12px; font-weight:800; }
+.q-fb-nv.warn{ background:#fff6e8; color:#7a4b00; }
+@media (min-width:641px){ .nv-tiles.six{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+.nv-score-note{ margin:10px 0 0; font-size:13px; color:var(--c-ink-2,#45454a); }
 /* 2026-10-23h 기간 종료 창: 카드 두 장 슬라이드 */
 .rr-nudge-box.rrs-mode .rrn-head{ display:none; }
 .rr-nudge-box.rrs-mode .modal-body{ padding:22px 0 6px !important; overflow:hidden; }
@@ -9830,7 +9836,12 @@ function axesFromFeedback(fb){
 }
 function nvScore(o){
   if(!o || !o.frames) return null;
-  const v = 0.6*(o.frontPct||0) + 0.25*(100-(o.downPct||0)) + 0.15*(100-(o.awayPct||0));
+  let v = 0.6*(o.frontPct||0) + 0.25*(100-(o.downPct||0)) + 0.15*(100-(o.awayPct||0));
+  // 2026-10-23j 행동 감점 (예전 기록에는 값이 없어 그대로)
+  if(o.handPct != null) v -= Math.min(15, o.handPct * 0.3);
+  v -= Math.min(10, (o.movePct||0) * 0.2);
+  if((o.multiPct||0) >= 5) v -= 5;
+  if((o.lowPct||0) >= 50) v -= 3;
   return Math.max(0, Math.min(100, Math.round(v)));
 }
 const GW_AXES = ['내용','구조','구체성','분량','태도·언어','전달력','표정·시선'];
@@ -10741,6 +10752,7 @@ async function openRecordDetail(recordId, fromList){
         <div class="record-q"><span>Q${(a.question_index ?? i)+1}. ${escapeHtml(a.question_text || '')}</span>${scoreHtml}</div>
         <p class="record-a"><b>내 답변</b>${answer}</p>
         ${a.feedback ? renderFeedbackBlock(a.feedback) : ''}
+        ${(setRow && setRow.nonverbal && Array.isArray(setRow.nonverbal.items)) ? FaceCoach.answerNoteHtml(setRow.nonverbal.items.find(x=>x.i === (a.question_index ?? i))) : ''}
       </div>`;
   }).join('');
   { const pb = document.getElementById('record-pdf-btn'); if(pb && state.currentUser && state.currentUser.isAdmin) pb.style.display = ''; }
@@ -15187,13 +15199,16 @@ function dialogPhase(cls, text){ const p=document.getElementById('dialog-phase')
   if(typeof Persona !== 'undefined') Persona.setState(cls); }
 /* ---------------- 내 모습 다시 보기 + 표정·시선 분석 (2026-10-12) ----------------
    - 라이브 면접에서 카메라가 켜져 있으면, 답변하는 동안의 내 모습을 답변마다 녹화 → 결과 화면에서 문항별로 다시 보기
-   - 같은 시간 동안 얼굴 위치·고개 방향·시선·표정을 초당 약 3번 분석 → "표정·시선" 피드백 (점수에는 넣지 않음)
+   - 같은 시간 동안 얼굴 위치·고개 방향·시선·표정을 초당 약 3번 분석 → "표정·시선" 피드백
+   - 2026-10-23j: 손이 얼굴로 가는 습관(손 분석, 약 1초에 1번 · 느린 기기·데이터 절약이면 생략), 고개를 자주 움직임, 화면에 다른 얼굴, 자세가 내려감도 잡음.
+     문항별 피드백에 '표정·시선' 한 줄을 붙이고, 측정된 면접은 종합 점수에 10% 반영(답변 점수 90% + 표정·시선 10%)
    - 영상과 분석은 모두 이 기기 안에서만 처리. 서버에는 숫자 요약(nonverbal)만 저장하고 영상은 올리지 않음
    - 분석 엔진(MediaPipe Face Landmarker)은 카메라를 켠 라이브 면접에서만 불러옴. 못 불러오면 분석만 빠지고 녹화는 그대로 */
 const FACE_TASKS_VER = '0.10.21';
 const FACE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
+const HAND_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
 const FaceCoach = {
-  lm:null, loading:null, failed:false, busy:false, timer:null, acc:null, lastTs:0, slow:0, interval:333,
+  lm:null, loading:null, failed:false, busy:false, timer:null, acc:null, lastTs:0, slow:0, interval:333, hm:null, handLoading:null, handOff:false, handSlow:0, tickN:0,
   load(){
     if(this.lm || this.failed) return Promise.resolve(this.lm);
     if(this.loading) return this.loading;
@@ -15204,16 +15219,31 @@ const FaceCoach = {
         const base = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${FACE_TASKS_VER}`;
         const vision = await import(`${base}/vision_bundle.mjs`);
         const fileset = await vision.FilesetResolver.forVisionTasks(`${base}/wasm`);
-        const opts = d=>({ baseOptions:{ modelAssetPath: FACE_MODEL_URL, delegate: d }, runningMode:'VIDEO', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true });
+        const opts = d=>({ baseOptions:{ modelAssetPath: FACE_MODEL_URL, delegate: d }, runningMode:'VIDEO', numFaces:2, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true });   // 2026-10-23j: 2명까지 (다른 사람이 화면에 보이는지)
         try{ this.lm = await vision.FaceLandmarker.createFromOptions(fileset, opts('GPU')); }
         catch(e){ this.lm = await vision.FaceLandmarker.createFromOptions(fileset, opts('CPU')); }
+        this.loadHand(vision, fileset);   // 손 분석은 따로 (실패해도 얼굴 분석은 그대로)
         return this.lm;
       }catch(e){ console.warn('[표정·시선 분석을 불러오지 못해 끔]', e && e.message || e); this.failed = true; return null; }
       finally{ this.loading = null; }
     })();
     return this.loading;
   },
-  newAcc(){ return { n:0, face:0, front:0, down:0, away:0, smile:0, centered:0, far:0, near:0 }; },
+  /** 2026-10-23j: 손이 얼굴 쪽으로 가는지 보는 손 분석 (데이터 절약·느린 망이면 받지 않음) */
+  loadHand(vision, fileset){
+    if(this.hm || this.handLoading || this.handOff) return;
+    const conn = navigator.connection;
+    if(conn && (conn.saveData || /(^|-)(2g|3g)$/.test(conn.effectiveType || ''))){ this.handOff = true; return; }
+    this.handLoading = (async ()=>{
+      try{
+        const opts = d=>({ baseOptions:{ modelAssetPath: HAND_MODEL_URL, delegate: d }, runningMode:'VIDEO', numHands:2 });
+        try{ this.hm = await vision.HandLandmarker.createFromOptions(fileset, opts('GPU')); }
+        catch(e){ this.hm = await vision.HandLandmarker.createFromOptions(fileset, opts('CPU')); }
+      }catch(e){ console.warn('[손 분석을 불러오지 못해 끔]', e && e.message || e); this.handOff = true; }
+      finally{ this.handLoading = null; }
+    })();
+  },
+  newAcc(){ return { n:0, face:0, front:0, down:0, away:0, smile:0, centered:0, far:0, near:0, multi:0, move:0, low:0, hand:0, handN:0, py:null, pp:null, box:null }; },
   startSeg(acc){ this.acc = acc; if(!this.timer) this.timer = setInterval(()=>this.tick(), this.interval); },
   endSeg(acc){
     if(this.acc === acc) this.acc = null;
@@ -15229,6 +15259,12 @@ const FaceCoach = {
       const ts = Math.max(this.lastTs + 1, Math.round(performance.now())); this.lastTs = ts;
       const r = this.lm.detectForVideo(v, ts);
       this.add(this.acc, r);
+      // 2026-10-23j: 손 분석은 3번에 1번(약 1초에 1번), 얼굴이 보일 때만 · 너무 느리면 끔
+      if(this.hm && !this.handOff && this.acc.box && (++this.tickN % 3 === 0)){
+        const h0 = performance.now();
+        try{ this.addHand(this.acc, this.hm.detectForVideo(v, ts)); }catch(_){}
+        if(performance.now() - h0 > 220 && ++this.handSlow >= 4) this.handOff = true;
+      }
     }catch(e){ /* 한 장 실패는 건너뜀 */ }
     const dt = performance.now() - t0;
     if(dt > 160 && ++this.slow >= 6 && this.interval < 1000){ this.interval = 1000; if(this.timer){ clearInterval(this.timer); this.timer = setInterval(()=>this.tick(), this.interval); } }   // 느린 휴대폰은 1초에 한 번
@@ -15238,14 +15274,20 @@ const FaceCoach = {
   add(acc, r){
     acc.n++;
     const lms = r && r.faceLandmarks && r.faceLandmarks[0];
-    if(!lms || !lms.length) return;
+    acc.box = null;
+    if(!lms || !lms.length){ acc.py = null; return; }
     acc.face++;
+    if(r.faceLandmarks.length >= 2) acc.multi++;   // 2026-10-23j 다른 얼굴
     let minX=1, maxX=0, minY=1, maxY=0;
     for(const pt of lms){ if(pt.x<minX) minX=pt.x; if(pt.x>maxX) maxX=pt.x; if(pt.y<minY) minY=pt.y; if(pt.y>maxY) maxY=pt.y; }
     const cx = (minX+maxX)/2, cy = (minY+maxY)/2, w = maxX-minX;
+    acc.box = { minX, maxX, minY, maxY };
     if(Math.abs(cx-0.5) < 0.2 && Math.abs(cy-0.45) < 0.25) acc.centered++;
     if(w < 0.16) acc.far++; else if(w > 0.7) acc.near++;
+    if(cy > 0.68) acc.low++;   // 2026-10-23j 얼굴이 화면 아래쪽 = 자세가 내려감
     const a = this.angles(r);
+    if(acc.py != null && (Math.abs(a.yaw - acc.py) > 12 || Math.abs(a.pitch - acc.pp) > 10)) acc.move++;   // 2026-10-23j 짧은 사이 고개가 크게 움직임
+    acc.py = a.yaw; acc.pp = a.pitch;
     const bs = {}; ((r.faceBlendshapes && r.faceBlendshapes[0] && r.faceBlendshapes[0].categories) || []).forEach(c=>{ bs[c.categoryName] = c.score; });
     const eyeDown = ((bs.eyeLookDownLeft||0) + (bs.eyeLookDownRight||0)) / 2;
     const eyeSide = Math.max(((bs.eyeLookOutLeft||0) + (bs.eyeLookInRight||0)) / 2, ((bs.eyeLookInLeft||0) + (bs.eyeLookOutRight||0)) / 2);
@@ -15253,6 +15295,14 @@ const FaceCoach = {
     const down = eyeDown > 0.42;
     const away = !down && (Math.abs(a.yaw) > 24 || Math.abs(a.pitch) > 24 || eyeSide > 0.55);
     if(down) acc.down++; else if(away) acc.away++; else acc.front++;
+  },
+  /** 2026-10-23j: 손가락 끝이 얼굴 상자(조금 넓힘) 안에 들어오면 '손이 얼굴로' */
+  addHand(acc, rh){
+    const b = acc.box; if(!b) return;
+    acc.handN++;
+    const pad = 0.04, hands = (rh && rh.landmarks) || [];
+    const hit = hands.some(h=>[4,8,12,16,20].some(k=>{ const p = h[k]; return p && p.x > b.minX-pad && p.x < b.maxX+pad && p.y > b.minY-pad && p.y < b.maxY+pad; }));
+    if(hit) acc.hand++;
   },
   /** 얼굴 변환 행렬 → 좌우(yaw)·위아래(pitch) 각도 (도). 행렬은 열 우선 4×4 */
   angles(r){
@@ -15269,7 +15319,8 @@ const FaceCoach = {
     const pct = (x, d)=> d ? Math.round(x / d * 100) : 0;
     const f = acc.face;
     return { frames: acc.n, facePct: pct(f, acc.n), frontPct: pct(acc.front, f), downPct: pct(acc.down, f), awayPct: pct(acc.away, f),
-             smile: f ? Math.round(acc.smile / f * 100) / 100 : 0, centeredPct: pct(acc.centered, f), farPct: pct(acc.far, f), nearPct: pct(acc.near, f) };
+             smile: f ? Math.round(acc.smile / f * 100) / 100 : 0, centeredPct: pct(acc.centered, f), farPct: pct(acc.far, f), nearPct: pct(acc.near, f),
+             multiPct: pct(acc.multi, f), movePct: pct(acc.move, f), lowPct: pct(acc.low, f), handPct: acc.handN >= 3 ? pct(acc.hand, acc.handN) : null };
   },
   /** 여러 답변을 프레임 수로 가중 평균 */
   overall(list){
@@ -15282,7 +15333,9 @@ const FaceCoach = {
     return { v:1, frames: W, answers: xs.length, facePct: avg('facePct'), frontPct: avgF('frontPct'), downPct: avgF('downPct'), awayPct: avgF('awayPct'),
              smile: Math.round(xs.reduce((s,x)=>s + x.smile * x.frames * x.facePct / 100, 0) / fw * 100) / 100,
              centeredPct: avgF('centeredPct'), farPct: avgF('farPct'), nearPct: avgF('nearPct'),
-             items: xs.map(x=>({ i:x.i, facePct:x.facePct, frontPct:x.frontPct, downPct:x.downPct, awayPct:x.awayPct })) };
+             multiPct: avgF('multiPct') || 0, movePct: avgF('movePct') || 0, lowPct: avgF('lowPct') || 0,
+             handPct: (()=>{ const hs = xs.filter(x=>x.handPct != null); if(!hs.length) return null; const hw = hs.reduce((s,x)=>s + x.frames, 0); return Math.round(hs.reduce((s,x)=>s + x.handPct * x.frames, 0) / hw); })(),
+             items: xs.map(x=>({ i:x.i, facePct:x.facePct, frontPct:x.frontPct, downPct:x.downPct, awayPct:x.awayPct, movePct:x.movePct || 0, multiPct:x.multiPct || 0, lowPct:x.lowPct || 0, handPct:x.handPct })) };
   },
   /** 요약 → 잘한 점 / 고칠 점 문장 */
   tips(o){
@@ -15293,13 +15346,34 @@ const FaceCoach = {
     else if(o.downPct >= 15) fix.push(`가끔 시선이 아래로 내려가요(${o.downPct}%). 생각할 때도 고개를 들고 카메라 쪽을 보는 연습을 해 보세요.`);
     if(o.awayPct >= 25) fix.push(`고개나 시선이 옆·위로 돌아간 시간이 ${o.awayPct}%예요. 답을 떠올릴 때 시선이 흩어지지 않게, 말을 시작할 때마다 카메라를 다시 봐 주세요.`);
     if(o.facePct >= 70 && o.farPct >= 40) fix.push('얼굴이 화면에서 작게 보여요. 카메라에 조금 더 가까이 앉으면 표정이 잘 전달돼요.');
+    // 2026-10-23j 행동
+    if(o.handPct != null && o.handPct >= 10) fix.push(`손이 얼굴·머리 쪽으로 간 순간이 ${o.handPct}% 있었어요. 얼굴을 만지거나 턱을 괴는 습관은 긴장하거나 자신 없어 보일 수 있어요. 손은 책상 위나 무릎에 편하게 올려 두세요.`);
+    if((o.movePct||0) >= 20) fix.push(`고개를 자주 크게 움직였어요(${o.movePct}%). 고개를 흔들거나 자주 끄덕이면 산만해 보일 수 있어요. 말할 때는 고개를 가만히 두고 카메라를 바라봐 주세요.`);
+    if((o.multiPct||0) >= 5) fix.push('화면에 다른 사람 얼굴이 함께 잡힌 때가 있었어요. 실제 화상 면접은 혼자 있는 조용한 곳에서 보세요.');
+    if((o.lowPct||0) >= 40) fix.push(`얼굴이 화면 아래쪽에 있는 시간이 길었어요(${o.lowPct}%). 몸이 처져 보일 수 있으니 허리를 펴고 카메라를 눈높이에 맞춰 주세요.`);
     if(o.smile < 0.06) fix.push('답변 내내 표정이 굳어 보였어요. 첫인사와 마지막 말에서는 입꼬리를 살짝 올려 부드러운 인상을 만들어 보세요.');
     if(o.frontPct >= 75) good.push(`카메라(정면)를 보며 답한 시간이 ${o.frontPct}%로 안정적이에요.`);
     if(o.facePct >= 90 && o.centeredPct >= 70) good.push('얼굴이 화면 가운데에 안정적으로 자리 잡고 있었어요.');
     if(o.smile >= 0.12 && o.smile <= 0.6) good.push('표정이 부드러워 편안한 인상을 줬어요.');
+    if(o.handPct != null && o.handPct < 5 && (o.movePct||0) < 10) good.push('손이나 고개를 크게 움직이지 않고 차분한 자세를 지켰어요.');
     return { good, fix };
   },
   chipText(x){ return x ? `정면 ${x.frontPct}% · 시선 아래 ${x.downPct}% · 얼굴 보임 ${x.facePct}%` : ''; },
+  /** 2026-10-23j: 문항 하나의 표정·시선·행동 → 피드백에 붙이는 짧은 문장 (문제 큰 것 2개까지) */
+  answerNote(x){
+    if(!x || !(x.frames >= 3 || x.facePct != null)) return null;
+    const w = [];
+    if(x.facePct < 60) w.push(`얼굴이 화면에 보인 시간이 ${x.facePct}%뿐이었어요`);
+    if(x.downPct >= 30) w.push(`시선이 아래로 내려간 시간이 ${x.downPct}%예요(대본을 읽는 것처럼 보일 수 있어요)`);
+    else if(x.awayPct >= 25) w.push(`시선이 옆·위로 돌아간 시간이 ${x.awayPct}%예요`);
+    if(x.handPct != null && x.handPct >= 15) w.push('손이 얼굴 쪽으로 자주 갔어요');
+    if((x.movePct||0) >= 25) w.push('고개를 자주 크게 움직였어요');
+    if((x.multiPct||0) >= 5) w.push('화면에 다른 사람 얼굴이 잡혔어요');
+    if(w.length) return { warn:true, text: w.slice(0,2).join(' · ') + '.' };
+    if(x.facePct >= 80 && x.frontPct >= 70) return { warn:false, text:`카메라를 보며 안정적으로 답했어요(정면 ${x.frontPct}%).` };
+    return null;
+  },
+  answerNoteHtml(x){ const n = this.answerNote(x); return n ? `<p class="q-fb-nv${n.warn?' warn':''}"><b>표정·시선</b>${escapeHtml(n.text)}</p>` : ''; },
 };
 const SelfCam = {
   clips: [], seg: null,
@@ -15412,8 +15486,9 @@ function renderNonverbalPanel(){
   }
   const t = FaceCoach.tips(o);
   const tile = (v, l, warn)=>`<div class="nv-tile${warn?' warn':''}"><b>${v}</b><span>${l}</span></div>`;
-  box.innerHTML = `<div class="section-title"><span>표정·시선 <small class="nv-tag">카메라 분석 · 점수에 포함 안 됨</small></span></div>
-    <div class="nv-tiles">${tile(o.frontPct+'%', '정면(카메라)을 본 시간', o.frontPct < 60)}${tile(o.downPct+'%', '시선이 아래로', o.downPct >= 30)}${tile(o.awayPct+'%', '옆·위를 본 시간', o.awayPct >= 25)}${tile(o.facePct+'%', '얼굴이 화면에 보임', o.facePct < 70)}</div>
+  box.innerHTML = `<div class="section-title"><span>표정·시선 <small class="nv-tag">카메라 분석 · 종합 점수에 10% 반영</small></span></div>
+    <div class="nv-tiles${o.handPct != null && o.movePct != null ? ' six' : ''}">${tile(o.frontPct+'%', '정면(카메라)을 본 시간', o.frontPct < 60)}${tile(o.downPct+'%', '시선이 아래로', o.downPct >= 30)}${tile(o.awayPct+'%', '옆·위를 본 시간', o.awayPct >= 25)}${tile(o.facePct+'%', '얼굴이 화면에 보임', o.facePct < 70)}${o.handPct != null ? tile(o.handPct+'%', '손이 얼굴 쪽으로', o.handPct >= 10) : ''}${o.movePct != null ? tile(o.movePct+'%', '고개를 크게 움직임', o.movePct >= 20) : ''}</div>
+    ${state.lastNvScore != null && state.lastContentAvg ? `<p class="nv-score-note">종합 점수 ${state.lastAverageScore}점 = 답변 점수 ${state.lastContentAvg}점 × 90% + 표정·시선 ${state.lastNvScore}점 × 10%</p>` : ''}
     ${t.good.length ? `<div class="nv-col good"><b>잘한 점</b><ul>${t.good.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>` : ''}
     ${t.fix.length ? `<div class="nv-col fix"><b>다듬을 점</b><ul>${t.fix.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>` : ''}
     <p class="nv-note">답변하는 동안의 얼굴 방향·시선·표정을 이 기기에서만 분석했어요. 영상은 서버에 올리지 않고, 이 화면을 닫으면 사라져요. 필요하면 문항별 "내 모습 보기"에서 영상을 저장하세요.${SelfCam.any() ? '' : ' (이번 면접은 녹화 영상이 없어요)'}</p>`;
@@ -16797,7 +16872,7 @@ function renderResultBars(){
         </div>
         <div class="qfeedback">
           <span class="qfeedback-label">${feedbackLabel}</span>
-          <p class="q-fb-text">${feedbackText}</p>${extraHtml}
+          <p class="q-fb-text">${feedbackText}</p>${FaceCoach.answerNoteHtml(state.answerFace && state.answerFace[i-1])}${extraHtml}
         </div>
         </div>
       </div>`;
@@ -16806,7 +16881,10 @@ function renderResultBars(){
   wrap.innerHTML = timeLimitSummaryHtml() + (AnswerAudio.anyRecorded() ? '<p class="aa-note">"다시 듣기"로 내 답변 목소리를 들어볼 수 있어요. 녹음은 이 화면에서만 들을 수 있고 어디에도 저장되지 않아요.</p>' : '') + rows;
   const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
   { const pe = document.getElementById('rs-pronun'); pe.textContent = deliveryList.length ? avg(deliveryList)+'점' : '측정 안 됨'; pe.classList.toggle('na', !deliveryList.length); pe.title = deliveryList.length ? '' : '말로 한 답변이 있어야 속도·군말·시간을 잴 수 있어요.'; }
-  state.lastAverageScore = avg((state.answerScores||[]).filter(s=>s!=null));
+  // 2026-10-23j: 종합 점수 = 답변 점수 평균 90% + 표정·시선 10% (카메라로 측정됐을 때만, 아니면 답변 점수 그대로)
+  { const contentAvg = avg((state.answerScores||[]).filter(s=>s!=null)); const nv = nvScore(state.nonverbal);
+    state.lastContentAvg = contentAvg; state.lastNvScore = nv;
+    state.lastAverageScore = (nv != null && contentAvg) ? Math.round(contentAvg * 0.9 + nv * 0.1) : contentAvg; }
   countUpEl(document.getElementById('rs-content'), state.lastAverageScore, '점');
   renderResultReport();
   Growth.annotateResult();
@@ -17004,7 +17082,7 @@ async function renderResultTop(){
   const cur = resultAxesNow();
   if(radarBox){
     if(!cur){ radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span></div><p class="nv-na">답변이 채점되면 여기에 7각형이 그려져요.</p>`; }
-    else radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span><span class="r4-radar-note" id="r4-radar-note">지난 기록을 찾는 중…</span></div>${radar7Svg(cur, null)}${cur[6]==null?'<p class="nv-na">표정·시선은 카메라를 켜고 답하면 측정돼요 (점수에 포함 안 됨)</p>':'<p class="nv-na">표정·시선은 참고용 · 점수에 포함 안 됨</p>'}`;
+    else radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span><span class="r4-radar-note" id="r4-radar-note">지난 기록을 찾는 중…</span></div>${radar7Svg(cur, null)}${cur[6]==null?'<p class="nv-na">표정·시선은 카메라를 켜고 답하면 측정돼요 (측정되면 종합 점수에 10% 반영)</p>':'<p class="nv-na">표정·시선은 참고용 · 점수에 포함 안 됨</p>'}`;
   }
   // 지난 기록 대비 (같은 분야 가장 최근 기록)
   const hist = (state.historyRecords || []).filter(h=>!state.savedRecordId || String(h.id)!==String(state.savedRecordId));
@@ -17049,7 +17127,7 @@ function renderResultDelivery(){
   const okN = secs.filter(v=>v>=25 && v<=120).length, shortN = secs.filter(v=>v>0 && v<25).length, longN = secs.filter(v=>v>120).length;
   box.innerHTML = `<div class="section-title"><span>전달력 · 말하기</span><span class="r4-pill ${score>=75?'':score>=55?'warn':'warn'}">${score}점</span></div>
     <div class="r4-tiles">${tile('말 속도', rate, '자/분', rateN)}${tile('음·어 군말', fillers, '회', filN)}${tile('머뭇거림', hes ? hes.toFixed(1) : '0', '초 최대', hesN)}${tile('평균 답변', dur, '초', durN)}</div>
-    <div class="r4-sub"><b>표정 · 시선</b><span class="r4-pill ${nvs==null?'na':nvs>=70?'':'warn'}">${nvs==null?'측정 안 됨':nvs+'점 · 참고용'}</span></div>
+    <div class="r4-sub"><b>표정 · 시선</b><span class="r4-pill ${nvs==null?'na':nvs>=70?'':'warn'}">${nvs==null?'측정 안 됨':nvs+'점 · 종합의 10%'}</span></div>
     <p class="r4-nvline">${nvLine}</p>
     <div class="r4-sub"><b>문항별 답변 시간</b><span style="font-size:12px;color:var(--c-ink-3)">초록 띠 = 25~120초 권장</span></div>
     <div class="r4-times"><div class="band" style="top:${(100-120/MAXS*100).toFixed(1)}%;height:${((120-25)/MAXS*100).toFixed(1)}%"></div><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${bars}</svg></div>
