@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23d';
+var APP_VERSION = '2026-10-23e';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -7642,7 +7642,7 @@ const ACCESS_EXPIRED_MSG = '이용 기간이 끝나 로그인할 수 없어요. 
 async function rejectIfExpired(profile, authUser){
   if(profile.is_admin || !accessInfo(profile.access_until).expired) return false;
   // 2026-10-16a: 분야를 받았던 사람은 '기간 종료' 화면으로 (연습은 막고, 실제 면접 질문 남기기·결과 알려 주기만)
-  if(authUser && (profile.allowed_fields || []).filter(Boolean).length){
+  if(authUser){   // 2026-10-23e: 분야가 비어 있는 기간 종료 계정도 로그아웃하지 않고 '기간 종료' 화면으로
     state.currentUser = { id: authUser.id, email: authUser.email, name: profile.name, note: profile.note, isAdmin:false, allowed: profile.allowed_fields || [],
       status: profile.status || '', phone: profile.phone || '', accessUntil: profile.access_until || null, aiOverride: null };
     state.username = profile.name;
@@ -7741,7 +7741,8 @@ let accessWatchTimer = null;
  * 홈·면접·자기소개 코치·내 성장·사용 안내는 막고, 할 수 있는 것은 승인 확인 / 서류 미리 올리기 / 의견 보내기 / 로그아웃.
  * AI 기능 서버(followup-question·grade-answer·set-review·intro-coach·speak-text)도 같은 기준으로 요청을 거절함. */
 function isPendingUser(u){ u = u || state.currentUser; return !!(u && !u.isAdmin && !((u.allowed || []).filter(Boolean).length)); }
-function isClosedExpired(u){ u = u || state.currentUser; return !!(u && !u.isAdmin && (u.allowed || []).filter(Boolean).length && isAccessExpired(u)); }
+// 2026-10-23e: 분야가 비어 있어도(관리자가 분야를 뺀 경우) 기간이 지났으면 같은 '기간 종료' 화면(새 분야 승인 요청 포함)으로
+function isClosedExpired(u){ u = u || state.currentUser; return !!(u && !u.isAdmin && isAccessExpired(u)); }
 function renderPendingScreen(){
   const u = state.currentUser || {};
   const closed = isClosedExpired(u);
