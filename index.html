@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23j';
+var APP_VERSION = '2026-10-23m';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4444,6 +4444,21 @@ body.is-admin-ui #d3-user-menu #nt-menu-item, body.is-admin-ui #d3-user-menu #na
 #screen-pending .pd-sent-d{ margin:0 0 8px; font-size:14.5px; line-height:1.6; color:var(--rr-ink); } #screen-pending .pd-sent-d small{ color:var(--rr-ink3); }
 #screen-pending .pd-sent-n{ margin:0 0 4px; font-size:13.5px; line-height:1.6; color:var(--rr-ink2); }
 #screen-pending .pd-sent{ margin-bottom:10px; }
+/* 2026-10-23m 사람별 목소리 크레딧 */
+.tcu-tag{ display:inline-block; margin-left:6px; padding:1px 7px; border-radius:99px; font-size:11px; font-style:normal; font-weight:700; vertical-align:1px; }
+.tcu-tag.own{ background:#eef4ff; color:#1f4fb4; } .tcu-tag.bonus{ background:#e7f3ec; color:#2f7a4a; }
+.tcu-edit{ margin-left:6px; padding:3px 9px; border-radius:7px; border:1px solid #d3d0ca; background:#fff; font:inherit; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.tcu-edit:hover{ background:#f6f5f3; }
+.tcu-pick{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin:8px 0 10px; padding:10px 12px; border-radius:10px; background:#f6f5f3; font-size:13.5px; }
+.tcu-pick > span{ font-weight:700; } .tcu-pick select{ min-width:200px; } .tcu-pick small{ flex:1 1 100%; color:#66666c; font-size:12.5px; }
+.tcap-box{ max-width:480px !important; }
+.tcap-box .modal-head p{ margin:6px 0 0; font-size:14px; color:#45454a; }
+.tcap-sec{ padding:12px 0; border-bottom:1px solid #eee; } .tcap-sec:last-child{ border-bottom:0; }
+.tcap-sec > b{ display:block; font-size:15px; margin-bottom:8px; }
+.tcap-opt{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:6px 0; font-size:14.5px; }
+.tcap-opt input[type=number]{ width:110px; }
+.tcap-quick{ display:inline-flex; gap:6px; margin-left:4px; }
+@media (max-width:640px){ .tcu-pick select{ min-width:0; flex:1 1 100%; } }
 /* 2026-10-23j 문항별 표정·시선 한 줄 */
 .q-fb-nv{ margin:10px 0 0; padding:8px 12px; border-radius:8px; background:#f4f7f5; font-size:13.5px; line-height:1.55; color:#2f5a3e; word-break:keep-all; }
 .q-fb-nv b{ display:inline-block; margin-right:8px; font-size:12px; font-weight:800; }
@@ -5074,6 +5089,23 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <button class="btn btn-outline" onclick="RealReport.closeNudge()">닫기</button>
       <button class="btn btn-solid" id="rrn-go">질문 남기기</button>
     </div>
+  </div>
+</div>
+<!-- 2026-10-23m 사람별 목소리(타입캐스트) 크레딧 한도 -->
+<div class="modal-overlay" id="modal-tcap" role="dialog" aria-modal="true" aria-labelledby="tcap-title">
+  <div class="modal-box tcap-box">
+    <div class="modal-head"><h2 id="tcap-title">목소리 크레딧</h2><p id="tcap-now"></p></div>
+    <div class="modal-body">
+      <div class="tcap-sec"><b>매달 한도</b>
+        <label class="tcap-opt"><input type="radio" name="tcap-mode" id="tcap-mode-def" onchange="TcCap.sync()"> <span id="tcap-def">기본 한도 따르기</span></label>
+        <label class="tcap-opt"><input type="radio" name="tcap-mode" id="tcap-mode-own" onchange="TcCap.sync()"> <span>이 사람만 따로 정하기</span> <input type="number" id="tcap-own" class="pipe-input" min="0" max="200000" step="500"> 크레딧</label>
+        <p class="pipe-hint">따로 정한 한도는 다음 달에도 계속 적용돼요. 0으로 두면 이 사람은 한도 없이 써요.</p></div>
+      <div class="tcap-sec"><b>이번 달만 더 주기</b>
+        <label class="tcap-opt">+ <input type="number" id="tcap-bonus" class="pipe-input" min="0" max="200000" step="500" placeholder="0"> 크레딧
+          <span class="tcap-quick"><button type="button" class="btn-manage" onclick="document.getElementById('tcap-bonus').value=(Number(document.getElementById('tcap-bonus').value)||0)+1000">+1,000</button><button type="button" class="btn-manage" onclick="document.getElementById('tcap-bonus').value=(Number(document.getElementById('tcap-bonus').value)||0)+2000">+2,000</button></span></label>
+        <p class="pipe-hint">매달 한도에 이번 달만 더해져요. 다음 달 1일이 되면 저절로 없어져요. AI 대화 면접 1번에 보통 200~300크레딧이에요.</p></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-outline" onclick="TcCap.close()">취소</button><button class="btn btn-solid" onclick="TcCap.save(this)">저장</button></div>
   </div>
 </div>
 <div class="modal-overlay" id="modal-notice" role="dialog" aria-modal="true" aria-labelledby="nt-title">
@@ -17082,7 +17114,7 @@ async function renderResultTop(){
   const cur = resultAxesNow();
   if(radarBox){
     if(!cur){ radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span></div><p class="nv-na">답변이 채점되면 여기에 7각형이 그려져요.</p>`; }
-    else radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span><span class="r4-radar-note" id="r4-radar-note">지난 기록을 찾는 중…</span></div>${radar7Svg(cur, null)}${cur[6]==null?'<p class="nv-na">표정·시선은 카메라를 켜고 답하면 측정돼요 (측정되면 종합 점수에 10% 반영)</p>':'<p class="nv-na">표정·시선은 참고용 · 점수에 포함 안 됨</p>'}`;
+    else radarBox.innerHTML = `<div class="section-title"><span>7가지 항목</span><span class="r4-radar-note" id="r4-radar-note">지난 기록을 찾는 중…</span></div>${radar7Svg(cur, null)}${cur[6]==null?'<p class="nv-na">표정·시선은 카메라를 켜고 답하면 측정돼요 (측정되면 종합 점수에 10% 반영)</p>':'<p class="nv-na">표정·시선은 종합 점수에 10% 반영돼요</p>'}`;
   }
   // 지난 기록 대비 (같은 분야 가장 최근 기록)
   const hist = (state.historyRecords || []).filter(h=>!state.savedRecordId || String(h.id)!==String(state.savedRecordId));
@@ -19973,6 +20005,62 @@ function monthStartKst(){ const k = new Date(Date.now() + 9 * 3600000); return D
 /* ---------------- 2026-10-21j 타입캐스트 크레딧 안전장치 ----------------
    이번 달 '면접 중 목소리'로 쓴 크레딧이 한도에 닿거나, 회사 전체 남은 크레딧이 정한 % 아래로 내려가면
    서버(speak-text)가 타입캐스트 대신 OpenAI 목소리로 읽음. 설정은 app_settings.tts_guard (서버는 1분마다 다시 읽음) */
+/* ---------------- 2026-10-23m 사람별 타입캐스트 크레딧 할당 ----------------
+   profiles.tts_cap: 그 사람의 매달 한도 (null = 기본 1인 한도를 따름, 0 = 한도 없음)
+   profiles.tts_bonus + tts_bonus_month('YYYY-MM', 한국 시간): 그달만 더 주는 크레딧 (다음 달엔 자동으로 사라짐)
+   실제 적용은 서버 speak-text v14 (같은 계산) */
+const TcCap = {
+  editId:null,
+  monthKey(){ const k = new Date(Date.now() + 9 * 3600000); return `${k.getUTCFullYear()}-${String(k.getUTCMonth() + 1).padStart(2, '0')}`; },
+  def(){ return Number((AiSwitch.guard || {}).user_cap) || 0; },
+  /** { base, own(따로 정함), bonus(이번 달), cap(실제 한도 · 0이면 없음) } */
+  eff(u){
+    u = u || {}; const own = u.tts_cap != null && u.tts_cap !== '';
+    const base = own ? Math.max(0, Number(u.tts_cap) || 0) : this.def();
+    const bonus = u.tts_bonus_month === this.monthKey() ? Math.max(0, Number(u.tts_bonus) || 0) : 0;
+    return { base, own, bonus, cap: base > 0 ? base + bonus : 0 };
+  },
+  used(uid){
+    const ms = monthStartKst(); let n = 0;
+    (TcCredit.usage || []).forEach(r=>{ if(r.kind === 'live' && r.user_id === uid && (r.provider || 'typecast') === 'typecast' && r.purpose !== 'admin_test' && new Date(r.created_at).getTime() >= ms) n += Number(r.chars) || 0; });
+    return n;
+  },
+  tagHtml(u){
+    const e = this.eff(u); const f = TcCredit.fmt.bind(TcCredit); const t = [];
+    if(e.own) t.push(`<em class="tcu-tag own">${e.base ? '매달 ' + f(e.base) : '한도 없음'}</em>`);
+    if(e.bonus) t.push(`<em class="tcu-tag bonus">이번 달 +${f(e.bonus)}</em>`);
+    return t.join('');
+  },
+  open(uid){
+    const u = (state.adminUsers || []).find(x=>x.id === uid); if(!u) return;
+    this.editId = uid; const e = this.eff(u); const f = TcCredit.fmt.bind(TcCredit); const $ = id=>document.getElementById(id);
+    $('tcap-title').textContent = `${u.name || '면접자'} · 목소리 크레딧`;
+    $('tcap-now').innerHTML = `이번 달 사용 <b>${TcCredit.usage ? f(this.used(uid)) : '–'}</b>크레딧 · 지금 한도 <b>${e.cap ? f(e.cap) : '없음'}</b>${e.cap ? '크레딧' : ''}`;
+    $('tcap-def').textContent = this.def() ? `기본 한도 따르기 (지금 ${f(this.def())}크레딧)` : '기본 한도 따르기 (지금 기본 한도는 꺼져 있어요)';
+    $('tcap-mode-def').checked = !e.own; $('tcap-mode-own').checked = e.own;
+    $('tcap-own').value = e.own ? e.base : (this.def() || 4000);
+    $('tcap-bonus').value = e.bonus || '';
+    this.sync(); $('modal-tcap').classList.add('active');
+  },
+  sync(){ const own = document.getElementById('tcap-mode-own').checked; const i = document.getElementById('tcap-own'); i.disabled = !own; },
+  close(){ document.getElementById('modal-tcap').classList.remove('active'); this.editId = null; },
+  async save(btn){
+    const uid = this.editId; if(!uid) return; const $ = id=>document.getElementById(id);
+    const own = $('tcap-mode-own').checked;
+    const cap = own ? Math.min(200000, Math.max(0, Math.round(Number($('tcap-own').value) || 0))) : null;
+    const bonus = Math.min(200000, Math.max(0, Math.round(Number($('tcap-bonus').value) || 0)));
+    const patch = { tts_cap: cap, tts_bonus: bonus, tts_bonus_month: bonus ? this.monthKey() : null };
+    if(btn){ btn.disabled = true; btn.textContent = '저장 중…'; }
+    try{
+      const { error } = await sb.from('profiles').update(patch).eq('id', uid);
+      if(error) throw error;
+      const u = (state.adminUsers || []).find(x=>x.id === uid); if(u) Object.assign(u, patch);
+      showToast('목소리 크레딧 한도를 저장했어요 (1분 안에 적용)', 'ok');
+      this.close(); try{ TcCredit.render(); }catch(_){} try{ if(state.editingUserId === uid && document.getElementById('modal-admin-user').classList.contains('active')) openAdminUserDetail(uid); }catch(_){}
+    }catch(e){ showToast('저장하지 못했어요: ' + ((e && e.message) || e) + (/tts_cap|tts_bonus/i.test(String(e && e.message)) ? ' — step36 SQL이 필요해요' : ''), 'warn'); }
+    finally{ if(btn){ btn.disabled = false; btn.textContent = '저장'; } }
+  },
+};
 const TcGuard = {
   state(){
     const g = AiSwitch.guard || {}; const s = TcCredit.sums(); const sub = TcCredit.sub;
@@ -20013,26 +20101,29 @@ const TcGuard = {
       o.used += Number(r.chars) || 0; o.lines++;
     });
     const users = state.adminUsers || [];
-    return Object.entries(by).map(([id, o])=>{ const u = users.find(x=>x.id === id); return Object.assign({ id, u, name: u ? (u.name || '') : '(알 수 없음)', exempt: !!(u && (u.is_admin || isStaffAcct(u))) }, o); })
-      .filter(x=>x.used > 0 || x.fb > 0).sort((a,b)=>b.used - a.used);
+    // 2026-10-23m: 따로 한도를 정했거나 이번 달 추가를 받은 사람은 아직 안 썼어도 목록에 보임
+    users.forEach(u=>{ if(!u.is_admin && !isStaffAcct(u) && !by[u.id] && (u.tts_cap != null || (u.tts_bonus && u.tts_bonus_month === TcCap.monthKey()))) by[u.id] = { used:0, lines:0, fb:0 }; });
+    return Object.entries(by).map(([id, o])=>{ const u = users.find(x=>x.id === id); const exempt = !!(u && (u.is_admin || isStaffAcct(u))); return Object.assign({ id, u, name: u ? (u.name || '') : '(알 수 없음)', exempt, capInfo: TcCap.eff(u) }, o); })
+      .filter(x=>x.used > 0 || x.fb > 0 || (x.capInfo && (x.capInfo.own || x.capInfo.bonus))).sort((a,b)=>b.used - a.used);
   },
   userHtml(){
     const f = TcCredit.fmt.bind(TcCredit); const cap = Number((AiSwitch.guard || {}).user_cap) || 0;
     const rows = this.userRows(); const k = new Date(Date.now() + 9 * 3600000);
-    const hitN = cap ? rows.filter(x=>!x.exempt && x.used >= cap).length : 0;
+    const hitN = rows.filter(x=>!x.exempt && x.capInfo.cap && x.used >= x.capInfo.cap).length;
     // 2026-10-22k: 그 사람이 지금까지 한 번 읽을 때 쓴 평균 크레딧으로 '남은 크레딧으로 질문 몇 개 더'를 셈 (3번 미만이면 전체 평균을 씀)
     const allUsed = rows.reduce((t,x)=>t+x.used, 0), allLines = rows.reduce((t,x)=>t+x.lines, 0);
     const avgAll = allLines ? allUsed / allLines : 75;
-    const list = rows.length ? rows.slice(0, 30).map(x=>{
+    const list = rows.length ? rows.slice(0, 40).map(x=>{
+      const cap = x.exempt ? 0 : x.capInfo.cap;   // 2026-10-23m 사람마다 한도가 다를 수 있음
       const pct = cap ? Math.min(100, Math.round(x.used / cap * 100)) : 0; const hit = cap && !x.exempt && x.used >= cap; const near = cap && !x.exempt && !hit && x.used >= cap * 0.8;
       const avg = x.lines >= 3 ? x.used / x.lines : avgAll; const left = cap ? Math.max(0, cap - x.used) : 0; const more = avg ? Math.floor(left / avg) : 0;
       const right = x.exempt ? `<span class="tcu-left">한도 없음</span> · 이번 달 <b>${f(x.used)}</b>크레딧`
-        : !cap ? `이번 달 <b>${f(x.used)}</b>크레딧`
+        : !cap ? `<span class="tcu-left">한도 없음</span> · 이번 달 <b>${f(x.used)}</b>크레딧`
         : hit ? `<span class="tcu-left hit">한도 도달 · OpenAI 목소리로 읽는 중</span> · <b>${f(x.used)}</b> / ${f(cap)}`
         : `<span class="tcu-left">질문 약 <b>${f(more)}</b>개 더</span> · 남은 ${f(left)} / ${f(cap)}크레딧`;
-      return `<div class="tcu-row${hit ? ' hit' : near ? ' near' : ''}" title="이번 달 즉석 읽기 ${f(x.lines)}번 · 한 번에 평균 ${Math.round(x.lines ? x.used / x.lines : 0)}크레딧${x.fb ? ` · 한도 때문에 OpenAI로 ${f(x.fb)}번` : ''}"><span class="tcu-name">${escapeHtml(x.name)}${x.exempt ? ' <em>제외</em>' : ''}</span>
+      return `<div class="tcu-row${hit ? ' hit' : near ? ' near' : ''}" title="이번 달 즉석 읽기 ${f(x.lines)}번 · 한 번에 평균 ${Math.round(x.lines ? x.used / x.lines : 0)}크레딧${x.fb ? ` · 한도 때문에 OpenAI로 ${f(x.fb)}번` : ''}"><span class="tcu-name">${escapeHtml(x.name)}${x.exempt ? ' <em>제외</em>' : TcCap.tagHtml(x.u)}</span>
         <span class="tcu-bar">${cap && !x.exempt ? `<i style="width:${pct}%"></i>` : ''}</span>
-        <span class="tcu-num">${right}${x.fb ? ` · <span class="tcu-fb">OpenAI로 ${f(x.fb)}번</span>` : ''}</span></div>`;
+        <span class="tcu-num">${right}${x.fb ? ` · <span class="tcu-fb">OpenAI로 ${f(x.fb)}번</span>` : ''}${x.exempt || !x.u ? '' : ` <button type="button" class="tcu-edit" onclick="TcCap.open('${x.id}')">한도 조정</button>`}</span></div>`;
     }).join('') : '<div class="pipe-hint">이번 달에는 아직 면접 중 목소리를 쓴 사람이 없어요.</div>';
     return `<div class="tcg tcu">
       <div class="tcg-head"><b>1인당 한 달 한도</b><span class="tcg-state ${!cap ? 'off' : hitN ? 'hit' : ''}">${!cap ? '꺼짐' : hitN ? `${hitN}명 한도 도달 · 그 사람만 OpenAI 목소리` : `켜짐 · 1인 ${f(cap)}크레딧`}</span></div>
@@ -20043,6 +20134,8 @@ const TcGuard = {
       </div>
       <div class="pipe-hint" style="margin-top:6px;">AI 대화 면접 1번에 보통 200~300크레딧이에요.${cap ? ` ${f(cap)}이면 한 사람이 한 달에 약 ${f(Math.floor(cap/300))}~${f(Math.floor(cap/200))}번이에요.` : ''} 0으로 두면 끔. 저장하면 1분 안에 적용돼요.</div>
       <div class="tcu-head">${k.getUTCMonth() + 1}월 면접자별 사용량 <small>(많이 쓴 순 · '질문 약 n개 더'는 그 사람이 한 번 읽을 때 쓴 평균 크레딧으로 계산했어요)</small></div>
+      <div class="tcu-pick"><span>사람별 한도 정하기</span><select id="tcu-pick" class="pipe-input" onchange="if(this.value){ TcCap.open(this.value); this.value=''; }"><option value="">면접자 고르기…</option>${(state.adminUsers || []).filter(u=>!u.is_admin && !isStaffAcct(u)).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ko')).map(u=>`<option value="${u.id}">${escapeHtml(u.name || '(이름 없음)')}${u.phone ? ' · ' + escapeHtml(String(u.phone).slice(-4)) : ''}</option>`).join('')}</select>
+        <small>사람마다 매달 한도를 따로 정하거나, 이번 달만 크레딧을 더 줄 수 있어요. 각 줄의 '한도 조정'으로도 바꿀 수 있어요.</small></div>
       <div class="tcu-list">${list}</div>
     </div>`;
   },
@@ -20574,6 +20667,9 @@ function openAdminUserDetail(userId){
     <div class="admin-stat"><div class="num">${best!=null ? best+'<i>점</i>' : '–'}</div><div class="lbl">최고 점수</div></div>
     ${u.is_admin ? '' : `<div class="admin-stat ai"><div class="num">${usg.used_total}<i>/${totalCap}회</i></div><div class="lbl">AI 면접 사용 · 오늘 ${usg.used_today}/${AiSwitch.limits.daily}${u.ai_bonus ? ` · 추가 +${u.ai_bonus}` : ''}</div>
       <div class="au-ai-actions"><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 10)">횟수 +10</button><button class="btn-manage" onclick="adminAddAiBonus('${userId}', 30)">+30</button><button class="btn-manage" onclick="adminResetAiUsage('${userId}')" title="이 사람의 AI 면접 사용 기록을 0으로 되돌려요">사용 기록 초기화</button></div></div>`}
+    ${(u.is_admin || isStaffAcct(u)) ? '' : (()=>{ const e = TcCap.eff(u); const f = TcCredit.fmt.bind(TcCredit); const used = TcCredit.usage ? TcCap.used(userId) : null;   // 2026-10-23m 사람별 목소리 크레딧
+      return `<div class="admin-stat ai tcap-stat"><div class="num">${used == null ? '–' : f(used)}<i>/${e.cap ? f(e.cap) : '한도 없음'}</i></div><div class="lbl">이번 달 목소리 크레딧 · ${e.own ? (e.base ? '매달 ' + f(e.base) + ' (따로 정함)' : '한도 없음 (따로 정함)') : '기본 한도'}${e.bonus ? ' · 이번 달 +' + f(e.bonus) : ''}</div>
+      <div class="au-ai-actions"><button class="btn-manage" onclick="TcCap.open('${userId}')">한도 바꾸기</button></div></div>`; })()}
   `;
 
   try{ AuFreq.load(userId, u); }catch(_){}   // 2026-10-22l 이용 빈도 (관리자만 봄)
