@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23c';
+var APP_VERSION = '2026-10-23d';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5844,7 +5844,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
         <div class="pipe-card" id="tc-live-card">
           <div class="ps-card-head">
             <div><div class="subhead" style="margin:0;">면접 중 즉석으로 읽은 문장 <span class="menu-badge" id="tcl-new-badge" style="display:none;"></span></div>
-            <div class="pipe-hint">미리 녹음해 둔 음성이 없어 면접 중에 타입캐스트로 바로 읽은 문장이에요. AI 꼬리질문은 매번 새 문장이라 모두 여기에 남아요. 끝음이 어색해 다시 읽은 것도 크레딧에 함께 셌어요. 타입캐스트가 안 돼 <b>OpenAI로 대신 읽은 것</b>도 이유와 함께 보여요. 여러 번 나오는 문장은 <b>녹음본으로 저장</b>하면 다음부터 크레딧이 들지 않아요.</div></div>
+            <div class="pipe-hint">미리 녹음해 둔 음성이 없어 면접 중에 타입캐스트로 바로 읽은 문장이에요. AI 꼬리질문은 매번 새 문장이라 모두 여기에 남아요. 끝음이 어색해 다시 읽은 것도 크레딧에 함께 셌어요. 타입캐스트가 안 돼 <b>OpenAI로 대신 읽은 것</b>도 이유와 함께 보여요. 여러 번 나오는 문장은 <b>녹음본으로 저장</b>하면 다음부터 크레딧이 들지 않아요.<br><b>서류 질문</b>은 면접자의 자기소개서·이력서로 만든 질문이라 사람마다 문장이 달라요. 같은 사람이 여러 번 읽을 때만 저장할 만해요. <b>기타</b>는 녹음본이 있지만 면접자가 예전 화면을 써서 문장이 조금 달랐던 경우 등이에요.</div></div>
           </div>
           <div id="tcl-body"><div class="pipe-hint">불러오는 중…</div></div>
         </div>
@@ -17880,6 +17880,9 @@ const SpeechTag = {
   of(text){
     const k = this._k(text); if(!k) return 'other';
     if(this.m.has(k)) return this.m.get(k);
+    // 2026-10-23d: 자기소개서·이력서로 만든 질문은 '서류 질문'으로 따로 셈 (예전에는 '기타'로 묶였음)
+    try{ const cq = state.customQuestions || []; if(cq.some(q=>q && [q.q, q.spoken].some(x=>x && (this._k(x) === k || this._k(sanitizeForSpeech(x)) === k)))) return 'doc_question'; }catch(_){}
+    if(/^(자기소개서|이력서)(에|를|에서|의)/.test(String(text||'').trim())) return 'doc_question';
     try{ const qs = state.interviewQuestions || []; if(qs.some(q=>q && [q.q, q.spoken].some(x=>x && (this._k(x) === k || this._k(sanitizeForSpeech(x)) === k)))) return 'question'; }catch(_){}
     return 'other';
   },
@@ -19838,7 +19841,7 @@ const TcGuard = {
    배지: 이 브라우저에서 마지막으로 목록을 본 뒤 새로 생긴 문장 수 (localStorage stenotalk_tts_live_seen) */
 const TcLive = {
   KEY:'stenotalk_tts_live_seen', show:30, filter:'all', prevSeen:null,
-  PURPOSE:{ ai_followup:['AI 꼬리질문','ai'], rule_followup:['기본 꼬리질문','rule'], question:['질문 (녹음본 없음)','q'], admin_test:['관리자 시험','other'], other:['기타 안내 문장','other'] },
+  PURPOSE:{ ai_followup:['AI 꼬리질문','ai'], rule_followup:['기본 꼬리질문','rule'], question:['질문 (녹음본 없음)','q'], doc_question:['서류 질문 (자기소개서·이력서)','q'], admin_test:['관리자 시험','other'], other:['기타 (녹음본과 문장이 달라진 질문 등)','other'] },
   seen(){ try{ return localStorage.getItem(this.KEY) || ''; }catch(_){ return ''; } },
   markSeen(){ try{ localStorage.setItem(this.KEY, new Date().toISOString()); }catch(_){} this.setBadge(0); },
   setBadge(n){ ['tts-nav-badge','tcl-new-badge'].forEach(id=>{ const b = document.getElementById(id); if(b){ b.textContent = n > 99 ? '99+' : String(n); b.style.display = n ? '' : 'none'; } }); },
