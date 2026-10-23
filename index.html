@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23h';
+var APP_VERSION = '2026-10-23i';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -8794,12 +8794,15 @@ const ApprovalAdmin = {
     const r = (this.rows||[]).find(x=>x.id===id); if(!r) return;
     this.approvingId = id;
     openPermissionModal(r.user_id);
+    // 2026-10-23i: 요청한 분야만 체크된 채로 엶. 이전 분야가 다르면 체크를 풀어 둠 → 그대로 저장하면 이전 분야 기록은 면접자 화면에서 숨겨짐 (같은 분야면 그대로 이어짐)
+    document.querySelectorAll('#perm-checklist input[type="checkbox"]').forEach(x=>{ x.checked = (x.value === r.field_id); });
     const cb = document.getElementById('perm-checklist-'+r.field_id); if(cb) cb.checked = true;
-    // 2026-10-23a: 재신청이면 면접일을 이용 기간 기본값으로, 이전 분야는 체크된 채로 둠(담당자가 풀지 결정)
+    // 2026-10-23a: 재신청이면 면접일을 이용 기간 기본값으로
     const u = (state.adminUsers||[]).find(x=>x.id===r.user_id) || {}; const prevF = (u.allowed_fields||[]).filter(Boolean);
+    const otherF = prevF.filter(f=>f !== r.field_id);
     if(r.interview_date){ const un = document.getElementById('perm-until'); if(un) un.value = String(r.interview_date).slice(0,10); }
     const d = document.getElementById('perm-modal-desc'); if(d) d.textContent = prevF.length
-      ? `재신청: ${rrFieldName(r.field_id)}${r.interview_date ? ' · 면접일 ' + String(r.interview_date).slice(0,10) : ''}. 새 분야를 체크해 두었고 이전 분야(${prevF.map(rrFieldName).join(', ')})는 그대로 체크돼 있어요 — 닫으려면 체크를 풀어 주세요. 이용 기간을 정하고 저장하면 승인돼요.`
+      ? `재신청: ${rrFieldName(r.field_id)}${r.interview_date ? ' · 면접일 ' + String(r.interview_date).slice(0,10) : ''}. ${otherF.length ? `새 분야만 체크해 두었어요. 이전 분야(${otherF.map(rrFieldName).join(', ')})는 체크를 풀어 두어서, 그대로 저장하면 그 분야의 예전 연습 기록은 면접자 화면에서 보이지 않아요(지워지지 않고 관리자는 볼 수 있어요). 계속 열어 두려면 다시 체크해 주세요.` : '같은 분야라 예전 연습 기록이 그대로 이어져요.'} 이용 기간을 정하고 저장하면 승인돼요.`
       : `승인 요청: ${rrFieldName(r.field_id)} · ${r.org||''}. 요청한 분야를 체크해 두었어요. 이용 기간(보통 면접일)을 정하고 저장하면 승인돼요.`;
   },
   /** 권한 저장 뒤: 그 사람의 '확인 대기' 요청을 승인으로 */
@@ -9387,6 +9390,13 @@ function renderTodayStrip(history, hide){
   el.className = 'd3-today' + (s.doneToday ? ' done' : '');
   el.style.display = '';
 }
+/** 2026-10-23i: 면접자에게 보일 연습 기록의 분야 = 지금 열려 있는 분야만.
+ *  예전에 다른 분야(예: 법원)로 연습했어도 지금 의회만 열려 있으면 법원 기록은 면접자 화면에서 숨김 (지우지 않음 · 같은 분야가 다시 열리면 다시 보임 · 관리자는 모두 봄).
+ *  null = 거르지 않음(관리자), [] = 보일 기록 없음 */
+function recordFieldScope(){
+  const u = state.currentUser; if(!u || u.isAdmin) return null;
+  return (u.allowed || []).filter(Boolean);
+}
 async function renderDashboard(){
   const isAdmin = !!(state.currentUser && state.currentUser.isAdmin);
   const allowed = (state.currentUser && state.currentUser.allowed) || [];
@@ -9394,11 +9404,13 @@ async function renderDashboard(){
   heroSub.textContent = '지원 분야를 선택하고 실전처럼 면접을 연습해보세요.';
 
   let history = [];
-  if(!isAdmin && state.currentUser){
+  const scope = recordFieldScope();
+  if(!isAdmin && state.currentUser && scope && scope.length){
     const { data, error } = await sb
       .from('interview_records')
       .select('*')
       .eq('user_id', state.currentUser.id)
+      .in('field_id', scope)   // 2026-10-23i 지금 열린 분야의 기록만
       .order('created_at', {ascending:false})
       .limit(50);
     if(!error && data){
@@ -9721,7 +9733,10 @@ const Growth = {
       const qTexts = [...new Set(items.filter(it=>it && !it.followup).map(it=>it.q))];
       if(!qTexts.length) return;
       const since = state.startTime ? new Date(state.startTime).toISOString() : new Date().toISOString();
-      const { data: recs, error } = await sb.from('interview_records').select('id,created_at').eq('user_id', state.currentUser.id).lt('created_at', since).order('created_at', {ascending:false}).limit(50);
+      const scope = recordFieldScope(); if(scope && !scope.length) return;
+      let rq = sb.from('interview_records').select('id,created_at').eq('user_id', state.currentUser.id).lt('created_at', since);
+      if(scope) rq = rq.in('field_id', scope);   // 2026-10-23i 지난 답변 비교도 지금 열린 분야끼리만
+      const { data: recs, error } = await rq.order('created_at', {ascending:false}).limit(50);
       if(error || !recs || !recs.length) return;
       const when = {}; recs.forEach(r=>{ when[r.id] = r.created_at; });
       const ans = (await this.answersFor(recs.map(r=>r.id).filter(id=>id !== state.savedRecordId), qTexts)).filter(a=>a.kind !== 'followup' && this.answered(a));
@@ -10618,10 +10633,13 @@ async function renderActivityCalendar(){
   const DAYS = 28;
   const today = new Date(); today.setHours(0,0,0,0);
   const start = new Date(today); start.setDate(start.getDate() - (DAYS-1));
-  const { data, error } = await sb.from('interview_records')
+  const scope = recordFieldScope();
+  let cq = sb.from('interview_records')
     .select('created_at')
     .eq('user_id', state.currentUser.id)
     .gte('created_at', start.toISOString());
+  if(scope) cq = cq.in('field_id', scope.length ? scope : ['__none__']);   // 2026-10-23i
+  const { data, error } = await cq;
   if(error){ calEl.innerHTML = ''; noteEl.textContent = '활동 기록을 불러오지 못했습니다: '+error.message; return; }
   const keyOf = d=>`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   const counts = {};
