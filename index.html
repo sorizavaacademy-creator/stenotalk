@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23a';
+var APP_VERSION = '2026-10-23b';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5322,7 +5322,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
           <li><b>합격 확인은 비대면으로 해요.</b> 위에서 승인 요청을 보내거나 카카오톡으로 알려 주세요.</li>
           <li><b>합격이 확인된 기관(분야)만 열려요.</b> 다른 기관에도 합격했다면 함께 알려 주세요.</li>
           <li>합격 여부를 확인할 수 없으면 승인되지 않을 수 있어요.</li>
-          <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 연습이 막히고, 연습 기록은 지워지지 않아요.</li>
+          <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 연습이 막혀요.</li>
           <li><b>면접을 보고 나면 받은 질문을 남겨 주세요.</b> 다음 지원자들의 연습 문항이 돼요. 합격하면 꼭 남겨 주세요!</li>
           <li>한 계정은 한 기기에서만 쓸 수 있어요. 다른 기기에서 로그인하면 이전 기기는 로그아웃돼요.</li>
           <li>계정을 다른 사람과 함께 쓰지 말아 주세요.</li>
@@ -5332,7 +5332,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
      <div id="pd-closed" hidden>
       <span class="pd-chip done"><i></i>이용 기간 종료</span>
       <h1 class="pd-h" id="pd-c-title">면접은 어떠셨어요?</h1>
-      <p class="pd-lead"><b id="pd-c-name">회원</b>님, 이용 기간이 끝나 연습이 닫혔어요. <span class="pd-lead-sub">연습 기록은 그대로 보관돼요.</span></p>
+      <p class="pd-lead"><b id="pd-c-name">회원</b>님, 이용 기간이 끝나 연습이 닫혔어요.</p>
       <section id="rr-closed" aria-label="실제 면접 질문 남기기"></section>
       <!-- 2026-10-23a: 기간이 끝난 뒤 다른 기관에 서류 합격한 사람 → 새 분야 승인 요청 -->
       <section class="pd-apply pd-rejoin" id="pd-rejoin" aria-labelledby="pd-rj-t">
@@ -5351,7 +5351,6 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
           <label class="pd-lbl" for="pd-rj-memo">하고 싶은 말 <small>선택</small></label>
           <textarea id="pd-rj-memo" class="pd-in" rows="2" maxlength="500" placeholder="예: 국회는 불합격했고, 이번엔 ○○지방법원이에요"></textarea>
           <button type="button" class="d3-btn d3-btn-primary pd-send" id="pd-rj-send" onclick="Rejoin.submit()">새 분야 승인 요청 보내기</button>
-          <p class="pd-copy-hint" id="pd-rj-hint">이전 분야의 연습 기록은 그대로 남아요. 캡처는 담당자가 확인한 뒤 지워요.</p>
         </div>
       </section>
       <div class="pd-foot">
@@ -5655,7 +5654,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <div class="admin-view" id="admin-view-approvals">
         <div class="admin-view-head">
           <div><h2>서류 합격 승인</h2>
-          <p>승인 대기 화면에서 면접자가 보낸 승인 요청이에요. 분야·기관을 확인하고(캡처가 있으면 함께 보고) <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요. 확인이 끝난 캡처는 <b>캡처 지우기</b>로 지워 주세요.</p></div>
+          <p>승인 대기 화면에서 면접자가 보낸 승인 요청이에요. 분야·기관을 확인하고(캡처가 있으면 함께 보고) <b>승인 · 분야 열기</b>를 누르면 권한 관리 창이 요청한 분야가 체크된 채로 열려요.</p></div>
           <button class="btn-manage" onclick="ApprovalAdmin.load(true)">새로 고침</button>
         </div>
         <div class="uf-chips" id="ap-chips"></div>
@@ -8548,9 +8547,9 @@ const Rejoin = {
     const sel = $('pd-rj-field'); if(!sel) return;
     const mine = (state.currentUser && state.currentUser.allowed) || [];
     if(!sel.options.length){
-      sel.innerHTML = `<option value="">분야를 골라 주세요</option>` + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}${mine.includes(id) ? ' (이전에 연습한 분야)' : ''}</option>`).join('');
+      sel.innerHTML = `<option value="">분야를 골라 주세요</option>` + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
     }
-    const r = this.last, sent = $('pd-rj-sent'), form = $('pd-rj-form'), chip = $('pd-rj-chip'), hint = $('pd-rj-hint');
+    const r = this.last, sent = $('pd-rj-sent'), form = $('pd-rj-form'), chip = $('pd-rj-chip');
     const pending = this.isMine(r) && !this.showForm;
     if(chip) chip.textContent = pending ? '새 분야 승인 요청' : '다른 기관 면접을 준비하시나요?';
     if(pending){
@@ -8567,7 +8566,6 @@ const Rejoin = {
       sent.hidden = !rejected;
       if(rejected) sent.innerHTML = `<p class="pd-sent-t warn">다시 보내 주세요</p><p class="pd-sent-n">${escapeHtml(r.admin_note)}</p>`;
       form.hidden = false;
-      if(hint) hint.textContent = (mine.length ? '이전 분야(' + mine.map(rrFieldName).join(', ') + ')의 연습 기록은 그대로 남아요. ' : '') + '캡처는 담당자가 확인한 뒤 지워요.';
     }
   },
   isMineRejected(r){ const u = state.currentUser || {}; const a = accessInfo(u.accessUntil); return !(a.until && new Date(r.created_at) < a.until); },
@@ -8661,7 +8659,7 @@ const ApprovalAdmin = {
         <div class="ap-acts">
           ${r.status !== 'approved' && u.id ? `<button class="btn-manage primary" onclick="ApprovalAdmin.approve(${r.id})">승인 · 분야 열기</button>` : ''}
           ${r.status === 'submitted' ? `<button class="btn-manage" onclick="ApprovalAdmin.reject(${r.id})">반려</button>` : ''}
-          ${r.proof_path && !r.proof_deleted_at ? `<button class="btn-manage" onclick="ApprovalAdmin.delProof(${r.id})">캡처 지우기</button>` : ''}
+          ${''/* 2026-10-23b: 합격 확인 캡처는 보관 — '캡처 지우기' 버튼 없앰 */}
         </div></div>`;
     }).join('');
   },
