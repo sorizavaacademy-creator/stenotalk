@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23b';
+var APP_VERSION = '2026-10-23c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -10112,9 +10112,20 @@ function renderAdminSubtabs(view){
   document.querySelectorAll('.admin-menu-btn[data-group]').forEach(b=>b.classList.toggle('active', b.dataset.group === g));
   try{ const sbar = document.querySelector('#screen-admin .admin-sidebar'), ab = document.querySelector('.admin-menu-btn.active[data-group]'); if(sbar && ab && sbar.scrollWidth > sbar.clientWidth + 4) sbar.scrollTo({ left: Math.max(0, ab.offsetLeft - (sbar.clientWidth - ab.offsetWidth) / 2), behavior:'smooth' }); }catch(_){}   // 2026-10-22n 휴대폰: 지금 메뉴가 보이게
   const vs = ADMIN_GROUPS[g].views;
-  box.innerHTML = vs.length > 1 ? vs.map(([v,l])=>`<button type="button" class="${v===view?'on':''}" onclick="showAdminView('${v}')">${l}${v==='feedback'?'<span class="menu-badge" id="fb-tab-badge" style="display:none;"></span>':''}${v==='live'?'<span class="live-dot-nav" id="live-tab-dot" style="display:none;"></span>':''}</button>`).join('') : '';
-  try{ const fb = document.getElementById('fb-nav-badge'), fb2 = document.getElementById('fb-tab-badge'); if(fb && fb2){ fb2.textContent = fb.textContent; fb2.style.display = fb.style.display; } const ld = document.getElementById('live-nav-dot'), ld2 = document.getElementById('live-tab-dot'); if(ld && ld2) ld2.style.display = ld.style.display; }catch(_){}
+  box.innerHTML = vs.length > 1 ? vs.map(([v,l])=>`<button type="button" class="${v===view?'on':''}" onclick="showAdminView('${v}')">${l}${TAB_BADGES[v]?`<span class="menu-badge" id="${TAB_BADGES[v][1]}" style="display:none;"></span>`:''}${v==='live'?'<span class="live-dot-nav" id="live-tab-dot" style="display:none;"></span>':''}</button>`).join('') : '';
+  syncTabBadges();
 }
+/* 2026-10-23c: 왼쪽 메뉴의 숫자(알림)가 안쪽 어느 탭 것인지 바로 보이게 — 메뉴 숫자를 해당 탭에도 똑같이 붙이고, 숫자가 바뀌면 따라 바뀜
+ *   소통 → 의견·오류 신고 / 질문 → 실제 면접 후기 / AI·비용 → 즉석으로 읽은 문장 */
+const TAB_BADGES = { feedback:['fb-nav-badge','fb-tab-badge'], reports:['ra-nav-badge','ra-tab-badge'], ttslive:['tts-nav-badge','tts-tab-badge'] };
+function syncTabBadges(){
+  try{
+    Object.values(TAB_BADGES).forEach(([src, dst])=>{ const a = document.getElementById(src), b = document.getElementById(dst); if(a && b){ b.textContent = a.textContent; b.style.display = a.style.display; if(a.title) b.title = a.title; } });
+    const ld = document.getElementById('live-nav-dot'), ld2 = document.getElementById('live-tab-dot'); if(ld && ld2) ld2.style.display = ld.style.display;
+  }catch(_){}
+}
+(function(){ const start = ()=>{ try{ const mo = new MutationObserver(()=>syncTabBadges()); Object.values(TAB_BADGES).map(x=>x[0]).concat(['live-nav-dot']).forEach(id=>{ const el = document.getElementById(id); if(el) mo.observe(el, { attributes:true, attributeFilter:['style'], childList:true, characterData:true, subtree:true }); }); }catch(_){} };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start(); })();
 function renderOverviewHardQ(){
   const sec = document.getElementById('ov-hardq'), list = document.getElementById('ov-hardq-list'); if(!sec || !list) return;
   const go = async()=>{
