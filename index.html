@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26i';
+var APP_VERSION = '2026-10-26j';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5135,6 +5135,18 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 .gw-types small{font-size:12.5px !important;}
 .rv-other{margin:0;line-height:1.7;word-break:keep-all;} .rv-link{display:inline;padding:6px 2px;margin:-6px 0;border:0;background:none;font:inherit;font-weight:700;color:var(--c-accent-ink,#c2401b);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
 #modal-signup .consent-row a, #modal-signup .signup-login-link a, #modal-signup .modal-foot a{display:inline-block;padding:8px 4px;margin:-8px 0;}
+/* 2026-10-26j 홈·면접 시작 흐름 (PC·휴대폰 같게) */
+.g4-reco-acts{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;}
+.g4-reco-acts > :first-child{grid-column:1 / -1;}
+.g4-reco-acts .d3-btn{width:100%;justify-content:center;min-height:46px;white-space:normal;text-align:center;}
+.g4-reco-acts > :not(:first-child){min-height:44px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:12px;background:#fff;font-size:14px;font-weight:700;color:var(--c-ink,#1c1c1e);display:flex;align-items:center;justify-content:center;padding:6px 10px;}
+#d3-start-btn[hidden], #d3-start-hint[hidden]{display:none !important;}
+#field-grid.lock-fold:not(.show-locked) .d3-lock-li{display:none;}
+.d3-more-li{grid-column:1 / -1;list-style:none;}
+.d3-more-fields{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 16px;border:1px dashed var(--c-line-strong,#d3d0ca);border-radius:14px;background:transparent;font:inherit;text-align:left;cursor:pointer;color:var(--c-ink,#1c1c1e);}
+.d3-more-fields span{font-size:15px;font-weight:700;} .d3-more-fields span::after{content:' ▾';color:var(--c-ink-3,#66666c);} .d3-more-fields[aria-expanded="true"] span::after{content:' ▴';}
+.d3-more-fields small{font-size:13px;color:var(--c-ink-3,#66666c);line-height:1.5;}
+.ready-skip{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 24px 0;font-size:14px;color:var(--c-ink-2,#45454a);cursor:pointer;} .ready-skip[hidden]{display:none;} .ready-skip input{width:20px;height:20px;margin:0;flex:none;accent-color:#c8441c;}
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -7249,6 +7261,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
       <p id="ready-desc">카메라와 마이크는 이미 켜져 있어요. 화면 속 내 모습과 소리를 확인하고, 준비되면 시작해 주세요.</p>
     </div>
     <div class="ready-steps" id="ready-steps" hidden></div>
+    <label class="ready-skip" id="ready-skip-row" hidden><input type="checkbox" id="ready-skip-ck"> 다음부터 이 안내 없이 바로 시작</label>
     <div class="modal-foot">
       <button class="btn btn-solid" onclick="confirmReady()" style="width:100%;">네, 시작할게요</button>
     </div>
@@ -9829,7 +9842,7 @@ async function renderDashboard(){
   if(meta){
     const parts = [];
     if(selField) parts.push(`<span>${escapeHtml(selField.name)}</span>`);
-    if(!isAdmin && acc.until && !acc.expired) parts.push(`<span>이용 기간 ${acc.label.slice(5).replace('-','.')}까지</span>`);
+    // 2026-10-26j: 이용 기간은 아래 칩('○일 남음')에만 — 두 번 보이지 않게
     meta.innerHTML = parts.join('<i class="d3-sep"></i>');
     meta.style.display = parts.length ? '' : 'none';
   }
@@ -9930,7 +9943,7 @@ async function renderDashboard(){
           ${chart}
           <div class="as-mini us-mini">
             <div><p>완료한 연습</p><div><span class="as-k">${history.length}</span><span class="as-u">회</span></div></div>
-            <div><p>이번 주</p><div><span class="as-k">${weekN}</span><span class="as-u">회</span></div></div>
+            <div><p>최근 7일</p><div><span class="as-k">${weekN}</span><span class="as-u">회</span></div></div>
             <div><p>최고 점수</p><div><span class="as-k">${best}</span><span class="as-u">점</span></div></div>
           </div>
           <button type="button" class="as-go" onclick="openAllHistory()">내 기록 자세히 보기 <span aria-hidden="true">→</span></button>`;
@@ -9947,13 +9960,17 @@ async function renderDashboard(){
     const sel = ok && f.id === state.dashField;
     const badge = sel ? '<span class="d3-badge d3-badge-selected"><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10.5l3.2 3L15 6.5"/></svg>선택됨</span>'
       : ok ? `<span class="d3-forg">${f.group}</span>`
-      : `<span class="d3-badge d3-badge-soon">${expired ? '기간 만료' : '준비 중'}</span>`;
-    return `<li><button type="button" class="d3-fcard" aria-pressed="${sel?'true':'false'}" aria-disabled="${ok?'false':'true'}" onclick="selectDashField('${f.id}')" ondblclick="${ok?`openPractice('${f.id}')`:''}" title="${ok ? (sel ? '선택됨 · 위의 면접 시작 버튼을 누르세요 (두 번 누르면 바로 시작)' : '누르면 이 분야가 선택돼요') : (expired ? '이용 기간이 끝났어요' : '서류 합격 확인 후 관리자가 열어드려요')}">
+      : `<span class="d3-badge d3-badge-soon">${expired ? '기간 만료' : '안 열림'}</span>`;
+    return `<li class="${ok ? '' : 'd3-lock-li'}"><button type="button" class="d3-fcard" aria-pressed="${sel?'true':'false'}" aria-disabled="${ok?'false':'true'}" onclick="selectDashField('${f.id}')" ondblclick="${ok?`openPractice('${f.id}')`:''}" title="${ok ? (sel ? '선택됨 · 위의 면접 시작 버튼을 누르세요 (두 번 누르면 바로 시작)' : '누르면 이 분야가 선택돼요') : (expired ? '이용 기간이 끝났어요' : '서류 합격 확인 후 관리자가 열어드려요')}">
       <div class="d3-fcard-top"><span class="d3-ficon">${svg(f.icon)}</span>${badge}</div>
       <p class="d3-fname">${escapeHtml(f.name)}</p>
       <p class="d3-fdesc">${escapeHtml(ok ? f.desc : (expired ? '이용 기간이 끝났어요. 연장은 관리자에게 문의해 주세요.' : f.desc))}</p>
     </button></li>`;
   }).join('');
+  /* 2026-10-26j: 면접자에게는 열린 분야만 — 나머지는 '다른 분야 N개 보기'로 접어 둠 */
+  { const nLock = isAdmin || expired ? 0 : FIELDS.filter(f=>!allowedIds.includes(f.id)).length;
+    grid.classList.toggle('lock-fold', nLock > 0); grid.classList.remove('show-locked');
+    if(nLock) grid.insertAdjacentHTML('beforeend', `<li class="d3-more-li"><button type="button" class="d3-more-fields" aria-expanded="false" onclick="toggleLockedFields(this)"><span>다른 분야 ${nLock}개 보기</span><small>서류 합격이 확인된 분야만 열려요. 다른 기관에 합격했다면 담당자에게 알려 주세요.</small></button></li>`); }
 
   if(!isAdmin){
     // 최근 연습
@@ -10021,6 +10038,7 @@ function selectDashField(fieldId){
   const scopeEl = document.getElementById('d3-trend-scope'); if(scopeEl) scopeEl.textContent = scopeTxt;
   renderTrendLine(document.getElementById('trend-chart'), pool.slice(0,6).slice().reverse());
 }
+function toggleLockedFields(btn){ const g = document.getElementById('field-grid'); if(!g) return; const on = g.classList.toggle('show-locked'); if(btn){ btn.setAttribute('aria-expanded', on ? 'true' : 'false'); const t = btn.querySelector('span'); if(t) t.textContent = on ? '다른 분야 접기' : `다른 분야 ${g.querySelectorAll('.d3-lock-li').length}개 보기`; } }
 function startSelectedField(){ if(!state.dashField){ showToast('연습할 분야가 아직 없어요. 관리자에게 문의해 주세요.'); return; } openPractice(state.dashField); }
 function toggleUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('d3-user-menu'), b = document.getElementById('d3-user-btn'); if(!m) return; const open = m.style.display === 'none'; if(open){ try{ const nb = document.getElementById('nt-bubble'); if(nb && !nb.hidden){ nb.classList.remove('on'); nb.hidden = true; } }catch(_){} }   /* 2026-10-21o 메뉴를 열면 종 말풍선을 숨김 (휴대폰에서 메뉴를 가렸음). 다음 순서(합격 후기 팝업)는 말풍선 타이머가 그대로 이어감 */ m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 function toggleAdminUserMenu(e){ if(e) e.stopPropagation(); const m = document.getElementById('a3-user-menu'), b = document.getElementById('a3-user-btn'); if(!m) return; const open = m.style.display === 'none'; m.style.display = open ? '' : 'none'; if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false'); }
@@ -10253,12 +10271,14 @@ function renderHomeExtras(history, isAdmin, expired){
   if(!f || expired){ reco.style.display = 'none'; return; }
   reco.style.display = '';
   const canSetHome = canRealSet(f.id);
-  const btns = `<div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary" onclick="startRecommendedSet()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>이 세트로 시작</button>${canSetHome?`<button class="d3-btn d3-btn-ghost" onclick="startRealSetFromHome()">실전 세트 (${escapeHtml(realSetCfg(f.id).org)} 형식)</button>`:''}<button class="d3-btn-text" type="button" onclick="startSelectedField()">직접 고르기 →</button></div>`;
+  const btns = `<div class="d3-greet-actions g4-reco-acts" style="padding-top:14px;"><button class="d3-btn d3-btn-primary" onclick="startRecommendedSet()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>이 세트로 시작</button>${canSetHome?`<button class="d3-btn d3-btn-ghost" onclick="startRealSetFromHome()">${escapeHtml(realSetCfg(f.id).org)} 실전 세트</button>`:''}<button class="d3-btn-text" type="button" onclick="startSelectedField()">질문 직접 고르기</button></div>`;
   const base = (title, desc, chips, mins)=>`<div class="g4-reco-head"><span class="g4-reco-eyebrow">오늘의 추천 세트</span><span class="g4-reco-time">약 ${mins}분</span></div><h2>${title}</h2><p>${desc}</p>${chips.length?`<div class="g4-reco-chips">${chips.map(c=>`<span>${escapeHtml(c)}</span>`).join('')}</div>`:''}${btns}`;
   const sub = document.getElementById('hero-sub');
   // 2026-10-26c: 아직 라이브 면접을 마친 적 없는 사람 → '3분 체험 면접' 하나만 크게 (다른 시작 버튼은 덜 눈에 띄게)
   { const sb0 = document.getElementById('d3-start-btn'); const first = history.length === 0;
-    if(sb0){ sb0.classList.toggle('d3-btn-primary', !first); sb0.classList.toggle('d3-btn-ghost', first); }
+    /* 2026-10-26j(사용자 요청으로 고침): '국회 속기사 면접 시작'은 그대로 둠. 주황은 추천 세트의 '이 세트로 시작' 하나라 이 버튼은 흰 버튼 */
+    if(sb0){ sb0.hidden = false; sb0.classList.remove('d3-btn-primary'); sb0.classList.add('d3-btn-ghost'); }
+    { const hint0 = document.getElementById('d3-start-hint'); if(hint0) hint0.hidden = false; }
     if(first){
       reco.innerHTML = `<div class="g4-reco-head"><span class="g4-reco-eyebrow">처음이라면 여기부터</span><span class="g4-reco-time">약 3분</span></div><h2>3분 체험 면접</h2><p>질문 3개에 말로 답해 보세요. 리허설 없이 AI 면접관과 바로 대화하고, 끝나면 결과를 보여 드려요.</p><div class="g4-reco-chips"><span>질문 3개</span><span>꼬리질문 없음</span><span>채점 결과 바로</span></div><div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary g4-trial-go" id="g4-trial-go" onclick="startTrialInterview()"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7 5.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg>3분 체험 면접 시작</button><button class="d3-btn-text" type="button" onclick="startRecommendedSet()">기본 세트(5문항)로 할게요 →</button></div>`;
       return;
@@ -15350,6 +15370,7 @@ function showReadyGate(){
   const title = document.getElementById('ready-title');
   const desc = document.getElementById('ready-desc');
   { const st0 = document.getElementById('ready-steps'); if(st0){ st0.hidden = true; st0.innerHTML = ''; } }
+  { const row = document.getElementById('ready-skip-row'); if(row) row.hidden = true; }
   if(state.interviewMode === 'rehearsal'){
     title.textContent = '워밍업부터 시작할게요';
     desc.textContent = '리허설은 면접관 없이 진행돼요. 카메라 속 내 모습과 목소리 크기를 보면서 질문 2개에 편하게 답해 보세요. 채점되지 않고, 끝나면 바로 라이브 면접으로 넘어갑니다.';
@@ -15359,6 +15380,7 @@ function showReadyGate(){
     desc.textContent = `${(rd.doneQ||0)+1}번째 질문부터 이어서 해요. 앞에서 답한 ${rd.asks.filter(a=>String(a.answer||'').trim()).length}개는 결과에 그대로 들어가요.`;
     const steps = document.getElementById('ready-steps'); if(steps){ steps.innerHTML = readyStepsHtml(); steps.hidden = false; }
   }else if(state.interviewMode === 'dialog'){
+    { const row = document.getElementById('ready-skip-row'), ck = document.getElementById('ready-skip-ck'); if(row){ row.hidden = false; if(ck) ck.checked = false; } }
     title.textContent = 'AI 대화 면접 준비되셨나요?';
     desc.textContent = '시작을 누르면 면접관이 연결되고, 아래 순서로 진행돼요.';
     const steps = document.getElementById('ready-steps');
@@ -15394,8 +15416,15 @@ async function connectInterviewer(){
   box.style.display='none';
   return true;
 }
+/** 2026-10-26j: '준비되셨나요?' 안내 건너뛰기 (이 기기·이 계정에만 기억) */
+const ReadySkip = {
+  key(){ return 'stenotalk_ready_skip_' + ((state.currentUser && state.currentUser.id) || ''); },
+  on(){ try{ return localStorage.getItem(this.key()) === '1'; }catch(_){ return false; } },
+  set(v){ try{ if(v) localStorage.setItem(this.key(), '1'); else localStorage.removeItem(this.key()); }catch(_){} },
+};
 function confirmReady(){
   MobileAudio.unlock();
+  { const ck = document.getElementById('ready-skip-ck'), row = document.getElementById('ready-skip-row'); if(ck && row && !row.hidden && ck.checked){ ReadySkip.set(true); try{ Activity.log('ready_skip_on'); }catch(_){} } }
   document.getElementById('modal-ready').classList.remove('active');
   if(state.interviewMode === 'dialog'){ connectInterviewer().then(ok=>{ if(ok) runDialogInterview(); }); return; }
   presentCurrentQuestion();
@@ -16048,6 +16077,7 @@ function startDialogInterview(){
   if(!StenoListener.supported()){ showToast('이 브라우저는 음성 인식을 지원하지 않아 답변을 직접 입력하는 방식으로 진행돼요. 말로 답변하려면 크롬 또는 엣지를 사용해 주세요.'); }
   startCamera();
   if(state.skipReadyGate){ state.skipReadyGate = false; confirmReady(); }
+  else if(!state.resumeDraft && ReadySkip.on()){ confirmReady(); }   // 2026-10-26j: '다음부터 바로 시작'을 고른 사람
   else showReadyGate();
 }
 function dialogStopListening(){
@@ -16136,8 +16166,8 @@ const SetupFlow = {
     if(lbl) lbl.textContent = state.trialMode ? '체험 면접 시작' : skip ? '라이브 면접 시작' : '리허설 시작하기';
     if(alt){ alt.hidden = !!state.trialMode; alt.textContent = skip ? '리허설부터 할게요' : '리허설 없이 바로 라이브'; }
   },
-  go(){ if(this.skipRh()) this.live(); else startRehearsal(); },
-  alt(){ if(this.skipRh()) startRehearsal(); else this.live(); },
+  go(){ try{ MobileAudio.unlock(); }catch(_){} if(this.skipRh()) this.live(); else startRehearsal(); },
+  alt(){ try{ MobileAudio.unlock(); }catch(_){} if(this.skipRh()) startRehearsal(); else this.live(); },
   live(){
     if(!bankReadyOr(()=>SetupFlow.live())) return;
     try{ Activity.log('rehearsal_skipped', { field: state.selectedField && state.selectedField.id, trial: !!state.trialMode }); }catch(_){}
