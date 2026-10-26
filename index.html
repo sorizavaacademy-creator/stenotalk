@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26h';
+var APP_VERSION = '2026-10-26i';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5109,6 +5109,32 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 #pd-wait .pd-note{margin:14px 0 0;font-size:13.5px;line-height:1.6;color:var(--c-ink-3,#66666c);text-align:center;word-break:keep-all;}
 #pd-wait .pd-guide{margin-top:18px;}
 #pd-wait[data-st="rejected"] .pd-alt{display:none;}
+/* 2026-10-26i 회원가입·마이페이지·코치·내 성장 (PC·휴대폰 같게) */
+#modal-signup .su-flow{margin:0 0 18px;} #modal-signup .su-flow li{flex:1 1 auto;} #modal-signup .su-flow li:last-child{flex:0 0 auto;} @media(max-width:520px){ #modal-signup .su-flow li{font-size:13px;gap:5px;} #modal-signup .su-flow li:not(:last-child)::after{margin:0 5px 0 1px;min-width:8px;} }
+.su-opt{font-weight:400;color:#5b6474;} .signup-hint{color:#5b6474 !important;font-size:12.5px;}
+#signup-consent-row{min-height:44px;align-items:center;} #signup-consent{width:22px;height:22px;flex:none;}
+.mp-sec-t{margin:0 0 10px;font-size:16px;font-weight:700;color:var(--c-ink,#1c1c1e);} .mp-sec-t small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:var(--c-ink-3,#66666c);}
+.mp-docs{padding:16px;border:1.5px solid var(--c-accent,#e8532a);border-radius:14px;margin-bottom:22px;background:#fffaf7;}
+.mp-docs .subhead{margin-top:6px;} .mp-docs .mp-resume span, #mp-resume > span, #mp-cv > span{color:#5b6474 !important;}
+.mp-sec-info{margin-top:4px;}
+#modal-mypage .au-hint{font-size:12.5px;}
+@media(max-width:520px){ #modal-mypage .mp-info-grid{grid-template-columns:1fr 1fr !important;gap:8px;} #modal-mypage .mp-info{padding:10px 12px;} #modal-mypage .mp-info:nth-child(2), #modal-mypage .mp-info:nth-child(6){grid-column:1 / -1;} }
+.status-chip{font-size:12px !important;}
+.coach-up{display:inline-flex;align-items:center;min-height:32px;margin-left:8px;padding:0 12px;border-radius:99px;border:1px solid #c8441c;background:#fff;color:#c8441c;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.coach-up:hover{background:#fff3ee;}
+.coach-docs-n{flex-basis:100%;}
+.coach-lbl small, .fb-auto, .record-a b{font-size:12.5px !important;}
+#screen-dashboard.v3 .activity-cal .cal-cell span{font-size:12px !important;}
+#screen-dashboard.v3 .activity-cal .cal-cell.l1 span{color:#9e3311 !important;}
+#screen-dashboard.v3 .activity-cal .cal-cell.l2{background:#f3a98f;} #screen-dashboard.v3 .activity-cal .cal-cell.l2 span{color:#4a1405 !important;}
+#screen-dashboard.v3 .activity-cal .cal-cell.l3{background:#c8441c !important;border-color:#c8441c !important;}
+.gp{cursor:pointer;}
+.pw-rules span{font-size:12px !important;} .mp-info-lbl{font-size:12px !important;}
+#screen-dashboard.v3 .activity-cal .cal-dow{font-size:12px !important;}
+.gw-miles .mi.off{opacity:1 !important;} .gw-miles .mi.off .t{color:var(--c-ink-3,#66666c) !important;} .gw-miles .mi.off .ic{opacity:.7;}
+.gw-types small{font-size:12.5px !important;}
+.rv-other{margin:0;line-height:1.7;word-break:keep-all;} .rv-link{display:inline;padding:6px 2px;margin:-6px 0;border:0;background:none;font:inherit;font-weight:700;color:var(--c-accent-ink,#c2401b);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+#modal-signup .consent-row a, #modal-signup .signup-login-link a, #modal-signup .modal-foot a{display:inline-block;padding:8px 4px;margin:-8px 0;}
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -5482,10 +5508,10 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
             <p class="t">이용 안내</p>
             <ol>
               <li><b>서류 합격자 전용</b> 서비스예요. 가입만으로는 연습이 열리지 않아요.</li>
-              <li>가입 후 소리자바 아카데미 <b>카카오톡 채널</b>로 이름·이메일·서류 합격 기관을 보내 주세요.</li>
-              <li>담당자가 서류 합격을 확인하면 그 기관의 면접 분야를 열어 드려요. 그 전에는 ‘승인 대기’ 화면만 보여요.</li>
+              <li>가입하고 로그인하면 나오는 화면에서 <b>서류에 합격한 분야</b>를 골라 보내 주세요.</li>
+              <li>담당자가 서류 합격을 확인하면 그 분야의 면접 연습이 열려요. 그 전에는 ‘승인 대기’ 화면만 보여요.</li>
             </ol>
-            <p class="lg-help">로그인이 안 되거나 비밀번호를 잊었거나 이용 기간 연장이 필요하면 교육 담당 관리자에게 문의해 주세요.</p>
+            <p class="lg-help">로그인이 안 되거나 비밀번호를 잊었거나 이용 기간 연장이 필요하면 담당자에게 문의해 주세요.</p>
           </div>
         </div>
       </section>
@@ -5687,7 +5713,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   <main class="d3-page" id="d3-growth" hidden>
     <div class="gw-head">
       <div><p class="gw-scope" id="gw-scope">국회 속기사</p><h1 class="gw-title">내 성장</h1></div>
-      <div class="gw-range" id="gw-range" role="tablist"><button type="button" class="on" data-days="30" onclick="setGrowthRange(30)">30일</button><button type="button" data-days="90" onclick="setGrowthRange(90)">90일</button><button type="button" data-days="0" onclick="setGrowthRange(0)">전체</button></div>
+      <div class="gw-range" id="gw-range" role="group" aria-label="기간"><button type="button" class="on" data-days="30" onclick="setGrowthRange(30)">30일</button><button type="button" data-days="90" onclick="setGrowthRange(90)">90일</button><button type="button" data-days="0" onclick="setGrowthRange(0)">전체</button></div>
     </div>
     <div class="gw-kpis" id="gw-kpis"></div>
     <div class="gw-grid2">
@@ -7358,20 +7384,11 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   <div class="modal-box modal-wide">
     <div class="modal-head">
       <h2>마이페이지</h2>
-      <p>내 계정 정보와 저장된 자기소개서·이력서를 확인할 수 있어요.</p>
+      <p>자기소개서·이력서를 올려 두면 면접 때 맞춤 질문이 나와요. 내 계정 정보도 여기서 볼 수 있어요.</p>
     </div>
     <div class="modal-body modal-scroll">
-      <div class="mp-info-grid">
-        <div class="mp-info"><div class="mp-info-lbl">이름</div><div class="mp-info-val" id="mp-name"></div></div>
-        <div class="mp-info"><div class="mp-info-lbl">이메일</div><div class="mp-info-val" id="mp-email"></div></div>
-        <div class="mp-info"><div class="mp-info-lbl">휴대폰 번호</div><div class="mp-info-val" id="mp-phone"></div></div>
-        <div class="mp-info"><div class="mp-info-lbl">현재 상태</div><div class="mp-info-val" id="mp-status"></div></div>
-        <div class="mp-info"><div class="mp-info-lbl">연습 가능한 분야</div><div class="mp-info-val" id="mp-fields"></div></div>
-        <div class="mp-info"><div class="mp-info-lbl">이용 기간</div><div class="mp-info-val" id="mp-until"></div></div>
-      </div>
-      <p class="au-hint" style="margin-top:8px;">이름·휴대폰 번호·비밀번호를 바꾸고 싶으시면 담당자에게 요청해 주세요. 비밀번호를 잊으면 관리자가 임시 비밀번호를 만들어 드리고, 그 비밀번호로 처음 로그인할 때 새 비밀번호를 한 번 정할 수 있어요.</p>
-
-      <div class="mp-home" id="mp-home"><img src="apple-touch-icon.png" alt=""><div><p class="t">휴대폰 홈 화면에 추가</p><p class="d" id="mp-home-d">아이콘만 누르면 바로 들어와요.</p></div><button class="btn btn-outline" id="mp-home-btn" onclick="HomeApp.open(true)">추가 방법</button></div>
+      <section class="mp-docs" aria-labelledby="mp-docs-t">
+        <h3 class="mp-sec-t" id="mp-docs-t">면접 맞춤 질문용 서류 <small>올리면 면접 때 내 서류에 맞춘 질문이 나와요</small></h3>
       <div class="subhead">자기소개서</div>
       <div id="mp-resume" class="mp-resume"></div>
       <div class="mp-resume-actions">
@@ -7388,6 +7405,19 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
         <button class="btn btn-outline mp-delete-btn" id="mp-cv-delete" onclick="removeCvFromMyPage()">저장된 이력서 삭제</button>
       </div>
       <div id="mp-cv-status" class="resume-status" style="display:none;"></div>
+      </section>
+      <h3 class="mp-sec-t mp-sec-info">내 정보</h3>
+      <div class="mp-info-grid">
+        <div class="mp-info"><div class="mp-info-lbl">이름</div><div class="mp-info-val" id="mp-name"></div></div>
+        <div class="mp-info"><div class="mp-info-lbl">이메일</div><div class="mp-info-val" id="mp-email"></div></div>
+        <div class="mp-info"><div class="mp-info-lbl">휴대폰 번호</div><div class="mp-info-val" id="mp-phone"></div></div>
+        <div class="mp-info"><div class="mp-info-lbl">현재 상태</div><div class="mp-info-val" id="mp-status"></div></div>
+        <div class="mp-info"><div class="mp-info-lbl">연습 가능한 분야</div><div class="mp-info-val" id="mp-fields"></div></div>
+        <div class="mp-info"><div class="mp-info-lbl">이용 기간</div><div class="mp-info-val" id="mp-until"></div></div>
+      </div>
+      <p class="au-hint" style="margin-top:8px;">이름·휴대폰 번호·비밀번호를 바꾸고 싶으시면 담당자에게 요청해 주세요. 비밀번호를 잊으면 관리자가 임시 비밀번호를 만들어 드리고, 그 비밀번호로 처음 로그인할 때 새 비밀번호를 한 번 정할 수 있어요.</p>
+
+      <div class="mp-home" id="mp-home"><img src="apple-touch-icon.png" alt=""><div><p class="t">휴대폰 홈 화면에 추가</p><p class="d" id="mp-home-d">아이콘만 누르면 바로 들어와요.</p></div><button class="btn btn-outline" id="mp-home-btn" onclick="HomeApp.open(true)">추가 방법</button></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeMyPage()">닫기</button>
@@ -7486,7 +7516,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
       <h2 id="record-modal-title">면접 기록</h2>
       <p id="record-modal-desc"></p>
     </div>
-    <div class="modal-body modal-scroll" id="record-modal-body"></div>
+    <div class="modal-body modal-scroll" id="record-modal-body" tabindex="0" aria-label="면접 기록 내용"></div>
     <div class="modal-foot">
       <button class="btn btn-outline" id="record-back-btn" onclick="recordGoBack()" style="display:none;">목록으로</button>
       <button class="btn btn-outline" id="record-pdf-btn" onclick="RecordPdf.save(this)" style="display:none;" title="이 면접 기록을 PDF 파일로 내려받아요 (관리자만)">PDF로 받기</button>
@@ -7504,15 +7534,15 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
       </div>
       <div>
         <h2>회원가입</h2>
-        <p><b>서류 합격자 전용</b> 서비스예요. 가입 후 카카오톡으로 서류 합격을 알려 주시면, 담당자가 확인한 뒤 면접 연습을 열어 드려요.</p>
+        <p><b>서류 합격자 전용</b> 서비스예요. 가입하고 나면 합격한 분야를 골라 보내 주세요. 담당자가 확인한 뒤 면접 연습을 열어 드려요.</p>
       </div>
     </div>
     <div class="modal-body">
-      <div class="signup-steps" aria-hidden="true">
-        <div class="signup-step"><b>STEP 1</b>이메일로 가입</div>
-        <div class="signup-step"><b>STEP 2</b>카카오톡으로 서류 합격 알리기 → 담당자 확인 후 승인</div>
-        <div class="signup-step"><b>STEP 3</b>리허설 → 라이브 면접 → 결과 확인</div>
-      </div>
+      <ol class="pd-flow su-flow" aria-label="진행 순서">
+        <li class="on"><i>1</i><span>가입하기</span></li>
+        <li><i>2</i><span>분야 보내기</span></li>
+        <li><i>3</i><span>연습 시작</span></li>
+      </ol>
       <div class="signup-grid">
         <div class="signup-field">
           <label for="signup-name">이름 <span class="req">*</span></label>
@@ -7544,9 +7574,9 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
         <div class="signup-hint">관리자가 면접 일정 안내 등 연락할 때만 사용해요.</div>
       </div>
       <div class="signup-field" style="margin-bottom:0;">
-        <label for="signup-note">지원 기관 <span style="font-weight:400;color:var(--slate-400);">(선택)</span></label>
+        <label for="signup-note">지원 기관 <span class="su-opt">(선택)</span></label>
         <input id="signup-note" type="text" placeholder="예: ○○광역시의회 서류합격, 10월 면접 예정" onkeydown="if(event.key==='Enter') submitSignup()">
-        <div class="signup-hint">서류 합격한 기관·직렬을 적어 주세요. 담당자가 합격 여부를 확인할 때 참고해요.</div>
+        <div class="signup-hint">적어 두면 담당자가 확인할 때 참고해요. 가입 뒤 화면에서 분야를 다시 골라 보내면 돼요.</div>
       </div>
       <label class="consent-row" id="signup-consent-row">
         <input type="checkbox" id="signup-consent" onchange="validateSignupField('consent')">
@@ -10277,17 +10307,18 @@ function startRealSetFromHome(){
   setTimeout(()=>{ try{ const row = document.getElementById('chip-realset'); const chip = row && row.querySelector('.chip[data-val="set"]'); if(chip && !chip.classList.contains('sel')) selectChip(chip, 'realset'); const blk = document.getElementById('setup-realset-block'); if(blk) blk.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(_){} }, 450);
 }
 /* ---- 내 성장 페이지 ---- */
-function setGrowthRange(days){ state.growthDays = days; document.querySelectorAll('#gw-range button').forEach(b=>b.classList.toggle('on', +b.dataset.days === days)); renderGrowthPage(); }
+function setGrowthRange(days){ state.growthDays = days; document.querySelectorAll('#gw-range button').forEach(b=>{ const on = +b.dataset.days === days; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); renderGrowthPage(); }
 function gwLineSvg(points){
-  const W = 640, H = 220, L = 28, R = 16, T = 18, B = 30;
+  const narrow = (window.innerWidth || 1000) < 600;   // 2026-10-26i 휴대폰은 좁은 그림으로 — 글자·점이 줄어들지 않게
+  const W = narrow ? 360 : 640, H = narrow ? 230 : 220, L = 30, R = 16, T = 20, B = 30;
   const n = points.length; const px = i => n > 1 ? L + i*((W-L-R)/(n-1)) : W/2; const py = v => T + (100-v)/100*(H-T-B);
   const d = points.map((p,i)=>`${i?'L':'M'}${px(i).toFixed(1)},${py(p.score).toFixed(1)}`).join(' ');
   const area = n > 1 ? `${d} L${px(n-1).toFixed(1)},${H-B} L${L},${H-B} Z` : '';
-  const grid = [0,25,50,75,100].map(v=>`<line x1="${L}" x2="${W-R}" y1="${py(v)}" y2="${py(v)}" stroke="var(--c-line)" stroke-width="1"/><text x="${L-6}" y="${py(v)+4}" font-size="10.5" text-anchor="end" fill="var(--c-ink-3)">${v}</text>`).join('');
-  const goal = `<line x1="${L}" x2="${W-R}" y1="${py(75)}" y2="${py(75)}" stroke="var(--c-ok,#2f7a4a)" stroke-dasharray="4 4" stroke-width="1.5"/><text x="${W-R}" y="${py(75)-6}" font-size="11" text-anchor="end" fill="var(--c-ok,#2f7a4a)" font-weight="700">목표 75</text>`;
-  const step = Math.max(1, Math.ceil(n/6));
-  const labels = points.map((p,i)=>(i%step===0 || i===n-1) ? `<text x="${px(i)}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--c-ink-3)">${escapeHtml(p.dateShort||'')}</text>` : '').join('');
-  const dots = points.map((p,i)=>`<g class="gp" onclick="openRecordDetail('${p.id}')"><title>${escapeHtml(p.dateShort||'')} · ${escapeHtml(p.fieldName||'')} · ${p.score}점</title><circle cx="${px(i)}" cy="${py(p.score)}" r="12" fill="transparent"/><circle cx="${px(i)}" cy="${py(p.score)}" r="${i===n-1?5:3.5}" fill="${i===n-1?'var(--c-accent)':'#fff'}" stroke="var(--c-accent)" stroke-width="2"/></g>`).join('');
+  const grid = [0,25,50,75,100].map(v=>`<line x1="${L}" x2="${W-R}" y1="${py(v)}" y2="${py(v)}" stroke="var(--c-line)" stroke-width="1"/><text x="${L-6}" y="${py(v)+4}" font-size="12.5" text-anchor="end" fill="var(--c-ink-3)">${v}</text>`).join('');
+  const goal = `<line x1="${L}" x2="${W-R}" y1="${py(75)}" y2="${py(75)}" stroke="var(--c-ok,#2f7a4a)" stroke-dasharray="4 4" stroke-width="1.5"/><text x="${W-R}" y="${py(75)-6}" font-size="12.5" text-anchor="end" fill="var(--c-ok,#2f7a4a)" font-weight="700">목표 75</text>`;
+  const step = Math.max(1, Math.ceil(n/(narrow ? 4 : 6)));
+  const labels = points.map((p,i)=>(i%step===0 || i===n-1) ? `<text x="${px(i)}" y="${H-8}" font-size="12.5" text-anchor="middle" fill="var(--c-ink-3)">${escapeHtml(p.dateShort||'')}</text>` : '').join('');
+  const dots = points.map((p,i)=>`<g class="gp" onclick="openRecordDetail('${p.id}')"><title>${escapeHtml(p.dateShort||'')} · ${escapeHtml(p.fieldName||'')} · ${p.score}점</title><circle cx="${px(i)}" cy="${py(p.score)}" r="16" fill="transparent"/><circle cx="${px(i)}" cy="${py(p.score)}" r="${i===n-1?5:3.5}" fill="${i===n-1?'var(--c-accent)':'#fff'}" stroke="var(--c-accent)" stroke-width="2"/></g>`).join('');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="점수 흐름">${grid}${goal}${area?`<path d="${area}" fill="var(--c-accent)" opacity=".10"/>`:''}<path d="${d}" fill="none" stroke="var(--c-accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${labels}</svg>`;
 }
 async function renderGrowthPage(){
@@ -10952,11 +10983,11 @@ async function renderReviewPanel(history){
     return;
   }
   const lookup = getBankLookup();
-  const agg = {};
+  const agg = {}; let lowOther = 0;
   (data || []).forEach(a=>{
     if(a.score == null || !a.question_text) return;
     const q = a.question_text.trim();
-    if(!lookup.has(q)) return;   // 꼬리질문·자기소개서 맞춤 질문은 복습 대상에서 제외
+    if(!lookup.has(q)){ if(a.score < REVIEW_THRESHOLD) lowOther++; return; }   // 꼬리질문·자기소개서 맞춤 질문은 복습 대상에서 제외 (2026-10-26i: 개수는 안내)
     if(!agg[q]) agg[q] = {q, sum:0, n:0, min:101, last:null};
     agg[q].sum += a.score; agg[q].n += 1; agg[q].min = Math.min(agg[q].min, a.score);
     if(!agg[q].last || a.created_at > agg[q].last) agg[q].last = a.created_at;
@@ -10968,7 +10999,9 @@ async function renderReviewPanel(history){
     .slice(0, REVIEW_MAX);
   state.reviewCandidates = items.map(x=>({q:x.q, ref:lookup.get(x.q), review:true}));
   if(!items.length){
-    listEl.innerHTML = `<div class="qa-empty">지금까지 답한 질문 중 ${REVIEW_THRESHOLD}점 미만인 질문이 없어요. 잘하고 계세요!</div>`;
+    listEl.innerHTML = lowOther
+      ? `<div class="qa-empty"><p class="rv-other">문제은행 질문 중에는 ${REVIEW_THRESHOLD}점 미만인 질문이 없어요.<br>서류 맞춤 질문·꼬리질문 중 ${REVIEW_THRESHOLD}점 미만이었던 답 <b>${lowOther}개</b>는 <button type="button" class="rv-link" onclick="navGo('reports')">리포트</button>에서 다시 볼 수 있어요.</p></div>`
+      : `<div class="qa-empty">지금까지 답한 질문 중 ${REVIEW_THRESHOLD}점 미만인 질문이 없어요. 잘하고 계세요!</div>`;
     return;
   }
   listEl.innerHTML = items.map(x=>`
@@ -19298,8 +19331,13 @@ async function openCoach(){
   coachResetPractice(); coachDraftInput();
   const aiOn = AiSwitch.anyOn();
   const mk = document.getElementById('coach-make'); mk.disabled = false; mk.classList.remove('is-off'); void aiOn; mk.textContent = Coach.script ? '대본 다시 만들기' : '1분 대본 만들기';
-  const docsEl = document.getElementById('coach-docs'); docsEl.innerHTML = '<li>서류를 확인하는 중…</li>';
   coachRenderScript();
+  const data = await coachLoadDocs();
+  if(data.intro_script && !Coach.script){ Coach.script = data.intro_script; Coach.savedAt = data.intro_script_at || null; Coach.dirty = false; mk.textContent = '대본 다시 만들기'; coachRenderScript(); }
+}
+/** 2026-10-26i: 코치 창의 서류 표시 — 없으면 바로 올리기 버튼 (마이페이지로 보내지 않음) */
+async function coachLoadDocs(){
+  const docsEl = document.getElementById('coach-docs'); docsEl.innerHTML = '<li>서류를 확인하는 중…</li>';
   let data = {};
   try{
     let r = await sb.from('user_resumes').select('file_name, resume_text, cv_file_name, cv_text, intro_script, intro_script_at').eq('user_id', state.currentUser.id).maybeSingle();
@@ -19311,11 +19349,18 @@ async function openCoach(){
     cv: String(state.cvText || data.cv_text || '').slice(0, 1500), cvName: data.cv_file_name || state.cvFileName || '',
   };
   docsEl.innerHTML = [
-    Coach.docs.resume ? `<li class="ok"><b>✓</b> 자기소개서 · ${escapeHtml(Coach.docs.resumeName || '저장됨')}</li>` : '<li class="no"><b>–</b> 자기소개서 없음</li>',
-    Coach.docs.cv ? `<li class="ok"><b>✓</b> 이력서 · ${escapeHtml(Coach.docs.cvName || '저장됨')}</li>` : '<li class="no"><b>–</b> 이력서 없음</li>',
-    (!Coach.docs.resume && !Coach.docs.cv) ? '<li>서류는 면접 준비 창이나 마이페이지에서 올릴 수 있어요. 없으면 아래에 자기소개를 직접 해 주세요.</li>' : '',
+    Coach.docs.resume ? `<li class="ok"><b>✓</b> 자기소개서 · ${escapeHtml(Coach.docs.resumeName || '저장됨')}</li>` : '<li class="no"><b>–</b> 자기소개서 없음 <label class="coach-up" for="coach-up-resume">PDF 올리기</label><input type="file" id="coach-up-resume" accept=".pdf" hidden onchange="coachUpload(event,\'resume\')"></li>',
+    Coach.docs.cv ? `<li class="ok"><b>✓</b> 이력서 · ${escapeHtml(Coach.docs.cvName || '저장됨')}</li>` : '<li class="no"><b>–</b> 이력서 없음 <label class="coach-up" for="coach-up-cv">PDF 올리기</label><input type="file" id="coach-up-cv" accept=".pdf" hidden onchange="coachUpload(event,\'cv\')"></li>',
+    (!Coach.docs.resume && !Coach.docs.cv) ? '<li class="coach-docs-n">서류가 없으면 아래에 자기소개를 직접 해 주셔도 돼요.</li>' : '',
   ].join('');
-  if(data.intro_script && !Coach.script){ Coach.script = data.intro_script; Coach.savedAt = data.intro_script_at || null; Coach.dirty = false; mk.textContent = '대본 다시 만들기'; coachRenderScript(); }
+  return data;
+}
+async function coachUpload(ev, kind){
+  const lbl = ev.target.parentNode && ev.target.parentNode.querySelector('.coach-up'); if(lbl) lbl.textContent = '읽는 중…';
+  try{ if(kind === 'cv') await handleMyPageCvUpload(ev); else await handleMyPageResumeUpload(ev); }catch(e){ console.warn('[코치 서류 올리기]', e); }
+  const st = document.getElementById(kind === 'cv' ? 'mp-cv-status' : 'mp-resume-status');
+  if(st && st.textContent) showToast(st.textContent.slice(0, 90), /warn/.test(st.className) ? 'warn' : 'ok');
+  await coachLoadDocs();
 }
 function closeCoach(){
   if(Coach.practicing || Coach.draftRec){ try{ StenoListener.stop('manual'); }catch(e){} }
