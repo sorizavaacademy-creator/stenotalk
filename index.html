@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26f';
+var APP_VERSION = '2026-10-26h';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5053,6 +5053,62 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   #screen-interview.lv3 .lv3-mhelp{width:44px;height:44px;}
   #screen-interview.lv3 .lv3-mend{height:44px;padding:0 16px;}
 }
+/* 2026-10-26g 승인 대기·기간 종료·질문 남기기 화면 (PC·휴대폰 같게) */
+/* 기간 종료: 카드 안 스크롤 대신 화면 전체가 내려가게 (버튼이 잘려 보이지 않게) */
+#screen-pending.pd-locked{overflow:visible;overflow-x:hidden;overflow-x:clip;}
+#screen-pending.pd-locked .pd{justify-content:flex-start !important;padding:32px 16px 40px !important;}
+#screen-pending.pd-locked .pd-card{max-height:none !important;overflow:visible !important;margin-top:auto;margin-bottom:auto;}
+@media(max-width:760px){ #screen-pending.pd-locked .pd{padding:12px 10px 28px !important;} }
+/* 신규 대기: 3단계를 휴대폰에서도 한 줄로 */
+@media(max-width:520px){ #screen-pending .pd-steps{grid-template-columns:repeat(3,1fr) !important;gap:6px;margin-bottom:18px;} #screen-pending .pd-steps li{padding:8px 8px;} #screen-pending .pd-steps b{font-size:12.5px;line-height:1.35;word-break:keep-all;} #screen-pending .pd-steps span{font-size:12px;line-height:1.35;word-break:keep-all;} }
+/* 반려 상자 안 카톡 버튼 */
+#screen-pending .pd-reject .pd-reject-kk{margin-top:10px;width:100%;min-height:46px;justify-content:center;}
+/* 주황 버튼 대비 (면접 질문 남기기·슬라이드 창 버튼) */
+.rr-btn.primary{background:#c8441c !important;border-color:#c8441c !important;} .rr-btn.primary:hover{background:#ad3814 !important;border-color:#ad3814 !important;}
+/* 슬라이드 점: 누르는 곳 24px, 보이는 점은 그대로 */
+.rrs-dots{gap:2px !important;} .rrs-dots button{position:relative;width:26px !important;height:26px !important;background:transparent !important;border-radius:99px;}
+.rrs-dots button::before{content:'';position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:99px;background:#bdb9b2;transform:translate(-50%,-50%);transition:width .25s, background .25s;}
+.rrs-dots button.on{width:34px !important;} .rrs-dots button.on::before{width:22px;background:#c8441c;}
+.rrs-arr{width:44px !important;height:44px !important;}
+.rrn-hide{min-height:44px;}
+/* 작은 글자·작은 버튼 */
+#screen-pending .pd-lbl small, #screen-pending .pd-reject-l small, .rr-lbl small, .rr-sec small, .rr-more summary small{font-size:12.5px !important;}
+#screen-pending .pd-logout, #screen-pending.pd-locked .pd-logout.in-foot{min-height:44px;}
+#screen-pending .pd-kakao.sm{min-height:44px;}
+.rr-link{min-height:40px;} .rr-fbtn{min-height:40px;}
+/* 질문 남기기 창: 질문 먼저, 면접 정보는 아래 */
+.rr-info{margin-top:18px;padding-top:16px;border-top:1px solid var(--rr-line,#e6e4e0);}
+.rr-sec{margin:0 0 10px;font-size:15px;font-weight:700;color:var(--rr-ink,#1c1c1e);} .rr-sec small{font-weight:500;color:var(--rr-ink3,#66666c);margin-left:6px;}
+/* 2026-10-26h 승인 대기 화면: 할 일 하나만 크게 */
+#pd-wait .pd-chip{transition:none;}
+#pd-wait[data-st="sent"] .pd-chip{background:#e8f3ec;color:#1d6b42;} #pd-wait[data-st="sent"] .pd-chip i{background:#2f7a4a;}
+#pd-wait[data-st="rejected"] .pd-chip{background:#fdecea;color:#b42318;} #pd-wait[data-st="rejected"] .pd-chip i{background:#b42318;}
+#pd-wait .pd-h{margin:12px 0 8px;font-size:25px;line-height:1.3;letter-spacing:-.02em;word-break:keep-all;}
+#pd-wait .pd-lead{margin:0 0 18px;font-size:15px;line-height:1.65;word-break:keep-all;}
+.pd-flow{list-style:none;margin:0 0 20px;padding:0;display:flex;align-items:center;gap:0;counter-reset:none;}
+.pd-flow li{flex:1 1 0;display:flex;align-items:center;gap:7px;min-width:0;font-size:13.5px;font-weight:600;color:var(--c-ink-3,#66666c);position:relative;}
+.pd-flow li:not(:last-child)::after{content:'';flex:1 1 auto;height:2px;min-width:10px;margin:0 8px 0 2px;background:var(--c-line,#e6e4e0);border-radius:2px;}
+.pd-flow li span{white-space:nowrap;}
+.pd-flow li i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12.5px;font-weight:700;border:1.5px solid var(--c-line-strong,#d3d0ca);background:#fff;color:var(--c-ink-3,#66666c);}
+.pd-flow li.on{color:var(--c-ink,#1c1c1e);} .pd-flow li.on i{background:#c8441c;border-color:#c8441c;color:#fff;}
+.pd-flow li.done{color:#23804f;} .pd-flow li.done i{background:#2f7a4a;border-color:#2f7a4a;color:#fff;font-size:0;} .pd-flow li.done i::before{content:'✓';font-size:13px;}
+.pd-flow li.done::after{background:#9fcfb1;}
+@media(max-width:400px){ .pd-flow li{font-size:12.5px;gap:5px;} .pd-flow li:not(:last-child)::after{margin:0 5px 0 1px;min-width:6px;} }
+#pd-wait .pd-apply{padding:20px;border-width:1.5px;}
+#pd-wait .pd-apply .pd-send{width:100%;min-height:52px;font-size:16px;justify-content:center;margin-top:14px;}
+.pd-memo{margin:12px 0 0;} .pd-memo summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--c-ink-2,#45454a);min-height:40px;display:flex;align-items:center;gap:6px;list-style:none;}
+.pd-memo summary::-webkit-details-marker{display:none;} .pd-memo summary::before{content:'+';font-weight:700;color:var(--c-accent-ink,#c2401b);} .pd-memo[open] summary::before{content:'−';}
+.pd-memo summary small{font-size:12.5px;font-weight:500;color:var(--c-ink-3,#66666c);} .pd-memo textarea{margin-top:4px;}
+.pd-alt{margin:14px 0 0;text-align:center;font-size:14px;color:var(--c-ink-3,#66666c);}
+.pd-alt-kk{display:inline-flex;align-items:center;min-height:40px;padding:0 4px;border:0;background:none;font:inherit;font-weight:700;color:#3a2a00;text-decoration:underline;text-decoration-color:#f2c200;text-decoration-thickness:3px;text-underline-offset:4px;cursor:pointer;}
+.pd-sent-card{padding:14px 16px;border-radius:12px;background:#f3f8f4;border:1px solid #cfe5d6;}
+.pd-sent-card .pd-sent-t{margin:0 0 6px;font-size:13.5px;} .pd-sent-card .pd-sent-d{margin:0;font-size:15.5px;} .pd-sent-card .pd-sent-d small{font-size:13px;}
+.pd-sent-links{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;}
+#pd-wait[data-st="sent"] .pd-apply{border-color:var(--c-line,#e6e4e0);box-shadow:none;}
+.pd-after{display:flex;flex-direction:column;gap:8px;margin-top:16px;} .pd-after[hidden]{display:none;} .pd-after .d3-btn{width:100%;min-height:50px;justify-content:center;white-space:normal;}
+#pd-wait .pd-note{margin:14px 0 0;font-size:13.5px;line-height:1.6;color:var(--c-ink-3,#66666c);text-align:center;word-break:keep-all;}
+#pd-wait .pd-guide{margin-top:18px;}
+#pd-wait[data-st="rejected"] .pd-alt{display:none;}
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -5141,20 +5197,6 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
         <select id="rr-user" class="rr-in" onchange="RealReport.pickUser()"></select>
         <input id="rr-pname" class="rr-in" maxlength="40" placeholder="가입하지 않은 사람이면 이름을 적어 주세요" aria-label="이름">
       </div>
-      <div class="rr-grid">
-        <div><label class="rr-lbl" for="rr-field">분야</label><select id="rr-field" class="rr-in"></select></div>
-        <div><label class="rr-lbl" for="rr-org">기관</label><input id="rr-org" class="rr-in" maxlength="60" placeholder="예: 국회사무처, ○○시의회"></div>
-        <div><label class="rr-lbl" for="rr-date">면접 날짜 <small id="rr-date-hint">선택</small></label><input type="date" id="rr-date" class="rr-in"></div>
-      </div>
-      <div id="rr-result-wrap">
-        <div class="rr-lbl">결과</div>
-        <div class="chip-row rr-chips" id="rr-result">
-          <button type="button" class="chip" data-val="waiting" onclick="RealReport.pickResult('waiting')">결과 기다리는 중</button>
-          <button type="button" class="chip" data-val="pass" onclick="RealReport.pickResult('pass')">합격</button>
-          <button type="button" class="chip" data-val="fail" onclick="RealReport.pickResult('fail')">불합격</button>
-          <button type="button" class="chip" data-val="unknown" onclick="RealReport.pickResult('unknown')">밝히고 싶지 않아요</button>
-        </div>
-      </div>
       <div id="rr-q-wrap">
         <div class="rr-lbl">받은 질문 <small>면접관이 물어본 그대로, 기억나는 만큼만</small></div>
         <ol class="rr-qs" id="rr-qs"></ol>
@@ -5175,6 +5217,22 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
           <textarea id="rr-tips" class="rr-in" rows="3" maxlength="1000" placeholder="예: 꼬리질문이 많았어요. 경험을 아주 구체적으로 물어봤어요."></textarea>
         </details>
       </div>
+      <div class="rr-info" id="rr-info"><div class="rr-sec">면접 정보 <small>분야는 미리 골라 뒀어요</small></div>
+      <div class="rr-grid">
+        <div><label class="rr-lbl" for="rr-field">분야</label><select id="rr-field" class="rr-in"></select></div>
+        <div><label class="rr-lbl" for="rr-org">기관 <small>선택</small></label><input id="rr-org" class="rr-in" maxlength="60" placeholder="예: 국회사무처, ○○시의회"></div>
+        <div><label class="rr-lbl" for="rr-date">면접 날짜 <small id="rr-date-hint">선택</small></label><input type="date" id="rr-date" class="rr-in"></div>
+      </div>
+      <div id="rr-result-wrap">
+        <div class="rr-lbl">결과</div>
+        <div class="chip-row rr-chips" id="rr-result">
+          <button type="button" class="chip" data-val="waiting" onclick="RealReport.pickResult('waiting')">결과 기다리는 중</button>
+          <button type="button" class="chip" data-val="pass" onclick="RealReport.pickResult('pass')">합격</button>
+          <button type="button" class="chip" data-val="fail" onclick="RealReport.pickResult('fail')">불합격</button>
+          <button type="button" class="chip" data-val="unknown" onclick="RealReport.pickResult('unknown')">밝히고 싶지 않아요</button>
+        </div>
+      </div>
+      </div>
       <p class="rr-note">남긴 질문은 바로 같은 분야 연습 문항('합격자 제보')에 들어가요. 이름은 보이지 않아요. 다른 사람의 이름·연락처는 적지 말아 주세요.</p>
       <p class="rr-err" id="rr-err" role="alert"></p>
     </div>
@@ -5186,7 +5244,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 </div>
 <div class="modal-overlay" id="modal-rr-nudge" role="dialog" aria-modal="true" aria-labelledby="rrn-title">
   <div class="modal-box rr-nudge-box">
-    <div class="modal-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span><p class="rrn-kicker" id="rrn-kicker">합격하면 꼭 남겨 주세요</p><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
+    <div class="modal-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span><p class="rrn-kicker" id="rrn-kicker">결과와 상관없이 남겨 주세요</p><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
     <div class="modal-body" id="rrn-body"></div>
     <div class="modal-foot">
       <button type="button" class="rrn-hide" onclick="RealReport.hideToday()">일주일 동안 보지 않기</button>
@@ -5452,41 +5510,34 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   <div class="pd">
     <header class="pd-top"><span class="d3-logo"><i class="d3-dot"></i>ZAVAPASS</span><span class="d3-org">한국AI속기사협회</span></header>
     <main class="pd-card">
-     <div id="pd-wait">
-      <span class="pd-chip"><i></i>승인 대기 중</span>
-      <h1 class="pd-h" id="pd-title">가입이 완료됐어요</h1>
-      <p class="pd-lead"><b id="pd-name">회원</b>님, 이 서비스는 <b>서류 합격자 전용</b>이에요. 담당자가 서류 합격을 확인한 뒤 연습할 분야를 열어 드려요.</p>
-      <ol class="pd-steps">
-        <li class="done"><b>회원가입</b><span>완료</span></li>
-        <li class="now"><b>서류 합격 확인</b><span id="pd-step2">승인 요청 보내기</span></li>
-        <li><b>면접 연습 시작</b><span>승인 후</span></li>
+     <div id="pd-wait" data-st="new">
+      <!-- 2026-10-26h: 화면이 하는 일을 하나로 — ① 분야 보내기 ② 담당자 확인 중 ③ 반려되면 다시 보내기 -->
+      <span class="pd-chip" id="pd-chip"><i></i><span id="pd-chip-t">가입 완료 · 승인 전</span></span>
+      <h1 class="pd-h" id="pd-title">합격한 분야를 알려 주세요</h1>
+      <p class="pd-lead" id="pd-lead"><b id="pd-name">회원</b>님, ZAVAPASS는 <b>서류 합격자 전용</b>이에요. 서류에 합격한 분야를 보내 주시면 담당자가 확인하고 연습을 열어 드려요.</p>
+      <ol class="pd-flow" aria-label="진행 순서">
+        <li id="pd-f1" class="on"><i>1</i><span>분야 보내기</span></li>
+        <li id="pd-f2"><i>2</i><span>담당자 확인</span></li>
+        <li id="pd-f3"><i>3</i><span>연습 시작</span></li>
       </ol>
-      <section class="pd-apply" id="pd-apply" aria-labelledby="pd-apply-t">
-        <h2 class="pd-sub" id="pd-apply-t">여기서 바로 승인 요청하기</h2>
+      <section class="pd-apply" id="pd-apply" aria-labelledby="pd-title">
         <div class="pd-sent" id="pd-ap-sent" hidden></div>
         <div id="pd-apply-form">
-          <p class="pd-req-lead">서류에 합격한 분야를 골라 보내 주시면 담당자가 확인한 뒤 바로 열어 드려요.</p>
           <label class="pd-lbl" for="pd-ap-field">서류에 합격한 분야</label>
           <select id="pd-ap-field" class="pd-in"></select>
-          <label class="pd-lbl" for="pd-ap-memo">하고 싶은 말 <small>선택</small></label>
-          <textarea id="pd-ap-memo" class="pd-in" rows="2" maxlength="500" placeholder="예: 면접일은 10월 30일이에요"></textarea>
+          <details class="pd-memo" id="pd-memo-wrap">
+            <summary>담당자에게 한마디 남기기 <small>선택</small></summary>
+            <textarea id="pd-ap-memo" class="pd-in" rows="2" maxlength="500" placeholder="예: 면접일은 10월 30일이에요" aria-label="담당자에게 한마디"></textarea>
+          </details>
           <button type="button" class="d3-btn d3-btn-primary pd-send" id="pd-ap-send" onclick="Approval.submit()">승인 요청 보내기</button>
+          <p class="pd-alt">카카오톡이 편하면 <button type="button" class="pd-alt-kk" id="pd-kakao" onclick="pendingKakao()">카카오톡으로 보내기</button></p>
         </div>
       </section>
-      <section class="pd-req" aria-labelledby="pd-req-t">
-        <h2 class="pd-sub" id="pd-req-t">카카오톡으로 보내도 돼요</h2>
-        <p class="pd-req-lead">급하면 소리자바 아카데미 카카오톡 채널로 이름·이메일·합격 기관을 보내 주세요.</p>
-        <div class="pd-acts">
-          <button type="button" class="pd-kakao" id="pd-kakao" onclick="pendingKakao()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡으로 승인 요청하기</button>
-          <button type="button" class="d3-btn d3-btn-ghost" id="pd-copy" onclick="copyPendingRequest()">보낼 내용 복사하기</button>
-        </div>
-        <p class="pd-copy-hint" id="pd-copy-hint">"보낼 내용 복사하기"를 누른 뒤 카카오톡 채팅창에 붙여 넣어 주세요.</p>
-      </section>
-      <div class="pd-acts pd-acts2">
+      <div class="pd-after" id="pd-after" hidden>
         <button class="d3-btn d3-btn-primary" id="pd-check" onclick="checkPendingApproval(true)">승인됐는지 확인하기</button>
-        <button class="d3-btn d3-btn-ghost" onclick="openMyPage()">자기소개서·이력서 미리 올리기</button>
+        <button class="d3-btn d3-btn-ghost" onclick="openMyPage()">기다리는 동안 자기소개서·이력서 올려 두기</button>
       </div>
-      <p class="pd-note" id="pd-note">승인되면 이 화면이 자동으로 바뀌어요. 승인 전에는 면접 연습과 자기소개 코치를 쓸 수 없어요.</p>
+      <p class="pd-note" id="pd-note">카카오톡으로 보냈다면 기다리시면 돼요. 승인되면 이 화면이 저절로 바뀌어요.</p>
       <details class="pd-guide">
         <summary>이용 안내</summary>
         <ul>
@@ -5495,7 +5546,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
           <li><b>합격이 확인된 기관(분야)만 열려요.</b> 다른 기관에도 합격했다면 함께 알려 주세요.</li>
           <li>합격 여부를 확인할 수 없으면 승인되지 않을 수 있어요.</li>
           <li><b>이용 기간</b>은 면접 일정에 맞춰 정해져요. 기간이 끝나면 연습이 막혀요.</li>
-          <li><b>면접을 보고 나면 받은 질문을 남겨 주세요.</b> 다음 지원자들의 연습 문항이 돼요. 합격하면 꼭 남겨 주세요!</li>
+          <li><b>면접을 보고 나면 받은 질문을 남겨 주세요.</b> 다음 지원자들의 연습 문항이 돼요. 합격·불합격과 상관없이 남겨 주시면 큰 도움이 돼요!</li>
           <li>한 계정은 한 기기에서만 쓸 수 있어요. 다른 기기에서 로그인하면 이전 기기는 로그아웃돼요.</li>
           <li>계정을 다른 사람과 함께 쓰지 말아 주세요.</li>
         </ul>
@@ -8020,18 +8071,24 @@ function renderPendingScreen(){
   const cn = document.getElementById('pd-c-name'); if(cn) cn.textContent = u.name || '회원';
   if(closed){ try{ RealReport.renderClosed(); }catch(_){} try{ Rejoin.load().then(()=>Rejoin.render()); }catch(_){} }
   else { try{ Approval.load().then(()=>Approval.render()); }catch(_){} }
-  if(!KAKAO_CHANNEL_URL){ const k = document.getElementById('pd-kakao'); if(k) k.lastChild.textContent = '담당자에게 승인 요청하기'; }
+  if(!KAKAO_CHANNEL_URL){ const k = document.getElementById('pd-kakao'); if(k) k.textContent = '담당자에게 따로 알리기'; }
 }
 /** 카카오톡 채널로 승인 요청 (주소가 없으면 의견 보내기 창) */
 function pendingKakao(){
   try{ Activity.log('pending_kakao'); }catch(_){}
+  /* 2026-10-26h: 보낼 내용을 먼저 복사해 두고 채널을 엶 → 채팅창에 붙여 넣기만 하면 됨 (버튼 하나로) */
+  const text = pendingRequestText(); let ok = false;
+  try{ if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).catch(()=>{}); ok = true; } }catch(_){}
+  if(!ok){ try{ const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove(); }catch(_){} }
   openKakaoChannel();
+  if(ok) showToast('보낼 내용을 복사해 뒀어요. 카카오톡 채팅창에 붙여 넣어 주세요.');
 }
 function pendingRequestText(){
   const u = state.currentUser || {};
   const note = String(u.note || '').trim();
+  const fsel = document.getElementById('pd-ap-field'), fv = fsel && fsel.value ? rrFieldName(fsel.value) : '';
   return ['[ZAVAPASS 면접 연습 승인 요청]', `이름: ${u.name || ''}`, `가입 이메일: ${u.email || ''}`,
-          `서류 합격 기관·직렬: ${note && !/서류 결과 확인 중/.test(note) ? note : '(여기에 적어 주세요)'}`].join('\n');
+          `서류 합격 분야: ${fv || (note && !/서류 결과 확인 중/.test(note) ? note : '(여기에 적어 주세요)')}`].join('\n');
 }
 async function copyPendingRequest(){
   const text = pendingRequestText(), hint = document.getElementById('pd-copy-hint');
@@ -8473,7 +8530,7 @@ const RealReport = {
     const n = this.fieldCount(fid), fname = rrFieldName(fid);
     const added = this.mine.reduce((s,x)=>s+(x.added_count||0), 0);
     const btn = (label, js, primary)=>`<button type="button" class="rr-btn${primary?' primary':''}" onclick="${js}">${label}</button>`;
-    let kicker = '합격하면 꼭 남겨 주세요', title = '', desc = '', acts = '';
+    let kicker = '결과와 상관없이 남겨 주세요', title = '', desc = '', acts = '';
     if(ph === 'none'){
       title = '면접에서 받은 질문을 남겨 주세요';
       desc = `실제 면접 질문은 다음 지원자에게 가장 좋은 연습 문제예요. 남기면 바로 같은 분야 연습 문항으로 들어가요.${n ? ` 지금까지 합격자들이 남긴 ${escapeHtml(fname)} 질문은 <b>${n}개</b>예요.` : ''}`;
@@ -8583,7 +8640,7 @@ const RealReport = {
     b.innerHTML = ''; go.style.display = ''; go.textContent = '면접 질문 남기기';
     { const bx = document.querySelector('#modal-rr-nudge .rr-nudge-box'); if(bx) bx.classList.remove('rrs-mode'); }
     go.onclick = ()=>{ this.closeNudge(); this.open('self', this.closedFid ? { field: this.closedFid } : undefined); };
-    k.textContent = '합격하면 꼭 남겨 주세요';
+    k.textContent = '결과와 상관없이 남겨 주세요';
     if(kind === 'ask'){
       k.textContent = '결과를 알려 주세요';
       t.textContent = '면접 결과 나왔나요?';
@@ -8852,24 +8909,37 @@ const Approval = {
     const $ = id=>document.getElementById(id);
     const sel = $('pd-ap-field'); if(!sel) return;
     if(!sel.options.length) sel.innerHTML = `<option value="">분야를 골라 주세요</option>` + RR_FIELD_IDS.map(id=>`<option value="${id}">${escapeHtml(rrFieldName(id))}</option>`).join('');
-    const r = this.last, sent = $('pd-ap-sent'), form = $('pd-apply-form'), step = $('pd-step2');
+    const r = this.last, sent = $('pd-ap-sent'), form = $('pd-apply-form');
     const pending = r && r.status === 'submitted' && !this.showForm;
-    if(step) step.textContent = pending ? '담당자 확인 중' : '승인 요청 보내기';
+    const rejected = !pending && r && r.status === 'rejected' && r.admin_note;
+    /* 2026-10-26h: 상태마다 화면이 하는 일 하나 — 제목·설명·순서 표시를 상태에 맞게 */
+    const st = pending ? 'sent' : rejected ? 'rejected' : 'new';
+    const nm = `<b id="pd-name">${escapeHtml((state.currentUser && state.currentUser.name) || '회원')}</b>`;
+    const T = {
+      new:      ['가입 완료 · 승인 전', '합격한 분야를 알려 주세요', `${nm}님, ZAVAPASS는 <b>서류 합격자 전용</b>이에요. 서류에 합격한 분야를 보내 주시면 담당자가 확인하고 연습을 열어 드려요.`],
+      sent:     ['담당자 확인 중', '담당자가 확인하고 있어요', `${nm}님, 승인 요청을 잘 받았어요. 확인되면 <b>이 화면이 저절로 바뀌고</b> 바로 연습할 수 있어요.`],
+      rejected: ['다시 보내 주세요', '승인 요청을 다시 보내 주세요', `${nm}님, 담당자가 남긴 사유를 확인하고 아래에서 다시 보내 주세요.`],
+    }[st];
+    const w = $('pd-wait'); if(w) w.dataset.st = st;
+    if($('pd-chip-t')) $('pd-chip-t').textContent = T[0]; if($('pd-title')) $('pd-title').textContent = T[1]; if($('pd-lead')) $('pd-lead').innerHTML = T[2];
+    const f1 = $('pd-f1'), f2 = $('pd-f2');
+    if(f1){ f1.className = pending ? 'done' : 'on'; } if(f2){ f2.className = pending ? 'on' : ''; }
+    if($('pd-after')) $('pd-after').hidden = !pending;
+    const note = $('pd-note'); if(note){ note.className = 'pd-note'; note.textContent = pending ? '승인 전에는 면접 연습과 자기소개 코치를 쓸 수 없어요.' : '카카오톡으로 보냈다면 기다리시면 돼요. 승인되면 이 화면이 저절로 바뀌어요.'; }
     if(pending){
       sent.hidden = false; form.hidden = true;
       const at = new Date(r.created_at);
-      sent.innerHTML = `<p class="pd-sent-t"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10.5l3.2 3L15 6.5"/></svg>승인 요청을 보냈어요</p>
-        <p class="pd-sent-d">${escapeHtml(rrFieldName(r.field_id))}${r.org && r.org !== rrFieldName(r.field_id) ? ' · '+escapeHtml(r.org) : ''}<br><small>${at.getMonth()+1}월 ${at.getDate()}일 ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}에 보냄${r.proof_path ? ' · 캡처 1개' : ''}</small></p>
-        <p class="pd-sent-n">담당자가 확인하면 이 화면이 저절로 바뀌어요. 급하면 아래 카카오톡으로 알려 주세요.</p>
-        <button type="button" class="rr-link" onclick="Approval.again()">잘못 보냈어요 · 다시 보내기</button>`;
+      sent.innerHTML = `<div class="pd-sent-card"><p class="pd-sent-t"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10.5l3.2 3L15 6.5"/></svg>보낸 요청</p>
+        <p class="pd-sent-d"><b>${escapeHtml(rrFieldName(r.field_id))}</b>${r.org && r.org !== rrFieldName(r.field_id) ? ' · '+escapeHtml(r.org) : ''}<br><small>${at.getMonth()+1}월 ${at.getDate()}일 ${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}에 보냄${r.proof_path ? ' · 캡처 1개' : ''}</small></p></div>
+        <div class="pd-sent-links"><button type="button" class="rr-link" onclick="Approval.again()">잘못 보냈어요 · 다시 보내기</button><button type="button" class="rr-link" onclick="pendingKakao()">급하면 카카오톡으로 알리기</button></div>`;
     }else{
       sent.hidden = !(r && r.status === 'rejected' && r.admin_note);
-      if(!sent.hidden) sent.innerHTML = pdRejectHtml(r);   // 2026-10-23f 반려 사유를 눈에 띄는 상자로
+      if(!sent.hidden) sent.innerHTML = pdRejectHtml(r, true);   // 2026-10-23f 반려 사유를 눈에 띄는 상자로 · 26g 카톡으로 캡처 보내기
       form.hidden = false;
       if(r && !sel.value){ sel.value = r.field_id || ''; }
     }
   },
-  again(){ this.showForm = true; this.render(); },
+  again(){ this.showForm = true; this.render(); try{ document.getElementById('pd-ap-field').focus(); }catch(_){} },
   pick(input){
     const f = input.files && input.files[0]; const name = document.getElementById('pd-ap-file-name'), prev = document.getElementById('pd-ap-prev');
     this.file = null; prev.hidden = true; prev.innerHTML = '';
@@ -8918,13 +8988,14 @@ const Approval = {
  * approval_requests 표를 그대로 쓰고(interview_date 칸 추가), 캡처는 approval-proof 저장소(비공개, 본인 폴더)에 올림.
  * 담당자가 권한 창에서 새 분야 체크·이용 기간을 정하면 1분 안에 자동으로 홈으로 들어감. */
 /** 2026-10-23f: 반려된 승인 요청 — 담당자가 적은 반려 사유를 눈에 띄게 (첫 승인·새 분야 요청 공통) */
-function pdRejectHtml(r){
+function pdRejectHtml(r, first){
   const at = r && (r.reviewed_at || r.updated_at || r.created_at) ? new Date(r.reviewed_at || r.updated_at || r.created_at) : null;
   return `<div class="pd-reject" role="alert">
     <p class="pd-reject-t"><svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 6v4.6M10 13.6v.1"/></svg>승인 요청이 반려됐어요</p>
     <p class="pd-reject-l">반려 사유${at && !isNaN(at) ? ` <small>${at.getMonth()+1}월 ${at.getDate()}일</small>` : ''}</p>
     <p class="pd-reject-n">${escapeHtml(r.admin_note)}</p>
-    <p class="pd-reject-h">위 내용을 고쳐서 아래에서 다시 보내 주세요.</p>
+    <p class="pd-reject-h">위 내용을 고쳐서 아래에서 다시 보내 주세요.${first ? ' 캡처·서류를 보내야 하면 카카오톡으로 보내 주세요.' : ''}</p>${first ? `
+    <button type="button" class="pd-kakao pd-reject-kk" onclick="pendingKakao()"><svg class="kk-ic" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 2.9c-.1.3.2.5.4.3l3.4-2.3c.4 0 .9.1 1.3.1 4.4 0 8-2.8 8-6.2S14.4 3 10 3z"/></svg>카카오톡으로 캡처 보내기</button>` : ''}
   </div>`;
 }
 const Rejoin = {
