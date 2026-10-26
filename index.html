@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26c';
+var APP_VERSION = '2026-10-26d';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5015,6 +5015,42 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 #screen-result.v3 .r4-mid{grid-template-columns:1fr !important;}
 #screen-result.v3 .r4-mid .qa-result-panel{order:-1;}
 @media print{ .rf-bar{display:none !important;} #screen-result .panel.rf-fold, #screen-result .panel.rf-fold:not(.rf-open){display:block !important;} #screen-result .panel.rf-fold[hidden], #screen-result .panel.rf-fold[hidden]:not(.rf-open){display:none !important;} .ans-confirm,.ans-meter{display:none !important;} }
+
+/* 2026-10-26d 음성 인식 바로잡기 · 잘못 들린 말 고치기 · 후기 질문 정리 */
+.sf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+.sf-card{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:14px;padding:16px;min-width:0;}
+.sf-card h3{margin:0 0 8px;font-size:15.5px;} .sf-card h3 small{font-size:12px;font-weight:600;color:var(--c-ink-3,#66666c);margin-left:6px;}
+.sf-test,.sf-past{grid-column:1 / -1;}
+.sf-cand-r{width:110px;height:32px;padding:0 8px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:8px;font:inherit;font-size:14px;font-weight:700;min-width:0;}
+.sf-past-n{margin:0 0 6px;font-size:14px;} .sf-past-ex{margin:0 0 12px;padding-left:18px;font-size:13px;line-height:1.8;} .sf-past-ex s{color:#b0391a;} .sf-past-ex b{color:#23804f;}
+.sf-add{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;} .sf-add label{flex:1 1 140px;display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--c-ink-3,#66666c);}
+.sf-add input{height:40px;padding:0 10px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:10px;font:inherit;font-size:14px;color:var(--c-ink,#1c1c1e);min-width:0;}
+.sf-add .btn{height:40px;flex:none;} .sf-arrow{color:var(--c-ink-3,#66666c);font-weight:700;padding-bottom:10px;}
+.sf-hint{margin:8px 0 10px;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.5;} .sf-hint.warn{color:#b0391a;font-weight:600;}
+.sf-list{display:flex;flex-direction:column;gap:6px;max-height:420px;overflow:auto;}
+.sf-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--c-line,#e6e4e0);border-radius:10px;font-size:14px;}
+.sf-row.off{opacity:.5;} .sf-w{color:#b0391a;text-decoration:line-through;} .sf-r{font-weight:700;} .sf-n{font-size:12px;color:var(--c-ink-3,#66666c);}
+.sf-acts{margin-left:auto;display:flex;gap:6px;} .btn-manage.primary{border-color:var(--c-accent,#e8532a);color:var(--c-accent-ink,#c2401b);font-weight:700;}
+.sf-empty{margin:6px 0;font-size:13px;color:var(--c-ink-3,#66666c);}
+.sf-test textarea{width:100%;box-sizing:border-box;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:10px;padding:10px;font:inherit;font-size:14px;resize:vertical;}
+.sf-test-out{margin-top:8px;font-size:14px;} .sf-test-out p{margin:4px 0 0;padding:10px;border-radius:10px;background:#f2f8f4;} .sf-same{color:var(--c-ink-3,#66666c);font-size:13px;}
+@media(max-width:860px){ .sf-grid{grid-template-columns:1fr;} }
+.af-btn{font:inherit;font-size:12.5px;font-weight:600;color:var(--c-accent-ink,#c2401b);background:none;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:99px;padding:4px 10px;cursor:pointer;margin-left:6px;white-space:nowrap;}
+.af-btn:hover{border-color:var(--c-accent,#e8532a);background:#fff8f4;}
+.record-a .af-btn{margin-top:6px;display:inline-block;} .af-fixed{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:#23804f;background:#e2f5e8;border-radius:99px;padding:2px 8px;cursor:help;}
+.af-body{padding:0 22px;} .af-q{margin:0 0 8px;font-size:13.5px;font-weight:600;color:var(--c-ink-2,#45454a);line-height:1.5;}
+.af-body textarea{width:100%;box-sizing:border-box;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:12px;padding:12px;font:inherit;font-size:15px;line-height:1.6;resize:vertical;}
+.af-diff{margin:8px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);line-height:1.8;} .af-pair{display:inline-block;margin-right:8px;} .af-pair s{color:#b0391a;} .af-pair b{color:#23804f;}
+.af-foot{display:flex;gap:8px;justify-content:flex-end;} .af-foot .btn{min-height:44px;}
+.rq-list{display:flex;flex-direction:column;gap:10px;}
+.rq-group{background:#fff;border:1px solid var(--c-line,#e6e4e0);border-radius:14px;overflow:hidden;}
+.rq-row{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-top:1px solid #efede9;} .rq-row:first-child{border-top:0;} .rq-row.off{background:#fafaf8;opacity:.7;}
+.rq-main{flex:1;min-width:0;} .rq-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.rq-tags span{font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 8px;} .rq-f{background:#eef0f4;color:#45454a;} .rq-freq{background:#fdf1ea;color:#c2401b;} .rq-ok{background:#e2f5e8;color:#15803d;} .rq-no{background:#fff4d6;color:#8a6a00;} .rq-hid{background:#ececec;color:#66666c;}
+.rq-q{margin:0;font-size:14.5px;font-weight:600;line-height:1.5;color:var(--c-ink,#1c1c1e);} .rq-meta{margin:4px 0 0;font-size:12px;color:var(--c-ink-3,#66666c);line-height:1.5;} .rq-near{color:#8a6a00;}
+.rq-acts{display:flex;flex-direction:column;gap:6px;flex:none;}
+.rq-merge{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#fbf4e4;font-size:12.5px;color:#8a6a2a;}
+@media(max-width:640px){ .rq-row{flex-direction:column;} .rq-acts{flex-direction:row;flex-wrap:wrap;} }
 </style>
 </head>
 <body>
@@ -5824,6 +5860,60 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
           <div id="admin-records-list"></div>
         </div>
         
+      </div>
+
+      <!-- 2026-10-26d 음성 인식 바로잡기 사전 -->
+      <div class="admin-view" id="admin-view-sttfix">
+        <div class="admin-view-head">
+          <div><h2>음성 인식 바로잡기</h2>
+          <p>말이 엉뚱한 낱말로 받아 적힐 때 '잘못 들린 말 → 바른 말'을 넣어 두면, 앞으로 모든 면접자의 답변에 바로 적용돼요(배포 없이). 면접자는 아무것도 하지 않아도 돼요. 최근 답변에서 <b>수상한 낱말을 자동으로 찾아</b> 후보로 보여 주고, <b>지난 답변도 한꺼번에</b> 바로잡을 수 있어요.</p></div>
+          <div class="beta-head-btns"><button class="btn-manage" onclick="SttAdmin.load(true)">새로 고침</button></div>
+        </div>
+        <div class="live-note" id="sf-note" style="display:none;"></div>
+        <div class="sf-grid">
+          <section class="sf-card">
+            <h3>바로잡기 목록 <small id="sf-count"></small></h3>
+            <div class="sf-add">
+              <label><span>잘못 들린 말</span><input id="sf-wrong" type="text" maxlength="30" placeholder="예: 쏙기록"></label>
+              <span class="sf-arrow" aria-hidden="true">→</span>
+              <label><span>바른 말</span><input id="sf-right" type="text" maxlength="30" placeholder="예: 속기록"></label>
+              <button type="button" class="btn btn-solid" id="sf-add-btn" onclick="SttAdmin.add()">넣기</button>
+            </div>
+            <p class="sf-hint" id="sf-add-msg">띄어쓰기는 달라도 맞춰 줘요. 프로그램 안에 기본 규칙 <b id="sf-base-n"></b>개가 따로 들어 있어요.</p>
+            <div class="sf-list" id="sf-list"></div>
+          </section>
+          <section class="sf-card">
+            <h3>자동으로 찾은 후보 <small id="sf-sug-sub"></small></h3>
+            <p class="sf-hint">최근 60일 답변에서 속기·면접 용어와 한 글자만 다른 낱말이에요(문제은행·모범답안에 나오는 말은 뺐어요). 맞으면 '목록에 넣기', 아니면 '넘기기'를 눌러 주세요. 바른 말은 넣기 전에 고칠 수 있어요.</p>
+            <div class="sf-list" id="sf-sug"></div>
+          </section>
+          <section class="sf-card sf-past">
+            <h3>지난 답변 한꺼번에 바로잡기</h3>
+            <p class="sf-hint">이미 저장된 답변에도 지금 목록(기본 규칙 포함)을 적용해요. 점수는 그대로이고, 처음 받아 적은 글은 따로 보관해요(지우지 않음).</p>
+            <div id="sf-past"></div>
+          </section>
+          <section class="sf-card sf-test">
+            <h3>시험해 보기</h3>
+            <textarea id="sf-test-in" rows="3" placeholder="받아 적힌 문장을 붙여 넣어 보세요. 예: 한글 조끼 1급을 따고 법문 과정에서 확인하겠습니다" oninput="SttAdmin.test()"></textarea>
+            <div class="sf-test-out" id="sf-test-out"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- 2026-10-26d 실제 면접 후기 질문 정리판 -->
+      <div class="admin-view" id="admin-view-reportq">
+        <div class="admin-view-head">
+          <div><h2>후기 질문 정리</h2>
+          <p>합격자·기간 종료 회원이 남긴 실제 면접 질문은 남기자마자 '합격자 제보'로 연습 문항에 들어가요. 여기서 <b>여러 명이 받은 질문(빈출)</b>을 확인하고, <b>모범답안</b>을 채우고, <b>비슷한 질문은 하나만 남기고 숨겨요</b>(지우지 않음).</p></div>
+          <div class="beta-head-btns"><button class="btn-manage" onclick="ReportQ.load(true)">새로 고침</button></div>
+        </div>
+        <div class="live-note" id="rq-note" style="display:none;"></div>
+        <div class="admin-toolbar rq-toolbar">
+          <label class="qm-sel"><span>분야</span><select id="rq-field" onchange="ReportQ.render()"><option value="">모든 분야</option></select></label>
+          <label class="qm-sel"><span>보기</span><select id="rq-view" onchange="ReportQ.render()"><option value="all">전체</option><option value="noref">모범답안 없는 것</option><option value="freq">빈출(2명 이상)</option><option value="hidden">숨긴 것</option></select></label>
+        </div>
+        <div class="hq-summary" id="rq-summary"></div>
+        <div class="rq-list" id="rq-list"></div>
       </div>
 
       <!-- 어려운 문항 TOP 10 (2026-10-12) -->
@@ -9383,7 +9473,7 @@ async function qmSave(){
       const { data, error } = await sb.from('questions').insert(Object.assign({ field_id: Qm.editField, is_active:true, sort_order: maxSort + 1 }, payload)).select().single();
       if(error) throw error; saved = data; Qm.rows.push(saved);
     }
-    qmCloseEdit(); qmRender();
+    qmCloseEdit(); qmRender(); try{ if(state.adminView === 'reportq') ReportQ.render(); }catch(_){}
     QuestionBank.rebuild((Qm.rows||[]).filter(r=>r.is_active));
     showToast(qmNeedRec(saved) ? '저장했어요. 질문 문장이 바뀌어 "바뀐 문항 녹음"으로 다시 녹음하면 면접관 목소리로 나와요.' : '저장했어요.');
   }catch(e){
@@ -10337,7 +10427,7 @@ const ADMIN_GROUPS = {   // 2026-10-22m 하는 일별로 다시 묶음 (화면 i
   today:    { label:'오늘 할 일', views:[['overview','할 일 · 요약'],['live','지금 접속 · 접속 기록']] },
   users:    { label:'면접자', views:[['users','면접자 목록'],['beta','연습 진행표'],['approvals','서류 합격 승인']] },
   results:  { label:'연습 결과', views:[['records','면접 기록'],['realset','실전 세트 · 자기소개'],['hardq','점수 낮은 질문'],['export','엑셀로 내려받기']] },
-  questions:{ label:'질문', views:[['questions','질문 · 모범답안'],['qrecord','질문 음성 녹음'],['reports','실제 면접 후기'],['reportcall','후기 부탁할 사람']] },
+  questions:{ label:'질문', views:[['questions','질문 · 모범답안'],['qrecord','질문 음성 녹음'],['reports','실제 면접 후기'],['reportq','후기 질문 정리'],['reportcall','후기 부탁할 사람'],['sttfix','음성 인식 바로잡기']] },
   talk:     { label:'소통', views:[['feedback','의견 · 오류 신고'],['notices','공지 보내기']] },
   settings: { label:'AI · 비용', views:[['pipeline','AI 켜기 · 횟수'],['tccredit','타입캐스트 크레딧'],['ttslive','즉석으로 읽은 문장'],['voice','면접관 목소리'],['devtest','문제 확인 (개발용)']] },
 };
@@ -10465,6 +10555,8 @@ function showAdminView(view){
   if(view === 'hardq') loadHardQ();
   if(view === 'approvals') ApprovalAdmin.load(true);
   if(view === 'reports' || view === 'reportcall') ReportAdmin.load(true);
+  if(view === 'reportq') ReportQ.load(true);   // 2026-10-26d
+  if(view === 'sttfix') SttAdmin.load(true);   // 2026-10-26d
   document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+(pv ? 'pipeline' : view)));
   try{ renderAdminSubtabs(view); }catch(e){ console.warn('[관리자 탭]', e); }
   window.scrollTo({top:0});
@@ -10908,7 +11000,7 @@ async function openRecordDetail(recordId, fromList){
     return `
       <div class="record-item">
         <div class="record-q"><span>Q${(a.question_index ?? i)+1}. ${escapeHtml(a.question_text || '')}</span>${scoreHtml}</div>
-        <p class="record-a"><b>내 답변</b>${answer}</p>
+        <p class="record-a"><b>내 답변</b><span class="record-a-t" id="rec-ans-${a.question_index ?? i}">${answer}</span>${(a.answer_raw && state.currentUser && state.currentUser.isAdmin) ? `<span class="af-fixed" title="${escapeHtml('처음 받아 적은 글: ' + a.answer_raw)}">바로잡은 답변</span>` : ''}</p>
         ${a.feedback ? renderFeedbackBlock(a.feedback) : ''}
         ${(setRow && setRow.nonverbal && Array.isArray(setRow.nonverbal.items)) ? FaceCoach.answerNoteHtml(setRow.nonverbal.items.find(x=>x.i === (a.question_index ?? i))) : ''}
       </div>`;
@@ -12450,7 +12542,7 @@ const PracticeTrack = {
 ['click','keydown','scroll','touchstart','input'].forEach(ev=>document.addEventListener(ev, ()=>{ if(PracticeTrack.v) PracticeTrack.act(); }, { passive:true, capture:true }));
 document.addEventListener('visibilitychange', ()=>{ if(!PracticeTrack.v) return; if(document.visibilityState === 'hidden'){ PracticeTrack.tick(); PracticeTrack.save(); } else { PracticeTrack._last = Date.now(); PracticeTrack.act(); } });
 window.addEventListener('pagehide', ()=>{ try{ PracticeTrack.end('other'); }catch(_){} });
-const ACTIVITY_LABEL = { abort_reason:'그만둔 이유', trial_open:'3분 체험 열기', rehearsal_skipped:'리허설 건너뜀', answer_confirm:'답변 완료 확인', takeover_ask:'다른 기기 면접 중 확인', practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습', capture_try:'복사·캡처 시도' };
+const ACTIVITY_LABEL = { answers_fixed:'지난 답변 바로잡기', abort_reason:'그만둔 이유', trial_open:'3분 체험 열기', rehearsal_skipped:'리허설 건너뜀', answer_confirm:'답변 완료 확인', takeover_ask:'다른 기기 면접 중 확인', practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습', capture_try:'복사·캡처 시도' };
 const ACTIVITY_CLS = { practice_view:'prep', login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end', capture_try:'abort' };
 function presenceLabel(p){
   if(!p) return '';
@@ -16523,9 +16615,179 @@ function sttBestAlt(result){
     return best;
   }catch(_){ return (result && result[0] && result[0].transcript) || ''; }
 }
+/** 2026-10-26d 관리자 '음성 인식 바로잡기' 목록 (app_settings.stt_fixes = { pairs:[{ wrong, right, on }] }) — 배포 없이 모두에게 적용 */
+const SttDict = {
+  pairs: [], _re: [],
+  set(row){ const v = row && row.value; this.pairs = (v && Array.isArray(v.pairs)) ? v.pairs.filter(p=>p && p.wrong && p.right) : []; this.build(); },
+  esc(x){ return String(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); },
+  ok(w, r){ w = String(w || '').trim(); r = String(r || '').trim(); if(!w || !r || w === r) return '잘못 들린 말과 바른 말을 둘 다 적어 주세요.'; if(r.replace(/\s/g, '').includes(w.replace(/\s/g, ''))) return '바른 말 안에 잘못 들린 말이 그대로 들어 있으면 넣을 수 없어요(계속 덧붙여져요).'; if(w.replace(/\s/g, '').length < 2) return '잘못 들린 말은 두 글자 이상이어야 해요.'; return ''; },
+  build(){ this._re = this.pairs.filter(p=>p.on !== false && !this.ok(p.wrong, p.right)).map(p=>[new RegExp(String(p.wrong).trim().split(/\s+/).join('').split('').map(c=>this.esc(c)).join('\\s*'), 'g'), String(p.right).trim()]); },
+  apply(t){ let x = t || ''; this._re.forEach(([re, to])=>{ re.lastIndex = 0; x = x.replace(re, to); }); return x; },
+};
+/** 2026-10-26d 관리자 화면: 바로잡기 목록 · 자동으로 찾은 후보 · 지난 답변 한꺼번에 바로잡기 · 시험해 보기 (면접자는 할 일 없음) */
+const SttAdmin = {
+  answers: [], cands: [], skip: new Set(), past: null,
+  skipKey: 'stenotalk_sttfix_skip',
+  async load(force){
+    const note = document.getElementById('sf-note'); if(note) note.style.display = 'none';
+    try{ this.skip = new Set(JSON.parse(localStorage.getItem(this.skipKey) || '[]')); }catch(_){ this.skip = new Set(); }
+    try{ const { data } = await sb.from('app_settings').select('key,value').eq('key', 'stt_fixes').maybeSingle(); SttDict.set(data || null); }catch(_){}
+    try{
+      const since = new Date(Date.now() - 60 * 86400000).toISOString();
+      const r = await sbAll(()=>sb.from('interview_answers').select('record_id,question_index,answer_text,answer_raw,created_at').gte('created_at', since).order('created_at', { ascending:false }));
+      if(r.error) throw r.error; this.answers = (r.data || []).filter(a=>a.answer_text && a.answer_text.trim());
+      if(!Qm.rows || !Qm.rows.length){ const q = await sbAll(()=>sb.from('questions').select('q,ref,hint,q_spoken')); if(!q.error) this.vocabRows = q.data || []; }
+    }catch(e){ this.answers = []; if(note){ note.style.display = ''; note.textContent = '최근 답변을 읽지 못했어요: ' + ((e && e.message) || e); } }
+    this.findCands(); this.past = null; this.render(); this.test();
+  },
+  /** 조사 떼기 */
+  core(w){ return String(w || '').replace(/[^가-힣A-Za-z0-9]/g, '').replace(/(에서는|에서|으로|로서|로써|에게|께서|까지|부터|이라|라고|이고|하고|처럼|보다|만큼|은|는|이|가|을|를|에|의|로|과|와|도|만)$/, ''); },
+  /** 한글 음절을 자모로 풀어서(초·중·종) 비교 — '번분/번문'처럼 소리가 한 끗 다른 말만 후보로 */
+  jamo(w){ let o = ''; for(const ch of String(w)){ const c = ch.charCodeAt(0) - 0xAC00; if(c < 0 || c > 11171){ o += ch; continue; } o += String.fromCharCode(0x1100 + Math.floor(c / 588), 0x1161 + Math.floor((c % 588) / 28)) + (c % 28 ? String.fromCharCode(0x11A7 + c % 28) : ''); } return o; },
+  lev(a, b){ const m = a.length, n = b.length; if(Math.abs(m - n) > 1) return 9; const d = Array.from({ length:m + 1 }, (_, i)=>[i].concat(Array(n).fill(0))); for(let j = 1; j <= n; j++) d[0][j] = j; for(let i = 1; i <= m; i++) for(let j = 1; j <= n; j++) d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1)); return d[m][n]; },
+  terms(){ const all = new Set(STT_PHRASES.concat(...Object.values(STT_FIELD_PHRASES))); return [...all].map(t=>t.replace(/\s+/g, '')).filter(t=>/^[가-힣]{2,8}$/.test(t)); },
+  vocab(){
+    const v = new Set(); const add = t=>String(t || '').split(/\s+/).forEach(w=>{ const c = this.core(w); if(c.length >= 2) v.add(c); });
+    (Qm.rows && Qm.rows.length ? Qm.rows : (this.vocabRows || [])).forEach(r=>{ add(r.q); add(r.ref); add(r.hint); add(r.q_spoken); });
+    return v;
+  },
+  findCands(){
+    const terms = this.terms(), tset = new Set(terms), vocab = this.vocab(), cnt = new Map(), joined = terms.join('|');
+    const COMMON = new Set(['회의','기록','의원','위원','질문','답변','생각','경우','부분','내용','정도','시간','업무','경험','상황','자료','확인','정리','과정','방법','사람','이후','먼저','우선','다시','정확','중요','노력','기관','공부','준비']);
+    this.answers.forEach(a=>String(a.answer_text).split(/\s+/).forEach(w=>{ const c = this.core(w); if(c.length < 2 || c.length > 8 || !/^[가-힣]+$/.test(c) || tset.has(c) || vocab.has(c) || COMMON.has(c) || joined.includes(c) || fixSpeech(c) !== c) return; /* 용어의 일부(회의 ⊂ 회의록)나 흔한 말은 빼고 */ cnt.set(c, (cnt.get(c) || 0) + 1); }));
+    const out = [];
+    cnt.forEach((n, w)=>{ let best = null; for(const t of terms){ if(t.length !== w.length) continue; if(t[0] !== w[0] && t[t.length-1] !== w[w.length-1]) continue; if(this.lev(this.jamo(w), this.jamo(t)) === 1){ best = t; break; } } if(best && !this.skip.has(w + '>' + best) && !SttDict.pairs.some(p=>p.wrong.replace(/\s+/g, '') === w)) out.push({ wrong:w, right:best, n }); });
+    this.cands = out.sort((a, b)=>b.n - a.n).slice(0, 40);
+  },
+  render(){
+    const bn = document.getElementById('sf-base-n'); if(bn) bn.textContent = STT_FIXES.length;
+    const cnt = document.getElementById('sf-count'); if(cnt) cnt.textContent = SttDict.pairs.length ? `${SttDict.pairs.filter(p=>p.on !== false).length}개 켜짐` : '';
+    const list = document.getElementById('sf-list');
+    if(list) list.innerHTML = SttDict.pairs.length ? SttDict.pairs.map((p, i)=>`<div class="sf-row ${p.on === false ? 'off' : ''}"><span class="sf-w">${escapeHtml(p.wrong)}</span><span class="sf-arrow">→</span><span class="sf-r">${escapeHtml(p.right)}</span><span class="sf-acts"><button type="button" class="btn-manage" onclick="SttAdmin.edit(${i})">고치기</button><button type="button" class="btn-manage" onclick="SttAdmin.toggle(${i})">${p.on === false ? '켜기' : '끄기'}</button></span></div>`).join('') : '<p class="sf-empty">아직 넣은 말이 없어요. 위에서 넣거나 오른쪽 후보에서 골라 주세요.</p>';
+    const sub = document.getElementById('sf-sug-sub'); if(sub) sub.textContent = `최근 답변 ${this.answers.length}개에서`;
+    const sg = document.getElementById('sf-sug');
+    if(sg) sg.innerHTML = this.cands.length ? this.cands.map((g, k)=>`<div class="sf-row"><span class="sf-w">${escapeHtml(g.wrong)}</span><span class="sf-arrow">→</span><input class="sf-cand-r" id="sf-cand-${k}" value="${escapeHtml(g.right)}" aria-label="바른 말"><span class="sf-n">${g.n}번</span><span class="sf-acts"><button type="button" class="btn-manage primary" onclick="SttAdmin.accept(${k})">목록에 넣기</button><button type="button" class="btn-manage" onclick="SttAdmin.ignore(${k})">넘기기</button></span></div>`).join('') : '<p class="sf-empty">지금은 수상한 낱말이 없어요.</p>';
+    this.renderPast();
+  },
+  /** 지난 답변 중 지금 규칙을 적용하면 바뀌는 것 */
+  pastItems(){ return this.answers.map(a=>{ const t = fixSpeech(a.answer_text); return t !== a.answer_text ? { record_id:a.record_id, question_index:a.question_index, before:a.answer_text, text:t } : null; }).filter(Boolean); },
+  renderPast(){
+    const el = document.getElementById('sf-past'); if(!el) return;
+    const items = this.past || this.pastItems();
+    if(!items.length){ el.innerHTML = '<p class="sf-empty">최근 60일 답변 중 바로잡을 곳이 없어요.</p>'; return; }
+    const ex = items.slice(0, 3).map(it=>{ const ps = AnsDiff.pairs(it.before, it.text).slice(0, 3); return `<li>${ps.map(p=>`<s>${escapeHtml(p.wrong)}</s> → <b>${escapeHtml(p.right)}</b>`).join(' · ')}</li>`; }).join('');
+    el.innerHTML = `<p class="sf-past-n">바로잡을 수 있는 답변 <b>${items.length}</b>개</p><ul class="sf-past-ex">${ex}</ul><button type="button" class="btn btn-solid" id="sf-past-go" onclick="SttAdmin.applyPast()">${items.length}개 답변 한꺼번에 바로잡기</button>`;
+  },
+  async applyPast(){
+    const items = this.pastItems(); if(!items.length) return;
+    const btn = document.getElementById('sf-past-go'); if(btn){ btn.disabled = true; btn.textContent = '바로잡는 중…'; }
+    let done = 0;
+    try{
+      for(let i = 0; i < items.length; i += 100){
+        const chunk = items.slice(i, i + 100).map(x=>({ record_id:x.record_id, question_index:x.question_index, text:x.text }));
+        const { data, error } = await sb.rpc('admin_fix_answers', { p_items: chunk }); if(error) throw error;
+        done += (data && data.updated) || chunk.length;
+        chunk.forEach(c=>{ const a = this.answers.find(y=>y.record_id === c.record_id && y.question_index === c.question_index); if(a){ a.answer_raw = a.answer_raw || a.answer_text; a.answer_text = c.text; } });
+      }
+      try{ Activity.log('answers_fixed', { n: done }); }catch(_){}
+      showToast(`지난 답변 ${done}개를 바로잡았어요. 점수는 그대로예요.`);
+    }catch(e){ showToast('바로잡지 못했어요: ' + ((e && e.message) || e)); }
+    this.past = null; this.renderPast();
+  },
+  async save(pairs, msg){
+    try{ const { error } = await sb.from('app_settings').upsert({ key:'stt_fixes', value:{ pairs }, updated_at: new Date().toISOString() }); if(error) throw error; SttDict.set({ value:{ pairs } }); this.findCands(); this.render(); this.test(); if(msg) showToast(msg); return true; }
+    catch(e){ showToast('저장하지 못했어요: ' + ((e && e.message) || e)); return false; }
+  },
+  async add(w, r){
+    const wi = document.getElementById('sf-wrong'), ri = document.getElementById('sf-right');
+    const fromForm = w == null;
+    w = (w != null ? w : wi.value).trim(); r = (r != null ? r : ri.value).trim();
+    const bad = SttDict.ok(w, r); const m = document.getElementById('sf-add-msg'); if(bad){ if(m){ m.textContent = bad; m.classList.add('warn'); } else showToast(bad); return false; }
+    if(m){ m.classList.remove('warn'); m.innerHTML = `띄어쓰기는 달라도 맞춰 줘요. 프로그램 안에 기본 규칙 <b id="sf-base-n">${STT_FIXES.length}</b>개가 따로 들어 있어요.`; }
+    const pairs = SttDict.pairs.filter(p=>p.wrong.replace(/\s/g, '') !== w.replace(/\s/g, '')).concat([{ wrong:w, right:r, on:true, at:new Date().toISOString() }]);
+    const ok = await this.save(pairs, `'${w}' → '${r}'를 넣었어요. 앞으로 모든 면접자에게 바로 적용돼요.`);
+    if(ok && fromForm){ wi.value = ''; ri.value = ''; }
+    return ok;
+  },
+  edit(i){ const p = SttDict.pairs[i]; if(!p) return; document.getElementById('sf-wrong').value = p.wrong; document.getElementById('sf-right').value = p.right; document.getElementById('sf-wrong').focus(); showToast('위 칸에서 고친 뒤 "넣기"를 누르면 바뀌어요.'); },
+  toggle(i){ const pairs = SttDict.pairs.map((p, k)=>k === i ? Object.assign({}, p, { on: p.on === false }) : p); this.save(pairs, pairs[i].on === false ? '껐어요. 다시 켤 수 있어요.' : '다시 켰어요.'); },
+  accept(k){ const g = this.cands[k]; if(!g) return; const inp = document.getElementById('sf-cand-' + k); this.add(g.wrong, inp ? inp.value : g.right); },
+  ignore(k){ const g = this.cands[k]; if(!g) return; this.skip.add(g.wrong + '>' + g.right); try{ localStorage.setItem(this.skipKey, JSON.stringify([...this.skip].slice(-500))); }catch(_){} this.cands.splice(k, 1); this.render(); showToast('넘겼어요. 다시 후보로 올리지 않아요.'); },
+  test(){ const i = document.getElementById('sf-test-in'), o = document.getElementById('sf-test-out'); if(!i || !o) return; const v = i.value.trim(); if(!v){ o.innerHTML = ''; return; } const r = fixSpeech(v); o.innerHTML = r === v ? '<span class="sf-same">바뀌는 곳이 없어요.</span>' : `<b>바로잡은 결과</b><p>${escapeHtml(r)}</p>`; },
+};
+/** 낱말 단위 비교로 바뀐 말 짝 뽑기 (지난 답변 바로잡기 예시 표시용) */
+const AnsDiff = {
+  pairs(a, b){
+    const A = String(a || '').trim().split(/\s+/).filter(Boolean), B = String(b || '').trim().split(/\s+/).filter(Boolean);
+    if(A.length > 600 || B.length > 600) return [];
+    const n = A.length, m = B.length, L = Array.from({ length:n + 1 }, ()=>new Uint16Array(m + 1));
+    for(let i = n - 1; i >= 0; i--) for(let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i+1][j+1] + 1 : Math.max(L[i+1][j], L[i][j+1]);
+    const out = []; let i = 0, j = 0, del = [], ins = [];
+    const flush = ()=>{ if(del.length && ins.length){ const w = del.join(' '), r = ins.join(' '); if(w.length <= 30 && r.length <= 30) out.push({ wrong:w, right:r }); } del = []; ins = []; };
+    while(i < n || j < m){ if(i < n && j < m && A[i] === B[j]){ flush(); i++; j++; } else if(j < m && (i >= n || L[i][j+1] >= L[i+1][j])){ ins.push(B[j]); j++; } else { del.push(A[i]); i++; } }
+    flush(); return out.slice(0, 10);
+  },
+};
+/** 2026-10-26d 관리자 '후기 질문 정리': 합격자 제보 문항을 빈출·모범답안·비슷한 질문 기준으로 정리 (숨기기만, 지우지 않음) */
+const ReportQ = {
+  rows: [], reports: [],
+  norm(t){ return String(t || '').replace(/[^가-힣A-Za-z0-9]/g, ''); },
+  grams(t){ const s = this.norm(t), g = new Set(); for(let i = 0; i < s.length - 1; i++) g.add(s.slice(i, i + 2)); return g; },
+  sim(a, b){ const A = this.grams(a), B = this.grams(b); if(!A.size || !B.size) return 0; let x = 0; A.forEach(v=>{ if(B.has(v)) x++; }); return x / (A.size + B.size - x); },
+  async load(force){
+    const note = document.getElementById('rq-note'); if(note) note.style.display = 'none';
+    const sel = document.getElementById('rq-field'); if(sel && sel.options.length <= 1) sel.innerHTML = '<option value="">모든 분야</option>' + FIELDS.filter(f=>f.id !== 'review').map(f=>`<option value="${f.id}">${escapeHtml(f.name)}</option>`).join('');
+    try{
+      const [q, r] = await Promise.all([ sbAll(()=>sb.from('questions').select('*').order('id', { ascending:true })), sb.from('interview_reports').select('id,field_id,org,interview_date,result,questions,created_at,hidden').order('created_at', { ascending:false }).limit(1000) ]);
+      if(q.error) throw q.error; Qm.rows = q.data || []; this.reports = (r && !r.error && r.data) ? r.data.filter(x=>!x.hidden) : [];
+    }catch(e){ if(note){ note.style.display = ''; note.textContent = '불러오지 못했어요: ' + ((e && e.message) || e); } }
+    this.render();
+  },
+  build(){
+    const all = Qm.rows || [], rep = all.filter(x=>x.source_report_id != null), bank = all.filter(x=>x.source_report_id == null && x.is_active);
+    const repQs = []; this.reports.forEach(r=>(Array.isArray(r.questions) ? r.questions : []).forEach(x=>{ const t = typeof x === 'string' ? x : (x && x.q); if(t) repQs.push({ rid:r.id, f:r.field_id, q:t }); }));
+    const items = rep.map(x=>{
+      const rids = new Set(repQs.filter(y=>y.f === x.field_id && this.sim(y.q, x.q) >= 0.55).map(y=>y.rid)); if(x.source_report_id) rids.add(x.source_report_id);
+      let near = null, best = 0; bank.forEach(b=>{ if(b.field_id !== x.field_id && b.field_id !== 'public') return; const s = this.sim(b.q, x.q); if(s > best){ best = s; near = b; } });
+      const src = this.reports.find(r=>r.id === x.source_report_id) || {};
+      return { x, freq: rids.size, near: best >= 0.55 ? near : null, org: src.org || '', date: src.interview_date || '' };
+    });
+    // 비슷한 합격자 제보끼리 묶음
+    const groups = []; items.forEach(it=>{ const g = groups.find(g=>g[0].x.field_id === it.x.field_id && this.sim(g[0].x.q, it.x.q) >= 0.55); if(g) g.push(it); else groups.push([it]); });
+    return groups.map(g=>g.sort((a,b)=>(b.x.is_active - a.x.is_active) || ((b.x.ref ? 1 : 0) - (a.x.ref ? 1 : 0)) || (a.x.id - b.x.id)));
+  },
+  render(){
+    const list = document.getElementById('rq-list'); if(!list) return;
+    const fld = (document.getElementById('rq-field') || {}).value || '', view = (document.getElementById('rq-view') || {}).value || 'all';
+    let groups = this.build().filter(g=>!fld || g[0].x.field_id === fld);
+    const flat = groups.flat(), active = flat.filter(i=>i.x.is_active);
+    const sum = document.getElementById('rq-summary'); if(sum) sum.innerHTML = `<span>합격자 제보 문항 <b>${flat.length}</b>개</span><span>연습에 나오는 것 <b>${active.length}</b>개</span><span>모범답안 없는 것 <b>${active.filter(i=>!i.x.ref).length}</b>개</span><span>빈출(2명 이상) <b>${active.filter(i=>i.freq >= 2).length}</b>개</span><span>비슷한 질문 묶음 <b>${groups.filter(g=>g.filter(i=>i.x.is_active).length > 1).length}</b>개</span>`;
+    groups = groups.filter(g=>{ const h = g.some(i=>!i.x.is_active), a = g.filter(i=>i.x.is_active);
+      if(view === 'hidden') return h; if(!a.length) return false;
+      if(view === 'noref') return a.some(i=>!i.x.ref); if(view === 'freq') return a.some(i=>i.freq >= 2); return true; })
+      .sort((a, b)=>Math.max(...b.map(i=>i.freq)) - Math.max(...a.map(i=>i.freq)));
+    if(!groups.length){ list.innerHTML = `<p class="sf-empty">${flat.length ? '조건에 맞는 질문이 없어요.' : '아직 남겨진 실제 면접 질문이 없어요. 기간이 끝난 회원이 질문을 남기면 여기에 모여요.'}</p>`; return; }
+    const fname = id=>(FIELDS.find(f=>f.id===id)||{}).name || id;
+    list.innerHTML = groups.map(g=>{
+      const live = g.filter(i=>i.x.is_active);
+      return `<div class="rq-group">${g.map((i, k)=>`<div class="rq-row ${i.x.is_active ? '' : 'off'}">
+        <div class="rq-main"><div class="rq-tags"><span class="rq-f">${escapeHtml(fname(i.x.field_id))}</span>${i.freq >= 2 ? `<span class="rq-freq">빈출 · ${i.freq}명</span>` : ''}${i.x.ref ? '<span class="rq-ok">모범답안 있음</span>' : '<span class="rq-no">모범답안 없음</span>'}${i.x.is_active ? '' : '<span class="rq-hid">숨김</span>'}</div>
+          <p class="rq-q">${escapeHtml(i.x.q)}</p>
+          <p class="rq-meta">${escapeHtml([i.org, i.date ? String(i.date).slice(0, 7).replace('-', '.') : ''].filter(Boolean).join(' · ') || '합격자 제보')}${i.near ? ` · <span class="rq-near">기존 문항과 비슷해요: "${escapeHtml(String(i.near.q).slice(0, 40))}${String(i.near.q).length > 40 ? '…' : ''}"</span>` : ''}</p></div>
+        <div class="rq-acts"><button type="button" class="btn-manage ${i.x.ref ? '' : 'primary'}" onclick="qmOpenEdit(${i.x.id})">${i.x.ref ? '모범답안 고치기' : '모범답안 쓰기'}</button><button type="button" class="btn-manage" onclick="ReportQ.toggle(${i.x.id})">${i.x.is_active ? '숨기기' : '다시 보이기'}</button></div>
+      </div>`).join('')}${live.length > 1 ? `<div class="rq-merge"><span>비슷한 질문 ${live.length}개 · 같은 질문이면 하나만 남겨요</span><button type="button" class="btn-manage" onclick="ReportQ.keepOne([${live.map(i=>i.x.id).join(',')}])">맨 위 하나만 남기기</button></div>` : ''}</div>`; }).join('');
+  },
+  async setActive(ids, on){
+    try{ const { error } = await sb.from('questions').update({ is_active: on }).in('id', ids); if(error) throw error; (Qm.rows || []).forEach(r=>{ if(ids.includes(r.id)) r.is_active = on; }); QuestionBank.rebuild((Qm.rows||[]).filter(x=>x.is_active)); this.render(); return true; }
+    catch(e){ showToast('바꾸지 못했어요: ' + ((e && e.message) || e)); return false; }
+  },
+  async toggle(id){ const r = (Qm.rows || []).find(x=>x.id === id); if(!r) return; if(await this.setActive([id], !r.is_active)) showToast(r.is_active ? '다시 보이게 했어요.' : '숨겼어요. 연습에 나오지 않아요. "숨긴 것"에서 되돌릴 수 있어요.'); },
+  async keepOne(ids){ const rest = ids.slice(1); if(!rest.length) return; if(await this.setActive(rest, false)) showToast(`비슷한 질문 ${rest.length}개를 숨기고 하나만 남겼어요. 지우지 않았으니 "숨긴 것"에서 되돌릴 수 있어요.`); },
+};
 function fixSpeech(text){
   let t = text || '';
   STT_FIXES.forEach(([re, to])=>{ t = t.replace(re, to); });
+  try{ t = SttDict.apply(t); }catch(_){}   // 2026-10-26d 관리자가 넣은 바로잡기 목록
   try{ if(typeof DocGuard !== 'undefined') t = DocGuard.fixSpeech(t); }catch(_){}   // 내 서류에 있는 낱말로 한 글자 틀린 말 바로잡기 (2026-10-14k)
   return t;
 }
@@ -17254,7 +17516,7 @@ function renderResultBars(){
         <div class="qanswer">
           <div class="qanswer-head"><span class="qanswer-label">내 답변</span><span class="qanswer-btns">${SelfCam.buttonHtml(i-1)}${AnswerAudio.buttonHtml(i-1)}</span></div>
           ${(state.answerFace && state.answerFace[i-1]) ? `<div class="nv-qchip">${escapeHtml(FaceCoach.chipText(state.answerFace[i-1]))}</div>` : ''}
-          <p>${answerText}</p>
+          <p class="qanswer-text" id="qans-text-${i-1}">${answerText}</p>
         </div>
         <div class="qfeedback">
           <span class="qfeedback-label">${feedbackLabel}</span>
@@ -18090,6 +18352,7 @@ const AiSwitch = {
       if(error) throw error;
       (data||[]).forEach(r=>{ if(r.key in this.settings) this.settings[r.key] = !!(r.value && r.value.enabled); if(r.key==='ai_limits' && r.value){ this.limits = { daily: Number(r.value.daily)||10, total: Number(r.value.total)||120 }; } if(r.key==='tts_guard' && r.value){ this.guard = { enabled: r.value.enabled !== false, month_cap: Math.max(0, Number(r.value.month_cap)||0), min_left_pct: Math.max(0, Number(r.value.min_left_pct)||0), user_cap: (r.value.user_cap === undefined || r.value.user_cap === null) ? 1500 : Math.max(0, Number(r.value.user_cap)||0) }; } });
       // 2026-10-07: 관리자가 저장한 면접관 목소리를 모든 사람에게 똑같이 적용 (예전엔 관리자 브라우저에만 저장돼 수강생은 기본 onyx로 들림)
+      try{ SttDict.set((data||[]).find(r=>r.key==='stt_fixes')); }catch(_){}   // 2026-10-26d
       const tv = (data||[]).find(r=>r.key==='tts_voice');
       if(tv && tv.value && tv.value.voice){ saveTtsSettings(Object.assign({}, TTS_DEFAULTS, tv.value)); if(typeof StenoVoice !== 'undefined') StenoVoice.applySettings(); }
       this.loaded = true;
