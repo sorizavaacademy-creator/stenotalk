@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26b';
+var APP_VERSION = '2026-10-26c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -4980,6 +4980,42 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
   #screen-admin .admin-subtabs button{font-size:14px;height:38px;padding:0 14px;}
 }
 </style>
+<style id="css-26c">
+/* 2026-10-26c 완주율·답변 끊김·리포트 접기·창 줄이기 */
+.ans-meter{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--c-ink-3,#66666c);}
+.ans-meter[hidden]{display:none !important;}
+.ans-meter .am-bar{position:relative;flex:1;height:6px;border-radius:99px;background:var(--c-surface-2,#ecebe7);overflow:hidden;}
+.ans-meter .am-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;background:#d9a441;transition:width .3s;}
+.ans-meter .am-tick{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.9);}
+.ans-meter.short .am-bar i{background:#d9a441;} .ans-meter.mid .am-bar i{background:#e0b84f;} .ans-meter.good .am-bar i{background:#2f9e63;} .ans-meter.long .am-bar i{background:#c2401b;}
+.ans-meter.good .am-lbl{color:#23804f;font-weight:600;} .ans-meter.long .am-lbl{color:#b0391a;}
+.ans-meter .am-lbl{flex:none;min-width:0;}
+.ans-confirm{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);width:min(360px,calc(100vw - 32px));background:#fff;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:14px;box-shadow:0 12px 32px rgba(20,20,30,.18);padding:14px 14px 12px;z-index:60;text-align:left;}
+.ans-confirm[hidden]{display:none !important;}
+.ans-confirm p{margin:0 0 10px;font-size:14px;font-weight:600;color:var(--c-ink,#1c1c1e);line-height:1.45;}
+.ans-confirm .ac-btns{display:flex;gap:8px;} .ans-confirm .ac-btns .btn{flex:1;min-height:42px;font-size:13.5px;}
+.control-bar .ctl-center{position:relative;}
+.quit-chips{display:flex;flex-direction:column;gap:8px;padding:4px 22px 6px;}
+.quit-chip{min-height:46px;text-align:left;padding:10px 14px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:12px;background:#fff;font:inherit;font-size:14.5px;color:var(--c-ink,#1c1c1e);cursor:pointer;}
+.quit-chip:hover,.quit-chip:focus-visible{border-color:var(--c-accent,#e8532a);background:#fdf3ee;outline:none;}
+.to-foot{display:flex;gap:8px;flex-wrap:wrap;} .to-foot .btn{flex:1 1 140px;min-height:44px;min-width:0;white-space:normal;padding-left:10px;padding-right:10px;}
+@media(max-width:420px){ .to-foot{flex-direction:column-reverse;} .to-foot .btn{flex:none;width:100%;} }
+.kicked-again{margin:10px 0 0;font-size:12.5px;color:var(--c-ink-3,#66666c);text-align:center;}
+.setup-alt{display:inline-block;margin-top:6px;padding:6px 0;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--c-accent-ink,#c2401b);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+.setup-alt[hidden]{display:none !important;}
+.g4-trial-go{min-height:48px;}
+.rf-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:58px;margin:0 0 12px;padding:12px 16px;border:1px solid var(--c-line,#e6e4e0);border-radius:14px;background:#fff;font:inherit;text-align:left;cursor:pointer;color:var(--c-ink,#1c1c1e);box-sizing:border-box;}
+.rf-bar:hover{border-color:var(--c-line-strong,#d3d0ca);}
+.rf-bar[hidden]{display:none !important;}
+.rf-bar .rf-bt{display:flex;flex-direction:column;gap:2px;min-width:0;} .rf-bar .rf-bt b{font-size:15px;} .rf-bar .rf-bt small{font-size:12.5px;color:var(--c-ink-3,#66666c);}
+.rf-bar .rf-more{flex:none;font-size:13px;font-weight:600;color:var(--c-accent-ink,#c2401b);}
+.rf-bar[aria-expanded="true"]{margin-bottom:6px;border-color:var(--c-line-strong,#d3d0ca);}
+#screen-result .panel.rf-fold:not(.rf-open){display:none !important;}
+/* PC·휴대폰 같게: 문항별 평가를 먼저, 그 아래에 접어 둔 막대 (2026-10-26c 사용자 요청) */
+#screen-result.v3 .r4-mid{grid-template-columns:1fr !important;}
+#screen-result.v3 .r4-mid .qa-result-panel{order:-1;}
+@media print{ .rf-bar{display:none !important;} #screen-result .panel.rf-fold, #screen-result .panel.rf-fold:not(.rf-open){display:block !important;} #screen-result .panel.rf-fold[hidden], #screen-result .panel.rf-fold[hidden]:not(.rf-open){display:none !important;} .ans-confirm,.ans-meter{display:none !important;} }
+</style>
 </head>
 <body>
 
@@ -5085,7 +5121,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
     <div class="modal-head rrn-head"><span class="rrn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></span><p class="rrn-kicker" id="rrn-kicker">합격하면 꼭 남겨 주세요</p><h2 id="rrn-title">면접 어떠셨어요?</h2><p id="rrn-desc"></p></div>
     <div class="modal-body" id="rrn-body"></div>
     <div class="modal-foot">
-      <button type="button" class="rrn-hide" onclick="RealReport.hideToday()">오늘 하루 보지 않기</button>
+      <button type="button" class="rrn-hide" onclick="RealReport.hideToday()">일주일 동안 보지 않기</button>
       <button class="btn btn-outline" onclick="RealReport.closeNudge()">닫기</button>
       <button class="btn btn-solid" id="rrn-go">질문 남기기</button>
     </div>
@@ -6513,6 +6549,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
             </div>
           </div>
           <div class="stt-alert" id="stt-alert"></div>
+          <div class="ans-meter" id="ans-meter" hidden aria-live="polite"><div class="am-bar"><i id="am-fill"></i><span class="am-tick" style="left:20%"></span><span class="am-tick" style="left:50%"></span></div><span class="am-lbl" id="am-lbl">짧아요</span></div>
           <div class="type-count" id="type-count" style="align-self:flex-end;margin-top:6px;">0자 인식됨</div>
         </div>
       </div>
@@ -6532,6 +6569,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <div class="ctl-center">
       <button class="ctl-btn primary" id="btn-answer-done" onclick="completeAnswer()">답변 완료</button>
       <button class="ctl-btn stop-listen" id="btn-dialog-stop-listen" onclick="dialogStopListening()" style="display:none;">답변 완료 · 다음으로</button>
+      <div class="ans-confirm" id="ans-confirm" hidden role="alertdialog" aria-labelledby="ac-text"><p id="ac-text">아직 말이 이어지는 것 같아요. 이어서 말할까요?</p><div class="ac-btns"><button type="button" class="btn btn-solid" onclick="AnsConfirm.keep()">이어서 말하기</button><button type="button" class="btn btn-outline" onclick="AnsConfirm.done()">이대로 완료</button></div></div>
       <button class="ctl-btn" id="btn-dialog-pause" onclick="dialogPause()" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg>
         <span>일시정지</span>
@@ -6621,7 +6659,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 
     <div class="panel nv-panel" id="nv-panel" hidden></div>
 
-    <div class="panel report-panel">
+    <div class="panel report-panel" id="result-report-panel">
       <div class="section-title">종합 리포트</div>
       <div id="result-report"></div>
     </div>
@@ -6783,12 +6821,13 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
     </div>
     <div class="modal-foot setup-foot">
       <div class="setup-foot-text">
-        <div><b>리허설</b> 2문항 · 채점 없음 → 이어서 <b>라이브 면접</b> 시작</div>
+        <div id="setup-flow-text"><b>리허설</b> 2문항 · 채점 없음 → 이어서 <b>라이브 면접</b> 시작</div>
         <div class="setup-summary" id="setup-summary"></div>
+        <button type="button" class="setup-alt" id="setup-alt" hidden onclick="SetupFlow.alt()"></button>
       </div>
       <div class="setup-foot-btns">
         <button class="btn btn-outline" onclick="closeSetup()">취소</button>
-        <button class="btn btn-solid" onclick="startRehearsal()">리허설 시작하기<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></button>
+        <button class="btn btn-solid" id="setup-go" onclick="SetupFlow.go()"><span id="setup-go-lbl">리허설 시작하기</span><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l5 5-5 5"/></svg></button>
       </div>
     </div>
   </div>
@@ -6927,6 +6966,43 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
     </div>
     <div class="modal-foot">
       <button class="btn btn-solid" onclick="SessionGuard.finish()" style="width:100%;">확인</button>
+      <p class="kicked-again">이 기기에서 계속 쓰려면 확인을 누른 뒤 다시 로그인하면 돼요.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2026-10-26c 다른 기기에서 면접 중일 때 (새로 로그인한 기기에서 고르기) ============ -->
+<div class="modal-overlay" id="modal-takeover" role="dialog" aria-modal="true" aria-labelledby="to-title">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-head">
+      <div class="kicked-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+      <h2 id="to-title">다른 기기에서 면접을 보고 있어요</h2>
+      <p id="to-desc">이 계정으로 다른 기기에서 지금 면접이 진행 중이에요.</p>
+      <p class="kicked-note">이 기기에서 계속하면 그쪽 면접은 지금까지 답한 내용으로 저장하고 끝나요. 한 계정은 한 기기에서만 쓸 수 있어요.</p>
+    </div>
+    <div class="modal-foot to-foot">
+      <button class="btn btn-outline" id="to-keep" onclick="SessionGuard.keepOther()">그쪽 면접 계속하기</button>
+      <button class="btn btn-solid" id="to-take" onclick="SessionGuard.takeOver()">이 기기에서 계속하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2026-10-26c 라이브 면접을 첫 답 전에 그만뒀을 때 (한 번 눌러 이유 고르기) ============ -->
+<div class="modal-overlay" id="modal-quit" role="dialog" aria-modal="true" aria-labelledby="qa-title">
+  <div class="modal-box quit-box" style="max-width:420px;">
+    <div class="modal-head">
+      <h2 id="qa-title">면접을 그만두셨네요</h2>
+      <p>어떤 점이 불편했는지 하나만 골라 주세요. 다음에 더 편하게 시작할 수 있게 고칠게요.</p>
+    </div>
+    <div class="quit-chips" id="quit-chips">
+      <button type="button" class="quit-chip" data-r="not_ready" onclick="QuitAsk.pick(this)">아직 준비가 덜 됐어요</button>
+      <button type="button" class="quit-chip" data-r="mic" onclick="QuitAsk.pick(this)">마이크·카메라가 잘 안 됐어요</button>
+      <button type="button" class="quit-chip" data-r="slow" onclick="QuitAsk.pick(this)">면접관이 늦게 시작했어요</button>
+      <button type="button" class="quit-chip" data-r="browse" onclick="QuitAsk.pick(this)">그냥 둘러봤어요</button>
+      <button type="button" class="quit-chip" data-r="other" onclick="QuitAsk.pick(this)">다른 이유예요</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="QuitAsk.close()" style="width:100%;">닫기</button>
     </div>
   </div>
 </div>
@@ -8027,8 +8103,9 @@ async function handleLogin(){
   await renderDashboard();
   showScreen('screen-dashboard');
   showToast('로그인했어요');
-  Activity.log('login'); Activity.setPresence('dashboard');
-  SessionGuard.claim();   // 한 계정 한 기기: 이 기기를 지금 쓰는 기기로 등록 (이전 기기는 로그아웃)
+  Activity.log('login');
+  { const pp = await SessionGuard.readPresence(); Activity.setPresence('dashboard');   // 2026-10-26c: 다른 기기가 면접 중인지 먼저 읽어 둠
+    SessionGuard.claim({ presence: pp }); }   // 한 계정 한 기기: 이 기기를 지금 쓰는 기기로 등록 (이전 기기는 로그아웃 · 면접 중이면 먼저 물어봄)
   QuestionBank.load(); try{ RubricPoints.load(); }catch(_){}
   if(maybeForceNewPassword(profile, pw, !!(data && data.weakPassword))) { startAccessWatch(); return; }
   maybeOpenDemoFromUrl();
@@ -8052,8 +8129,18 @@ const SessionGuard = {
     return `${os} · ${br}`;
   },
   active(){ return !!(state.currentUser && !state.currentUser.isAdmin); },
-  async claim(){
+  /** 2026-10-26c 이 계정이 지금 다른 곳에서 면접 화면에 있는지 (presence 90초 안) */
+  async readPresence(){
+    try{ if(!state.currentUser) return null; const { data } = await sb.from('user_presence').select('screen,updated_at').eq('user_id', state.currentUser.id).maybeSingle(); return data || null; }catch(_){ return null; }
+  },
+  busyFrom(pp){ return !!(pp && pp.screen === 'interview' && pp.updated_at && Date.now() - new Date(pp.updated_at).getTime() < 90000); },
+  async claim(opt){
     if(!this.active()) return;
+    opt = opt || {};
+    if(!opt.force && this.busyFrom(opt.presence)){
+      const r = await this.peek();
+      if(r && r.ok === false && r.reason === 'replaced'){ this.askTakeover(r); return; }
+    }
     this.kicked = false;
     try{
       const { data, error } = await sb.rpc('session_claim', { p_device: this.device() });
@@ -8095,6 +8182,19 @@ const SessionGuard = {
     this._restore = !!opt.restore;
     document.querySelectorAll('.modal-overlay.active').forEach(m=>{ if(m.id !== 'modal-kicked') m.classList.remove('active'); });
     document.getElementById('modal-kicked').classList.add('active');
+  },
+  askTakeover(r){
+    const d = document.getElementById('to-desc');
+    if(d) d.textContent = `이 계정으로 ${r && r.device ? '"' + r.device + '"' : '다른 기기'}에서 지금 면접이 진행 중이에요.`;
+    document.getElementById('modal-takeover').classList.add('active');
+    try{ Activity.log('takeover_ask', { other: r && r.device }); }catch(_){}
+  },
+  takeOver(){ document.getElementById('modal-takeover').classList.remove('active'); try{ Activity.log('takeover_yes'); }catch(_){} this.claim({ force:true }); },
+  async keepOther(){
+    document.getElementById('modal-takeover').classList.remove('active');
+    try{ Activity.log('takeover_no'); }catch(_){}
+    try{ await sb.auth.signOut({ scope:'local' }); }catch(_){}
+    state.currentUser = null; showScreen('screen-login'); showToast('다른 기기에서 면접을 이어서 하세요. 이 기기는 로그아웃했어요.', 'info');
   },
   async finish(){
     document.getElementById('modal-kicked').classList.remove('active');
@@ -8316,6 +8416,7 @@ const RealReport = {
     tries = tries || 0;
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-pending' || !isClosedExpired()) return;
     try{ if(localStorage.getItem(this.nudgeKey()) === formatYmd(new Date())) return; }catch(_){}
+    if(!this.nudgeDue(kind)) return;   // 2026-10-26c 일주일에 한 번 · 이미 질문을 남기고 새 분야 요청도 보낸 사람은 안 띄움
     const busy = document.querySelector('.modal-overlay.active') || (typeof Notice !== 'undefined' && Notice.pending);
     if(busy){ if(tries < 60) clearTimeout(this._nt), this._nt = setTimeout(()=>this.maybeNudgeClosed(kind, tries+1), 3000); return; }
     this.showNudge(kind);
@@ -8325,7 +8426,16 @@ const RealReport = {
    *    (면접일 = 관리자가 넣은 이용 기간 마지막 날. 그날이면 "오늘 면접 보셨나요?")
    *  · 결과 기다린 지 3일 넘음 → "결과 나왔나요?" · 합격/불합격을 알려 준 뒤에는 안 뜸
    *  · 투어·홈 화면 추가 안내·다른 창이 떠 있으면 닫힐 때까지 기다렸다가 띄움 */
-  nudgeKey(){ return 'stenotalk_rr_hide_' + ((state.currentUser||{}).id || ''); },   // 2026-10-16f: 예전(16b) 'stenotalk_rr_popup_' 값이 남아 팝업이 안 뜨던 문제 → 새 이름
+  nudgeKey(){ return 'stenotalk_rr_hide_' + ((state.currentUser||{}).id || ''); },
+  nudgeSeenKey(){ return 'stenotalk_rr_seen_' + ((state.currentUser||{}).id || ''); },
+  /** 2026-10-26c 안내 창 빈도: 마지막으로 띄운 지 7일이 지났을 때만 (면접 당일은 그날 처음이면). 기간 종료자가 질문도 남기고 새 분야 요청도 보냈으면 띄우지 않음 */
+  nudgeDue(kind){
+    if(kind === 'closed' && this.mine && this.mine.length && typeof Rejoin !== 'undefined' && Rejoin.isMine && Rejoin.isMine(Rejoin.last)) return false;
+    let last = 0; try{ last = +localStorage.getItem(this.nudgeSeenKey()) || 0; }catch(_){}
+    if(!last) return true;
+    if(kind === 'today') return formatYmd(new Date(last)) !== formatYmd(new Date());
+    return Date.now() - last >= 7 * 86400000;
+  },   // 2026-10-16f: 예전(16b) 'stenotalk_rr_popup_' 값이 남아 팝업이 안 뜨던 문제 → 새 이름
   nudgeKind(){
     const ph = this.phase();
     if(ph === 'none' || ph === 'planned'){ const a = accessInfo((state.currentUser||{}).accessUntil); return (a.until && a.daysLeft === 0) ? 'today' : 'none'; }
@@ -8338,6 +8448,7 @@ const RealReport = {
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
     const kind = this.nudgeKind(); if(!kind) return;
     try{ if(localStorage.getItem(this.nudgeKey()) === formatYmd(new Date())) return; }catch(_){}   // '오늘 하루 보지 않기'를 누른 날만 안 뜸
+    if(!this.nudgeDue(kind)) return;   // 2026-10-26c 일주일에 한 번 (면접 당일 'today'는 그날 한 번)
     const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open') || document.body.classList.contains('nt-panel-open') || (typeof Notice !== 'undefined' && Notice.pending);
     if(busy){ if(tries < 60) clearTimeout(this._nt), this._nt = setTimeout(()=>this.maybeNudge(tries+1), 3000); return; }
     this.showNudge(kind);
@@ -8400,6 +8511,7 @@ const RealReport = {
       if(n) b.innerHTML = `<p class="rrn-count">지금까지 합격자들이 남긴 ${escapeHtml(rrFieldName(fid))} 질문 <b>${n}개</b></p>`;
     }
     document.getElementById('modal-rr-nudge').classList.add('active');
+    try{ localStorage.setItem(this.nudgeSeenKey(), String(Date.now())); }catch(_){}
     try{ Activity.log('real_report_nudge', { kind }); }catch(_){}
   },
   closeNudge(){ const m = document.getElementById('modal-rr-nudge'); if(m) m.classList.remove('active'); },
@@ -8429,7 +8541,7 @@ const RealReport = {
     try{ Activity.log('closed_slide_rejoin'); }catch(_){}
     setTimeout(()=>{ const f = document.getElementById('pd-rj-field'); if(f && !document.getElementById('pd-rj-form').hidden) try{ f.focus({ preventScroll:true }); }catch(_){} }, 600);
   },
-  hideToday(){ try{ localStorage.setItem(this.nudgeKey(), formatYmd(new Date())); }catch(_){} this.closeNudge(); try{ Activity.log('real_report_hide_today'); }catch(_){} showToast('오늘은 다시 띄우지 않을게요. 내 메뉴의 "면접 질문 남기기"에서 언제든 남길 수 있어요.'); },
+  hideToday(){ try{ localStorage.setItem(this.nudgeKey(), formatYmd(new Date())); }catch(_){} this.closeNudge(); try{ Activity.log('real_report_hide_today'); }catch(_){} showToast('일주일 동안 다시 띄우지 않을게요. 내 메뉴의 "면접 질문 남기기"에서 언제든 남길 수 있어요.'); },
   /* ---- 2026-10-16d: 홈 카드 대신 오른쪽 사이드바 (내 메뉴 → 면접 질문 남기기) ---- */
   /** 로그아웃하면 이전 계정의 후기·팝업 상태를 비움 (같은 창에서 다른 계정으로 로그인해도 팝업이 다시 뜨게) */
   reset(){ this.mine = []; this.loaded = false; this.nudged = false; this.closedNudged = false; this.closedFid = ''; clearTimeout(this._nt); try{ this.closeDrawer(); this.closeNudge(); this.close(); }catch(_){} this.paintMenu(); },
@@ -9920,6 +10032,13 @@ function renderHomeExtras(history, isAdmin, expired){
   const btns = `<div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary" onclick="startRecommendedSet()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>이 세트로 시작</button>${canSetHome?`<button class="d3-btn d3-btn-ghost" onclick="startRealSetFromHome()">실전 세트 (${escapeHtml(realSetCfg(f.id).org)} 형식)</button>`:''}<button class="d3-btn-text" type="button" onclick="startSelectedField()">직접 고르기 →</button></div>`;
   const base = (title, desc, chips, mins)=>`<div class="g4-reco-head"><span class="g4-reco-eyebrow">오늘의 추천 세트</span><span class="g4-reco-time">약 ${mins}분</span></div><h2>${title}</h2><p>${desc}</p>${chips.length?`<div class="g4-reco-chips">${chips.map(c=>`<span>${escapeHtml(c)}</span>`).join('')}</div>`:''}${btns}`;
   const sub = document.getElementById('hero-sub');
+  // 2026-10-26c: 아직 라이브 면접을 마친 적 없는 사람 → '3분 체험 면접' 하나만 크게 (다른 시작 버튼은 덜 눈에 띄게)
+  { const sb0 = document.getElementById('d3-start-btn'); const first = history.length === 0;
+    if(sb0){ sb0.classList.toggle('d3-btn-primary', !first); sb0.classList.toggle('d3-btn-ghost', first); }
+    if(first){
+      reco.innerHTML = `<div class="g4-reco-head"><span class="g4-reco-eyebrow">처음이라면 여기부터</span><span class="g4-reco-time">약 3분</span></div><h2>3분 체험 면접</h2><p>질문 3개에 말로 답해 보세요. 리허설 없이 AI 면접관과 바로 대화하고, 끝나면 결과를 보여 드려요.</p><div class="g4-reco-chips"><span>질문 3개</span><span>꼬리질문 없음</span><span>채점 결과 바로</span></div><div class="d3-greet-actions" style="padding-top:14px;"><button class="d3-btn d3-btn-primary g4-trial-go" id="g4-trial-go" onclick="startTrialInterview()"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M7 5.5v9l7-4.5-7-4.5z" fill="currentColor"/></svg>3분 체험 면접 시작</button><button class="d3-btn-text" type="button" onclick="startRecommendedSet()">기본 세트(5문항)로 할게요 →</button></div>`;
+      return;
+    } }
   if(history.length < 2){
     reco.innerHTML = base(`${escapeHtml(f.name)} 기본 세트 · 5문항`, '질문 5개 · 난이도 중 · 꼬리질문 최대 3개. 리허설 2문항으로 목소리를 확인한 뒤 라이브 면접으로 이어져요.', ['자기소개','지원 동기','경험','상황 대처','직무 지식'], 12);
     return;
@@ -9950,6 +10069,13 @@ function startRecommendedSet(){
     const row = document.getElementById('chip-realset'); const chip = row && row.querySelector('.chip[data-val="normal"]'); if(chip && !chip.classList.contains('sel')) selectChip(chip, 'realset');
     const card = document.getElementById('setup-reco'); if(card){ const t = card.querySelector('.sr-txt b'); if(t && state.weakAxis) t.textContent = `오늘의 추천 세트: "${state.weakAxis}" 집중 · 5문항`; card.scrollIntoView({ block:'center', behavior:'smooth' }); card.classList.add('pulse'); setTimeout(()=>card.classList.remove('pulse'), 2400); }
   }catch(_){} }, 450);
+}
+/** 2026-10-26c 처음 온 사람용 3분 체험 면접: 질문 3개 · 꼬리질문 없음 · 난이도 하 · 리허설 없이 바로 라이브 */
+function startTrialInterview(){
+  if(!state.dashField){ showToast('연습할 분야가 아직 없어요.'); return; }
+  state._trialNext = true;
+  try{ Activity.log('trial_open', { field: state.dashField }); }catch(_){}
+  openSetup(state.dashField);
 }
 function startRealSetFromHome(){
   if(!state.dashField){ showToast('연습할 분야가 아직 없어요.'); return; }
@@ -11129,6 +11255,7 @@ function openSetup(fieldId){   // 2026-10-22v: 새 버전 확인 뒤 준비 창 
   state.reviewLabel = null;
   { const rc = document.getElementById('setup-reco'); if(rc) rc.hidden = isReview; }
   document.getElementById('modal-setup').classList.add('active');
+  try{ SetupFlow.paint(); }catch(e){ console.warn('[준비 창 흐름]', e); }
   updateDifficultyNote();
   renderVoiceSelect(); renderPrimaryVoice();
   { const vp = document.getElementById('voice-primary'); if(vp) vp.style.display = isAdmin ? '' : 'none'; }   // 면접관 목소리 정보는 관리자에게만 (2026-10-08)
@@ -12323,7 +12450,7 @@ const PracticeTrack = {
 ['click','keydown','scroll','touchstart','input'].forEach(ev=>document.addEventListener(ev, ()=>{ if(PracticeTrack.v) PracticeTrack.act(); }, { passive:true, capture:true }));
 document.addEventListener('visibilitychange', ()=>{ if(!PracticeTrack.v) return; if(document.visibilityState === 'hidden'){ PracticeTrack.tick(); PracticeTrack.save(); } else { PracticeTrack._last = Date.now(); PracticeTrack.act(); } });
 window.addEventListener('pagehide', ()=>{ try{ PracticeTrack.end('other'); }catch(_){} });
-const ACTIVITY_LABEL = { practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습', capture_try:'복사·캡처 시도' };
+const ACTIVITY_LABEL = { abort_reason:'그만둔 이유', trial_open:'3분 체험 열기', rehearsal_skipped:'리허설 건너뜀', answer_confirm:'답변 완료 확인', takeover_ask:'다른 기기 면접 중 확인', practice_view:'질문 준비', login:'로그인', logout:'로그아웃', interview_start:'면접 시작', interview_end:'면접 종료', interview_abort:'면접 중단', password_reset:'임시 비밀번호 발급', password_changed:'새 비밀번호 설정', intro_coach:'자기소개 대본 생성', intro_coach_practice:'자기소개 연습', capture_try:'복사·캡처 시도' };
 const ACTIVITY_CLS = { practice_view:'prep', login:'login', logout:'logout', interview_start:'start', interview_end:'end', interview_abort:'abort', password_reset:'logout', password_changed:'login', intro_coach:'start', intro_coach_practice:'end', capture_try:'abort' };
 function presenceLabel(p){
   if(!p) return '';
@@ -12511,6 +12638,7 @@ function renderLiveTimeline(){
       if(e.event==='interview_start') extra = `${dt.field||''}${dt.mode==='rehearsal'?' · 리허설':dt.mode==='dialog'?' · AI 대화':''}${dt.set==='real'?' · 실전 세트':''}`;
       else if(e.event==='interview_end') extra = `${dt.field||''}${dt.count!=null?' · '+dt.count+'문항':''}${dt.score!=null?' · '+dt.score+'점':''}${dt.duration?' · '+dt.duration:''}`;
       else if(e.event==='interview_abort') extra = `${dt.field||''}${dt.stage?' · '+dt.stage:''}`;
+      else if(e.event==='abort_reason') extra = `${dt.field ? dt.field + ' · ' : ''}${dt.reason||''}`;
       else if(e.event==='login' && dt.restored) extra = '(자동 로그인)';
       else if(e.event==='practice_view') extra = `${dt.field||''} · ${pvMin(dt.secs||0)} 봄 · 질문 ${dt.viewed||0}개 펼쳐 봄${dt.next==='setup' ? ' · 면접 준비실로 이동' : ''}`;
       else if(e.event==='intro_coach') extra = `${dt.field||''}${dt.chars?' · '+dt.chars+'자':''}`;
@@ -13349,7 +13477,7 @@ function startWithRecommended(){
     if(chip && !chip.classList.contains('sel')) selectChip(chip, type);
   });
   try{ Activity.log('setup_recommended', { field: state.selectedField && state.selectedField.id }); }catch(_){}
-  startRehearsal();
+  SetupFlow.go();   // 2026-10-26c: 익숙한 사람은 리허설 없이 라이브로
 }
 function selectChip(el,type){
   const row = el.parentElement;
@@ -15682,8 +15810,98 @@ function startDialogInterview(){
 }
 function dialogStopListening(){
   if(StenoLoop.running && StenoLoop.typedWait){ StenoLoop.submitAnswer(document.getElementById('steno-input').value); return; }   // 직접 입력 제출
-  if(StenoListener.active) StenoListener.stop('manual');
+  if(StenoListener.active){ if(AnsConfirm.need()) return; StenoListener.stop('manual'); }
 }
+/** 2026-10-26c 답변 끊김 막기: 말이 덜 끝났는데(문장 끝맺음 없음·지금 말하는 중) 또는 답이 아주 짧은데 '답변 완료'를 누르면 한 번만 물어봄 */
+const AnsConfirm = {
+  _key: null,
+  text(){ return joinSpeech(StenoListener.transcript || '', StenoListener.interim || '').trim(); },
+  why(t, now){
+    now = now || Date.now();
+    if(!t) return '';
+    const talking = !!(StenoListener.interim && StenoListener.interim.trim()) || (now - Math.max(StenoListener.lastVoiceAt || 0, StenoListener.spokeAt || 0) < 900);
+    const ended = /(다|요|죠|까|니다|습니다|입니다|겠습니다|했습니다|감사합니다|이상입니다)[.!?…]*$/.test(t);
+    if(talking && !ended) return 'talking';
+    if(!ended && t.length >= 6) return 'unfinished';
+    if(t.replace(/\s/g, '').length < 20) return 'short';
+    return '';
+  },
+  need(){
+    const key = String(StenoListener.startedAt || '');
+    if(this._key === key) return false;   // 한 답변에 한 번만
+    const w = this.why(this.text());
+    if(!w) return false;
+    this._key = key;
+    const msg = w === 'short' ? '답이 아주 짧아요. 경험이나 이유를 한 가지 더 덧붙여 볼까요?' : '아직 말이 이어지는 것 같아요. 이어서 말할까요?';
+    const box = document.getElementById('ans-confirm'), tx = document.getElementById('ac-text');
+    if(!box) return false;
+    tx.textContent = msg; box.hidden = false; box.dataset.why = w;
+    try{ Activity.log('answer_confirm', { why: w }); }catch(_){}
+    return true;
+  },
+  keep(){ this.hide(); try{ Activity.log('answer_confirm_keep'); }catch(_){} },
+  done(){ this.hide(); if(StenoListener.active) StenoListener.stop('manual'); },
+  hide(){ const b = document.getElementById('ans-confirm'); if(b) b.hidden = true; },
+  reset(){ this.hide(); },
+};
+/** 2026-10-26c 라이브 면접 첫 질문이 나올 때까지 몇 초째인지 (오래 걸리면 안심 문구) */
+const FirstQWait = {
+  iv: null, t0: 0,
+  start(){
+    this.stop(); this.t0 = Date.now();
+    const tick = ()=>{
+      if(!document.querySelector('#screen-interview.active') || state.interviewMode !== 'dialog'){ this.stop(); return; }
+      const sec = Math.floor((Date.now() - this.t0) / 1000);
+      dialogPhase('', sec < 8 ? `첫 질문을 준비하는 중 · ${sec}초` : `조금 오래 걸리고 있어요 · ${sec}초 · 곧 시작해요`);
+    };
+    tick(); this.iv = setInterval(tick, 1000);
+  },
+  stop(){ if(this.iv){ clearInterval(this.iv); this.iv = null; } },
+};
+/** 2026-10-26c 라이브 면접을 첫 답 전에 그만뒀을 때 이유 하나만 묻기 (3일에 한 번 · 다른 기기 로그인으로 끊긴 경우 제외) */
+const QuitAsk = {
+  key(){ return 'stenotalk_quit_ask_' + ((state.currentUser || {}).id || ''); },
+  maybe(){
+    if(!state.currentUser || state.currentUser.isAdmin || state.demoResult) return;
+    if(typeof SessionGuard !== 'undefined' && SessionGuard.kicked) return;
+    try{ const last = +localStorage.getItem(this.key()) || 0; if(Date.now() - last < 3 * 86400000) return; }catch(_){}
+    this.field = state.selectedField ? state.selectedField.name : '';
+    setTimeout(()=>{ if(document.querySelector('.modal-overlay.active')) return; const m = document.getElementById('modal-quit'); if(m) m.classList.add('active'); try{ localStorage.setItem(this.key(), String(Date.now())); }catch(_){} }, 700);
+  },
+  pick(btn){
+    const r = btn && btn.dataset.r;
+    try{ Activity.log('abort_reason', { reason: btn.textContent.trim(), code: r, field: this.field || '' }); }catch(_){}
+    this.close();
+    if(r === 'mic'){ try{ openMicHelp(); }catch(_){} }
+    else showToast('알려 주셔서 고마워요. 준비되면 언제든 다시 시작해 보세요.');
+  },
+  close(){ const m = document.getElementById('modal-quit'); if(m) m.classList.remove('active'); },
+};
+/** 2026-10-26c 준비 창: 라이브 면접을 2번 이상 마친 사람은 리허설 없이 바로 라이브(리허설은 고를 수 있음). 3분 체험도 리허설 없이 */
+const SetupFlow = {
+  done(){ return (state.historyRecords || []).length; },
+  skipRh(){ if(state.trialMode) return true; if(state.selectedField && state.selectedField.id === 'review') return false; return this.done() >= 2; },
+  paint(){
+    state.trialMode = !!state._trialNext; state._trialNext = false;
+    if(state.trialMode){
+      const want = { realset:'normal', count:'3', diff:'하', followups:'0', timed:'free' };
+      Object.entries(want).forEach(([type, val])=>{ const row = document.getElementById('chip-' + type); const chip = row && row.querySelector(`.chip[data-val="${val}"]`); if(chip && !chip.classList.contains('sel')) selectChip(chip, type); });
+      const rc = document.getElementById('setup-reco'); if(rc) rc.hidden = true;
+    }
+    const skip = this.skipRh();
+    const ft = document.getElementById('setup-flow-text'), lbl = document.getElementById('setup-go-lbl'), alt = document.getElementById('setup-alt');
+    if(ft) ft.innerHTML = state.trialMode ? '<b>3분 체험 면접</b> · 질문 3개 · 꼬리질문 없음 · 리허설 없이 바로 시작' : skip ? '<b>라이브 면접</b>을 바로 시작해요 (리허설은 건너뜀)' : '<b>리허설</b> 2문항 · 채점 없음 → 이어서 <b>라이브 면접</b> 시작';
+    if(lbl) lbl.textContent = state.trialMode ? '체험 면접 시작' : skip ? '라이브 면접 시작' : '리허설 시작하기';
+    if(alt){ alt.hidden = !!state.trialMode; alt.textContent = skip ? '리허설부터 할게요' : '리허설 없이 바로 라이브'; }
+  },
+  go(){ if(this.skipRh()) this.live(); else startRehearsal(); },
+  alt(){ if(this.skipRh()) startRehearsal(); else this.live(); },
+  live(){
+    if(!bankReadyOr(()=>SetupFlow.live())) return;
+    try{ Activity.log('rehearsal_skipped', { field: state.selectedField && state.selectedField.id, trial: !!state.trialMode }); }catch(_){}
+    startDialogInterview();
+  },
+};
 /** 직접 입력 모드 켜기/끄기 (마이크가 안 될 때 답변창을 편집 가능하게) */
 function setDialogTypedUI(on, why, partial){
   const ta = document.getElementById('steno-input'); const stopBtn = document.getElementById('btn-dialog-stop-listen');
@@ -15783,6 +16001,7 @@ async function runDialogInterview(){
     opt.questions = resume.questions.map(x=>Object.assign({}, x)); delete opt.extraQuestions; delete opt.docQuestion;
     opt.resume = { startIndex: doneQ, setLeftMs: resume.setLeftMs != null ? resume.setLeftMs : null };
   }
+  FirstQWait.start();   // 2026-10-26c 첫 질문이 나올 때까지 몇 초째인지 보여 줌
   const saveDraft = ()=>{ try{ InterviewDraft.save({ asks, questions: planned, doneQ, setLeftMs: (StenoLoop.setEndsAt != null && typeof StenoLoop.setLeftMs === 'function') ? StenoLoop.setLeftMs() : null }); }catch(_){} };
   await StenoLoop.run(opt, (type, d)=>{
     if(type==='questions'){ planned = d.list.map(x=>{ const o = Object.assign({}, x); delete o.audioBlob; return o; }); document.getElementById('iv-progress').textContent = `질문 ${doneQ} / ${d.list.length}`; saveDraft(); }
@@ -15797,8 +16016,8 @@ async function runDialogInterview(){
       else { badge.textContent = d.q.slotName ? `실전 세트 · ${d.q.slotName}` : state.selectedField.id==='review' ? '복습 문항' : '문제은행 출제'; badge.className='qcard-source-badge bank'; }
       ta.value=''; updateCharCount();
     }
-    else if(type==='speaking'){ try{ SelfCam.stopSeg(); }catch(_){} dialogPhase('speaking', '면접관이 말하는 중'); document.getElementById('wave-state').textContent='면접관 발화 중'; stopBtn.disabled = true; if(!stopBtn.classList.contains('typed')) stopBtn.textContent = '면접관이 말하는 중…'; stopWaveAnim(); }
-    else if(type==='listening'){ try{ SelfCam.begin(); }catch(_){} setDialogTypedUI(false); hideSttAlert(); stopBtn.classList.remove('nudge'); dialogPhase('listening', '답변을 듣는 중 · 다 말하면 "답변 완료"'); document.getElementById('wave-state').textContent='답변 인식 중'; updateListeningUI(true); startWaveAnim(); stopBtn.disabled = false; ta.value=''; updateCharCount(); }
+    else if(type==='speaking'){ FirstQWait.stop(); try{ SelfCam.stopSeg(); }catch(_){} dialogPhase('speaking', '면접관이 말하는 중'); document.getElementById('wave-state').textContent='면접관 발화 중'; stopBtn.disabled = true; if(!stopBtn.classList.contains('typed')) stopBtn.textContent = '면접관이 말하는 중…'; stopWaveAnim(); }
+    else if(type==='listening'){ FirstQWait.stop(); AnsConfirm.reset(); try{ SelfCam.begin(); }catch(_){} setDialogTypedUI(false); hideSttAlert(); stopBtn.classList.remove('nudge'); dialogPhase('listening', '답변을 듣는 중 · 다 말하면 "답변 완료"'); document.getElementById('wave-state').textContent='답변 인식 중'; updateListeningUI(true); startWaveAnim(); stopBtn.disabled = false; ta.value=''; updateCharCount(); }
     else if(type==='interim'){ ta.value = d.text; ta.scrollTop = ta.scrollHeight; updateCharCount(); }
     else if(type==='listen-typed'){ setDialogTypedUI(true, d.why, d.partial); }
     else if(type==='skipped'){
@@ -15838,6 +16057,7 @@ async function runDialogInterview(){
     else if(type==='set-timeup'){ showToast('15분이 지나 마지막 질문으로 넘어가요.', 'warn'); }
     else if(type==='set-fallback'){ showToast('실전 세트 문항을 불러오지 못해 일반 방식으로 7문항을 진행해요.', 'warn'); }
     else if(type==='done' || type==='aborted'){
+      FirstQWait.stop(); AnsConfirm.hide();
       if(state.dialogFinishedRun === StenoLoop.runId) return;   // 감시 타이머가 먼저 마무리한 경우 중복 방지
       state.dialogFinishedRun = StenoLoop.runId;
       dialogPhase('', type==='done' ? '면접 종료' : '면접 중단');
@@ -15933,7 +16153,7 @@ async function finishDialogInterview(asks, transcript){
       state.pendingGrades.push(p);
     });
   }
-  if(!asks.length){ showToast('기록된 답변이 없어 결과 없이 대시보드로 돌아갑니다.'); Activity.log('interview_abort', { field: state.selectedField.name, stage:'답변 전 종료' }); stopCamera(); goDashboard(); return; }
+  if(!asks.length){ showToast('기록된 답변이 없어 결과 없이 대시보드로 돌아갑니다.'); Activity.log('interview_abort', { field: state.selectedField.name, stage:'답변 전 종료' }); stopCamera(); goDashboard(); try{ QuitAsk.maybe(); }catch(_){} return; }
   await endInterview();
 }
 
@@ -16522,8 +16742,23 @@ function updateCharCount(){
   const v=document.getElementById('steno-input').value;
   const isRh = state.interviewMode === 'rehearsal' || state.interviewMode === 'dialog';
   document.getElementById('type-count').textContent = isRh ? v.length+'자' : v.length+'자 인식됨';
+  try{ AnsMeter.paint(v); }catch(_){}
   const panel = document.getElementById('type-panel'); if(panel) panel.classList.toggle('has-text', v.trim().length>0);
 }
+/** 2026-10-26c 답변 길이 막대 (라이브 면접): 40자 미만 짧아요 → 150자 조금 더 → 좋아요 → 600자 넘으면 핵심만 */
+const AnsMeter = {
+  level(n){ return n < 40 ? ['short', '짧아요 · 이유나 경험을 덧붙여 보세요'] : n < 150 ? ['mid', '조금 더 말해 보세요'] : n <= 600 ? ['good', '좋아요'] : ['long', '길어요 · 핵심만 정리해 보세요']; },
+  paint(v){
+    const box = document.getElementById('ans-meter'); if(!box) return;
+    const on = state.interviewMode === 'dialog' && !!document.querySelector('#screen-interview.active');
+    const n = String(v || '').replace(/\s/g, '').length;
+    box.hidden = !on || n === 0; if(box.hidden) return;
+    const [cls, txt] = this.level(n);
+    box.className = 'ans-meter ' + cls;
+    const f = document.getElementById('am-fill'); if(f) f.style.width = Math.min(100, Math.round(n / 300 * 100)) + '%';
+    const l = document.getElementById('am-lbl'); if(l) l.textContent = txt;
+  },
+};
 function completeAnswer(){
   const userText = document.getElementById('steno-input').value;
   if(!userText || !userText.trim()){
@@ -16698,6 +16933,7 @@ async function endInterview(){
   renderResultBars();
   renderResultSummary();
   try{ renderResultFocus(); }catch(e){ console.warn('[결과 요약]', e); }
+  try{ ResultFold.reset(); ResultFold.apply(); }catch(e){ console.warn('[결과 접기]', e); }
   try{ renderNonverbalPanel(); }catch(e){ console.warn('[표정·시선]', e); }
   try{ renderResultTop(); }catch(e){ console.warn('[결과 상단]', e); }
   try{ renderResultDelivery(); }catch(e){ console.warn('[전달력 카드]', e); }
@@ -17285,6 +17521,34 @@ function renderResultDelivery(){
     <div class="r4-chips">${okN?`<span class="ok">25~120초 ${okN}문항</span>`:''}${shortN?`<span class="warn">25초 미만 ${shortN}문항</span>`:''}${longN?`<span>120초 초과 ${longN}문항</span>`:''}</div>`;
 }
 function resultOpenSelfCam(){ try{ const n = state.currentQ||0; for(let i=0;i<n;i++){ if(SelfCam.has && SelfCam.has(i)){ SelfCam.open(i); return; } } SelfCam.open(0); }catch(_){ const nv = document.getElementById('nv-panel'); if(nv) nv.scrollIntoView({behavior:'smooth'}); } }
+/** 2026-10-26c 결과 리포트 요약 먼저: PC·휴대폰 모두 말하기·표정·시선·종합 리포트를 접어 두고, 문항별 평가를 먼저 보여 줌. 인쇄·PDF는 다 펼침 */
+const ResultFold = {
+  ITEMS: [ ['r4-delivery', '말하기 습관', '말 빠르기 · 군말 · 답변 시간'], ['nv-panel', '표정 · 시선', '종합 점수에 10% 반영돼요'], ['result-report-panel', '종합 리포트', '항목별 점수 · 잘한 점 · 보완할 점 · 다음 연습'] ],
+  apply(){
+    this.ITEMS.forEach(([id, title, sub])=>{
+      const p = document.getElementById(id); if(!p) return;
+      let bar = document.querySelector(`.rf-bar[data-for="${id}"]`);
+      if(!bar){
+        bar = document.createElement('button'); bar.type = 'button'; bar.className = 'rf-bar'; bar.dataset.for = id; bar.setAttribute('aria-expanded', 'false'); bar.setAttribute('aria-controls', id);
+        bar.innerHTML = `<span class="rf-bt"><b>${title}</b><small>${sub}</small></span><span class="rf-more">자세히 보기</span>`;
+        bar.onclick = ()=>this.toggle(id);
+        p.parentNode.insertBefore(bar, p);
+        try{ new MutationObserver(()=>{ bar.hidden = !!p.hidden; }).observe(p, { attributes:true, attributeFilter:['hidden'] }); }catch(_){}   // 나중에 보이거나 숨겨지는 패널(말하기·표정)도 막대가 따라감
+      }
+      p.classList.add('rf-fold');
+      if(!p.dataset.rfInit){ p.dataset.rfInit = '1'; p.classList.remove('rf-open'); bar.setAttribute('aria-expanded', 'false'); const m = bar.querySelector('.rf-more'); if(m) m.textContent = '자세히 보기'; }
+      bar.hidden = !!p.hidden;
+    });
+  },
+  toggle(id){
+    const p = document.getElementById(id), bar = document.querySelector(`.rf-bar[data-for="${id}"]`); if(!p || !bar) return;
+    const open = !p.classList.contains('rf-open'); p.classList.toggle('rf-open', open);
+    bar.setAttribute('aria-expanded', open ? 'true' : 'false'); const m = bar.querySelector('.rf-more'); if(m) m.textContent = open ? '접기' : '자세히 보기';
+    if(open) try{ Activity.log('result_unfold', { part: id }); }catch(_){}
+  },
+  reset(){ this.ITEMS.forEach(([id])=>{ const p = document.getElementById(id); if(p){ delete p.dataset.rfInit; p.classList.remove('rf-open'); } }); },
+};
+try{ const _rnp26c = renderNonverbalPanel; renderNonverbalPanel = function(){ const r = _rnp26c.apply(this, arguments); try{ ResultFold.apply(); }catch(_){} return r; }; }catch(_){}
 function renderResultFocus(){
   const box = document.getElementById('result-focus'); if(!box) return;
   const sum = state.lastReport;
