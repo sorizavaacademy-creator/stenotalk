@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-23m';
+var APP_VERSION = '2026-10-26b';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -12879,6 +12879,8 @@ const DocQ = {
     body = body.replace(/([가-힣])\n(?=(?:습니다|읍니다|니다|니까)(?:[.!?,]|\s|$))/g, '$1').replace(/(니)\n(?=다(?:[.!?,]|\s|$))/g, '$1');
     // 다음 줄이 조사·어미 한 글자로 시작하면 앞 낱말에 붙임 (역량\n을 → 역량을, 꼼꼼하\n게 → 꼼꼼하게, 각\n종 → 각종). 그·이·더처럼 혼자 쓰는 말은 제외
     body = body.replace(/([가-힣])\n(?=([가-힣])(?:[\s,.!?]|$))/g, (m, a, b)=> /[그이저더잘또꼭늘및등약총첫한두세네몇안못좀제내수]/.test(b) ? a + '\n' : a);
+    // 2026-10-26a: 줄 끝 조각이 한 글자이고 그 앞이 띄어쓰기·문장 시작이면 다음 줄과 붙임 (중\n환자실 → 중환자실). 혼자 쓰는 말(그·이·수 …)은 제외
+    body = body.replace(/(^|[\s(])([가-힣])\n(?=[가-힣])/g, (m, pre, a)=> /[그이저더잘또꼭늘및등약총첫한두세네몇안못좀제내수]/.test(a) ? m : pre + a);
     // 그 밖에 한글과 한글 사이 줄바꿈은 낱말이 끊긴 것인지 알 수 없어 표시(\u2063)해 두고, 인용할 때 이 표시가 든 절은 뒤로 미룸
     body = body.replace(/([가-힣])\n(?=[가-힣])/g, '$1\u2063');
     return body.replace(/\n/g, ' ').split(/(?<=[다요])\.\s+|(?<=[.!?])\s+(?=[가-힣A-Z"'‘“])/).map(s=>s.trim()).filter(s=>s.length >= 12);
@@ -12918,6 +12920,10 @@ const DocQ = {
       }
       return null;
     };
+    // 2026-10-26a: 38자 이하를 먼저 → 없으면 연결어미 뒤 핵심 구절(14~38자) → 그래도 없으면 예전 순서(44 → 66/58 → '~경험')
+    if(plainAll && plainAll.length <= 38) return plainAll;
+    { const c = parts.length > 1 ? pickClause(38) : null; if(c) return c; }
+    { const t = this._shortTail(plainAll); if(t) return t; }
     if(plainAll && plainAll.length <= 44) return plainAll;
     { const c = parts.length > 1 ? pickClause(44) : null; if(c) return c; }
     if(plainAll && plainAll.length <= 66) return plainAll;
@@ -12926,6 +12932,18 @@ const DocQ = {
     const np = s.match(/([가-힣A-Za-z0-9·\s]{4,34}?경험)(?=을|이|과|에서|을 바탕|으로)/);
     if(np) return { np: np[1].trim().replace(/^(또한|특히|그리고)\s+/, '') };
     return null;
+  },
+  /** 2026-10-26a 긴 문장에서 연결어미(며·면서·고·하여·해서·뒤·후 …) 다음의 핵심 구절만 남김 (14~38자, 가장 긴 것) */
+  _shortTail(plain){
+    if(!plain) return null;
+    const re = /(?:며|면서|으며|하여|해서|하고|고|뒤|후에?|서)[,\s]+/g; let m, best = null;
+    while((m = re.exec(plain))){
+      const tail = plain.slice(m.index + m[0].length).trim();
+      if(tail.length < 14 || tail.length > 38) continue;
+      if(/^(그|이|저|그것|이것)\s/.test(tail)) continue;
+      if(!best || tail.length > best.length) best = tail;
+    }
+    return best;
   },
   /** 2026-10-22o: 같은 서류 문장이라도 매번 조금씩 다르게 묻기 (오전·오후에 토씨 하나 안 틀리고 같은 질문이 나왔던 문제) */
   _pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; },
@@ -12993,7 +13011,7 @@ const DocQ = {
         const quote = this._quote(s);
         if(!quote) return;
         if(!this._quoteOk(typeof quote === 'object' ? quote.np : quote)) return;
-        { const qs = typeof quote === 'object' ? quote.np : quote; if(/\u2063/.test(qs)) score -= 3; }   // 줄바꿈에서 낱말이 끊겼을 수 있는 인용은 뒤로
+        { const qs = typeof quote === 'object' ? quote.np : quote; if(/\u2063/.test(qs)) score -= 8; }   // 줄바꿈에서 낱말이 끊겼을 수 있는 인용은 뒤로 (2026-10-26a 3 → 8)
         const q = this._q(sec, kind, quote).replace(/\u2063/g, ' ');
         if(q.length > 190) return;
         const quoteCore = typeof quote === 'object' ? quote.np : quote.slice(0, Math.max(6, Math.min(16, quote.length - 3)));
@@ -14770,6 +14788,7 @@ function startRehearsal(){
   state.micOn = true;
   state.camOn = state.camPref !== false;
   state.interviewQuestions = buildQuestionSet(REHEARSAL_COUNT);
+  if(state.selectedField && state.selectedField.id === 'review'){ try{ ReviewAudio.enrich(state.interviewQuestions, 3000).catch(()=>{}); }catch(_){} }   // 2026-10-26a 복습 문항도 녹음본으로
   // 녹음된 목소리로 읽기 위해 DB 문항(audio_url 포함)으로 바꿔 둠 — 점검하는 동안 조용히 불러옴 (실패하면 HTML 문제은행 그대로)
   if(state.selectedField && state.selectedField.id !== 'review'){
     const rid = state.startTime = Date.now();
@@ -15757,7 +15776,7 @@ async function runDialogInterview(){
   // 2026-10-22o: 면접을 시작할 때마다 서류 질문을 새로 골라(최근에 물은 문장은 뒤로, 말투도 바꿔) 같은 질문이 그대로 반복되지 않게 함
   if(!resume && !(state.selectedField.id === 'review' && state.reviewQuestions) && (state.resumeFull || state.resumeText || state.cvFull || state.cvText)){ try{ refreshDocQuestions(); }catch(_){} }
   if(!resume && state.customQuestions && state.customQuestions.length){ try{ DocQ.remember(realSet ? state.customQuestions.slice(0, 1) : state.customQuestions); }catch(_){} }
-  if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); }
+  if(state.selectedField.id === 'review' && state.reviewQuestions){ opt.questions = state.reviewQuestions.map(x=>Object.assign({}, x)); try{ await ReviewAudio.enrich(opt.questions, 3000); }catch(_){} }   // 2026-10-26a 문항표의 녹음본·말할 문장 붙이기
   else if(realSet){ if(state.customQuestions && state.customQuestions.length) opt.docQuestion = Object.assign({}, state.customQuestions[0]); }
   else if(state.customQuestions && state.customQuestions.length){ opt.extraQuestions = state.customQuestions.map(x=>Object.assign({}, x)); }
   if(resume){
@@ -15928,16 +15947,16 @@ function initSpeechRecognition(){
   rec.lang = 'ko-KR';
   rec.continuous = true;
   rec.interimResults = true;
-  rec.maxAlternatives = 1;
+  rec.maxAlternatives = 3;   // 2026-10-26: 후보 문장 여러 개 중 속기·면접 낱말이 더 많이 맞는 쪽을 고름
   applySttPhrases(rec);
   rec.onresult = (e)=>{
     let interim = '';
     for(let i=e.resultIndex; i<e.results.length; i++){
-      const transcript = fixSpeech((e.results[i][0].transcript || '').trim());
+      const transcript = fixSpeech((e.results[i].isFinal ? sttBestAlt(e.results[i]) : (e.results[i][0].transcript || '')).trim());
       if(!transcript) continue;
       if(e.results[i].isFinal){
-        // 끊어 말한 문장끼리 붙지 않도록 띄어쓰기를 넣어줍니다
-        state.finalTranscript = joinSpeech(state.finalTranscript, transcript);
+        // 끊어 말한 문장끼리 붙지 않도록 띄어쓰기를 넣어줍니다 · 이어 붙인 뒤 한 번 더 바로잡음(끊긴 곳에 걸친 낱말)
+        state.finalTranscript = fixSpeech(joinSpeech(state.finalTranscript, transcript));
       }else{
         interim = joinSpeech(interim, transcript);
       }
@@ -16099,7 +16118,8 @@ function computeDelivery(text, timing, endAt){
 const STT_PHRASES = ['속기사','속기록','속기','국회','의회','법원','검찰','해바라기센터','공판','조서','녹취','발언',
   '회의록','의사일정','개의','산회','정회','속개','차수 변경','상정','부의','회부','대체토론','축조심사','찬반토론','체계·자구 심사','법제사법위원회',
   '공청회','청문회','수정동의','표결','가결','부결','의사정족수','의결정족수','재적의원','교섭단체','원내대표','간사','국정감사','국정조사','피감기관',
-  '대정부질문','5분 자유발언','신상발언','의사진행발언','무제한토론','종결동의','신속처리안건','자구 정정','불게재','비공개회의록','소위원회','계류','본회의','상임위원회'];
+  '대정부질문','5분 자유발언','신상발언','의사진행발언','무제한토론','종결동의','신속처리안건','자구 정정','불게재','비공개회의록','소위원회','계류','본회의','상임위원회',
+  '번문','약어','약어장','한글속기','속기직','속기 자격증','응시번호','재의결','재의 요구','법률안','예산안','예결위','정례회','질의응답','소관','사후 속기','국회사무처','위원회 중심주의','시정연설','국정통제','검수','편집'];
 /* 2026-10-19: 분야별 전문 용어 힌트 — 고른 분야의 용어만 함께 넣음(의회·법원·검찰·해바라기·교육·기업·프리랜서) */
 const STT_FIELD_PHRASES = {"council": ["지방의회", "시의회", "도의회", "구의회", "군의회", "광역의회", "기초의회", "의회사무처", "의회사무국", "의사담당관", "정례회", "임시회", "회기", "행정사무감사", "행정사무조사", "예산결산특별위원회", "예결위", "윤리특별위원회", "의회운영위원회", "특별위원회", "조례안", "일부개정조례안", "전부개정조례안", "주민조례발안", "청원", "결산 승인", "추가경정예산안", "추경", "계수조정", "업무보고", "집행부", "집행기관", "지방자치단체장", "단체장", "재의 요구", "정책지원관", "정책지원 전문인력", "인사권 독립", "지방자치법", "회의규칙", "전자회의록", "임시회의록", "영상회의록", "보존회의록", "지방의정포털", "의장단", "부의장", "상임위원장", "전반기", "후반기", "시정질문", "도정질문", "군정질문", "구정질문", "번문", "발언 취소", "발언보충서", "서면질문", "출석 공무원", "사무처장"], "court": ["변론기일", "변론준비기일", "공판기일", "공판준비기일", "선고기일", "증인신문", "주신문", "반대신문", "재주신문", "피고인신문", "원고", "피고", "피고인", "변호인", "소송대리인", "공소장", "공소사실", "모두진술", "최후진술", "구형", "판결", "기각", "각하", "인용", "항소", "상고", "항고", "집행유예", "선고유예", "보석", "구속영장", "증거조사", "증거목록", "서증", "갑 제1호증", "을 제1호증", "감정인", "선서", "위증", "국민참여재판", "배심원", "평결", "재판장", "배석판사", "참여관", "법원사무관", "법정경위", "영상재판", "전자소송", "재판소원", "공소청", "중대범죄수사청", "화해권고결정", "지급명령", "가압류", "가처분", "공시송달", "손해배상", "회생법원", "형사소송법 제56조의2"], "prosecution": ["공소청", "지방공소청", "광역공소청", "중대범죄수사청", "중수청", "공수처", "검사실", "수사관", "참여관", "형사법무직", "피의자", "피고인", "참고인", "고소인", "고발인", "신뢰관계인", "피의자신문조서", "피신조서", "진술조서", "대질조사", "영상녹화", "영상녹화물", "영상녹화조사", "녹취록", "접견 녹음", "전화 녹음", "기명날인", "간인", "입건", "송치", "불송치", "이의신청", "재수사요청", "보완수사요구", "수사지휘", "수사권 조정", "수사종결권", "직접수사", "기소", "불기소", "기소유예", "공소제기", "공소유지", "공소시효", "항고", "재정신청", "구속영장", "체포영장", "압수수색", "영장실질심사", "구속 전 피의자심문", "구속적부심", "진술거부권", "증거능력", "피의사실 공표", "불송치심사부", "중대범죄기소부", "직무수행계획서"], "sunflower": ["진술녹화", "영상녹화", "영상녹화물", "진술조력인", "신뢰관계인", "동석", "2차 피해", "피해자다움", "성인지 감수성", "증거보전", "반대신문", "증인신문", "중계장치", "영상증인신문", "특신상태", "증거능력", "전문심리위원", "성폭력처벌법", "성폭력방지법", "아청법", "여성폭력방지기본법", "성폭력피해자통합지원센터", "위기지원형", "아동형", "통합형", "성평등가족부", "여성긴급전화 1366", "응급키트", "증거채취", "국립과학수사연구원", "수사팀", "수사관", "사법경찰관", "피해자 진술조서", "수사속기", "동시속기", "사후속기", "메인 속기사", "서브 속기사", "비언어 표현", "피해자", "피의자", "피고인", "참고인", "법정대리인", "친권자", "국선변호사", "피해자 변호사", "친족 성폭력", "가정폭력", "성매매", "디지털 성범죄", "불법촬영물", "허위영상물", "딥페이크", "스토킹", "데이트폭력", "친고죄", "트라우마", "지적장애"], "education": ["문자통역", "문자통역사", "교육 속기", "교육 속기사", "학습지원 속기사", "장애학생지원센터", "장애인고등교육지원센터", "특수교육지원센터", "특수교육법", "장애인차별금지법", "정당한 편의", "편의 제공", "교육지원인력", "교육보조인력", "특별지원위원회", "심사청구", "실태조사", "실태평가", "한국대학교육협의회", "국가인권위원회", "청각장애", "청각장애인", "농인", "난청", "인공와우", "보청기", "한국수어", "수어통역", "수어통역사", "폐쇄자막", "화면해설", "괄호 주석", "상황 주석", "판서", "강의록", "교안", "강의계획서", "약어 등록", "약어 사전", "원격 문자통역", "비대면 수업", "대면 수업", "쉐어타이핑", "화자 구분", "대필", "점역", "점자자료", "순회교육", "특수교사", "특수교육 관련서비스", "학습권", "정보접근", "민감정보", "장애인식개선", "비장애인", "평생학습관", "복지관", "입 모양", "실시간 자막", "음성 인식"], "corporate": ["이사회", "주주총회", "의사록", "이사회 의사록", "주주총회 의사록", "경과요령", "기명날인", "반대이유", "사외이사", "독립이사", "감사위원", "대표이사", "의결권", "전자투표", "전자주주총회", "보통결의", "특별결의", "충실의무", "공증", "인수합병", "후속 조치", "결정 사항", "미결", "타운홀", "출장 속기", "녹취록", "번문", "청취 불가", "화자", "발언자", "폐쇄자막", "화면해설", "한국수어", "실시간 자막", "자막방송", "문자통역", "장애인방송", "방송미디어통신위원회", "영업비밀", "비밀유지계약", "보안 서약서", "기밀", "개인정보 보호법", "개인정보처리자", "정보주체", "위탁자", "수탁자", "파기", "과징금", "개인정보 보호책임자", "통신비밀보호법", "부정경쟁방지법", "징벌적 손해배상", "AI 회의록", "클로바노트", "다글로", "음성인식", "오인식", "한글속기", "속기사무소"], "freelance": ["녹취록", "녹취서", "화자", "화자 구분", "청취 불가", "불명확 구간", "재생 시각", "축어록", "발췌", "원본 대조", "원본 동일성", "해시값", "편집본", "통신비밀보호법", "타인 간의 대화", "대화 당사자", "증거능력", "검증", "민사소송규칙", "형사소송규칙", "민사소송법", "형사소송법", "국립과학수사연구원", "개인정보 보호법", "수탁자", "재위탁", "파기", "영구 삭제", "비밀유지서약서", "원천징수", "사업소득", "3.3%", "종합소득세", "지방소득세", "인적용역", "홈택스", "견적서", "세금계산서", "표준계약서", "노무제공자", "고용노동부", "내용증명", "지급명령", "소액사건", "속기사무소", "법무법인", "출장 속기", "현장 속기", "실시간 자막", "단축어", "용어집", "보이스레코더", "이중 녹음", "주주총회", "이사회", "재개발 조합", "징계위원회", "음성인식", "오인식", "외래어 표기법"]};
 function applySttPhrases(rec){
@@ -16184,7 +16204,105 @@ const STT_FIXES = [
   [/종합\s+소득세/g, '종합소득세'],
   [/해쉬\s*값|해시\s+값/g, '해시값'],
   [/(삼점삼|삼쩜삼|3\.3)\s*퍼센트/g, '3.3%'],
+  // 2026-10-26 실제 면접 답변(음성 인식)에서 모은 오인식 — 속기 분야 낱말
+  [/(?:부케\s*속|쾌속)기사/g, '국회 속기사'],
+  [/국회\s*속히\s*사(?=[를가는로의]|\s|$)/g, '국회 속기사'],
+  [/계속\s*기사(?=를|가|로|에서|의|는|님)/g, '속기사'],
+  [/토끼\s*사(?=는|가|로|의|를)/g, '속기사'],
+  [/한글\s*(?:소개|조끼|속히|쏙기|소기)(?=\s*(?:[1-3]|일|이|삼|상)\s*급|\s*자격)/g, '한글 속기'],
+  [/(^|[^조신급가])속히(?=\s*(?:연습|업무|자격|공부|실력|타자|[1-3]\s*급|사(?:로|가|는|를|의|님)?(?:\s|$)))/g, '$1속기'],
+  [/(속기|자격증?)\s+(일|이|삼)\s*급(?=[을를이은과도에의]|\s|$)/g, (m, a, n)=>a + ' ' + ({일:'1', 이:'2', 삼:'3'}[n]) + '급'],
+  [/한글\s*속기\s*(일|이|삼)\s*급(?=[을를이은과도에의까]|\s|$)/g, (m, n)=>'한글 속기 ' + ({일:'1', 이:'2', 삼:'3'}[n]) + '급'],
+  [/상급(?=\s*자격|을\s*(?:취득|따|땄)|\s*취득)/g, '3급'],
+  [/속(?:기|해)지(?:개|게)(?=\s)/g, '속기직에'],
+  [/속해지기에서/g, '속기직에서'],
+  [/소기록/g, '속기록'],
+  [/회의력(?=[이은을의과에])/g, '회의록'],
+  [/4호\s*속기/g, '사후 속기'],
+  [/법문\s*안은\s*과정/g, '번문하는 과정'],
+  [/법문(?=\s*(?:과정|하|할|한\s|을\s*하|을\s*할|작업|단계|상황))/g, '번문'],
+  [/검문(?=을\s*하는\s*과정|\s*과정)/g, '검수'],
+  [/낙원은\s*속기사/g, '약어는 속기사'],
+  [/(?:낙어|약어)\s*(?:짝|장)(?=[만이을은에도]|\s|$)/g, '약어장'],
+  [/야구장이라도\s*매일/g, '약어장이라도 매일'],
+  [/약어장애(?=는)/g, '약어'],
+  [/트럼프(?=가\s*(?:오|왔|올|자연))/g, '슬럼프'],
+  [/감사\s*생활/g, '강사 생활'],
+  [/음식\s*번호/g, '응시번호'],
+  // 국회·의회 용어
+  [/예결의(?=[를에가는]|\s)/g, '예결위'],
+  [/예상\s*결산/g, '예산 결산'],
+  [/양도\s*예산안/g, '연도 예산안'],
+  [/한인\s*위원회/g, '상임위원회'],
+  [/의\s*장이\s*정\s*회/g, '의장이 정회'],
+  [/정\s*회를\s*선호/g, '정회를 선포'],
+  [/정의(를\s*(?:선언|선포)|\s*이후)/g, '정회$1'],
+  [/속죄(를\s*(?:선언|선포))/g, '속개$1'],
+  [/지방(?:을|이)\s*정례/g, '지방의회 정례'],
+  [/지방의\s*(회의록|상임위원회|정례회|속기)/g, '지방의회 $1'],
+  [/전문\s*영화/g, '전문 용어'],
+  [/영어에\s*정확성/g, '용어의 정확성'],
+  [/병렬안/g, '법률안'],
+  [/법률한(?=\s*(?:의결|심사|처리)|[이을은의])/g, '법률안'],
+  [/제\s*해결(?=에서\s*(?:출석|찬성|의결)|\s*요건)/g, '재의결'],
+  [/제의를\s*요구/g, '재의를 요구'],
+  [/국가(의)?\s*제정을(?=\s*(?:관리|위한|위해))/g, '국가$1 재정을'],
+  [/의전\s*기록/g, '의정 기록'],
+  [/의겨\s*과정/g, '의결 과정'],
+  [/수관\s*분야/g, '소관 분야'],
+  [/지뢰\s*응답/g, '질의응답'],
+  [/공개되는\s*시안/g, '공개되는 시한'],
+  [/시안이(?=\s*(?:\d+|삼십)\s*일)/g, '시한이'],
+  [/(주호관|주모관)(?=님|께|이|과|와|에게|\s|$)/g, '주무관'],
+  [/송모\s*업무/g, '송무 업무'],
+  // 자주 틀리는 일반 낱말
+  [/실뢰/g, '신뢰'],
+  [/쌍급자/g, '상급자'],
+  [/바로자가\s*불분명/g, '발언자가 불분명'],
+  [/상사화에\s*갈등/g, '상사와의 갈등'],
+  [/내양형/g, '내향형'],
+  [/실물을\s*시작/g, '실무를 시작'],
+  [/일치\s*않고/g, '잃지 않고'],
+  [/(중요한|잘못된|올바른|기본)\s*전세/g, '$1 자세'],
+  [/수능하면서/g, '수용하면서'],
+  [/저의\s*본부는/g, '저의 본분은'],
+  [/경의가\s*무엇/g, '경위가 무엇'],
+  [/정정하게\s*거절/g, '정중하게 거절'],
+  [/사랑과의\s*관계/g, '사람과의 관계'],
+  // 띄어쓰기: 음성 인식이 '이'·'들은'을 앞말에 붙여 쓰는 경우
+  [/(에서|을|를)(들은|들을)(?=\s)/g, '$1 $2'],
+  [/(니다|그리고|그래서|위해|위해서|때문에|또)이(?=\s)/g, '$1 이'],
+  // 답을 끝내며 소리 내어 말한 '답변 완료'는 답변 글에서 뺌
+  [/\s+(?:다음\s*)?답변\s*완료(?:입니다|요|했습니다)?\s*$/g, ''],
 ];
+/** 2026-10-26: 음성 인식 후보(최대 3개) 중 고르기 — 기본은 1번 후보, 다른 후보가 속기·분야·내 서류 낱말을 더 많이 담고 있을 때만 그쪽 */
+function sttTerms(){
+  const fid = (typeof state !== 'undefined' && state.selectedField) ? state.selectedField.id : '';
+  let doc = []; try{ if(typeof DocGuard !== 'undefined') doc = DocGuard.sttTerms() || []; }catch(_){}
+  const key = fid + '|' + doc.length;
+  if(sttTerms._k !== key){ sttTerms._k = key; sttTerms._v = [...new Set(STT_PHRASES.concat(STT_FIELD_PHRASES[fid] || [], doc))].filter(w=>w && w.length >= 2); }
+  return sttTerms._v;
+}
+function sttAltScore(text){
+  const t = String(text || '').replace(/\s+/g, ''); let n = 0;
+  sttTerms().forEach(w=>{ if(t.includes(w.replace(/\s+/g, ''))) n += Math.min(4, w.replace(/\s+/g, '').length); });
+  // 이미 알려진 오인식이 들어 있으면 감점 (바로잡기 전 글자 기준)
+  STT_FIXES.forEach(([re])=>{ re.lastIndex = 0; if(re.test(text)) n -= 1; re.lastIndex = 0; });
+  return n;
+}
+function sttBestAlt(result){
+  try{
+    const first = (result && result[0] && result[0].transcript) || '';
+    if(!result || result.length < 2) return first;
+    let best = first, bestScore = sttAltScore(first);
+    for(let k = 1; k < result.length; k++){
+      const alt = result[k] && result[k].transcript; if(!alt || !alt.trim()) continue;
+      const sc = sttAltScore(alt);
+      if(sc >= bestScore + 2){ best = alt; bestScore = sc; }   // 확실히 나을 때만 바꿈
+    }
+    return best;
+  }catch(_){ return (result && result[0] && result[0].transcript) || ''; }
+}
 function fixSpeech(text){
   let t = text || '';
   STT_FIXES.forEach(([re, to])=>{ t = t.replace(re, to); });
@@ -17537,6 +17655,7 @@ function _spokenTail(t){
   t = t.trim().replace(/\s+/g,' ').replace(/\s*\([^)]*\)\s*$/,'').replace(/(하는|있는|되는)\s+가$/,'$1가');
   if(!t) return '';
   if(/(니다|이다|습니다)$/.test(t)) return t+'.';
+  if(/주세요$/.test(t)) return t+'.';   // 2026-10-26a: '…말씀해 주세요'는 평서문 그대로 (복습 모드에서 '주시겠습니까?'로 바뀌던 문제)
   if(/(나요|까요|가요|습니까|입니까|십니까|합니까|어요|아요|해요|겠어요|주십시오|십시오)$/.test(t)) return t+'?';
   const R = [
     [/말(해|하여)\s*보(시오|세요)$/, '말씀해 주시겠습니까?'], [/(해|하여)\s*보(시오|세요)$/, '해 주시겠습니까?'],
@@ -17571,6 +17690,28 @@ function toSpokenQuestion(q){
   }
   return outs.join(' ') || q;
 }
+/** 2026-10-26a 복습 모드 문항에 문항표(questions)의 말할 문장(q_spoken)·녹음본(audio_url)을 붙임.
+ *  녹음본은 녹음한 글(audio_text)이 말할 문장과 같을 때만. 서류 질문(custom)·꼬리질문은 건드리지 않음. 시간이 넘으면 그대로 진행 */
+const ReviewAudio = {
+  async enrich(list, ms){
+    if(!Array.isArray(list) || !list.length || typeof sb === 'undefined' || !sb) return list;
+    const want = [...new Set(list.filter(x=>x && x.q && !x.custom && !x.followup && !x.audio_url).map(x=>x.q))];
+    if(!want.length) return list;
+    const job = (async()=>{
+      const { data, error } = await sb.from('questions').select('q,q_spoken,audio_url,audio_text').in('q', want);
+      if(error || !Array.isArray(data)) return;
+      const by = new Map(); data.forEach(r=>{ if(r && r.q && !by.has(r.q)) by.set(r.q, r); });
+      list.forEach(x=>{
+        if(!x || !x.q || x.custom || x.followup) return;
+        const r = by.get(x.q); if(!r) return;
+        if(r.q_spoken && !x.spoken) x.spoken = r.q_spoken;
+        if(r.audio_url && !x.audio_url && r.audio_text && r.audio_text === (x.spoken || r.q_spoken)) x.audio_url = r.audio_url;
+      });
+    })();
+    try{ await Promise.race([job, new Promise(r=>setTimeout(r, ms || 3000))]); }catch(e){ console.warn('[복습 녹음본 붙이기 실패]', e && e.message); }
+    return list;
+  },
+};
 /* 질문 객체에서 "말할 문장"을 고릅니다 (DB q_spoken 우선) */
 function spokenOf(item){ if(!item) return ''; if(item.spoken) return item.spoken; if(item.custom || item.followup) return item.q; return toSpokenQuestion(item.q); }
 
@@ -17789,6 +17930,10 @@ const StenoDialog = {
     }catch(e){ console.warn('[실전 세트: 불러오기 실패 → 일반 뽑기]', e.message); this.lastError = e.message; return null; }
   },
 
+  /** 2026-10-26a 이번 면접에서 이미 한 AI 꼬리질문(최대 8개) — 같은 상황·문형, '괜찮습니다'로 시작하는 말을 반복하지 않게 서버에 함께 보냄 */
+  recentFollowups(){ const k = String(state.startTime || ''); if(this._rfKey !== k){ this._rfKey = k; this._rf = []; } return this._rf.slice(-8); },
+  rememberFollowup(t){ this.recentFollowups(); if(t) this._rf.push(String(t).slice(0, 200)); },
+
   /* ② 답변 → ③ 꼬리질문 */
   async followup({ fieldId, question, answer, reference, history, pressure, rootQuestion, followupsDone, qid }){
     history = history || [];
@@ -17802,6 +17947,7 @@ const StenoDialog = {
                   resume_summary: state.resumeText ? state.resumeText.slice(0, 2000) : null,
                   cv_summary: state.cvText ? state.cvText.slice(0, 1500) : null,
                   doc_focus: (typeof DocQ !== 'undefined') ? DocQ.srcOf(root) : null,
+                  recent_followups: this.recentFollowups(),
                   interview_id: state.demoResult ? null : String(state.startTime || '') },
         });
         const timeout = new Promise((_, rej)=>setTimeout(()=>rej(new Error('응답 시간 초과 ('+(STEP1.followupTimeoutMs/1000)+'초)')), STEP1.followupTimeoutMs));
@@ -17818,6 +17964,7 @@ const StenoDialog = {
           if(!chk.ok){ DocGuard.log('doc_guard', { reason: chk.reason, detail: String(chk.detail || '').slice(0, 60), text: String(data.followup).slice(0, 140) }); throw new Error('서류 확인에서 걸러짐: ' + chk.reason); } }
         if(data.limit && typeof data.limit.daily_left === 'number') AiQuota.status = Object.assign({}, AiQuota.status||{}, data.limit);
         try{ SpeechTag.set(data.followup, 'ai_followup'); }catch(_){}
+        this.rememberFollowup(data.followup);
         return { followup: data.followup, evaluation: data.evaluation || '', intent: data.intent || 'probe', model: data.model || '', source:'llm' };
       }catch(e){
         console.warn('[꼬리질문: LLM 실패 → 템플릿으로 대체]', e.message);
@@ -17994,13 +18141,13 @@ const StenoListener = {
 
     // 2) 음성 인식
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const rec = new SR(); rec.lang = this.opt.lang; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 1;
+    const rec = new SR(); rec.lang = this.opt.lang; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 3;
     applySttPhrases(rec);
     rec.onresult = (e)=>{
       let interim='';
       for(let i=e.resultIndex;i<e.results.length;i++){
-        const t = fixSpeech((e.results[i][0].transcript||'').trim()); if(!t) continue;
-        if(e.results[i].isFinal) this.transcript = joinSpeech(this.transcript, t); else interim = joinSpeech(interim, t);
+        const t = fixSpeech((e.results[i].isFinal ? sttBestAlt(e.results[i]) : (e.results[i][0].transcript||'')).trim()); if(!t) continue;
+        if(e.results[i].isFinal) this.transcript = fixSpeech(joinSpeech(this.transcript, t)); else interim = joinSpeech(interim, t);
       }
       this.interim = interim;
       const now = Date.now(); this.spokeAt = now; if(!this.firstSpeechAt) this.firstSpeechAt = now; this.lastVoiceAt = Math.max(this.lastVoiceAt, now); this.timers.netErr = 0;
@@ -18146,6 +18293,7 @@ async function fetchSpeechBlob(text, voice, speed, model, instructions, engine, 
   const { data: sess } = await sb.auth.getSession();
   const token = (sess && sess.session && sess.session.access_token) || SUPABASE_ANON_KEY;
   const tag = engine && engine.provider === 'typecast' ? { purpose: (meta && meta.purpose) || SpeechTag.of(text), retry: !!(meta && meta.retry) } : {};
+  if(tag.retry && meta && meta.end_note) tag.end_note = String(meta.end_note).slice(0, 80);   // 2026-10-26a 다시 읽은 이유
   const res = await fetch(SUPABASE_URL + '/functions/v1/speak-text', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + token, 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
@@ -18289,8 +18437,11 @@ const EndCheck = {
   WH: /무엇|어떻게|어떤|왜|언제|어디|누구|얼마|몇|어느|무슨|뭐/,
   stats: { checked:0, redone:0 },
   LONG: 70,
-  /** 끝음이 어색할 때 다시 만들 수 있는 횟수: 70자 이상 긴 문장은 1번, 그보다 짧으면 2번 */
-  maxTries(text){ return String(text || '').replace(/\s+/g, ' ').trim().length >= this.LONG ? 1 : 2; },
+  last: null,
+  /** 끝음이 어색할 때 다시 만들 수 있는 횟수: 2026-10-26a 모든 문장 1번까지 (크레딧 절약) */
+  maxTries(text){ return 1; },
+  /** 2026-10-26a 다시 읽은 이유 (사용 기록 note로 남겨 주간 점검에서 기준이 너무 민감한지 봄) */
+  why(bs){ const m = this.last || {}; const r4 = typeof m.r4 === 'number' ? m.r4.toFixed(2) : '-'; return `끝음 점수 ${bs} · 끝 갈라짐 ${m.lowN != null ? m.lowN : '-'} · 끝/평소 높이 ${r4}`; },
   async measure(blob){
     const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if(!AC || !blob) return null;
     const buf = await blob.arrayBuffer();
@@ -18314,6 +18465,7 @@ const EndCheck = {
   /** 0 = 정상, 클수록 이상. 분석이 안 되면 0 (그대로 씀) */
   async score(blob, text){
     let m = null; try{ m = await this.measure(blob); }catch(_){ return 0; }
+    this.last = m;
     if(!m) return 0;
     let b = 0; if(m.lowN >= 2) b += 2; if(m.r4 < 0.62) b += 1; if(m.r4 > 1.25 && this.WH.test(text || '')) b += 1;
     return b;
@@ -18388,7 +18540,7 @@ const StenoVoice = {
       const t0 = Date.now(); let best = blob, bs = await EndCheck.score(blob, text), tries = 0;
       while(bs > 0 && tries < maxTries && Date.now() - t0 < 6000 && my === this._seq){
         tries++;
-        let b2; try{ b2 = await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine, { retry:true }); }catch(_){ break; }
+        let b2; try{ b2 = await fetchSpeechBlob(text, this.openaiVoice, this.speed, this.ttsModel, this.instructions, this.engine, { retry:true, end_note: EndCheck.why(bs) }); }catch(_){ break; }
         if(fetchSpeechBlob.last !== 'typecast') break;
         const s2 = await EndCheck.score(b2, text);
         if(s2 < bs){ best = b2; bs = s2; }
