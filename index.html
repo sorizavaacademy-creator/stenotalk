@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26e';
+var APP_VERSION = '2026-10-26f';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5032,6 +5032,27 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
 .sf-row.off{opacity:.5;} .sf-w{color:#b0391a;text-decoration:line-through;} .sf-r{font-weight:700;} .sf-n{font-size:12px;color:var(--c-ink-3,#66666c);}
 .sf-acts{margin-left:auto;display:flex;gap:6px;} .btn-manage.primary{border-color:var(--c-accent,#e8532a);color:var(--c-accent-ink,#c2401b);font-weight:700;}
 .sf-empty{margin:6px 0;font-size:13px;color:var(--c-ink-3,#66666c);}
+/* 2026-10-26f 접근성: 글자 대비·작은 글자·누르는 크기 (PC·휴대폰 같게) */
+/* 흰 글자 + 주황 바탕 → 진한 주황(#c8441c, 대비 4.9:1) */
+.d3-btn-primary, .d3-badge-selected, #g4-trial-go, .g4-trial-go, #screen-result.v3 .r3-next, #inapp-gate .ig-btn, .access-banner .pr-btn, .as-alert, .update-bar .ub-go, .nt-badge, .nt-new{background:#c8441c !important;border-color:#c8441c !important;}
+.d3-btn-primary:hover:not(:disabled), #g4-trial-go:hover, #screen-result.v3 .r3-next:hover, .update-bar .ub-go:hover{background:#ad3814 !important;border-color:#ad3814 !important;}
+/* 작은 글자 → 12px 이상 */
+#screen-dashboard.v3 .d3-today .t-day em{font-size:12.5px;}
+#screen-practice.v3 .p3-steps li i, #screen-practice.v3 .p3-steps li:not(.cur) i{font-size:12px !important;}
+.qcard-source-badge{font-size:12px !important;}
+.mic-help-link{font-size:13px !important;}
+.opt-new{font-size:12px;}
+#screen-login.v3 .lg-prev-card .lbl, #screen-login.v3 .lg-prev-card .st{font-size:12px;}
+/* 누르는 곳 크기 */
+#screen-login.v3 .lg-check{min-height:44px;} #screen-login.v3 .lg-check input{width:22px;height:22px;}
+body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} body.v3-ui #modal-setup .dev-check input[type=checkbox], .dev-check input[type=checkbox]{width:22px;height:22px;margin:0;flex:none;}
+#screen-practice.v3 .p3-tips-toggle{min-height:44px;}
+@media(max-width:860px){
+  #screen-practice.v3 .p3-seg button{height:44px;}
+  #q-toggle-all, .q-toggle-all{min-height:44px;padding:0 16px;font-size:13px;}
+  #screen-interview.lv3 .lv3-mhelp{width:44px;height:44px;}
+  #screen-interview.lv3 .lv3-mend{height:44px;padding:0 16px;}
+}
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -6672,7 +6693,7 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
       <button class="ctl-btn primary" id="btn-answer-done" onclick="completeAnswer()">답변 완료</button>
       <button class="ctl-btn stop-listen" id="btn-dialog-stop-listen" onclick="dialogStopListening()" style="display:none;">답변 완료 · 다음으로</button>
       <div class="ans-confirm" id="ans-confirm" hidden role="alertdialog" aria-labelledby="ac-text"><p id="ac-text">아직 말이 이어지는 것 같아요. 이어서 말할까요?</p><div class="ac-btns"><button type="button" class="btn btn-solid" onclick="AnsConfirm.keep()">이어서 말하기</button><button type="button" class="btn btn-outline" onclick="AnsConfirm.done()">이대로 완료</button></div></div>
-      <button class="ctl-btn" id="btn-dialog-pause" onclick="dialogPause()" style="display:none;">
+      <button class="ctl-btn" id="btn-dialog-pause" onclick="dialogPause()" style="display:none;" aria-label="일시정지">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg>
         <span>일시정지</span>
       </button>
@@ -6702,9 +6723,9 @@ body.v3-ui #screen-admin .score-pill:not(.hi):not(.mid):not(.low), body.v3-ui .r
         <a href="javascript:void(0)" onclick="navGo('coach')">자기소개 코치</a>
       </nav>
       <div class="r3-actions">
-        <button class="r3-btn r3-home" onclick="goDashboard()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 4l7 5.5V16a1 1 0 0 1-1 1h-3.5v-4.5h-5V17H4a1 1 0 0 1-1-1z"/></svg><span>메인으로</span></button>
-        <button class="r3-btn r3-next" onclick="resultNextPractice()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg><span>다음 추천 연습</span></button>
-        <button class="r3-btn" onclick="printReport()"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7V3h8v4M6 14H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M6 11h8v6H6z"/></svg><span>인쇄 · PDF</span></button>
+        <button class="r3-btn r3-home" onclick="goDashboard()" aria-label="홈으로"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 4l7 5.5V16a1 1 0 0 1-1 1h-3.5v-4.5h-5V17H4a1 1 0 0 1-1-1z"/></svg><span>메인으로</span></button>
+        <button class="r3-btn r3-next" onclick="resultNextPractice()" aria-label="다음 연습"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg><span>다음 추천 연습</span></button>
+        <button class="r3-btn" onclick="printReport()" aria-label="리포트 인쇄 · PDF 저장"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7V3h8v4M6 14H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M6 11h8v6H6z"/></svg><span>인쇄 · PDF</span></button>
         <span class="d3-avatar" id="r3-avatar" title="">김</span>
       </div>
     </div>
@@ -13634,9 +13655,21 @@ function setMicCheck(kind, text, noReport){
   const pill = document.getElementById('setup-mic-pill'); if(pill){ pill.textContent = label; pill.className = 'dev-pill' + (kind ? ' '+kind : ''); }
   const ms = document.getElementById('setup-ms-device'); if(ms){ ms.textContent = label; ms.className = kind||''; }
 }
+/* 2026-10-26f 아이폰 음성 인식 안내 — 아이폰은 '받아쓰기'가 꺼져 있거나 사파리가 아닌 앱이면 음성 인식이 막힘(PC용 안내로는 못 고침) */
+const IosSpeech = {
+  is(){ const u = navigator.userAgent || ''; return /iPhone|iPad|iPod/i.test(u) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); },
+  other(){ return /CriOS|FxiOS|EdgiOS|Whale|NAVER|KAKAOTALK|DaumApps|Instagram|FBAN|FBAV|Line\//i.test(navigator.userAgent || ''); },
+  text(){
+    return this.other()
+      ? '아이폰에서는 크롬·네이버·카카오톡 안에서 음성 인식이 잘 안 돼요. 사파리로 열어 주세요. 사파리에서도 안 되면 아이폰 설정 → 일반 → 키보드 → "받아쓰기 활성화"를 켜 주세요.'
+      : '아이폰 설정 → 일반 → 키보드 → "받아쓰기 활성화"를 켜 주세요. 그래도 안 되면 사파리 주소창 왼쪽 "가가"(aA) 버튼 → 웹 사이트 설정 → 마이크를 "허용"으로 바꾼 뒤 새로고침해 주세요.';
+  }
+};
 function micErrorMessage(err){
   const name = (err && (err.name || err.error)) || '';
   const emsg = String((err && err.message) || '').toLowerCase();
+  if((name === 'not-allowed' || name === 'service-not-allowed') && IosSpeech.is())
+    return {kind:'err', text:'음성 인식이 막혀 있어요. ' + IosSpeech.text(), help:true};
   if(name==='NotAllowedError' && /system/.test(emsg))
     return {kind:'err', text:'윈도우(기기) 설정에서 마이크가 꺼져 있어요. 설정 → 개인 정보 및 보안 → 마이크를 켠 뒤 브라우저를 다시 열어 주세요.', help:true};
   if(name==='NotAllowedError' && /dismiss/.test(emsg))
@@ -13698,7 +13731,8 @@ async function startMicLevelAnim(){
             : r.error==='audio-capture' ? '다른 앱(통화·녹음·카메라 앱)이 마이크를 쓰고 있어 음성 인식을 시작하지 못했어요'
             : r.error==='language-not-supported' ? '이 브라우저가 한국어 음성 인식을 지원하지 않아요'
             : '음성 인식을 시작하지 못했어요';
-          setMicCheck('err', `마이크는 정상이지만 ${why}. 이대로 시작하면 답변을 직접 입력하게 돼요.`);
+          const iosHow = (r.error==='not-allowed'||r.error==='service-not-allowed') && IosSpeech.is() ? ' ' + IosSpeech.text() : '';
+          setMicCheck('err', iosHow ? `마이크는 정상이지만 음성 인식이 막혀 있어요.${iosHow} 이대로 시작하면 답변을 직접 입력하게 돼요.` : `마이크는 정상이지만 ${why}. 이대로 시작하면 답변을 직접 입력하게 돼요.`);
           micCheck.srBlocked = true;
         }
       });
@@ -13811,7 +13845,7 @@ async function runMicDiagnostic(){
   else if(f.gum==='ok' && !sr.ok){
     if(sr.error==='not-allowed' || sr.error==='service-not-allowed'){
       title = f.isFile && f.browser==='크롬' ? '크롬은 "파일을 직접 연" 페이지에서 음성 인식을 막는 경우가 있어요.' : '음성 인식 서비스가 허용되지 않았어요.';
-      body = f.isFile
+      body = IosSpeech.is() ? IosSpeech.text() : f.isFile
         ? '마이크 자체는 정상인데 음성 인식(말→글자)만 막혔어요. 해결: ① 같은 파일을 엣지로 열기(엣지는 이 제한이 없어요) ② 또는 인터넷 주소(https://…)로 배포된 버전으로 접속하기(GitHub Pages 배포 = Step 5-C) ③ 급하면 면접 화면에서 답변을 직접 입력하는 방식으로 진행돼요.'
         : '사이트 권한에서 마이크를 허용으로 바꾸고 새로고침한 뒤에도 같다면 엣지로 접속해 보세요.';
     }else if(sr.error==='network'){ title='음성 인식 서버에 연결하지 못했어요.'; body='크롬의 음성 인식은 구글 서버가 필요해요. 인터넷·회사 방화벽을 확인하거나, 서버 연결 없이도 되는 엣지로 열어 주세요.'; }
@@ -17754,7 +17788,7 @@ function openResultCard(i){
 function resultNextPractice(){ if(state.recoQuestions && state.recoQuestions.length) startRecommendedReview(); else retryPractice(); }
 function radar7Svg(cur, prev){
   const keys = ['내용','구조','구체성','분량','태도','전달력','표정·시선'];
-  const W = 340, H = 250, cx = W/2, cy = H/2 + 6, R = 86, n = keys.length;
+  const W = 340, H = 262, cx = W/2, cy = 131, R = 86, n = keys.length;   /* 2026-10-26f 글자 키움(13/12.5px) → 아래 여유 */
   const pt = (v,i,r)=>{ const a = -Math.PI/2 + i*2*Math.PI/n; const rr = (r==null?R:r)*(v==null?0:v)/100; return [cx+Math.cos(a)*rr, cy+Math.sin(a)*rr]; };
   const poly = arr => arr.map((v,i)=>pt(v==null?0:v,i).map(x=>x.toFixed(1)).join(',')).join(' ');
   const grid = [25,50,75,100].map(k=>`<polygon points="${poly(Array(n).fill(k))}" fill="none" stroke="var(--c-line)" stroke-width="1"/>`).join('');
@@ -17762,7 +17796,7 @@ function radar7Svg(cur, prev){
   const prevPoly = prev ? `<polygon points="${poly(prev)}" fill="var(--c-ink-3)" opacity=".10" stroke="var(--c-ink-3)" stroke-width="1.5" stroke-dasharray="3 3"/>` : '';
   const curPoly = `<polygon points="${poly(cur)}" fill="var(--c-accent)" opacity=".18" stroke="var(--c-accent)" stroke-width="2.5" stroke-linejoin="round"/>`;
   const dots = cur.map((v,i)=>{ if(v==null) return ''; const [x,y]=pt(v,i); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="var(--c-accent)"/>`; }).join('');
-  const labels = keys.map((k,i)=>{ const [x,y]=pt(100,i,R+30); const anchor = Math.abs(x-cx)<6 ? 'middle' : x<cx ? 'end' : 'start'; const v = cur[i]; return `<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" font-size="11.5" font-weight="700" text-anchor="${anchor}" fill="var(--c-ink-2)">${k}</text><text x="${x.toFixed(1)}" y="${(y+14).toFixed(1)}" font-size="11" text-anchor="${anchor}" fill="${v==null?'var(--c-ink-3)':'var(--c-ink)'}">${v==null?'–':v}</text>`; }).join('');
+  const labels = keys.map((k,i)=>{ const [x,y]=pt(100,i,R+30); const anchor = Math.abs(x-cx)<6 ? 'middle' : x<cx ? 'end' : 'start'; const v = cur[i]; return `<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" font-size="13" font-weight="700" text-anchor="${anchor}" fill="var(--c-ink-2)">${k}</text><text x="${x.toFixed(1)}" y="${(y+16).toFixed(1)}" font-size="12.5" text-anchor="${anchor}" fill="${v==null?'var(--c-ink-3)':'var(--c-ink)'}">${v==null?'–':v}</text>`; }).join('');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="7가지 항목 점수">${grid}${spokes}${prevPoly}${curPoly}${dots}${labels}</svg>`;
 }
 function resultAxesNow(){
