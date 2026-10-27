@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-27b';
+var APP_VERSION = '2026-10-27c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -92,7 +92,8 @@ var APP_VERSION = '2026-10-27b';
 }catch(e){} })();
 </script>
 <title>ZAVAPASS AI · 한국AI속기사협회 AI 모의면접</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3Cpath d='M16.9 6.2l.55 1.35 1.35.55-1.35.55-.55 1.35-.55-1.35-1.35-.55 1.35-.55z' fill='%232F6FE0' opacity='.8'/%3E%3C/g%3E%3C/svg%3E">
+<!-- 2026-10-27c: 앱 아이콘 Z + 합격 체크 (어두운 바탕) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231F1F21'/%3E%3Cpath d='M134 128h232v52L218 332h148v52H134v-52l148-152H134z' fill='%23fff'/%3E%3Ccircle cx='370' cy='372' r='74' fill='%23E8532A' stroke='%231F1F21' stroke-width='14'/%3E%3Cpath d='M338 373l23 23 42-46' fill='none' stroke='%23fff' stroke-width='19' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#ffffff">
 <!-- 2026-10-08 홈 화면 아이콘: 휴대폰 홈 화면에 추가하면 아이콘만 눌러 바로 들어옴 (주소는 그대로) -->
 <script>
@@ -100,7 +101,7 @@ var APP_VERSION = '2026-10-27b';
    → 삼성 인터넷에서는 앱 설치 정보(manifest)를 빼서, "홈 화면에 추가"가 경고 없는 바로가기로 만들어지게 함. 크롬·아이폰은 그대로. */
 (function(){ try{ if(/SamsungBrowser/i.test(navigator.userAgent)) return; var l=document.createElement('link'); l.rel='manifest'; l.href='manifest.webmanifest'; document.head.appendChild(l); }catch(e){} })();
 </script>
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=27c">
 <script>/* 2026-10-22v: 다른 사이트가 ZAVAPASS를 틀(iframe) 안에 넣어 속이는 것 막기 — 우리 도메인(sorizavaacademy.com) 안에서만 허용, 그 밖에서는 화면 대신 '새 창으로 열기' */
 (function(){ try{
   if(window.top === window.self) return;
@@ -5071,6 +5072,29 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 .rrs-dots button.on{width:34px !important;} .rrs-dots button.on::before{width:22px;background:#c8441c;}
 .rrs-arr{width:44px !important;height:44px !important;}
 .rrn-hide{min-height:44px;}
+/* 2026-10-27c 아이콘 바뀜 안내 */
+.icn-box{max-width:440px;}
+.icn-box .icn-head{text-align:center;padding-top:26px;border-bottom:0;}
+.icn-pair{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 14px;}
+.icn-pair figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.icn-pair img{width:56px;height:56px;border-radius:13px;display:block;}
+.icn-pair figure:not(.new) img{opacity:.55;}
+.icn-pair figure.new img{width:68px;height:68px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.18);}
+.icn-pair figcaption{font-size:12.5px;color:#66666c;} .icn-pair .new figcaption{color:#1c1c1e;font-weight:700;}
+.icn-arrow{font-size:20px;color:#8e8e93;margin-bottom:22px;}
+.icn-box .icn-head h2{font-size:21px !important;line-height:1.35;margin:0 0 6px;color:#1c1c1e;}
+.icn-lead{font-size:15px;line-height:1.6;color:#45454a;margin:0;}
+.icn-why{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:#1c1c1e;}
+.icn-steps{list-style:none;margin:0;padding:14px 16px;border-radius:12px;background:#f6f5f3;display:flex;flex-direction:column;gap:10px;counter-reset:icn;}
+.icn-steps li{position:relative;padding-left:30px;font-size:14.5px;line-height:1.55;color:#1c1c1e;counter-increment:icn;}
+.icn-steps li::before{content:counter(icn);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;background:#1c1c1e;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.icn-steps small{display:block;font-size:13px;color:#66666c;margin-top:2px;}
+.icn-note{margin:10px 0 0;font-size:13.5px;line-height:1.55;color:#66666c;}
+#modal-icon-new .modal-foot .btn{min-height:44px;}
+.icn-box .nw{white-space:nowrap;}
+.icn-steps.nonum li{padding-left:0;} .icn-steps.nonum li::before{display:none;}
+body:has(#modal-icon-new.active) #home-bar{display:none !important;}
+@media (max-width:520px){ #modal-icon-new .modal-foot .btn{flex:1 1 0 !important;} }
 /* 작은 글자·작은 버튼 */
 #screen-pending .pd-lbl small, #screen-pending .pd-reject-l small, .rr-lbl small, .rr-sec small, .rr-more summary small{font-size:12.5px !important;}
 #screen-pending .pd-logout, #screen-pending.pd-locked .pd-logout.in-foot{min-height:44px;}
@@ -5311,6 +5335,21 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
     </div>
   </div>
 </div>
+<!-- 2026-10-27c 앱 아이콘이 바뀐 것을 예전 아이콘을 쓰던 사람에게 한 번 알려 줌 -->
+<div class="modal-overlay" id="modal-icon-new" role="dialog" aria-modal="true" aria-labelledby="icn-title">
+  <div class="modal-box icn-box">
+    <div class="modal-head icn-head">
+      <div class="icn-pair" aria-hidden="true"><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B8BFF'/%3E%3Cstop offset='1' stop-color='%231F5FD6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' fill='url(%23g)'/%3E%3Cg transform='translate(8 8) scale(2)'%3E%3Cpath d='M6 3.5h12a3.5 3.5 0 0 1 3.5 3.5v7a3.5 3.5 0 0 1-3.5 3.5h-6.4L7.8 21.4V17.5H6A3.5 3.5 0 0 1 2.5 14V7A3.5 3.5 0 0 1 6 3.5z' fill='%23fff'/%3E%3Cpath d='M12 6.2l1.25 3.05L16.3 10.5l-3.05 1.25L12 14.8l-1.25-3.05L7.7 10.5l3.05-1.25z' fill='%232F6FE0'/%3E%3C/g%3E%3C/svg%3E" alt=""><figcaption>예전</figcaption></figure><span class="icn-arrow">→</span><figure class="new"><img src="apple-touch-icon.png?v=27c" alt=""><figcaption>새 아이콘</figcaption></figure></div>
+      <h2 id="icn-title">ZAVAPASS 아이콘이 바뀌었어요</h2>
+      <p class="icn-lead">모양만 바뀌었어요. <span class="nw">연습 기록과 로그인은 그대로예요.</span></p>
+    </div>
+    <div class="modal-body" id="icn-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" id="icn-ok" onclick="IconNotice.done()">알겠어요</button>
+      <button class="btn btn-solid" id="icn-go" onclick="IconNotice.go(this)">새 아이콘 추가하기</button>
+    </div>
+  </div>
+</div>
 <!-- 2026-10-23m 사람별 목소리(타입캐스트) 크레딧 한도 -->
 <div class="modal-overlay" id="modal-tcap" role="dialog" aria-modal="true" aria-labelledby="tcap-title">
   <div class="modal-box tcap-box">
@@ -5418,7 +5457,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   <div class="hs-sheet" role="dialog" aria-modal="true" aria-labelledby="hs-title">
     <div class="hs-grab"></div>
     <div class="hs-top">
-      <img class="hs-ic" src="apple-touch-icon.png" alt="">
+      <img class="hs-ic" src="apple-touch-icon.png?v=27c" alt="">
       <div><h3 id="hs-title">홈 화면에 ZAVAPASS 추가하기</h3><p>다음부터는 아이콘만 누르면 바로 들어와요. 로그인도 유지돼요.</p></div>
     </div>
     <!-- 갤럭시·안드로이드 크롬 (설치 버튼이 뜨는 경우) -->
@@ -5535,7 +5574,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
             <button type="submit" class="lg-submit" id="btn-login">로그인</button>
           </form>
           <div class="lg-join"><span>처음이신가요?</span><button type="button" class="lg-join-btn" onclick="openSignup()">회원가입</button></div>
-          <div class="hs-link-row"><button type="button" class="hs-link" onclick="HomeApp.open(true)"><img src="apple-touch-icon.png" alt="">다음부터 바로 들어오기 · 홈 화면에 추가</button></div>
+          <div class="hs-link-row"><button type="button" class="hs-link" onclick="HomeApp.open(true)"><img src="apple-touch-icon.png?v=27c" alt="">다음부터 바로 들어오기 · 홈 화면에 추가</button></div>
           <div class="lg-info">
             <p class="t">이용 안내</p>
             <ol>
@@ -5709,7 +5748,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 
     <!-- 2026-10-08 PC에서 어느 정도 익힌 뒤: 휴대폰으로 옮겨 오는 QR 카드 (PC에서만, 첫 연습을 마친 뒤 보임) -->
     <section class="d3-card pcq" id="pc-qr-card" style="display:none;" aria-label="휴대폰으로 연습하기">
-      <img class="pcq-ic" src="apple-touch-icon.png" alt="">
+      <img class="pcq-ic" src="apple-touch-icon.png?v=27c" alt="">
       <div class="pcq-body">
         <h3>휴대폰에 ZAVAPASS 앱 넣기</h3>
         <p>휴대폰 카메라로 오른쪽 QR을 비추면 바로 로그인 화면이 열려요. 로그인하면 <b>홈 화면에 ZAVAPASS 아이콘</b>을 추가할 수 있어서, 다음부터는 아이콘만 누르면 앱처럼 열려요. 앱 설치나 별도 다운로드는 필요 없어요.</p>
@@ -5720,7 +5759,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
     </section>
 
     <section class="d3-card pcq m-app-card" id="m-app-card" style="display:none;" aria-label="휴대폰 홈 화면에 추가">
-      <img class="pcq-ic" src="apple-touch-icon.png" alt="">
+      <img class="pcq-ic" src="apple-touch-icon.png?v=27c" alt="">
       <div class="pcq-body">
         <h3>홈 화면에 ZAVAPASS 앱 추가하기</h3>
         <p id="m-app-desc">브라우저 메뉴에서 "홈 화면에 추가"를 누르면 앱처럼 아이콘으로 열려요.</p>
@@ -7452,7 +7491,7 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
       </div>
       <p class="au-hint" style="margin-top:8px;">이름·휴대폰 번호·비밀번호를 바꾸고 싶으시면 담당자에게 요청해 주세요. 비밀번호를 잊으면 관리자가 임시 비밀번호를 만들어 드리고, 그 비밀번호로 처음 로그인할 때 새 비밀번호를 한 번 정할 수 있어요.</p>
 
-      <div class="mp-home" id="mp-home"><img src="apple-touch-icon.png" alt=""><div><p class="t">휴대폰 홈 화면에 추가</p><p class="d" id="mp-home-d">아이콘만 누르면 바로 들어와요.</p></div><button class="btn btn-outline" id="mp-home-btn" onclick="HomeApp.open(true)">추가 방법</button></div>
+      <div class="mp-home" id="mp-home"><img src="apple-touch-icon.png?v=27c" alt=""><div><p class="t">휴대폰 홈 화면에 추가</p><p class="d" id="mp-home-d">아이콘만 누르면 바로 들어와요.</p></div><button class="btn btn-outline" id="mp-home-btn" onclick="HomeApp.open(true)">추가 방법</button></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeMyPage()">닫기</button>
@@ -22296,6 +22335,7 @@ const HomeApp = {
   },
   maybeOffer(){
     try{
+      if(typeof IconNotice !== 'undefined' && IconNotice.maybe()) return;   // 2026-10-27c 아이콘 바뀜 안내가 먼저
       if(!this.isMobile() || this.isStandalone() || this.shownThisLoad) return;
       const st = this.get(); const DAY = 86400000;
       if(st.installed) return;
@@ -22340,6 +22380,66 @@ const HomeApp = {
     window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); this.deferred = e; const sh = document.getElementById('home-sheet'); if(sh && sh.classList.contains('on') && (this.mode === 'android-manual' || this.mode === 'samsung')) this.open(!this.auto); });
     window.addEventListener('appinstalled', ()=>{ this.set({ installed: Date.now() }); this.close(); });
     if('serviceWorker' in navigator && location.protocol === 'https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+  }
+};
+/* 2026-10-27c 앱 아이콘이 바뀜 → 예전 아이콘을 홈 화면에 둔 사람(이 휴대폰에서 추가했던 사람)에게 한 번만 알려 줌
+ *  · 아이폰·삼성 인터넷은 홈 화면 아이콘이 저절로 안 바뀌어서 지우고 다시 추가해야 함
+ *  · 안드로이드 크롬으로 설치한 앱은 보통 며칠 안에 저절로 바뀜
+ *  · 새 아이콘이 나온 뒤 처음 추가한 사람·컴퓨터·관리자에게는 안 띄움 */
+const IconNotice = {
+  KEY:'stenotalk_icon27c_seen', NEW_AT: Date.parse('2026-10-27T14:48:00+09:00'),
+  seen(){ try{ return !!localStorage.getItem(this.KEY); }catch(_){ return true; } },
+  should(){
+    if(!HomeApp.isMobile() || !state.currentUser || state.currentUser.isAdmin || this.seen()) return false;
+    const st = HomeApp.get(); const t = Number(st.installed || st.guided || 0);
+    return !!t && t < this.NEW_AT;   // 새 아이콘이 나오기 전에 홈 화면에 추가했던 사람만
+  },
+  kind(){
+    if(HomeApp.isIOS()) return HomeApp.isStandalone() ? 'ios-app' : 'ios';
+    if(/SamsungBrowser/i.test(HomeApp.ua())) return 'samsung';
+    return HomeApp.isStandalone() ? 'android-app' : 'android';
+  },
+  maybe(){
+    try{
+      if(!this.should()) return false;
+      setTimeout(()=>{
+        const sc = document.querySelector('.screen.active');
+        if(!state.currentUser || !sc || sc.id !== 'screen-dashboard') return;
+        if(document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open')) return;
+        this.show();
+      }, 1200);
+      return true;
+    }catch(_){ return false; }
+  },
+  show(){
+    const k = this.kind(); this.k = k;
+    const del = '<li>홈 화면의 <b>예전 아이콘</b>을 꾹 눌러 <b>삭제</b>해요.<small>지워도 연습 기록은 그대로예요.</small></li>';
+    let html = '', go = '새 아이콘 추가하기';
+    const webapp = '<small>"웹 앱으로 열기" 스위치가 보이면 <span class="nw">꺼 주세요.</span></small>';
+    if(k === 'ios' || k === 'ios-app'){
+      html = '<p class="icn-why">아이폰은 홈 화면의 예전 아이콘이 <b>저절로 바뀌지 않아요.</b> 한 번만 다시 추가해 주세요.</p><ol class="icn-steps">' + del +
+        (k === 'ios-app' ? '<li><b>사파리</b>를 열고 ZAVAPASS 주소로 들어가요.<small>아래 "주소 복사하기"를 눌러 사파리 주소창에 붙여 넣으면 돼요.</small></li><li>사파리 아래 <b>공유</b> 버튼 → <b>홈 화면에 추가</b>를 눌러요.' + webapp + '</li>'
+          : '<li>지금 이 사파리 화면 아래 <b>공유</b> 버튼 → <b>홈 화면에 추가</b>를 눌러요.' + webapp + '</li>') + '</ol>';
+      if(k === 'ios-app') go = '주소 복사하기';
+    } else if(k === 'samsung'){
+      html = '<p class="icn-why">삼성 인터넷으로 만든 아이콘은 <b>저절로 바뀌지 않아요.</b> 한 번만 다시 추가해 주세요.</p><ol class="icn-steps">' + del +
+        '<li>삼성 인터넷 아래 <b>메뉴(≡)</b> → <b>현재 페이지 추가</b> → <b>홈 화면</b>을 눌러요.</li></ol>';
+    } else {
+      html = '<p class="icn-why">크롬으로 설치한 아이콘은 보통 <b>며칠 안에 저절로</b> 새 아이콘으로 바뀌어요.</p><ul class="icn-steps nonum"><li>\'앱이 업데이트됐다\'는 확인 창이 뜨면 <b>업데이트</b>(또는 <b>확인</b>)를 눌러 주세요.</li></ul>' +
+        '<p class="icn-note">며칠이 지나도 예전 아이콘 그대로이면 예전 아이콘을 꾹 눌러 삭제한 뒤 ' + (k === 'android-app' ? '크롬에서 ZAVAPASS를 열어 다시 추가해 주세요.' : '"새 아이콘 추가하기"를 눌러 다시 추가해 주세요.') + '</p>';
+      if(k === 'android-app') go = '';
+    }
+    document.getElementById('icn-body').innerHTML = html;
+    const g = document.getElementById('icn-go'); g.textContent = go; g.style.display = go ? '' : 'none';
+    document.getElementById('modal-icon-new').classList.add('active');
+  },
+  mark(){ try{ localStorage.setItem(this.KEY, String(Date.now())); }catch(_){} },
+  done(){ this.mark(); document.getElementById('modal-icon-new').classList.remove('active'); try{ setTimeout(()=>RealReport.maybeNudge(), 600); }catch(_){} },
+  go(btn){
+    this.mark();
+    if(this.k === 'ios-app'){ HomeApp.copyLink(btn); btn.onclick = ()=>this.done(); setTimeout(()=>{ btn.textContent = '복사했어요 · 닫기'; }, 50); return; }
+    document.getElementById('modal-icon-new').classList.remove('active');
+    try{ HomeApp.open(true); }catch(_){}
   }
 };
 try{ HomeApp.init(); }catch(e){ console.warn('HomeApp', e); }
