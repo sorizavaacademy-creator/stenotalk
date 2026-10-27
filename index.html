@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-27e';
+var APP_VERSION = '2026-10-27f';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5125,6 +5125,53 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
   #screen-interview.rh3 .ctl-right{grid-row:1 !important;grid-column:3 !important;}
   #screen-interview.rh3 .ctl-center > button{white-space:nowrap;font-size:14px;padding:0 12px;}
   #screen-interview.rh3 .ctl-av .ctl-btn{padding:0 10px;font-size:13px;}
+}
+/* 2026-10-27f 리허설(휴대폰·펼친 폴더블·태블릿): '카메라 · 장치'가 질문·답변 아래로 떨어져 안 보이던 것 → 맨 위에 한 장의 작은 카드로.
+   왼쪽 = 내 카메라, 오른쪽 = 마이크·카메라 상태. 리허설은 카메라·마이크를 확인하는 단계라 첫 화면에 보여야 함 (라이브 면접 배치와 같은 생각) */
+@media (max-width:839px){
+  #screen-interview.rh3:not(.lv3) .side-panel{grid-row:2 !important;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel{grid-row:1 !important;display:grid !important;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:16px;row-gap:12px;align-items:start;background:#fff !important;border:1px solid var(--c-line) !important;border-radius:12px !important;padding:14px 16px !important;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel > .cam-preview{grid-column:1 !important;grid-row:1 !important;padding:26px 0 0 !important;border:0 !important;border-radius:0 !important;background:none !important;margin:0 !important;}
+  #screen-interview.rh3:not(.lv3) .rh3-cam-title{top:0 !important;left:0 !important;margin:0 !important;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel > .rh3-dev{grid-column:2 !important;grid-row:1 !important;margin:0 !important;padding:26px 0 0 !important;border:0 !important;border-radius:0 !important;background:none !important;align-self:start;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel > .rh-panel{grid-column:1 / -1 !important;grid-row:2 !important;border-radius:10px !important;}
+  #screen-interview.rh3:not(.lv3) .rh3-tips-toggle{padding:11px 14px;}
+  #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{height:clamp(120px, 22vh, 260px) !important;min-height:0 !important;max-height:none !important;aspect-ratio:auto !important;object-fit:cover;border-radius:8px;}
+  #screen-interview.rh3:not(.lv3) .rh3-dev-row{padding:6px 0 !important;}
+}
+@media (min-width:840px) and (max-width:960px){   /* 펼친 화면 가로(890) 등: 리허설도 PC처럼 왼쪽 카메라 | 오른쪽 질문 */
+  #screen-interview.rh3:not(.lv3) .interview-main{grid-template-columns:minmax(280px,36%) minmax(0,1fr) !important;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel{grid-column:1 !important;grid-row:1 !important;}
+  #screen-interview.rh3:not(.lv3) .side-panel{grid-column:2 !important;grid-row:1 !important;}
+}
+@media (min-width:840px) and (max-width:1200px) and (max-height:760px){
+  #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{max-height:34vh !important;min-height:0 !important;}
+  #screen-interview.rh3:not(.lv3) .cam-preview{justify-content:flex-start !important;}
+}
+@media (max-width:560px){
+  #screen-interview.rh3:not(.lv3) .avatar-panel{column-gap:12px;padding:12px !important;}
+  #screen-interview.rh3:not(.lv3) .avatar-panel{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  #screen-interview.rh3:not(.lv3) .rh3-dev .rh3-pill{font-size:12px;padding:3px 7px;white-space:nowrap;}
+  #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{height:clamp(96px, 15vh, 130px) !important;}
+  #screen-interview.rh3:not(.lv3) .rh3-dev .rh3-dev-row:nth-child(3){display:none;}   /* '질문 음성' 설명 줄은 좁은 화면에서 생략 */
+  #screen-interview.rh3:not(.lv3) .rh3-dev-row{flex-wrap:wrap;gap:4px;}
+  /* 카메라를 위로 올린 만큼 위아래를 줄여 '리허설 시작' 버튼도 첫 화면에 */
+  #screen-interview.rh3:not(.lv3) #rh3-bar-sub{display:none !important;}               /* '채점 없음' 표시와 같은 말이라 생략 */
+  #screen-interview.rh3:not(.lv3) .rh3-nograde{display:none !important;}
+  #screen-interview.rh3:not(.lv3) .rh3-bar-row{flex-wrap:nowrap !important;align-items:center;}
+  #screen-interview.rh3:not(.lv3) .rh3-bar-title{min-width:0;}
+  #screen-interview.rh3:not(.lv3) .rh3-exit{flex:none;margin-left:auto;}
+  #screen-interview.rh3:not(.lv3) .qcard:has(#rh3-startgate:not([hidden])) #iv-example-q{display:none !important;}   /* 시작 전 '시작을 누르면 첫 질문이 나와요'는 아래 안내와 같은 말 */
+  #screen-interview.rh3:not(.lv3) .rh3-tips-toggle{padding:9px 12px;font-size:13px;}
+}
+@media (max-width:350px){ #screen-interview.rh3:not(.lv3) .rh3-dev .rh3-pill{font-size:11px;padding:3px 6px;letter-spacing:-.2px;} }
+@media (max-width:839px) and (max-height:760px){   /* 위아래가 짧은 화면(작은 휴대폰·아이폰 듀오 겉화면·펼쳐 가로로 눕힘) */
+  #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{height:110px !important;}
+  #screen-interview.rh3:not(.lv3) #rh3-startgate p{font-size:0 !important;margin-bottom:10px;}            /* 안내 설명은 줄이고 제목만 */
+  #screen-interview.rh3:not(.lv3) #rh3-startgate p b{font-size:15px !important;margin:0 !important;}
+}
+@media (max-width:560px) and (max-height:760px){
+  #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{height:92px !important;}
 }
 /* 2026-10-27c 아이콘 바뀜 안내 */
 .icn-box{max-width:440px;}
@@ -15400,7 +15447,7 @@ function startRehearsal(){
   startCamera();
   // 2026-10-12: 바로 시작하지 않고 "준비됐어요 · 리허설 시작"을 눌러야 첫 질문을 읽음 (준비 팁은 오른쪽에서 선택적으로)
   { const ad = document.getElementById('btn-answer-done'); if(ad) ad.disabled = true; const rp0 = document.querySelector('#screen-interview .rh3-replay'); if(rp0) rp0.style.visibility = 'hidden'; }
-  { const gate = document.getElementById('rh3-startgate'); if(gate) gate.hidden = false; const go = document.getElementById('rh3-start-go'); if(go) setTimeout(()=>{ try{ go.focus(); }catch(_){} }, 300); }
+  { const gate = document.getElementById('rh3-startgate'); if(gate) gate.hidden = false; const go = document.getElementById('rh3-start-go'); if(go) setTimeout(()=>{ try{ go.focus({ preventScroll:true }); }catch(_){} }, 300); }   /* 2026-10-27f 버튼으로 화면이 내려가면 맨 위 카메라가 가려져서 움직이지 않게 */
   rh3Start();
 }
 /* ---- 리허설 화면 v3 (젠스파크 시안) ---- */
