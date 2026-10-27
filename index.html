@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-26j';
+var APP_VERSION = '2026-10-27a';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5147,6 +5147,11 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 .d3-more-fields span{font-size:15px;font-weight:700;} .d3-more-fields span::after{content:' ▾';color:var(--c-ink-3,#66666c);} .d3-more-fields[aria-expanded="true"] span::after{content:' ▴';}
 .d3-more-fields small{font-size:13px;color:var(--c-ink-3,#66666c);line-height:1.5;}
 .ready-skip{display:flex;align-items:center;gap:10px;min-height:44px;margin:4px 24px 0;font-size:14px;color:var(--c-ink-2,#45454a);cursor:pointer;} .ready-skip[hidden]{display:none;} .ready-skip input{width:20px;height:20px;margin:0;flex:none;accent-color:#c8441c;}
+/* 2026-10-27a 관리자: 기간 끝난 사람 따로 */
+.uf-ended-link{margin-left:auto;min-height:36px;padding:0 12px;border:1px solid #f1c9bd;border-radius:10px;background:#fff7f4;color:#a83612;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;} .uf-ended-link[hidden]{display:none;}
+.uf-ended-link:hover{background:#fdeee8;}
+.ul-ended-line{margin:4px 0 2px;font-size:13px;color:var(--c-ink-3,#66666c);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+@media(max-width:640px){ .uf-ended-link{margin-left:0;width:100%;} }
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -5879,8 +5884,9 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
       <div class="admin-view" id="admin-view-users">
         <div class="admin-view-head">
           <div>
-            <h2>면접자 목록</h2>
-            <p>가입한 사람에게 <b>권한 관리</b>로 분야(국회·법원 등)를 열어 주면 그때부터 모의면접을 볼 수 있어요. 이름이나 <b>상세</b>를 누르면 연락처·메모·이용 기간·AI 횟수를 한 곳에서 고칠 수 있어요.</p>
+            <h2 id="ul-title">면접자 목록</h2>
+            <p id="ul-desc-ended" hidden>이용 기간이 끝난 면접자만 모았어요. <b>면접자 목록에서는 자동으로 빠져요.</b> 다시 연습하게 하려면 <b>권한 관리</b>에서 새 이용 기간을 넣어 주세요(넣으면 면접자 목록으로 돌아가요). 여러 명은 골라서 <b>한 번에 설정</b>할 수 있어요. 지우지 않고 그대로 보관돼요.</p>
+            <p id="ul-desc">가입한 사람에게 <b>권한 관리</b>로 분야(국회·법원 등)를 열어 주면 그때부터 모의면접을 볼 수 있어요. 이름이나 <b>상세</b>를 누르면 연락처·메모·이용 기간·AI 횟수를 한 곳에서 고칠 수 있어요.</p>
           </div>
           <button class="btn-add-user" onclick="openAddUser()">지원자 등록 안내</button>
         </div>
@@ -5891,8 +5897,9 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
               <option value="">모든 준비 단계</option>
             </select>
             <span class="admin-toolbar-count" id="admin-user-count"></span>
+            <button type="button" class="uf-ended-link" id="uf-ended-link" hidden onclick="showAdminView('expired')"></button>
           </div>
-          <div class="uf-row"><span class="uf-lbl">상태</span><div class="uf-chips" id="uf-chips"></div></div>
+          <div class="uf-row" id="uf-chip-row"><span class="uf-lbl">상태</span><div class="uf-chips" id="uf-chips"></div></div>
           <div class="uf-row" id="uf-field-row" style="display:none;"><span class="uf-lbl">분야</span><div class="uf-chips" id="uf-field-chips"></div></div>
           <button type="button" class="uf-reset" id="uf-reset" style="display:none;" onclick="resetUserFilters()">조건 모두 지우기</button>
         </div>
@@ -10580,7 +10587,7 @@ async function hardQOpenQm(fieldId, q){
 /* 관리자 메뉴 5개 묶음 (2026-10-14): 화면(view) → 묶음(group) · 묶음 안 탭 */
 const ADMIN_GROUPS = {   // 2026-10-22m 하는 일별로 다시 묶음 (화면 id는 그대로)
   today:    { label:'오늘 할 일', views:[['overview','할 일 · 요약'],['live','지금 접속 · 접속 기록']] },
-  users:    { label:'면접자', views:[['users','면접자 목록'],['beta','연습 진행표'],['approvals','서류 합격 승인']] },
+  users:    { label:'면접자', views:[['users','면접자 목록'],['expired','기간 끝난 사람'],['beta','연습 진행표'],['approvals','서류 합격 승인']] },
   results:  { label:'연습 결과', views:[['records','면접 기록'],['realset','실전 세트 · 자기소개'],['hardq','점수 낮은 질문'],['export','엑셀로 내려받기']] },
   questions:{ label:'질문', views:[['questions','질문 · 모범답안'],['qrecord','질문 음성 녹음'],['reports','실제 면접 후기'],['reportq','후기 질문 정리'],['reportcall','후기 부탁할 사람'],['sttfix','음성 인식 바로잡기']] },
   talk:     { label:'소통', views:[['feedback','의견 · 오류 신고'],['notices','공지 보내기']] },
@@ -10698,6 +10705,8 @@ function renderOverviewHardQ(){
 }
 function showAdminView(view){
   state.adminView = view;
+  /* 2026-10-27a: '기간 끝난 사람'은 면접자 목록 화면을 같이 쓰되, 기간 끝난 사람만 보여 줌 (면접자 목록에서는 빠짐) */
+  if(view === 'users' || view === 'expired'){ const sc = view === 'expired' ? 'ended' : 'active'; if(state.userScope !== sc){ state.userChip = ''; state.userField = ''; state.selectedUserIds && state.selectedUserIds.clear(); } state.userScope = sc; try{ applyUserScope(); }catch(e){ console.warn('[기간 끝난 사람]', e); } }
   const pv = PIPE_VIEWS[view];   // 2026-10-22m AI · 비용 / 질문 음성 녹음 탭은 같은 화면의 칸
   if(pv){ state.pipePane = pv.pane; pipeInit(); showPipePane(pv.pane); pipeApplyView(view); }
   if(view === 'feedback') loadFeedback();
@@ -10712,7 +10721,7 @@ function showAdminView(view){
   if(view === 'reports' || view === 'reportcall') ReportAdmin.load(true);
   if(view === 'reportq') ReportQ.load(true);   // 2026-10-26d
   if(view === 'sttfix') SttAdmin.load(true);   // 2026-10-26d
-  document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+(pv ? 'pipeline' : view)));
+  document.querySelectorAll('.admin-view').forEach(el=>el.classList.toggle('active', el.id === 'admin-view-'+(pv ? 'pipeline' : view === 'expired' ? 'users' : view)));
   try{ renderAdminSubtabs(view); }catch(e){ console.warn('[관리자 탭]', e); }
   window.scrollTo({top:0});
 }
@@ -10730,19 +10739,43 @@ function filterAdminUsers(){
   let shown = 0;
   document.querySelectorAll('#admin-list .admin-row').forEach(row=>{
     const hay = (row.dataset.search || '');
-    const chipOk = !chip || (chip === '__devwarn' ? row.dataset.devwarn === '1' : chip === '__admin' ? row.dataset.admin === '1' : chip === '__staff' ? row.dataset.staff === '1' : chip === '__expired' ? row.dataset.expired === '1' : chip === '__pending' ? row.dataset.pending === '1' : chip === '__active' ? row.dataset.active === '1' : true);
+    const chipOk = !chip || (chip === '__devwarn' ? row.dataset.devwarn === '1' : chip === '__admin' ? row.dataset.admin === '1' : chip === '__staff' ? row.dataset.staff === '1' : chip === '__expired' ? row.dataset.expired === '1' : chip === '__soon' ? row.dataset.soon === '1' : chip === '__pending' ? row.dataset.pending === '1' : chip === '__active' ? row.dataset.active === '1' : true);
     const stOk = !st || row.dataset.status === st;
     const fldOk = !fld || (row.dataset.staff !== '1' && (row.dataset.fields || '').split(',').includes(fld));   // 직원(8개 분야 전부)은 분야별 보기에서 빼고 '직원'으로 따로
-    const ok = (!q || hay.includes(q)) && chipOk && stOk && fldOk;
+    const scopeOk = state.userScope === 'ended' ? row.dataset.ended === '1' : row.dataset.ended !== '1';   // 2026-10-27a
+    const ok = scopeOk && (!q || hay.includes(q)) && chipOk && stOk && fldOk;
     row.style.display = ok ? '' : 'none';
     if(ok) shown++;
   });
   const empty = document.getElementById('admin-list-empty');
   if(empty) empty.style.display = shown ? 'none' : '';
-  const cnt = document.getElementById('admin-user-count'); if(cnt) cnt.textContent = `${shown}명`;
+  const cnt = document.getElementById('admin-user-count'); if(cnt) cnt.textContent = state.userScope === 'ended' ? `기간 끝난 사람 ${shown}명` : `${shown}명`;
+  if(empty && !shown) empty.textContent = state.userScope === 'ended' ? '이용 기간이 끝난 사람이 없어요.' : '검색 조건에 맞는 면접자가 없어요.';
   document.querySelectorAll('#uf-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === chip));
   document.querySelectorAll('#uf-field-chips .uf-chip').forEach(c=>c.classList.toggle('on', c.dataset.val === fld));
+  /* 2026-10-27a 분야 칩 숫자는 지금 화면(면접자 목록 / 기간 끝난 사람)에 있는 사람만 */
+  { const inScope = [...document.querySelectorAll('#admin-list .admin-row[data-uid]')].filter(r=>(state.userScope === 'ended') === (r.dataset.ended === '1') && r.dataset.staff !== '1');
+    document.querySelectorAll('#uf-field-chips .uf-chip[data-val]').forEach(c=>{ const v = c.dataset.val; if(!v) return; const n = inScope.filter(r=>(r.dataset.fields || '').split(',').includes(v)).length; const b = c.querySelector('b'); if(b) b.textContent = n; c.style.display = n ? '' : 'none'; });
+    const fr = document.getElementById('uf-field-row'); if(fr && fr.dataset.has !== '0') fr.style.display = inScope.some(r=>(r.dataset.fields || '').replace(/,/g, '')) ? '' : 'none'; }
   const rs = document.getElementById('uf-reset'); if(rs) rs.style.display = (chip || st || fld || q) ? '' : 'none';
+}
+/** 2026-10-27a 면접자 목록 / 기간 끝난 사람 화면 전환 (같은 표를 씀) */
+function applyUserScope(){
+  const ended = state.userScope === 'ended';
+  const $ = id=>document.getElementById(id);
+  if($('ul-title')) $('ul-title').textContent = ended ? '기간 끝난 사람' : '면접자 목록';
+  if($('ul-desc')) $('ul-desc').hidden = ended; if($('ul-desc-ended')) $('ul-desc-ended').hidden = !ended;
+  if($('uf-chip-row')) $('uf-chip-row').style.display = ended ? 'none' : '';
+  const sel = $('admin-status-filter'); if(sel){ sel.style.display = ended ? 'none' : ''; if(ended) sel.value = ''; }
+  const add = document.querySelector('#admin-view-users .btn-add-user'); if(add) add.style.display = ended ? 'none' : '';
+  const sv = $('admin-view-users'); if(sv) sv.classList.toggle('ul-ended', ended);
+  syncEndedLink();
+  try{ filterAdminUsers(); }catch(_){}
+}
+function syncEndedLink(){
+  const b = document.getElementById('uf-ended-link'); if(!b) return;
+  const n = state.endedCount || 0; b.hidden = state.userScope === 'ended' || !n;
+  b.textContent = `기간 끝난 사람 ${n}명 따로 보기 →`;
 }
 /** 상태 칩(빈 값·__로 시작) 또는 준비 단계 값 */
 function setUserFilter(v, keepField){
@@ -18187,13 +18220,13 @@ async function renderAdmin(){
   const expiredCount = students.filter(u=>accessInfo(u.access_until).expired).length;
   const soonCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.until && !a.expired && a.daysLeft <= 3; }).length;
   const grantedCount = students.filter(u=>(u.allowed_fields||[]).length>0).length;
-  const pendingCount = students.filter(u=>(u.allowed_fields||[]).length===0).length;
+  const pendingCount = students.filter(u=>(u.allowed_fields||[]).length===0 && !accessInfo(u.access_until).expired).length;   // 2026-10-27a 기간 끝난 사람은 권한 대기에서 뺌
   const tile = statTile;
   const elP = document.getElementById('ov-stats-people');
   const activeCount = students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length;
   if(elP) elP.innerHTML =
-      tile(students.length+'<i>명</i>', '등록 면접자', {scope:'전체', foot: (adminCount || staffCount) ? [adminCount ? `관리자 ${adminCount}명` : '', staffCount ? `직원 ${staffCount}명` : ''].filter(Boolean).join(' · ') + ' 별도' : '관리자 계정 제외', go:"adminGo('users','')"})
-    + tile(activeCount+'<i>명</i>', '이용 중', {scope:'현재', cls: expiredCount ? 'warn' : '', foot: (expiredCount || soonCount) ? [soonCount ? `3일 안 만료 ${soonCount}명` : '', expiredCount ? `기간 끝남 ${expiredCount}명` : ''].filter(Boolean).join(' · ') : '권한 있고 기간이 남은 면접자', go: (expiredCount || soonCount) ? "adminGo('users','__expired')" : "adminGo('users','__active')"})
+      tile((students.length - expiredCount)+'<i>명</i>', '등록 면접자', {scope:'기간 끝난 사람 제외', foot: [expiredCount ? `기간 끝난 ${expiredCount}명 따로` : '', adminCount ? `관리자 ${adminCount}명` : '', staffCount ? `직원 ${staffCount}명` : ''].filter(Boolean).join(' · ') || '관리자 계정 제외', go:"adminGo('users','')"})
+    + tile(activeCount+'<i>명</i>', '이용 중', {scope:'현재', cls: expiredCount ? 'warn' : '', foot: (expiredCount || soonCount) ? [soonCount ? `3일 안 만료 ${soonCount}명` : '', expiredCount ? `기간 끝남 ${expiredCount}명` : ''].filter(Boolean).join(' · ') : '권한 있고 기간이 남은 면접자', go: soonCount ? "adminGo('users','__soon')" : expiredCount ? "adminGo('expired')" : "adminGo('users','__active')"})
     + tile(pendingCount+'<i>명</i>', '권한 대기', {scope:'현재', cls: pendingCount ? 'warn' : '', foot:'열어준 분야가 없는 면접자', go:"adminGo('users','__pending')"})
     + tile(activeUsers+'<i>명</i>', '최근 연습한 사람', {scope:'최근 7일', foot:`이번 달 완료 ${thisMonth}회 · 전체 ${statRecords.length}회`, go:"adminGo('live')"});
   const elR = document.getElementById('ov-stats-practice');
@@ -18212,10 +18245,11 @@ async function renderAdmin(){
     { const apN = Object.keys(state.apSubmitted||{}).length; if(apN) items.push({ cls:'warn', txt:`<b>${apN}명</b>이 서류 합격 증빙을 올리고 승인을 기다려요`, go:"adminGo('approvals')", btn:'증빙 보기' }); }
     if(state.raRecent) items.push({ cls:'', txt:`최근 7일 동안 면접 후기 <b>${state.raRecent}건</b>이 들어왔어요 <small>(받은 질문은 연습 문항에 바로 들어가요)</small>`, go:"adminGo('reports')", btn:'후기 보기' });
     if(pendingCount) items.push({ cls:'warn', txt:`<b>${pendingCount}명</b>이 분야 권한을 기다리고 있어요`, go:"adminGo('users','__pending')", btn:'권한 주기' });
-    if(expiredCount){ const ex = students.filter(u=>accessInfo(u.access_until).expired);
-      items.push({ cls:'warn', txt:`<b>${expiredCount}명</b>의 이용 기간이 끝났어요 <small>(${ex.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${ex.length>4?' 외':''} · 연습은 막히고, 로그인하면 면접 질문 남기기만 보여요)</small>`, go:"adminGo('users','__expired')", btn:'확인' }); }
+    // 2026-10-27a: 기간 끝난 사람은 따로 관리 — 할 일에는 최근 7일 안에 끝난 사람만 알림
+    { const ex = students.filter(u=>{ const a = accessInfo(u.access_until); return a.expired && -a.daysLeft <= 7; });
+      if(ex.length) items.push({ cls:'warn', txt:`최근 7일 안에 <b>${ex.length}명</b>의 이용 기간이 끝났어요 <small>(${ex.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${ex.length>4?' 외':''} · 면접자 목록에서 빠지고 '기간 끝난 사람'에 있어요)</small>`, go:"adminGo('expired')", btn:'기간 끝난 사람' }); }
     if(soonCount){ const soon = students.map(u=>({ u, a: accessInfo(u.access_until) })).filter(x=>x.a.until && !x.a.expired && x.a.daysLeft <= 3).sort((a,b)=>a.a.daysLeft-b.a.daysLeft);
-      items.push({ cls:'warn', txt:`<b>${soonCount}명</b>의 이용 기간이 3일 안에 끝나요 <small>(${soon.slice(0,4).map(x=>escapeHtml(x.u.name||'') + ' ' + String(x.u.access_until).slice(5,10).replace('-','/')).join(', ')}${soon.length>4?' 외':''})</small>`, go:"adminGo('users','__expired')", btn:'기간 늘리기' }); }
+      items.push({ cls:'warn', txt:`<b>${soonCount}명</b>의 이용 기간이 3일 안에 끝나요 <small>(${soon.slice(0,4).map(x=>escapeHtml(x.u.name||'') + ' ' + String(x.u.access_until).slice(5,10).replace('-','/')).join(', ')}${soon.length>4?' 외':''})</small>`, go:"adminGo('users','__soon')", btn:'기간 늘리기' }); }
     // 2026-10-22v: 분야는 열려 있는데 이용 기간이 비어 있는 면접자(직원 제외) → 기간 없이 계속 쓸 수 있으니 알려 줌
     { const noEnd = students.filter(u=>(u.allowed_fields||[]).filter(Boolean).length && !u.access_until);
       if(noEnd.length) items.push({ cls:'', txt:`<b>${noEnd.length}명</b>의 이용 기간이 정해지지 않았어요 <small>(${noEnd.slice(0,4).map(u=>escapeHtml(u.name||'')).join(', ')}${noEnd.length>4?' 외':''} · 기간 없이 계속 쓸 수 있어요)</small>`, go:"adminGo('users','__active')", btn:'기간 정하기' }); }
@@ -18299,18 +18333,22 @@ async function renderAdmin(){
     const isActive = !u.is_admin && !isStaff && allowedFields.length > 0 && !acc.expired;
     const isPending = !u.is_admin && allowedFields.length === 0;
     const isExpiring = !u.is_admin && !isStaff && (acc.expired || (acc.until && acc.daysLeft <= 3));
+    const isEnded = !u.is_admin && !isStaff && acc.expired;   // 2026-10-27a 기간 끝남 → 면접자 목록에서 빠지고 '기간 끝난 사람'에만
+    const isSoon = !u.is_admin && !isStaff && !acc.expired && !!acc.until && acc.daysLeft <= 3;
+    const endedAgo = isEnded ? Math.max(0, -acc.daysLeft) : 0;
     const di = u.is_admin ? null : adminDeviceInfo(u.id);
     const devLine = !di || !di.s ? '' : `<div class="up-dev${di.warn ? ' warn' : ''}" title="최근 7일 기기 ${di.dev7}대 · 다른 기기로 넘어간 로그인 ${di.rep7}회 · 누적 기기 전환 ${di.s.takeovers||0}회"><span class="up-dev-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/></svg></span>${escapeHtml(di.s.device || '기기 정보 없음')} · ${agoLabel(di.s.last_seen)}${di.warn ? ' <b class="up-dev-tag">기기 주의</b>' : (di.rep7 ? ` · 전환 ${di.rep7}회` : '')}</div>`;
-    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-staff="${isStaff ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-pending="${isPending ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-fields="${escapeHtml(allowedFields.join(','))}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
+    return `<div class="admin-row" data-devwarn="${di && di.warn ? '1' : '0'}" data-uid="${u.id}" data-admin="${u.is_admin ? '1' : '0'}" data-staff="${isStaff ? '1' : '0'}" data-expired="${isExpiring ? '1' : '0'}" data-ended="${isEnded ? '1' : '0'}" data-soon="${isSoon ? '1' : '0'}" data-pending="${isPending && !isEnded ? '1' : '0'}" data-active="${isActive ? '1' : '0'}" data-fields="${escapeHtml(allowedFields.join(','))}" data-status="${escapeHtml(status)}" data-search="${escapeHtml(((u.name||'')+' '+(u.email||'')+' '+(u.note||'')+' '+(u.phone||'')+' '+phoneDigits(u.phone)).toLowerCase())}">
       <input type="checkbox" ${checked} onchange="toggleUserSelect('${u.id}', this.checked)">
       <div>
         <div class="admin-name">
           <a href="javascript:void(0)" class="admin-name-link" onclick="openAdminUserDetail('${u.id}')" title="클릭하면 상세 기록을 볼 수 있어요">${escapeHtml(u.name || '')}</a>
           ${u.is_admin ? ' <span class="perm-chip">관리자</span>' : ` <span class="status-chip ${statusChipClass(status)}">${escapeHtml(status)}</span>`}${isSelf ? ' <span class="status-chip">나</span>' : ''}${u.is_admin ? '' : ' '+accessChipHtml(u.access_until)}${u.ai_override==='on' ? ' <span class="status-chip until" title="이 사람만 AI 즉석 꼬리질문·채점 켬">AI 켬</span>' : u.ai_override==='off' ? ' <span class="status-chip" title="이 사람만 AI 끔">AI 끔</span>' : ''}
         </div>
+        ${isEnded ? `<div class="ul-ended-line"><span class="tag tag-danger">기간 끝남 ${escapeHtml(acc.label.slice(5).replace('-','/'))}</span> ${endedAgo ? `${endedAgo}일 지남` : '오늘 끝남'}</div>` : ''}
         ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
-        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '<span class="tag tag-danger">기간 만료</span>' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
+        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
       <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
@@ -18329,12 +18367,15 @@ async function renderAdmin(){
   // 빠른 필터 칩 (전체 / 권한 대기 / 이용 중 / 만료·임박 / 관리자)
   const chipsEl = document.getElementById('uf-chips');
   if(chipsEl){
-    const expiringCount = students.filter(u=>{ const a = accessInfo(u.access_until); return a.expired || (a.until && a.daysLeft <= 3); }).length;
-    const defs = [['', '전체', users.length], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__pending', '권한 대기', pendingCount], ['__expired', '만료 · 임박', expiringCount]];
+    const endedN = students.filter(u=>accessInfo(u.access_until).expired).length;
+    const soonN = students.filter(u=>{ const a = accessInfo(u.access_until); return a.until && !a.expired && a.daysLeft <= 3; }).length;
+    const pendN = students.filter(u=>(u.allowed_fields||[]).length===0 && !accessInfo(u.access_until).expired).length;
+    state.endedCount = endedN;
+    const defs = [['', '전체', users.length - endedN], ['__active', '이용 중', students.filter(u=>(u.allowed_fields||[]).length && !accessInfo(u.access_until).expired).length], ['__pending', '권한 대기', pendN], ['__soon', '3일 안 끝남', soonN]];
     { const dw = students.filter(u=>adminDeviceInfo(u.id).warn).length; if(dw) defs.push(['__devwarn', '기기 주의', dw]); }
     if(staffCount) defs.push(['__staff', '직원', staffCount]);
     defs.push(['__admin', '관리자', adminCount]);
-    const tone = { __active:'ok', __pending:'warn', __expired:'danger', __devwarn:'warn', __staff:'staff', __admin:'mute' };
+    const tone = { __active:'ok', __pending:'warn', __expired:'danger', __soon:'danger', __devwarn:'warn', __staff:'staff', __admin:'mute' };
     chipsEl.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${tone[v] ? ' t-'+tone[v] : ''}" data-val="${v}" onclick="setUserFilter('${v}')">${tone[v] && v !== '__admin' && v !== '__staff' ? '<i class="uf-dot" aria-hidden="true"></i>' : ''}${l} <b>${n}</b></button>`).join('');
   }
   // 분야 칩 (2026-10-20i): 열어 준 분야별로 보기 — 한 명이라도 열린 분야만
@@ -18355,7 +18396,7 @@ async function renderAdmin(){
     stSel.innerHTML = '<option value="">모든 준비 단계</option>' + USER_STATUSES.map(s=>`<option value="${s}">준비 단계 · ${s}</option>`).join('');
     stSel.value = /^__/.test(cur) ? '' : cur;
   }
-  filterAdminUsers();
+  filterAdminUsers(); try{ syncEndedLink(); }catch(_){}
 
   // 면접 기록 (사람별 묶음 / 전체 목록)
   const nameOf = {}; const phoneOf = {};
@@ -18535,6 +18576,7 @@ function fieldBadgesHtml(ids){
 }
 /** 관리자 화면 이동 (현황 요약 숫자 칸 클릭) — filter: 면접자 관리의 빠른 필터 값 */
 function adminGo(view, filter){
+  if(view === 'users' && filter === '__expired'){ view = 'expired'; filter = undefined; }   // 2026-10-27a 예전 '만료 · 임박' 바로가기 → 기간 끝난 사람
   showAdminView(view);
   if(view === 'users' && filter !== undefined){ try{ setUserFilter(filter, false); }catch(_){} }
 }
