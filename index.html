@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-27a';
+var APP_VERSION = '2026-10-27b';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5152,6 +5152,21 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 .uf-ended-link:hover{background:#fdeee8;}
 .ul-ended-line{margin:4px 0 2px;font-size:13px;color:var(--c-ink-3,#66666c);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 @media(max-width:640px){ .uf-ended-link{margin-left:0;width:100%;} }
+/* 2026-10-27b 가입 필수: 면접 후기 약속 (2026-10-27b2 문장·줄바꿈 다듬음) */
+#modal-signup .su-agree{margin-top:18px;padding-top:16px;border-top:1px solid var(--c-line,#e6e4e0);}
+#modal-signup .su-agree-t{margin:0 0 8px;font-size:14.5px;font-weight:700;color:var(--c-ink,#1c1c1e);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;}
+#modal-signup .su-agree-t small{font-size:12.5px;font-weight:500;color:var(--c-ink-3,#66666c);}
+#modal-signup .su-agree .consent-row{margin-top:8px;align-items:flex-start;gap:12px;padding:12px 14px;font-size:14px;line-height:1.6;word-break:keep-all;overflow-wrap:break-word;text-wrap:pretty;}
+#modal-signup .su-agree .consent-row input{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:#c8441c;}
+#modal-signup .su-agree .consent-row.invalid{background:#fef3f2 !important;border:1px solid #f04438 !important;}
+#modal-signup .pledge-txt small{display:block;margin-top:2px;font-size:13px;font-weight:400;color:var(--c-ink-3,#66666c);}
+#modal-signup .pledge-note{margin:8px 2px 0;padding:0 0 0 18px;font-size:13px;line-height:1.65;color:var(--c-ink-2,#45454a);word-break:keep-all;text-wrap:pretty;}
+#modal-signup .pledge-note li{margin:0 0 2px;} #modal-signup .pledge-note li::marker{color:#c8441c;}
+#modal-signup .pledge-note b{color:#a83612;font-weight:700;}
+#modal-signup .su-agree .field-error{margin:4px 2px 0;font-size:12.5px;}
+.rr-pledge{margin:0 0 14px;padding:10px 12px;border-radius:10px;background:#fff3ee;border:1px solid #f6d5c8;font-size:13.5px;line-height:1.65;color:#6b2a10;word-break:keep-all;text-wrap:pretty;}
+.rr-pledge b{color:#a83612;}
+#modal-signup .nw, .rr-pledge .nw{white-space:nowrap;}
 /* 2026-10-26e 후보 골라서 한꺼번에 넣기 */
 .sf-bulk{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:10px;background:var(--c-bg-2,#f6f5f2);}
 .sf-bulk:empty{display:none;}
@@ -7598,11 +7613,24 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
         <input id="signup-note" type="text" placeholder="예: ○○광역시의회 서류합격, 10월 면접 예정" onkeydown="if(event.key==='Enter') submitSignup()">
         <div class="signup-hint">적어 두면 담당자가 확인할 때 참고해요. 가입 뒤 화면에서 분야를 다시 골라 보내면 돼요.</div>
       </div>
+      <div class="su-agree" role="group" aria-labelledby="su-agree-t">
+        <p class="su-agree-t" id="su-agree-t">필수 동의 <small>두 가지 모두 체크해야 가입할 수 있어요</small></p>
       <label class="consent-row" id="signup-consent-row">
         <input type="checkbox" id="signup-consent" onchange="validateSignupField('consent')">
         <span><b>[필수]</b> 개인정보 수집·이용에 동의합니다. <a onclick="event.preventDefault(); openPrivacyNotice()">내용 보기</a></span>
       </label>
       <div class="field-error" id="signup-consent-err"></div>
+      <!-- 2026-10-27b 필수: 면접 후기 작성 약속 (이 기능 전에 가입한 사람은 예외) -->
+      <label class="consent-row pledge-row" id="signup-pledge-row">
+        <input type="checkbox" id="signup-pledge" onchange="validateSignupField('pledge')">
+        <span class="pledge-txt"><b>[필수]</b> 면접을 본 뒤 <span class="nw"><b>면접&nbsp;후기(받은&nbsp;질문)</b>를</span> 남기겠습니다.<small>합격·불합격과 상관없이 남겨 주세요.</small></span>
+      </label>
+      <ul class="pledge-note">
+        <li>후기를 남기지 않으면 새&nbsp;분야&nbsp;승인·이용&nbsp;기간&nbsp;연장 등 <b>다음 이용이 제한되는</b> <span class="nw"><b>불이익</b>이</span> 있을 수 있어요.</li>
+        <li>동의하지 않으면 회원가입을 할 수 없어요.</li>
+      </ul>
+      <div class="field-error" id="signup-pledge-err"></div>
+      </div>
     </div>
     <div class="modal-foot" style="flex-direction:column;gap:8px;">
       <div style="display:flex;gap:10px;width:100%;">
@@ -8011,7 +8039,7 @@ async function rejectIfExpired(profile, authUser){
   if(profile.is_admin || !accessInfo(profile.access_until).expired) return false;
   // 2026-10-16a: 분야를 받았던 사람은 '기간 종료' 화면으로 (연습은 막고, 실제 면접 질문 남기기·결과 알려 주기만)
   if(authUser){   // 2026-10-23e: 분야가 비어 있는 기간 종료 계정도 로그아웃하지 않고 '기간 종료' 화면으로
-    state.currentUser = { id: authUser.id, email: authUser.email, name: profile.name, note: profile.note, isAdmin:false, allowed: profile.allowed_fields || [],
+    state.currentUser = { id: authUser.id, email: authUser.email, name: profile.name, note: profile.note, pledgeAt: profile.report_pledge_at || null, isAdmin:false, allowed: profile.allowed_fields || [],
       status: profile.status || '', phone: profile.phone || '', accessUntil: profile.access_until || null, aiOverride: null };
     state.username = profile.name;
     showScreen('screen-pending');
@@ -8318,6 +8346,7 @@ async function handleLogin(){
     email: data.user.email,
     name: profile.name,
     note: profile.note,
+    pledgeAt: profile.report_pledge_at || null,
     isAdmin: profile.is_admin,
     isStaff: !profile.is_admin && !!profile.is_staff,
     allowed: profile.allowed_fields || [],
@@ -8490,6 +8519,7 @@ async function tryRestoreSession(){
     email: data.session.user.email,
     name: profile.name,
     note: profile.note,
+    pledgeAt: profile.report_pledge_at || null,
     isAdmin: profile.is_admin,
     isStaff: !profile.is_admin && !!profile.is_staff,
     allowed: profile.allowed_fields || [],
@@ -8581,6 +8611,10 @@ const RealReport = {
     const added = this.mine.reduce((s,x)=>s+(x.added_count||0), 0);
     const btn = (label, js, primary)=>`<button type="button" class="rr-btn${primary?' primary':''}" onclick="${js}">${label}</button>`;
     let kicker = '결과와 상관없이 남겨 주세요', title = '', desc = '', acts = '';
+    const pledgeLine = (state.currentUser && state.currentUser.pledgeAt && (ph === 'none' || ph === 'after' || ph === 'planned'))
+      ? (where === 'closed'
+        ? `<p class="rr-pledge">가입할 때 약속한 <span class="nw"><b>면접&nbsp;후기</b>를</span> 아직 남기지&nbsp;않았어요. 남기지 않으면 새&nbsp;분야&nbsp;승인·기간&nbsp;연장이 제한될 수 있어요.</p>`
+        : `<p class="rr-pledge">가입할 때 <span class="nw"><b>면접&nbsp;후기</b>를</span> 남기기로 약속했어요. 면접을 본 뒤 꼭 남겨&nbsp;주세요.</p>`) : '';
     if(ph === 'none'){
       title = '면접에서 받은 질문을 남겨 주세요';
       desc = `실제 면접 질문은 다음 지원자에게 가장 좋은 연습 문제예요. 남기면 바로 같은 분야 연습 문항으로 들어가요.${n ? ` 지금까지 합격자들이 남긴 ${escapeHtml(fname)} 질문은 <b>${n}개</b>예요.` : ''}`;
@@ -8609,7 +8643,7 @@ const RealReport = {
       acts = btn('질문 더 남기기', "RealReport.open('self')", true);
     }
     return `<div class="rr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></div>
-      <div class="rr-main"><p class="rr-kicker">${kicker}</p><h3 class="rr-title">${title}</h3><p class="rr-desc">${desc}</p><div class="rr-acts">${acts}</div></div>`;
+      <div class="rr-main"><p class="rr-kicker">${kicker}</p><h3 class="rr-title">${title}</h3><p class="rr-desc">${desc}</p>${pledgeLine}<div class="rr-acts">${acts}</div></div>`;
   },
   async refreshHome(){
     const card = document.getElementById('rr-card'); if(!card) return;
@@ -9168,7 +9202,7 @@ const ApprovalAdmin = {
       const open = (u.allowed_fields||[]).length ? fieldBadgesHtml(u.allowed_fields) : '<span class="up-none">아직 열린 분야 없음</span>';
       // 2026-10-23a: 이미 분야를 받았던 사람의 요청 = 재신청 (이전 분야·기간 표시)
       const prevF = (u.allowed_fields||[]).filter(Boolean); const acc = accessInfo(u.access_until);
-      const rejoin = prevF.length && r.status !== 'approved' ? `<span class="tag">재신청</span>` : '';
+      const rejoin = prevF.length && r.status !== 'approved' ? `<span class="tag">재신청</span> ${reportPledgeTag(u)}` : '';
       const prevTxt = prevF.length ? `<dt>이전 분야</dt><dd>${escapeHtml(prevF.map(rrFieldName).join(', '))}${acc.until ? ` · ${acc.expired ? '기간 끝남 ' : '기간 '}${escapeHtml(acc.label)}${acc.expired ? '' : '까지'}` : ''}</dd>` : '';
       const dateTxt = r.interview_date ? `<dt>면접일</dt><dd>${escapeHtml(String(r.interview_date).slice(0,10))}</dd>` : '';
       return `<div class="ap-card">${thumb}
@@ -10758,6 +10792,14 @@ function filterAdminUsers(){
     document.querySelectorAll('#uf-field-chips .uf-chip[data-val]').forEach(c=>{ const v = c.dataset.val; if(!v) return; const n = inScope.filter(r=>(r.dataset.fields || '').split(',').includes(v)).length; const b = c.querySelector('b'); if(b) b.textContent = n; c.style.display = n ? '' : 'none'; });
     const fr = document.getElementById('uf-field-row'); if(fr && fr.dataset.has !== '0') fr.style.display = inScope.some(r=>(r.dataset.fields || '').replace(/,/g, '')) ? '' : 'none'; }
   const rs = document.getElementById('uf-reset'); if(rs) rs.style.display = (chip || st || fld || q) ? '' : 'none';
+}
+/** 2026-10-27b 가입 때 '면접 후기 남기기'에 동의한 사람 표시 (동의 전 가입자는 표시 없음) */
+function reportPledgeTag(u){
+  if(!u || u.is_admin) return '';
+  const has = !!(state.reportUserIds && state.reportUserIds.has(u.id));
+  if(has) return '<span class="tag tag-ok" title="면접 후기를 남겼어요">후기 남김</span>';
+  if(u.report_pledge_at){ const d = new Date(u.report_pledge_at); return `<span class="tag tag-warn" title="${d.getMonth()+1}/${d.getDate()} 가입할 때 면접 후기 작성에 동의 · 아직 안 남김">후기 약속 · 안 남김</span>`; }
+  return '';
 }
 /** 2026-10-27a 면접자 목록 / 기간 끝난 사람 화면 전환 (같은 표를 씀) */
 function applyUserScope(){
@@ -18144,6 +18186,8 @@ async function renderAdmin(){
   const users = profiles || [];
   await attachAdminEmails(users);
   state.adminUsers = users;
+  // 2026-10-27b: 면접 후기를 남긴 사람 (가입 때 약속한 사람이 남겼는지 보려고)
+  try{ const rr = await sbAll(()=>sb.from('interview_reports').select('user_id,created_by,source')); if(!rr.error) state.reportUserIds = new Set((rr.data||[]).map(x=>x.user_id || (x.source !== 'phone' ? x.created_by : null)).filter(Boolean)); }catch(_){}
 
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
   let { data: records, error: recErr } = await sbAll(()=>sb
@@ -18345,7 +18389,7 @@ async function renderAdmin(){
           <a href="javascript:void(0)" class="admin-name-link" onclick="openAdminUserDetail('${u.id}')" title="클릭하면 상세 기록을 볼 수 있어요">${escapeHtml(u.name || '')}</a>
           ${u.is_admin ? ' <span class="perm-chip">관리자</span>' : ` <span class="status-chip ${statusChipClass(status)}">${escapeHtml(status)}</span>`}${isSelf ? ' <span class="status-chip">나</span>' : ''}${u.is_admin ? '' : ' '+accessChipHtml(u.access_until)}${u.ai_override==='on' ? ' <span class="status-chip until" title="이 사람만 AI 즉석 꼬리질문·채점 켬">AI 켬</span>' : u.ai_override==='off' ? ' <span class="status-chip" title="이 사람만 AI 끔">AI 끔</span>' : ''}
         </div>
-        ${isEnded ? `<div class="ul-ended-line"><span class="tag tag-danger">기간 끝남 ${escapeHtml(acc.label.slice(5).replace('-','/'))}</span> ${endedAgo ? `${endedAgo}일 지남` : '오늘 끝남'}</div>` : ''}
+        ${isEnded ? `<div class="ul-ended-line"><span class="tag tag-danger">기간 끝남 ${escapeHtml(acc.label.slice(5).replace('-','/'))}</span> ${endedAgo ? `${endedAgo}일 지남` : '오늘 끝남'} ${reportPledgeTag(u)}</div>` : ''}
         ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
         ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
@@ -22013,6 +22057,7 @@ function openSignup(){
   ['signup-name','signup-id','signup-phone','signup-pw','signup-pw2','signup-note'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('invalid'); } });
   { const e2 = document.getElementById('signup-pw2-err'); if(e2){ e2.textContent = ''; e2.classList.remove('ok'); } toggleSignupPwVisible(false); }
   const consent=document.getElementById('signup-consent'); if(consent){ consent.checked=false; validateSignupField('consent'); }
+  const pledge=document.getElementById('signup-pledge'); if(pledge){ pledge.checked=false; validateSignupField('pledge'); }
   const pe=document.getElementById('signup-phone-err'); if(pe) pe.textContent='';
   document.querySelectorAll('#signup-pw-rules [data-rule]').forEach(el=>el.classList.remove('ok','bad'));
 }
@@ -22071,6 +22116,11 @@ function validateSignupField(which, force){
     const bad = !c.checked && !!force;
     document.getElementById('signup-consent-row').classList.toggle('invalid', bad);
     document.getElementById('signup-consent-err').textContent = bad ? '가입하려면 개인정보 수집·이용에 동의해 주세요' : '';
+  }else if(which === 'pledge'){
+    const c = document.getElementById('signup-pledge'); if(!c) return;
+    const bad = !c.checked && !!force;
+    document.getElementById('signup-pledge-row').classList.toggle('invalid', bad);
+    document.getElementById('signup-pledge-err').textContent = bad ? '면접 후기를 남기기로 동의해야 가입할 수 있어요' : '';
   }
 }
 function openPrivacyNotice(){ document.getElementById('modal-privacy').classList.add('active'); }
@@ -22112,6 +22162,12 @@ async function submitSignup(){
     showToast('개인정보 수집·이용에 동의해야 가입할 수 있어요');
     return;
   }
+  if(!document.getElementById('signup-pledge').checked){   // 2026-10-27b
+    validateSignupField('pledge', true);
+    try{ document.getElementById('signup-pledge-row').scrollIntoView({ block:'center', behavior:'smooth' }); }catch(_){}
+    showToast('면접 후기를 남기기로 동의해야 가입할 수 있어요');
+    return;
+  }
   const signupBtn = document.querySelector('#modal-signup .btn-solid'); if(signupBtn){ signupBtn.disabled = true; signupBtn.textContent = '가입 중…'; }
   const restoreBtn = ()=>{ if(signupBtn){ signupBtn.disabled = false; signupBtn.textContent = '가입하기'; } };
   let signRes; try{ signRes = await sb.auth.signUp({ email, password: pw }); }catch(e){ restoreBtn(); showToast('회원가입 요청에 실패했어요. 인터넷 연결을 확인해 주세요.'); return; }
@@ -22134,8 +22190,10 @@ async function submitSignup(){
     showToast('가입 요청은 보냈지만 계정 정보를 받지 못했어요. 잠시 후 다시 시도해 주세요.');
     return;
   }
-  const profileRow = { id: userId, name, phone, note: note || '서류 결과 확인 중', is_admin:false, allowed_fields: [], privacy_agreed_at: new Date().toISOString() };
+  const profileRow = { id: userId, name, phone, note: note || '서류 결과 확인 중', is_admin:false, allowed_fields: [], privacy_agreed_at: new Date().toISOString(), report_pledge_at: new Date().toISOString() };
   let { error: insertErr } = await sb.from('profiles').insert(profileRow);
+  // profiles.report_pledge_at 컬럼이 아직 없으면(SQL step38 미적용) 빼고 저장
+  if(insertErr && /report_pledge_at/i.test(insertErr.message||'')){ console.warn('[profiles.report_pledge_at 컬럼 없음] sql/step38_report_pledge_2026-10-27.sql'); delete profileRow.report_pledge_at; ({ error: insertErr } = await sb.from('profiles').insert(profileRow)); }
   // profiles.privacy_agreed_at 컬럼이 아직 없으면(SQL 미적용) 동의 시각만 빼고 저장
   if(insertErr && /privacy_agreed_at/i.test(insertErr.message||'')){
     console.warn('[profiles.privacy_agreed_at 컬럼 없음 → 제외하고 저장] supabase/sql/step5b_privacy_consent.sql을 실행해 주세요.');
