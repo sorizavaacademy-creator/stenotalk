@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-28f';
+var APP_VERSION = '2026-10-28g';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -8624,7 +8624,7 @@ const ZpFoot = {
   SCREENS: ['screen-pending','screen-dashboard','screen-practice','screen-result','screen-admin'],
   html(){
     return '<div class="zp-foot-top"><button type="button" class="zp-foot-policy" onclick="openPolicy()">개인정보 처리방침</button><span class="zp-foot-org">한국AI속기사협회</span></div>'
-      + '<p><span class="zf-i">서울특별시 강남구 강남대로94길 66, 산들빌딩 5층</span><span class="sep">|</span><span class="zf-i">대표 안문학 · 사업자등록번호 119-82-01497</span></p>'
+      + '<p><span class="zf-i">서울특별시 강남구 강남대로94길 66, 산돌빌딩 5층</span><span class="sep">|</span><span class="zf-i">대표 안문학 · 사업자등록번호 119-82-01497</span></p>'
       + '<p><span class="zf-i">대표전화 02-876-0161</span><span class="sep">|</span><span class="zf-i">개인정보 보호책임자 박선욱 · kcost@kcost.org</span></p>'
       + '<p>© 2026 한국AI속기사협회</p>';
   },
