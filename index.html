@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-28d';
+var APP_VERSION = '2026-10-28e';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -3870,7 +3870,7 @@ var APP_VERSION = '2026-10-28d';
     .pp-2 td:nth-child(2)::before{content:'맡긴 일 · ';font-weight:700;color:var(--c-ink-3,#77777e);}
   }
   @media(max-width:560px){ .pp-body{font-size:13.5px;} .pp-tbl{font-size:12.5px;} .pp-tbl th,.pp-tbl td{padding:7px 8px;} .pp-tbl tbody th{width:84px;} }
-  .lg-policy,.zp-foot-policy{padding:0;border:0;background:none;font:inherit;font-weight:800;color:var(--c-ink,#1c1c1e);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .lg-policy,.zp-foot-policy{padding:0;border:0;background:none;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-decoration:none;text-underline-offset:3px;} .lg-policy:hover,.zp-foot-policy:hover{text-decoration:underline;}   /* 2026-10-28e 다른 글과 똑같이 (굵게·밑줄 없음) */
   .lg-foot-l{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
   .zp-foot{max-width:1160px;margin:28px auto 0;padding:18px clamp(16px,4vw,32px) 28px;border-top:1px solid #E6E6EA;font-size:12.5px;line-height:1.7;color:var(--c-ink-3,#77777e);box-sizing:border-box;width:100%;clear:both;}
   .zp-foot-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:4px;font-size:13px;}
