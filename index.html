@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-27f';
+var APP_VERSION = '2026-10-28a';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -5172,6 +5172,16 @@ body.v3-ui #modal-setup .dev-check, .dev-check{min-height:44px;cursor:pointer;} 
 }
 @media (max-width:560px) and (max-height:760px){
   #screen-interview.rh3:not(.lv3) .cam-preview video, #screen-interview.rh3:not(.lv3) .cam-preview #cam-preview-label{height:92px !important;}
+}
+/* 2026-10-28a 태블릿(아이패드·갤럭시 탭) 점검에서 찾은 작은 것들 */
+@media (min-width:641px) and (max-width:1100px){
+  .d3-nav a{padding:0 11px;}                                      /* 위 메뉴 '자기소개 코치'가 알림 종과 붙어 보이던 것 */
+  #screen-practice.v3 .p3-search{min-width:250px !important;}      /* 검색칸 안내 글("'공공기관 공통'에서 검색") 잘림 */
+  #screen-admin.v3 #admin-record-search{min-width:270px;}
+}
+@media (max-width:1280px){
+  #screen-admin.v3 #rec-stats-strip .admin-stat .lbl{display:block;}     /* '완료된 기록 / 최근 7일'이 두 줄로 나뉘던 것 */
+  #screen-admin.v3 #rec-stats-strip .admin-stat .lbl .scope{display:block;margin-top:1px;font-size:12px;}
 }
 /* 2026-10-27c 아이콘 바뀜 안내 */
 .icn-box{max-width:440px;}
