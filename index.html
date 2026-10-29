@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-29b';
+var APP_VERSION = '2026-10-29c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -3935,6 +3935,8 @@ var APP_VERSION = '2026-10-29b';
     .ur-title{font-size:19px;} .ur-desc{font-size:14px;margin-bottom:18px;}
     .ur-ta{font-size:16px;min-height:88px;}
   }
+  #screen-admin.v3 .fb-note-row textarea.fb-reply-in{height:auto !important;min-height:66px;padding:10px 12px;line-height:1.55;resize:vertical;font:inherit;font-size:14px;}
+  #screen-admin.v3 .fb-note-row{align-items:flex-start;}
   .fb-kind.review{background:#FFF4D6;color:#8A5A00;}
   #screen-admin.v3 .fb-kind.review{color:#8A5A00;border-color:#EBD9A6;background:#FFF9E8;}
   @media print{ .zp-foot, #modal-policy{display:none !important;} }
@@ -4470,7 +4472,7 @@ body.is-admin-ui #d3-user-menu #nt-menu-item, body.is-admin-ui #d3-user-menu #na
 .nt-done{ display:flex; align-items:center; gap:8px; padding:12px 14px 4px; } .nt-done b{ font-size:15.5px; color:#1c1c1e; } .nt-done time{ margin-left:auto; font-size:12px; color:#66666c; }
 .nt-ok{ flex:none; width:22px; height:22px; border-radius:50%; background:#2f7a4a; color:#fff; display:grid; place-items:center; }
 .nt-done .nt-new{ margin:0; }
-.nt-reply .nt-q{ background:none; padding:4px 14px 10px 44px; } .nt-tip{ margin:0; padding:0 14px 12px 44px; font-size:13px; line-height:1.55; color:#45454a; word-break:keep-all; }
+.nt-reply .nt-q{ background:none; padding:4px 14px 10px 44px; } .nt-ans{ margin:0 14px 12px 44px; padding:10px 12px; background:#FFF4EE; border:1px solid #F6D9CB; border-radius:10px; } .nt-ans span{ display:block; margin-bottom:3px; font-size:12px; font-weight:700; color:#B8441C; } .nt-ans p{ margin:0; font-size:14px; line-height:1.6; color:#1c1c1e; word-break:keep-all; overflow-wrap:anywhere; } .nt-tip{ margin:0; padding:0 14px 12px 44px; font-size:13px; line-height:1.55; color:#45454a; word-break:keep-all; }
 /* ---- 공지사항 · 답장 (2026-10-20f) ---- */
 .nt-box{ max-width:520px !important; --rr-ink:#1c1c1e; --rr-ink2:#45454a; --rr-ink3:#66666c; --rr-line:#e6e4e0; --rr-acc:#e8532a; --rr-acc-ink:#c2401b; --rr-acc-soft:#fdf0eb; --rr-surface:#f6f5f3; }
 .nt-box .nt-head{ text-align:center; padding-top:26px; border-bottom:0; }
@@ -12783,7 +12785,7 @@ function renderFeedback(){
     if(cur!=='perm' && fbIsPerm(r) && (document.getElementById('fb-hide-perm')||{}).checked) return false;   // 2026-10-22f 권한 차단 기록은 기본으로 숨김 ('권한 차단' 칩으로 보기)
     if(hideDone && r.status==='처리 완료' && cur!=='') return false;
     if(hideDone && r.status==='처리 완료' && cur==='') return false;
-    if(q && !((fbUserName(r.user_id)+' '+(r.message||'')+' '+(r.admin_note||'')).toLowerCase().includes(q))) return false;
+    if(q && !((fbUserName(r.user_id)+' '+(r.message||'')+' '+(r.admin_note||'')+' '+(r.reply||'')).toLowerCase().includes(q))) return false;
     return true;
   });
   const cnt = document.getElementById('fb-count'); if(cnt) cnt.textContent = `${shown.length}건`;
@@ -12809,7 +12811,7 @@ function renderFeedback(){
       <details class="fb-detail"><summary>자동 첨부 정보</summary><pre>${escapeHtml(JSON.stringify(d, null, 1))}</pre></details>
       <div class="fb-admin-row">
         <div class="fb-admin-col"><label class="fb-admin-lbl">처리 상태 <small>· 바꾸면 바로 저장</small></label><select class="voice-select fb-status ${r.status==='처리 완료'?'done':r.status==='확인 중'?'mid':''}" onchange="updateFeedback(${r.id}, {status:this.value})">${FB_STATUSES.map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select>${fbNotifyLine(r)}</div>
-        <div class="fb-admin-col grow"><label class="fb-admin-lbl">관리자 처리 메모 <small>· 면접자에게 보이지 않음</small></label><div class="fb-note-row"><input type="text" class="pipe-input" id="fb-note-${r.id}" value="${escapeHtml(r.admin_note||'')}" placeholder="예: 10/3 수정 배포" onkeydown="if(event.key==='Enter'){ updateFeedback(${r.id}, {admin_note:this.value}); }"><button class="btn-manage" onclick="updateFeedback(${r.id}, {admin_note:document.getElementById('fb-note-${r.id}').value})">메모 저장</button></div></div>
+        <div class="fb-admin-col grow"><label class="fb-admin-lbl" for="fb-note-${r.id}">면접자에게 보낼 답장 <small>· 처리 완료 알림에 함께 보여요</small></label><div class="fb-note-row"><textarea class="pipe-input fb-reply-in" id="fb-note-${r.id}" rows="2" maxlength="600" placeholder="예: 알려 주셔서 고마워요. 말씀하신 부분을 고쳤어요.">${escapeHtml(r.reply != null ? r.reply : (r.admin_note||''))}</textarea><button class="btn-manage" onclick="saveFbReply(${r.id})">답장 저장</button></div>${fbReplyHint(r)}</div>
       </div>
       <div class="fb-card-foot"><button class="fb-del" onclick="deleteFeedback(${r.id})">삭제</button></div>
     </div>`;
@@ -12906,7 +12908,7 @@ const Notice = {
     const b = document.getElementById('nt-bubble'), t = document.getElementById('nt-bubble-t'); if(!b || !t){ this.pending = false; return; }
     const u = this.unseen(); const n = u.ns.length + u.rs.length;
     if(!n){ this.pending = false; return; }
-    t.textContent = u.rs.length && !u.ns.length ? (u.rs.length === 1 ? ntDoneWord(u.rs[0]).bubble : `보내 주신 글 ${u.rs.length}개가 해결됐어요`) : u.ns.length === 1 && !u.rs.length ? '새 공지: ' + (u.ns[0].title || '') : `새 소식 ${n}개가 있어요`;
+    t.textContent = u.rs.length && !u.ns.length ? (u.rs.length === 1 ? ((u.rs[0].reply||'').trim() ? '담당자가 답장을 남겼어요' : ntDoneWord(u.rs[0]).bubble) : `보내 주신 글 ${u.rs.length}개에 답이 왔어요`) : u.ns.length === 1 && !u.rs.length ? '새 공지: ' + (u.ns[0].title || '') : `새 소식 ${n}개가 있어요`;
     b.hidden = false; requestAnimationFrame(()=>b.classList.add('on'));
     try{ Activity.log('notice_bubble', { notices: u.ns.map(x=>x.id), replies: u.rs.map(x=>x.id) }); }catch(_){}
     clearTimeout(this._bt); this._bt = setTimeout(()=>this.hideBubble(), 8000);
@@ -12929,7 +12931,7 @@ const Notice = {
       h += `<section class="nt-sec"><h3 class="nt-h">보내 주신 글</h3>` + rs.map(r=>{ const w = ntDoneWord(r); const isNew = newSet.has('r'+r.id); return `<div class="nt-reply${isNew ? ' new' : ''}">
         <div class="nt-done"><span class="nt-ok" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>${w.done}</b>${isNew ? '<i class="nt-new">새 소식</i>' : ''}<time>${ntMD(r.replied_at)}</time></div>
         <div class="nt-q"><span class="nt-who">내가 보낸 글 · ${ntMD(r.created_at)}</span><p>${escapeHtml(ntQuote(r))}</p></div>
-        ${w.tip ? `<p class="nt-tip">${w.tip}</p>` : ''}${r.reply ? `<p class="nt-tip">${ntText(r.reply)}</p>` : ''}</div>`; }).join('') + `</section>`;
+        ${(r.reply||'').trim() ? `<div class="nt-ans"><span>담당자 답장</span><p>${ntText(r.reply.trim())}</p></div>` : ''}${w.tip ? `<p class="nt-tip">${w.tip}</p>` : ''}</div>`; }).join('') + `</section>`;
     }
     if(ns.length){
       h += `<section class="nt-sec"><h3 class="nt-h">공지</h3>` + ns.map(n=>`<article class="nt-item${newSet.has('n'+n.id) ? ' new' : ''}"><h4>${newSet.has('n'+n.id) ? '<i class="nt-new">새 공지</i>' : ''}${escapeHtml(n.title||'')}</h4><time>${ntMD(n.starts_at || n.created_at)}${n.ends_at ? ` · ${ntMD(n.ends_at)}까지` : ''}</time><p>${ntText(n.body)}</p></article>`).join('') + `</section>`;
@@ -13065,7 +13067,31 @@ const NoticeAdmin = {
 function fbNotifyLine(r){
   if(r.status !== '처리 완료') return `<small class="fb-notify">'처리 완료'로 바꾸면 ${escapeHtml(fbUserName(r.user_id))} 님께 '해결됐어요' 알림이 가요.</small>`;
   if(!r.replied_at) return '<small class="fb-notify">알림 없이 처리 완료됨 (알림 기능 전에 끝낸 글)</small>';
-  return r.reply_seen_at ? `<small class="fb-notify ok">✓ 해결 알림 보냄 · ${ntMD(r.reply_seen_at)}에 확인함</small>` : `<small class="fb-notify wait">✓ 해결 알림 보냄 · 아직 안 봄</small>`;
+  const what = (r.reply || '').trim() ? '해결 알림·답장' : '해결 알림';
+  return r.reply_seen_at ? `<small class="fb-notify ok">✓ ${what} 보냄 · <span class="nw">${ntMD(r.reply_seen_at)}에 확인함</span></small>` : `<small class="fb-notify wait">✓ ${what} 보냄 · <span class="nw">아직 안 봄</span></small>`;
+}
+/* 2026-10-29c 관리자 메모 → '면접자에게 보낼 답장' (feedback.reply). 처리 완료 알림을 누르면 면접자가 '담당자 답장'으로 봄 */
+function fbReplyHint(r){
+  return r.status === '처리 완료'
+    ? '<small class="fb-notify">저장하면 면접자 알림(종)에 답장이 새로 떠요.</small>'
+    : '<small class="fb-notify">미리 적어 둘 수 있어요. \'처리 완료\'로 바꿀 때 알림과 함께 보여요.</small>';
+}
+async function saveFbReply(id){
+  const el = document.getElementById('fb-note-' + id); if(!el) return;
+  const r = (state.feedbackRows||[]).find(x=>x.id===id); if(!r) return;
+  const text = el.value.trim().slice(0, 600);
+  const prev = (r.reply != null ? r.reply : (r.admin_note || '')).trim();
+  const patch = { reply: text || null };
+  const done = r.status === '처리 완료';
+  if(done && text && text !== prev){ patch.replied_at = new Date().toISOString(); patch.reply_seen_at = null; }   // 처리 완료 뒤 답장을 새로 쓰면 다시 알림
+  try{
+    const { error } = await sb.from('feedback').update(Object.assign({ updated_at: new Date().toISOString() }, patch)).eq('id', id);
+    if(error) throw error;
+    Object.assign(r, patch);
+    const who = fbUserName(r.user_id);
+    showToast(!text ? '답장을 비웠어요.' : done ? (patch.replied_at ? `답장을 저장했어요. ${who ? who + ' 님' : '보낸 사람'}께 알림이 가요.` : '답장을 저장했어요.') : "답장을 저장했어요. '처리 완료'로 바꾸면 알림과 함께 보여요.", 'ok');
+    renderFeedback();
+  }catch(e){ showToast('저장 실패: ' + (e.message||e)); }
 }
 
 const Activity = {
