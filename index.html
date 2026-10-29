@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-28g';
+var APP_VERSION = '2026-10-29b';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -3908,6 +3908,35 @@ var APP_VERSION = '2026-10-28g';
     #screen-login.v3 .lg-foot-r{order:1;flex-direction:column;align-items:center;gap:12px;}
     #screen-login.v3 .lg-foot-l{order:2;justify-content:center;gap:8px 14px;padding-top:12px;border-top:1px solid #E6E6EA;width:100%;}
   }
+
+  /* ---------- 2026-10-29a 사용 후기 창 (29b: 별점 없이 글 두 칸) ---------- */
+  #modal-usage-review [hidden]{display:none !important;}
+  .ur-box{max-width:460px;width:100%;}
+  .ur-body{padding:28px 28px 6px;}
+  .ur-kicker{margin:0 0 8px;font-size:13px;font-weight:700;color:#B8441C;}
+  .ur-title{margin:0 0 10px;font-size:21px;line-height:1.4;color:var(--c-ink,#1c1c1e);text-wrap:balance;word-break:keep-all;}
+  .ur-desc{margin:0 0 22px;font-size:14.5px;line-height:1.65;color:var(--c-ink-2,#45454a);word-break:keep-all;}
+  .ur-field{margin:0 0 16px;}
+  .ur-lbl{display:block;margin:0 0 8px;font-size:14.5px;font-weight:700;color:var(--c-ink,#1c1c1e);}
+  .ur-ta{display:block;width:100%;box-sizing:border-box;margin:0;padding:12px 14px;border:1px solid var(--c-line-strong,#d3d0ca);border-radius:12px;font:inherit;font-size:15px;line-height:1.6;resize:vertical;min-height:92px;background:#fff;color:var(--c-ink,#1c1c1e);word-break:keep-all;}
+  .ur-ta::placeholder{color:#8E8E93;}
+  .ur-ta:focus{outline:none;border-color:#1c1c1e;box-shadow:0 0 0 3px rgba(28,28,30,.08);}
+  .ur-err{margin:-4px 0 12px;font-size:13.5px;color:#B42318;}
+  .ur-foot{display:flex;gap:10px;padding:14px 28px 24px;border-top:0;}
+  .ur-foot .btn{flex:1 1 0;min-height:48px;font-size:15px;}
+  .ur-foot .btn[disabled]{opacity:.45;cursor:not-allowed;}
+  .ur-done{text-align:center;padding:22px 0 6px;}
+  .ur-done .ur-title{margin-bottom:8px;} .ur-done .ur-desc{margin-bottom:6px;}
+  .ur-done-ic{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#E9F6EF;color:#137A4B;margin-bottom:14px;}
+  @media(max-width:560px){
+    #modal-usage-review.modal-overlay{padding:10px;align-items:flex-end;}
+    #modal-usage-review .modal-box{max-height:calc(100dvh - 20px);}
+    .ur-body{padding:24px 20px 4px;} .ur-foot{padding:12px 20px 18px;}
+    .ur-title{font-size:19px;} .ur-desc{font-size:14px;margin-bottom:18px;}
+    .ur-ta{font-size:16px;min-height:88px;}
+  }
+  .fb-kind.review{background:#FFF4D6;color:#8A5A00;}
+  #screen-admin.v3 .fb-kind.review{color:#8A5A00;border-color:#EBD9A6;background:#FFF9E8;}
   @media print{ .zp-foot, #modal-policy{display:none !important;} }
 </style>
 <style>
@@ -5516,6 +5545,39 @@ body:has(#modal-icon-new.active) #home-bar{display:none !important;}
       <button type="button" class="rrn-hide" onclick="RealReport.hideToday()">일주일 동안 보지 않기</button>
       <button class="btn btn-outline" onclick="RealReport.closeNudge()">닫기</button>
       <button class="btn btn-solid" id="rrn-go">질문 남기기</button>
+    </div>
+  </div>
+</div>
+<!-- 2026-10-29a 이용 기간이 끝나 가는 면접자(마지막 3일)에게 '사용 후기' 창: 좋았던 점·바라는 점 (29b 별점 없음 · 바깥을 눌러도 안 닫힘) -->
+<div class="modal-overlay" id="modal-usage-review" role="dialog" aria-modal="true" aria-labelledby="ur-title">
+  <div class="modal-box ur-box">
+    <div class="modal-body ur-body" id="ur-body">
+      <div id="ur-form">
+        <p class="ur-kicker" id="ur-kicker">이용 기간이 곧 끝나요</p>
+        <h2 class="ur-title" id="ur-title">ZAVAPASS, 써 보니 어떠셨어요?</h2>
+        <p class="ur-desc">지금까지 연습하며 느낀 점을 편하게 적어 주세요.<br>둘 중 하나만 적어도 돼요.</p>
+        <div class="ur-field">
+          <label class="ur-lbl" for="ur-good">좋았던 점</label>
+          <textarea id="ur-good" class="ur-ta" rows="3" maxlength="500" oninput="UsageReview.sync()" placeholder="예: 실제 면접처럼 질문을 읽어 줘서 긴장을 미리 풀 수 있었어요"></textarea>
+        </div>
+        <div class="ur-field">
+          <label class="ur-lbl" for="ur-bad">바라는 점</label>
+          <textarea id="ur-bad" class="ur-ta" rows="3" maxlength="500" oninput="UsageReview.sync()" placeholder="예: 답변이 글자로 바뀔 때 더 정확했으면 좋겠어요"></textarea>
+        </div>
+        <p class="ur-err" id="ur-err" role="alert" hidden></p>
+      </div>
+      <div id="ur-done" class="ur-done" hidden>
+        <span class="ur-done-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <h2 class="ur-title">후기 고마워요</h2>
+        <p class="ur-desc">남겨 주신 후기는 담당자가 하나하나 읽어요.<br>남은 기간도 끝까지 응원할게요.</p>
+      </div>
+    </div>
+    <div class="modal-foot ur-foot" id="ur-foot">
+      <button type="button" class="btn btn-outline" id="ur-later" onclick="UsageReview.later()">나중에 할게요</button>
+      <button type="button" class="btn btn-solid" id="ur-send" onclick="UsageReview.send()" disabled>후기 보내기</button>
+    </div>
+    <div class="modal-foot ur-foot" id="ur-foot-done" hidden>
+      <button type="button" class="btn btn-solid ur-close" onclick="UsageReview.close()">닫기</button>
     </div>
   </div>
 </div>
@@ -9027,7 +9089,7 @@ const RealReport = {
     await this.load();
     card.innerHTML = ''; card.style.display = 'none';   // 2026-10-16d: 홈에는 두지 않고 내 메뉴 → 사이드바로
     this.paintMenu(); if(document.getElementById('rr-drawer').classList.contains('on')) this.renderDrawer();
-    if(!this.nudged){ this.nudged = true; setTimeout(()=>{ try{ this.maybeNudge(); }catch(_){} }, 1600); }
+    if(!this.nudged){ this.nudged = true; setTimeout(async ()=>{ let ur = false; try{ ur = await UsageReview.maybe(); }catch(_){} if(!ur){ try{ this.maybeNudge(); }catch(_){} } }, 1600); }   // 2026-10-29a 기간 마지막 3일엔 사용 후기 창이 먼저, 아니면 '면접 질문 남기기'
   },
   async renderClosed(){
     const box = document.getElementById('rr-closed'); if(!box) return;
@@ -9085,6 +9147,7 @@ const RealReport = {
     tries = tries || 0;
     if(!this.isUser()) return;
     const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return;
+    if(typeof UsageReview !== 'undefined' && (UsageReview.shownThisLoad || UsageReview.pending)) return;   // 2026-10-29a 사용 후기 창이 떴거나 뜰 차례면 이번엔 쉼
     const kind = this.nudgeKind(); if(!kind) return;
     try{ if(localStorage.getItem(this.nudgeKey()) === formatYmd(new Date())) return; }catch(_){}   // '오늘 하루 보지 않기'를 누른 날만 안 뜸
     if(!this.nudgeDue(kind)) return;   // 2026-10-26c 일주일에 한 번 (면접 당일 'today'는 그날 한 번)
@@ -9093,6 +9156,7 @@ const RealReport = {
     this.showNudge(kind);
   },
   showNudge(kind){
+    this.shownThisLoad = true;   // 2026-10-29a 같은 로그인에 사용 후기 창이 또 뜨지 않게
     const r = this.latest();
     const t = document.getElementById('rrn-title'), d = document.getElementById('rrn-desc'), b = document.getElementById('rrn-body'), go = document.getElementById('rrn-go'), k = document.getElementById('rrn-kicker');
     if(!t) return;
@@ -9888,6 +9952,110 @@ const BetaRate = {
       if(error) throw error;
     }catch(e){ console.warn('[베타 평가]', (e && e.message) || e); }
     setTimeout(()=>{ if(box) box.hidden = true; }, 2500);
+  },
+};
+
+/* ---------------- 2026-10-29a 사용 후기 (이용 기간이 끝나 가는 면접자) ----------------
+ *  · 누구: 관리자·직원이 아닌 면접자 중, 분야가 열려 있고 이용 기간이 아직 남았으며 마지막 3일 안(오늘이 마지막 날 포함)
+ *  · 언제: 홈 화면에서 다른 창이 없을 때. 하루에 한 번. 후기를 남기면 다시 안 뜸 (서버 feedback kind '사용 후기'로 확인)
+ *  · 같은 로그인에서 '면접 질문 남기기' 창이 이미 떴으면 이번에는 안 띄움 (창 두 개 연달아 안 뜨게)
+ *  · 바깥을 눌러도 닫히지 않음 (쓰던 글 보호) */
+const UsageReview = {
+  KIND:'사용 후기', sending:false, shownThisLoad:false, pending:false, checkedFor:null, wrote:false,
+  key(){ return 'stenotalk_ur_' + ((state.currentUser||{}).id || ''); },
+  local(){ try{ return JSON.parse(localStorage.getItem(this.key()) || '{}') || {}; }catch(_){ return {}; } },
+  setLocal(p){ try{ localStorage.setItem(this.key(), JSON.stringify(Object.assign(this.local(), p))); }catch(_){} },
+  eligible(){
+    const u = state.currentUser;
+    if(!u || u.isAdmin || u.isStaff) return null;
+    if(!(u.allowed || []).filter(Boolean).length) return null;
+    const a = accessInfo(u.accessUntil);
+    if(!a.until || a.expired || a.daysLeft == null || a.daysLeft < 0 || a.daysLeft > 3) return null;
+    return a;
+  },
+  async already(){
+    const u = state.currentUser; if(!u) return true;
+    if(this.checkedFor === u.id) return this.wrote;
+    if(this.local().sent) { this.checkedFor = u.id; this.wrote = true; return true; }
+    try{
+      const { data, error } = await sb.from('feedback').select('id').eq('user_id', u.id).eq('kind', this.KIND).limit(1);
+      if(error) throw error;
+      this.wrote = !!(data && data.length);
+    }catch(_){ this.wrote = false; }
+    this.checkedFor = u.id;
+    if(this.wrote) this.setLocal({ sent: true });
+    return this.wrote;
+  },
+  /** 띄웠거나 띄울 차례를 기다리면 true ('면접 질문 남기기' 창은 이번 로그인에서 쉼). 대상이 아니면 false */
+  async maybe(tries){
+    tries = tries || 0;
+    const no = ()=>{ this.pending = false; return false; };
+    if(this.shownThisLoad) return true;
+    const a = this.eligible(); if(!a) return no();
+    const act = document.querySelector('.screen.active'); if(!act || act.id !== 'screen-dashboard') return no();
+    if(this.local().day === formatYmd(new Date())) return no();   // 하루에 한 번
+    if(typeof RealReport !== 'undefined' && RealReport.shownThisLoad) return no();   // 이번 로그인에 다른 안내 창이 이미 떴음
+    this.pending = true;
+    if(await this.already()) return no();
+    const busy = document.querySelector('.modal-overlay.active') || (typeof Tour !== 'undefined' && Tour.on) || document.body.classList.contains('hs-open') || document.body.classList.contains('rr-drawer-open') || document.body.classList.contains('nt-panel-open') || (typeof Notice !== 'undefined' && Notice.pending);
+    if(busy){ if(tries < 60){ clearTimeout(this._t); this._t = setTimeout(()=>this.maybe(tries+1), 3000); return true; } return no(); }
+    this.pending = false;
+    this.open(a); return true;
+  },
+  texts(){ return { good: ((document.getElementById('ur-good')||{}).value || '').trim(), bad: ((document.getElementById('ur-bad')||{}).value || '').trim() }; },
+  /** 둘 중 하나라도 적으면 '후기 보내기'가 켜짐 */
+  sync(){
+    const t = this.texts(); const b = document.getElementById('ur-send'); if(b) b.disabled = (!t.good && !t.bad) || this.sending;
+    const e = document.getElementById('ur-err'); if(e && (t.good || t.bad)) e.hidden = true;
+  },
+  open(a){
+    a = a || this.eligible() || {};
+    this.shownThisLoad = true; this.sending = false;
+    this.setLocal({ day: formatYmd(new Date()) });
+    const k = document.getElementById('ur-kicker');
+    if(k) k.textContent = a.daysLeft === 0 ? '오늘이 이용 기간 마지막 날이에요' : (a.daysLeft != null ? `이용 기간이 ${a.daysLeft}일 남았어요` : '사용 후기를 남겨 주세요');
+    ['ur-good','ur-bad'].forEach(id=>{ const t = document.getElementById(id); if(t) t.value = ''; });
+    document.getElementById('ur-form').hidden = false; document.getElementById('ur-done').hidden = true;
+    document.getElementById('ur-foot').hidden = false; document.getElementById('ur-foot-done').hidden = true;
+    const e = document.getElementById('ur-err'); if(e) e.hidden = true;
+    this.sync();
+    document.getElementById('modal-usage-review').classList.add('active');
+    try{ const b = document.getElementById('ur-body'); if(b) b.scrollTop = 0; }catch(_){}
+    try{ Activity.log('usage_review_shown', { days_left: a.daysLeft }); }catch(_){}
+  },
+  later(){
+    const { good, bad } = this.texts();
+    if((good || bad) && !confirm('쓰던 후기가 지워져요. 나중에 할까요?')) return;
+    this.close();
+    try{ Activity.log('usage_review_later', {}); }catch(_){}
+    showToast('내일 다시 여쭤볼게요.', 'info');
+  },
+  close(){ const m = document.getElementById('modal-usage-review'); if(m) m.classList.remove('active'); },
+  async send(){
+    if(this.sending) return;
+    const err = document.getElementById('ur-err');
+    const u = state.currentUser; if(!u) return;
+    let { good, bad } = this.texts(); good = good.slice(0, 500); bad = bad.slice(0, 500);
+    if(!good && !bad){ if(err){ err.textContent = '좋았던 점이나 바라는 점 중 하나는 적어 주세요.'; err.hidden = false; } return; }
+    const a = accessInfo(u.accessUntil);
+    const msg = [good ? `좋았던 점: ${good}` : '', bad ? `바라는 점: ${bad}` : ''].filter(Boolean).join('\n');
+    this.sending = true; this.sync();
+    const b = document.getElementById('ur-send'); if(b) b.textContent = '보내는 중…';
+    try{
+      let ctx = {}; try{ ctx = Feedback.context(); }catch(_){}
+      const { error } = await sb.from('feedback').insert({ user_id: u.id, kind: this.KIND, message: msg, screen: 'home',
+        detail: Object.assign(ctx, { good, bad, days_left: a.daysLeft, access_until: a.label || null, fields: (u.allowed || []).filter(Boolean) }) });
+      if(error) throw error;
+      this.wrote = true; this.checkedFor = u.id; this.setLocal({ sent: true });
+      try{ Activity.log('usage_review_sent', { good: !!good, bad: !!bad }); }catch(_){}
+      document.getElementById('ur-form').hidden = true; document.getElementById('ur-done').hidden = false;
+      document.getElementById('ur-foot').hidden = true; document.getElementById('ur-foot-done').hidden = false;
+    }catch(e){
+      console.warn('[사용 후기]', (e && e.message) || e);
+      if(err){ err.textContent = '보내지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.'; err.hidden = false; }
+    }finally{
+      this.sending = false; if(b) b.textContent = '후기 보내기'; this.sync();
+    }
   },
 };
 
@@ -12586,12 +12754,13 @@ function fbUserPhone(id){ const u = (state.adminUsers||[]).find(x=>x.id===id); r
 function fbIsPerm(r){ const m = String(r.message||''); return !!r.auto && (/^\[(권한 차단|카메라 차단 안내|마이크 차단 안내)\]/.test(m) || /권한이 차단되어|설정에서 마이크가 꺼져|묻는 창이 닫혔|권한 상태 변경|not-allowed/.test(m)); }
 /** 2026-10-21n: 관리자 알림(숫자)에 셀 글 = '새 글' 중 면접자 기기 권한 차단 자동 기록은 뺌 (프로그램 문제가 아니라서) */
 function fbAlert(r){ return !!r && r.status==='새 글' && !fbIsPerm(r); }
-function fbKindCls(r){ if(fbIsPerm(r)) return 'perm'; return r.auto || r.kind==='오류' ? 'err' : r.kind==='문제' ? 'bug' : r.kind==='질문' ? 'q' : 'idea'; }
+function fbKindCls(r){ if(fbIsPerm(r)) return 'perm'; return r.auto || r.kind==='오류' ? 'err' : r.kind==='문제' ? 'bug' : r.kind==='질문' ? 'q' : r.kind==='사용 후기' ? 'review' : 'idea'; }
 function setFeedbackFilter(v){ state.feedbackFilter = v; renderFeedback(); }
 function renderFeedback(){
   const rows = state.feedbackRows || [];
   const stats = document.getElementById('fb-stats');
-  const newN = rows.filter(fbAlert).length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto && !fbIsPerm(r)).length, permN = rows.filter(fbIsPerm).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제').length;
+  const newN = rows.filter(fbAlert).length, bugN = rows.filter(r=>!r.auto && r.kind==='문제').length, errN = rows.filter(r=>r.auto && !fbIsPerm(r)).length, permN = rows.filter(fbIsPerm).length, ideaN = rows.filter(r=>!r.auto && r.kind!=='문제' && r.kind!=='사용 후기').length;
+  const revRows = rows.filter(r=>!r.auto && r.kind==='사용 후기'), revN = revRows.length;   // 2026-10-29a 사용 후기
   const weekAgo = Date.now() - 7*86400000; const weekN = rows.filter(r=>new Date(r.created_at).getTime() >= weekAgo).length;
   const checkingN = rows.filter(r=>r.status==='확인 중').length, doneN = rows.filter(r=>r.status==='처리 완료').length;
   if(stats) stats.innerHTML = statTile(`${newN}<i>건</i>`, '새 글', {scope:'처리 상태', cls: newN?'warn':'', foot:'아직 확인하지 않은 글 · 메뉴 배지와 같은 기준 (권한 차단 기록 제외)'})
@@ -12599,7 +12768,7 @@ function renderFeedback(){
     + statTile(`${doneN}<i>건</i>`, '처리 완료', {scope:'처리 상태', foot:`최근 7일 들어온 글 ${weekN}건`});
   const chips = document.getElementById('fb-chips');
   const cur = state.feedbackFilter || '';
-  if(chips){ const defs = [['', '전체', rows.length], ['new', '새 글', newN], ['bug', '문제', bugN], ['idea', '의견·질문', ideaN], ['err', '자동 오류', errN], ['perm', '권한 차단', permN]];
+  if(chips){ const defs = [['', '전체', rows.length], ['new', '새 글', newN], ['bug', '문제', bugN], ['idea', '의견·질문', ideaN], ['review', '사용 후기', revN], ['err', '자동 오류', errN], ['perm', '권한 차단', permN]];
     chips.innerHTML = defs.map(([v,l,n])=>`<button type="button" class="uf-chip${cur===v?' on':''}" onclick="setFeedbackFilter('${v}')">${l} <b>${n}</b></button>`).join(''); }
   const q = ((document.getElementById('fb-search')||{}).value || '').trim().toLowerCase();
   const hideDone = !!(document.getElementById('fb-hide-done')||{}).checked;
@@ -12607,7 +12776,8 @@ function renderFeedback(){
   const shown = rows.filter(r=>{
     if(cur==='new' && !fbAlert(r)) return false;
     if(cur==='bug' && (r.auto || r.kind!=='문제')) return false;
-    if(cur==='idea' && (r.auto || r.kind==='문제')) return false;
+    if(cur==='idea' && (r.auto || r.kind==='문제' || r.kind==='사용 후기')) return false;
+    if(cur==='review' && (r.auto || r.kind!=='사용 후기')) return false;
     if(cur==='err' && (!r.auto || fbIsPerm(r))) return false;
     if(cur==='perm' && !fbIsPerm(r)) return false;
     if(cur!=='perm' && fbIsPerm(r) && (document.getElementById('fb-hide-perm')||{}).checked) return false;   // 2026-10-22f 권한 차단 기록은 기본으로 숨김 ('권한 차단' 칩으로 보기)
@@ -12688,6 +12858,7 @@ function ntDoneWord(r){
   const k = r.auto ? '문제' : (r.kind || '');
   if(k === '의견' || k === '베타 평가') return { noun:'의견', done:'의견이 반영됐어요', bubble:'보내 주신 의견이 반영됐어요', tip:'' };
   if(k === '질문') return { noun:'질문', done:'질문을 확인했어요', bubble:'보내 주신 질문을 확인했어요', tip:'' };
+  if(k === '사용 후기') return { noun:'후기', done:'후기를 잘 읽었어요', bubble:'남겨 주신 사용 후기를 담당자가 읽었어요', tip:'' };
   return { noun:'문제', done:'해결됐어요', bubble:'보내 주신 문제가 해결됐어요', tip:'새로고침(F5) 후 다시 써 보세요. 또 생기면 \'의견 · 문제 보내기\'로 알려 주세요.' };
 }
 const Notice = {
