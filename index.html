@@ -12,7 +12,7 @@
 (function(){ try{ var p=location.pathname; if(!/\.github\.io$/i.test(location.hostname) && /^\/stenotalk(\/|$)/i.test(p)){ location.replace('/zavapass' + (p.replace(/^\/stenotalk/i,'') || '/') + location.search + location.hash); } }catch(e){} })();
 (function(){ try{ var p=location.pathname; if(/\/zavapass$/i.test(p)) history.replaceState(null,'',p+'/'+location.search+location.hash); }catch(e){} })();
 (function(){ try{ if(/[?&]v=\d+/.test(location.search)){ var q=new URLSearchParams(location.search); q.delete('v'); var qs=q.toString(); history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); } }catch(e){} })();
-var APP_VERSION = '2026-10-30b';
+var APP_VERSION = '2026-10-30c';
 </script>
 <script>
 /* 2026-10-20l 카카오톡 등 앱 안의 창(인앱 브라우저)으로 열면 카메라·마이크·음성 인식이 막힘
@@ -3937,6 +3937,7 @@ var APP_VERSION = '2026-10-30b';
   }
   #screen-admin.v3 .fb-note-row textarea.fb-reply-in{height:auto !important;min-height:66px;padding:10px 12px;line-height:1.55;resize:vertical;font:inherit;font-size:14px;}
   #screen-admin.v3 .fb-note-row{align-items:flex-start;}
+  .rp-done-chip, .ap-proof-chip{border:0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;} .rp-done-chip:hover, .ap-proof-chip:hover{text-decoration:underline;text-underline-offset:2px;}
   .fb-kind.review{background:#FFF4D6;color:#8A5A00;}
   #screen-admin.v3 .fb-kind.review{color:#8A5A00;border-color:#EBD9A6;background:#FFF9E8;}
   @media print{ .zp-foot, #modal-policy{display:none !important;} }
@@ -11359,11 +11360,17 @@ function filterAdminUsers(){
     const fr = document.getElementById('uf-field-row'); if(fr && fr.dataset.has !== '0') fr.style.display = inScope.some(r=>(r.dataset.fields || '').replace(/,/g, '')) ? '' : 'none'; }
   const rs = document.getElementById('uf-reset'); if(rs) rs.style.display = (chip || st || fld || q) ? '' : 'none';
 }
+/** 2026-10-30c 실제 면접 후기를 남긴 사람 표시 (면접자 목록·기간 끝난 사람·승인 요청) · 누르면 '실제 면접 후기' 화면 */
+function reportDoneChip(u){
+  if(!u || u.is_admin || !(state.reportUserIds && state.reportUserIds.has(u.id))) return '';
+  const n = (state.reportCounts || {})[u.id] || 1;
+  return `<button type="button" class="tag tag-ok rp-done-chip" onclick="adminGo('reports')" title="실제 면접 후기를 ${n}번 남겼어요 · 누르면 실제 면접 후기 화면">면접 후기 남김${n > 1 ? ` · ${n}건` : ''}</button>`;
+}
 /** 2026-10-27b 가입 때 '면접 후기 남기기'에 동의한 사람 표시 (동의 전 가입자는 표시 없음) */
 function reportPledgeTag(u){
   if(!u || u.is_admin) return '';
   const has = !!(state.reportUserIds && state.reportUserIds.has(u.id));
-  if(has) return '<span class="tag tag-ok" title="면접 후기를 남겼어요">후기 남김</span>';
+  if(has) return reportDoneChip(u);
   if(u.report_pledge_at){ const d = new Date(u.report_pledge_at); return `<span class="tag tag-warn" title="${d.getMonth()+1}/${d.getDate()} 가입할 때 면접 후기 작성에 동의 · 아직 안 남김">후기 약속 · 안 남김</span>`; }
   return '';
 }
@@ -18816,7 +18823,7 @@ async function renderAdmin(){
   await attachAdminEmails(users);
   state.adminUsers = users;
   // 2026-10-27b: 면접 후기를 남긴 사람 (가입 때 약속한 사람이 남겼는지 보려고)
-  try{ const rr = await sbAll(()=>sb.from('interview_reports').select('user_id,created_by,source')); if(!rr.error) state.reportUserIds = new Set((rr.data||[]).map(x=>x.user_id || (x.source !== 'phone' ? x.created_by : null)).filter(Boolean)); }catch(_){}
+  try{ const rr = await sbAll(()=>sb.from('interview_reports').select('user_id,created_by,source,hidden')); if(!rr.error){ const ids = (rr.data||[]).filter(x=>!x.hidden).map(x=>x.user_id || (x.source !== 'phone' ? x.created_by : null)).filter(Boolean); state.reportUserIds = new Set(ids); state.reportCounts = {}; ids.forEach(id=>{ state.reportCounts[id] = (state.reportCounts[id] || 0) + 1; }); } }catch(_){}   // 2026-10-30c 몇 번 남겼는지도
 
   // 전체 면접 기록 (관리자는 RLS로 전체 조회 가능) → 수강생별 요약과 통계에 사용
   let { data: records, error: recErr } = await sbAll(()=>sb
@@ -19021,7 +19028,7 @@ async function renderAdmin(){
         ${isEnded ? `<div class="ul-ended-line"><span class="tag tag-danger">기간 끝남 ${escapeHtml(acc.label.slice(5).replace('-','/'))}</span> ${endedAgo ? `${endedAgo}일 지남` : '오늘 끝남'} ${reportPledgeTag(u)}</div>` : ''}
         ${u.email ? `<div class="admin-sub admin-email" title="로그인 아이디 ${escapeHtml(u.email)}">${escapeHtml(u.email)}</div>` : ''}
         ${u.phone ? `<div class="admin-sub admin-phone">${escapeHtml(u.phone)}</div>` : '<div class="admin-sub up-none">휴대폰 번호 없음</div>'}
-        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
+        ${u.is_admin ? '' : `<div class="up-state">${isStaff ? '<span class="tag tag-staff" title="관리자가 직원으로 지정한 계정 · 현황 통계에서 빠져요">직원</span>' : acc.expired ? '' : allowedFields.length ? (acc.until && acc.daysLeft <= 3 ? '<span class="tag tag-warn">만료 임박</span>' : '<span class="tag tag-ok">이용 중</span>') : '<span class="tag tag-warn">권한 대기</span>'}${(state.apSubmitted||{})[u.id] && !allowedFields.length ? ` <button type="button" class="tag tag-ok ap-proof-chip" onclick="adminGo('approvals')" title="서류 합격 증빙을 올렸어요 · 누르면 승인 요청 화면">증빙 제출함</button>` : ''}${isEnded || isStaff ? '' : (reportDoneChip(u) ? ' ' + reportDoneChip(u) : '')}<span class="up-state-txt">준비 단계 · ${escapeHtml(status)}</span></div>`}
       </div>
       <div class="up-cell">${practiceCell}${devLine}</div>
       <div class="admin-sub admin-note-cell">${u.note ? escapeHtml(u.note) : '<span class="up-none">메모 없음</span>'}</div>
